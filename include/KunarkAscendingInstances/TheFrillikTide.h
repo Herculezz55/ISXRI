@@ -1,0 +1,4 @@
+string TheFrillikTide[] = {"Custom", 
+"Frillik", 
+"-1.440000 12.870000 73.000000", 
+};

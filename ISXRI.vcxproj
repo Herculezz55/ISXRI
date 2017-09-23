@@ -1,0 +1,609 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{0E859323-C509-4F97-A38B-D5A229D2B6A6}</ProjectGuid>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\..\..\..\..\OneDrive\InnerSpace\Extensions\ISXDK35\</OutDir>
+    <IntDir>Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\OneDrive\ISXDK\35\bin\ISXRI\include\TerrorsofThalumbraCraftingTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\SokokarTimelineCrafting;C:\OneDrive\ISXDK\35\bin\ISXRI\include\ShatteredSeas;C:\OneDrive\ISXDK\35\bin\ISXRI\include\SentinelsFate;C:\OneDrive\ISXDK\35\bin\ISXRI\include\RaidCoding;C:\OneDrive\ISXDK\35\bin\ISXRI\include\ProvingGrounds;C:\OneDrive\ISXDK\35\bin\ISXRI\include\KunarkAscendingInstances;C:\OneDrive\ISXDK\35\bin\ISXRI\include\KunarkAscendingCraftingTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\KunarkAscendingAdventureTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\Instances;C:\OneDrive\ISXDK\35\bin\ISXRI\include\ArtisanEpicTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\ToweroftheFourWindsTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\TearsofVeeshanTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\OthmirEWFactionTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\OthmirCobaltScarTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\OrderofRimeFactionTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\NingYungRetreatTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\JarsathWastesTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\HeritageQuests;C:\OneDrive\ISXDK\35\bin\ISXRI\include\CityofQeynosTimeline;C:\OneDrive\ISXDK\35\bin\ISXRI\include\SS;C:\OneDrive\ISXDK\35\bin\ISXRI\include\PG;C:\OneDrive\ISXDK\35\bin\ISXRI\include\KAInstance;C:\OneDrive\ISXDK\35\bin\ISXRI\include\KAAS;C:\OneDrive\ISXDK\35\bin\ISXRI\include\Greenmist;C:\OneDrive\ISXDK\35\bin\ISXRI\include\SF;C:\OneDrive\ISXDK\35\bin\ISXRI\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\OneDrive\ISXDK\35\lib\vs14;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ISX_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(OutDir)ISXRI.dll</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>false</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <ImportLibrary>$(OutDir)ISXRI.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Commands.cpp" />
+    <ClCompile Include="DataTypes.cpp" />
+    <ClCompile Include="ISXRI.cpp" />
+    <ClCompile Include="LGUIRIFrame.cpp" />
+    <ClCompile Include="Services.cpp" />
+    <ClCompile Include="TopLevelObjects.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Commands.h" />
+    <ClInclude Include="DataTypeList.h" />
+    <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="include\AbilityCheck.h" />
+    <ClInclude Include="include\Acadechism.h" />
+    <ClInclude Include="include\AFindingCharm.h" />
+    <ClInclude Include="include\AggroControl.h" />
+    <ClInclude Include="include\Agnostics.h" />
+    <ClInclude Include="include\AnEyeintheSky.h" />
+    <ClInclude Include="include\AntiAFK.h" />
+    <ClInclude Include="include\AnUrgentCall.h" />
+    <ClInclude Include="include\AnythingforJumjum.h" />
+    <ClInclude Include="include\ArgTest.h" />
+    <ClInclude Include="include\ArtisanEpicTimeline.h" />
+    <ClInclude Include="include\Ascension.h" />
+    <ClInclude Include="include\Ash.h" />
+    <ClInclude Include="include\AssayofOrigin.h" />
+    <ClInclude Include="include\AttuningthePortal.h" />
+    <ClInclude Include="include\Auth.h" />
+    <ClInclude Include="include\AutoDeity.h" />
+    <ClInclude Include="include\AutoTarget.h" />
+    <ClInclude Include="include\Balance.h" />
+    <ClInclude Include="include\BalanceProtector.h" />
+    <ClInclude Include="include\BarBrawl.h" />
+    <ClInclude Include="include\BathezidsWatchFactionCrafting.h" />
+    <ClInclude Include="include\Bilgewater.h" />
+    <ClInclude Include="include\BixieDistraction.h" />
+    <ClInclude Include="include\BlessingofGrowf.h" />
+    <ClInclude Include="include\BoneCollecting.h" />
+    <ClInclude Include="include\BorrowingFromTheDead.h" />
+    <ClInclude Include="include\Bosun.h" />
+    <ClInclude Include="include\Bull.h" />
+    <ClInclude Include="include\Caldera.h" />
+    <ClInclude Include="include\Captain.h" />
+    <ClInclude Include="include\Caverns.h" />
+    <ClInclude Include="include\Charanda.h" />
+    <ClInclude Include="include\ChoosetheSlugLife.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\ABaronsLoss.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\ABodytoDieFor.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\AFatedConfrontation.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\ALightofHope.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\BestofIntentions.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\BloodforBlood.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\BloodTies.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\ClosingtheBlackMarket.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\DireDeliverytoIronforge.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\DivineIntervention.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\FollowingtheFootsteps.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\FreebloodFlu.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\FullCircle.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\GnollRestfortheWicked.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\GnollThreatWithin.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\IronforgedRequests.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\KaedrinIronforgesTrial.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\KaedrinsFate.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\KarmaConcordium.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\LawoftheLand.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\LendingYourSkills.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\LongLivetheQueen.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\MarrsWorkBeDone.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\OfClocksandClankers.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\OntheRun.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\PaidonDelivery.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\PriestCityofQeynosTimeline.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\ProofinWriting.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\PropagandaPostings.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\ProtectionThroughDeception.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\RedHanded.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\ScoutCityofQeynosTimeline.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\SecretsandCeremoniesDownBelow.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\SeekingSuperiorSalve.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\SinkorSwim.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\SpiesinQeynos.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\TheCityofQeynosTimeline.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\TheEagleandtheHawk.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\TheEyesHaveIt.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\TheHeartofQeynos.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\ThePriceoftheCrown.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\TheRightfulHeir.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\TheTruthofSpies.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\ThyWordMinistration.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\TowerDefense.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\TrailofSchemesintheCatacombs.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\TrialbyFire.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\UnexpectedSupport.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\UnsafeHarbor.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\WatchingOverQeynos.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\WhereHelpisNeeded.h" />
+    <ClInclude Include="include\CityofQeynosTimeline\WithinOurReach.h" />
+    <ClInclude Include="include\CloseAndReloadISXRI.h" />
+    <ClInclude Include="include\CloseISXOgre.h" />
+    <ClInclude Include="include\CloseISXRI.h" />
+    <ClInclude Include="include\CloseRI.h" />
+    <ClInclude Include="include\CoA.h" />
+    <ClInclude Include="include\Collection.h" />
+    <ClInclude Include="include\ColumnRenderer.h" />
+    <ClInclude Include="include\CombatBot.h" />
+    <ClInclude Include="include\ContainingtheStone.h" />
+    <ClInclude Include="include\CoT.h" />
+    <ClInclude Include="include\Court.h" />
+    <ClInclude Include="include\CraftsmanErrands.h" />
+    <ClInclude Include="include\Crohp.h" />
+    <ClInclude Include="include\DeeperDisguise.h" />
+    <ClInclude Include="include\DeleteMissions.h" />
+    <ClInclude Include="include\Depot.h" />
+    <ClInclude Include="include\Detarget.h" />
+    <ClInclude Include="include\Distill.h" />
+    <ClInclude Include="include\DropYourWeapon.h" />
+    <ClInclude Include="include\DyingofBoredom.h" />
+    <ClInclude Include="include\Evac.h" />
+    <ClInclude Include="include\FangsAway.h" />
+    <ClInclude Include="include\Farozth.h" />
+    <ClInclude Include="include\FeelingCrabby.h" />
+    <ClInclude Include="include\Ferun.h" />
+    <ClInclude Include="include\FigurinetheProfits.h" />
+    <ClInclude Include="include\FileList.h" />
+    <ClInclude Include="include\Flag.h" />
+    <ClInclude Include="include\Foray.h" />
+    <ClInclude Include="include\ForgingOnwards.h" />
+    <ClInclude Include="include\GatheringShinies.h" />
+    <ClInclude Include="include\GetCharms.h" />
+    <ClInclude Include="include\GetItems.h" />
+    <ClInclude Include="include\GettingHooked.h" />
+    <ClInclude Include="include\GoneAstray.h" />
+    <ClInclude Include="include\GooglowJuice.h" />
+    <ClInclude Include="include\Greenmist\GreenmistTimeline.h" />
+    <ClInclude Include="include\Greenmist\TheCallofFear.h" />
+    <ClInclude Include="include\Greenmist\TheNameofFear.h" />
+    <ClInclude Include="include\Greenmist\ThePathofFear.h" />
+    <ClInclude Include="include\Greenmist\TheTriumphofFear.h" />
+    <ClInclude Include="include\Greenmist\TheWordofFear.h" />
+    <ClInclude Include="include\Grethah.h" />
+    <ClInclude Include="include\Grevog.h" />
+    <ClInclude Include="include\GuardianofGrowf.h" />
+    <ClInclude Include="include\Harvest.h" />
+    <ClInclude Include="include\HeritageQuests\ASourceofMalediction.h" />
+    <ClInclude Include="include\HeritageQuests\TheWhiteDragonscaleCloak.h" />
+    <ClInclude Include="include\HideEffects.h" />
+    <ClInclude Include="include\Highhold.h" />
+    <ClInclude Include="include\Hoist.h" />
+    <ClInclude Include="include\Howling.h" />
+    <ClInclude Include="include\HungOutToDry.h" />
+    <ClInclude Include="include\Hunt.h" />
+    <ClInclude Include="include\Icon.h" />
+    <ClInclude Include="include\IfTheBonesFit.h" />
+    <ClInclude Include="include\IllSeen.h" />
+    <ClInclude Include="include\Imbiber.h" />
+    <ClInclude Include="include\Index.h" />
+    <ClInclude Include="include\InnerSanctum.h" />
+    <ClInclude Include="include\IntoTheSpire.h" />
+    <ClInclude Include="include\IntotheUnknown.h" />
+    <ClInclude Include="include\ISInterface.h" />
+    <ClInclude Include="include\IsItGoodNews.h" />
+    <ClInclude Include="include\ISXDK.h" />
+    <ClInclude Include="include\ISXInterface.h" />
+    <ClInclude Include="include\ISXRIUpdate.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\101ThingstoDoWithaDeadGrindhoof.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\AGameofGrabSap.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\AggressivePinCushions.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\AgonizedSpiritShards.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\AGraveJob.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\AlongCameaDrachnid.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\AnotherShellGame.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\APathforMedicus.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\ARecipeforNecromancerStew.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\BadtotheBones.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\BitoffMore.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\CommandingAttention.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\DeadFishBlueFish.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\DecapitatorExterminator.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\DesertSurvivalTacticNumberEight.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\DracurionDonationsfortheDanakLegion.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\EmissarysCourier.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\EscapeFromtheHouseofDroag.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\HeadsOfftotheSergeant.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\HeadsorTales.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\IdHammerintheMorning.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\InformationHighway.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\IsThereaShamanintheHouse.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\JarsathWastesTimeline.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\KeepYourNosetotheGrindhoof.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\LieutenantDansissGetsNewLegsMe.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\LuclinOreDeath.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\MysteryattheBattlement.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\NothingontheMind.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\OfftoSeetheWarlord.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\OnceaMarineAlwaysaMarine.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\OneFishTwoFish.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\OverthereandBackAgain.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\PlantingtheEvidence.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\PlushyHidestoSeek.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\PropagandaProliferation.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\RedWhiteandDead.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\RingAroundtheScholar.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\ScorpikisYourTailGoodbye.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\ScoutJamboree.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\SealedWithaScorpikis.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\SeekingSergeantSlithess.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\SkyfireExterminator.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\SomethingFishyisGoingOn.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\StoneglintKnuckleCrackers.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\SuperScroll.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\TakingtheSurgefromInsurgents.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\TheDivinerWillSeeYouNow.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\ThreeperFoot.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\TomeSweetTome.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\TotheNextMaster.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\TotheWarlord.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\UtterlyVial.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\WhatWasLost.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\WhenYouMessWiththeRhino.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\WorkintheDocks.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\WurmsandDevourersandDrakesOhMy.h" />
+    <ClInclude Include="include\JarsathWastesTimeline\YourGlishisMyCommand(er).h" />
+    <ClInclude Include="include\JarsathWastesTimeline\YourGlishisMyCommander.h" />
+    <ClInclude Include="include\Jessip.h" />
+    <ClInclude Include="include\KAAS\ArtifactsofLife.h" />
+    <ClInclude Include="include\KAAS\AViciousTongue.h" />
+    <ClInclude Include="include\KAAS\BridgeToSuccess.h" />
+    <ClInclude Include="include\KAAS\CaseoftheMissingHeadpiece.h" />
+    <ClInclude Include="include\KAAS\DamagetheTrust.h" />
+    <ClInclude Include="include\KAAS\DeliveredfromMadness.h" />
+    <ClInclude Include="include\KAAS\DrakeDisposalDuty.h" />
+    <ClInclude Include="include\KAAS\DyingtoHaveYou.h" />
+    <ClInclude Include="include\KAAS\FeastforaGift.h" />
+    <ClInclude Include="include\KAAS\FlameLicked.h" />
+    <ClInclude Include="include\KAAS\GetAShroom.h" />
+    <ClInclude Include="include\KAAS\GhostsandGooblins.h" />
+    <ClInclude Include="include\KAAS\GiantImpressmentEffort.h" />
+    <ClInclude Include="include\KAAS\GiantSpiritualAwakening.h" />
+    <ClInclude Include="include\KAAS\GrowthinanAridLand.h" />
+    <ClInclude Include="include\KAAS\HideandWreek.h" />
+    <ClInclude Include="include\KAAS\IdolDestruction.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingAChosenWeapon.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingAdventureTimeline.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingANightmareRealized.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingBeyondtheVeil.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingForgottenLands.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingGhostWhisperer.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingHistoryinStone.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingOpportunityNoks.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingReadingAssignment.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingResurrectionMachination.h" />
+    <ClInclude Include="include\KAAS\KunarkAscendingSeekingReassurance.h" />
+    <ClInclude Include="include\KAAS\LightningBugHunt.h" />
+    <ClInclude Include="include\KAAS\LitteredAlongthePass.h" />
+    <ClInclude Include="include\KAAS\ParchmentPreservation.h" />
+    <ClInclude Include="include\KAAS\RemainstobeSeen.h" />
+    <ClInclude Include="include\KAAS\ShatteredLives.h" />
+    <ClInclude Include="include\KAAS\SlugginItOut.h" />
+    <ClInclude Include="include\KAAS\SuitUp.h" />
+    <ClInclude Include="include\KAAS\TraderAmongstUs.h" />
+    <ClInclude Include="include\KAAS\WingsinDanger.h" />
+    <ClInclude Include="include\KAInstance\CharasisMaidensChamberAgnostic.h" />
+    <ClInclude Include="include\KAInstance\CryptofDalnirBaronsWorkshop.h" />
+    <ClInclude Include="include\KAInstance\LostCityofTorsisReaversRemnants.h" />
+    <ClInclude Include="include\KAInstance\VaedenmoorRealmofDespair.h" />
+    <ClInclude Include="include\KeepTheHomeFiresBurning.h" />
+    <ClInclude Include="include\Kerridicus.h" />
+    <ClInclude Include="include\KunarkAscendingCraftingTimeline.h" />
+    <ClInclude Include="include\LiveBait.h" />
+    <ClInclude Include="include\LosersWeepers.h" />
+    <ClInclude Include="include\LostCityofTorsisTheSpectralMarket.h" />
+    <ClInclude Include="include\MenaceintheMine.h" />
+    <ClInclude Include="include\MissionofMercy.h" />
+    <ClInclude Include="include\MonitoringtheSituation.h" />
+    <ClInclude Include="include\MonitorMalfunction.h" />
+    <ClInclude Include="include\MoreOreofYore.h" />
+    <ClInclude Include="include\NewLandsNewProfits.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\AdditionalTeachings.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\AFastFinishingFish.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\CallOfftheHunt.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\DarkCravings.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\DefendingNingYunRetreat.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\EasetheSufferingMinds.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\RepellingtheGruengach.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\ShapingaClearerMind.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\SmokeGetsinYourEyes.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\StalkingtheStalkers.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\TheNonHarmfulWay.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\TheThreeTidings.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\WalkingtheCentralPathPartOne.h" />
+    <ClInclude Include="include\NingYungRetreatTimeline\WalkingtheCentralPathPartTwo.h" />
+    <ClInclude Include="include\NotDeadYet.h" />
+    <ClInclude Include="include\OgrePlayNice.h" />
+    <ClInclude Include="include\OreofYore.h" />
+    <ClInclude Include="include\OssCon.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\APoisonMostPrecious.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\APotentPotable.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\ASaltyBreeze.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\ASaltyFarewell.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\ASolemnRequest.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\BoningUpontheSituation.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\BreakingBones.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\CampDefense.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\GiftsFromPrexus.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\GoingHome.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\HighTide.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\ManoWar.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\MerriksMission.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\OnEdge.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\OthmirCobaltScarTimeline.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\RitualofBone.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\ShellfishAmbassador.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\TheGutsoftheMatter.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\TheLostOthmir.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\TheRock.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\TheScar.h" />
+    <ClInclude Include="include\OthmirCobaltScarTimeline\VillageoftheDead.h" />
+    <ClInclude Include="include\OutfitterErrands.h" />
+    <ClInclude Include="include\ParamTest.h" />
+    <ClInclude Include="include\PG\TheUnderdepthsProvingGround.h" />
+    <ClInclude Include="include\PoisonReplenish.h" />
+    <ClInclude Include="include\PotionReplenish.h" />
+    <ClInclude Include="include\PreperationsfortheRescue.h" />
+    <ClInclude Include="include\ProcessofElimination.h" />
+    <ClInclude Include="include\Protector.h" />
+    <ClInclude Include="include\ProtectorofGrowf.h" />
+    <ClInclude Include="include\Queue.h" />
+    <ClInclude Include="include\RA.h" />
+    <ClInclude Include="include\RaidRelayGroup.h" />
+    <ClInclude Include="include\RelayGroup.h" />
+    <ClInclude Include="include\Repair.h" />
+    <ClInclude Include="include\Replenish.h" />
+    <ClInclude Include="include\Repository.h" />
+    <ClInclude Include="include\RequestingBlessing.h" />
+    <ClInclude Include="include\ResearchingaSolution.h" />
+    <ClInclude Include="include\Resonance.h" />
+    <ClInclude Include="include\Revealed.h" />
+    <ClInclude Include="include\RI.h" />
+    <ClInclude Include="include\RICharList.h" />
+    <ClInclude Include="include\RIGroupLogin.h" />
+    <ClInclude Include="include\RILogin.h" />
+    <ClInclude Include="include\RILooter.h" />
+    <ClInclude Include="include\RIMobHud.h" />
+    <ClInclude Include="include\RIMovement.h" />
+    <ClInclude Include="include\RIMovementUI.h" />
+    <ClInclude Include="include\RiseToPower.h" />
+    <ClInclude Include="include\Ritual.h" />
+    <ClInclude Include="include\RPG.h" />
+    <ClInclude Include="include\RunInstances.h" />
+    <ClInclude Include="include\RZ.h" />
+    <ClInclude Include="include\Sacrificer.h" />
+    <ClInclude Include="include\Salvage.h" />
+    <ClInclude Include="include\Sanctum.h" />
+    <ClInclude Include="include\Sanguine.h" />
+    <ClInclude Include="include\SarnakSupplyStocking.h" />
+    <ClInclude Include="include\ScanningtheSeals.h" />
+    <ClInclude Include="include\ScholarErrands.h" />
+    <ClInclude Include="include\ScryingEyes.h" />
+    <ClInclude Include="include\SearchandRescue.h" />
+    <ClInclude Include="include\SeedsofGrowf.h" />
+    <ClInclude Include="include\Services.h" />
+    <ClInclude Include="include\SF\AMessagewithSpirit.h" />
+    <ClInclude Include="include\SF\IntotheArena.h" />
+    <ClInclude Include="include\SF\IntotheArenaOnceMore.h" />
+    <ClInclude Include="include\SF\MendingaBrokenLand.h" />
+    <ClInclude Include="include\SF\MoreMessagewithSpirit.h" />
+    <ClInclude Include="include\SF\TheNeverEndingMendingofaBrokenLand.h" />
+    <ClInclude Include="include\ShareMissions.h" />
+    <ClInclude Include="include\ShroudedTemple.h" />
+    <ClInclude Include="include\SicklyBrewsforStabbySticks.h" />
+    <ClInclude Include="include\SmoothyStonesforStabbySticks.h" />
+    <ClInclude Include="include\SoilandTrouble.h" />
+    <ClInclude Include="include\SquirmyWormiesforGrumblyBellies.h" />
+    <ClInclude Include="include\SS\ADeinodonisAngry.h" />
+    <ClInclude Include="include\SS\ADeinoSavedisaDeinoEarned.h" />
+    <ClInclude Include="include\SS\ADragonflyASpider.h" />
+    <ClInclude Include="include\SS\AlluthoaAbduction.h" />
+    <ClInclude Include="include\SS\APlacetoHangYourHat.h" />
+    <ClInclude Include="include\SS\ArmingGreymast.h" />
+    <ClInclude Include="include\SS\ATaleofTwoTrails.h" />
+    <ClInclude Include="include\SS\AToastTotheFarSeas.h" />
+    <ClInclude Include="include\SS\BattlefieldRelief.h" />
+    <ClInclude Include="include\SS\BodyofWork.h" />
+    <ClInclude Include="include\SS\BoneRemoval.h" />
+    <ClInclude Include="include\SS\BuildingaNewFuture.h" />
+    <ClInclude Include="include\SS\CaptainGreymast.h" />
+    <ClInclude Include="include\SS\CausticCollection.h" />
+    <ClInclude Include="include\SS\CeremonialVestmentsandCondiments.h" />
+    <ClInclude Include="include\SS\ClericalError.h" />
+    <ClInclude Include="include\SS\CogginBodyShots.h" />
+    <ClInclude Include="include\SS\ConfrontingtheLost.h" />
+    <ClInclude Include="include\SS\CrewCutsandBruises.h" />
+    <ClInclude Include="include\SS\CrumblingIsle.h" />
+    <ClInclude Include="include\SS\DeepintheLostShadows.h" />
+    <ClInclude Include="include\SS\DiscardedDeinos.h" />
+    <ClInclude Include="include\SS\DivingforDefenses.h" />
+    <ClInclude Include="include\SS\DowntotheBone.h" />
+    <ClInclude Include="include\SS\EscortingKitkalla.h" />
+    <ClInclude Include="include\SS\FallingOut.h" />
+    <ClInclude Include="include\SS\FieldBandage.h" />
+    <ClInclude Include="include\SS\FreeYourMind.h" />
+    <ClInclude Include="include\SS\FromtheRuins.h" />
+    <ClInclude Include="include\SS\GangrenousTreatment.h" />
+    <ClInclude Include="include\SS\GrimReaping.h" />
+    <ClInclude Include="include\SS\HandleWithCare.h" />
+    <ClInclude Include="include\SS\HandtoMouth.h" />
+    <ClInclude Include="include\SS\HidingFromDeinodons.h" />
+    <ClInclude Include="include\SS\KarrabukksWord.h" />
+    <ClInclude Include="include\SS\MindsBehindtheBarrage.h" />
+    <ClInclude Include="include\SS\NowThatsTheSpirit.h" />
+    <ClInclude Include="include\SS\OvertheWallsofHighhold.h" />
+    <ClInclude Include="include\SS\PlaguedWithQuestions.h" />
+    <ClInclude Include="include\SS\PreparationforthePygmyWars.h" />
+    <ClInclude Include="include\SS\PushingAhead.h" />
+    <ClInclude Include="include\SS\RawMaterials.h" />
+    <ClInclude Include="include\SS\RedeemingQualities.h" />
+    <ClInclude Include="include\SS\RedemptionsFolly.h" />
+    <ClInclude Include="include\SS\RedoubtAboutIt.h" />
+    <ClInclude Include="include\SS\ResearchandRecovery.h" />
+    <ClInclude Include="include\SS\RitualisticTendencies.h" />
+    <ClInclude Include="include\SS\RunningforSafety.h" />
+    <ClInclude Include="include\SS\ScoutCityofQeynosTimeline.h" />
+    <ClInclude Include="include\SS\ShatteredSeasChasingGreymast.h" />
+    <ClInclude Include="include\SS\ShatteredSeasDarkForestofLegend.h" />
+    <ClInclude Include="include\SS\ShatteredSeasDarkThreatsonDshinn.h" />
+    <ClInclude Include="include\SS\ShatteredSeasEntertheSavageLands.h" />
+    <ClInclude Include="include\SS\ShatteredSeasEpilogue.h" />
+    <ClInclude Include="include\SS\ShatteredSeasHighpasstoNowhere.h" />
+    <ClInclude Include="include\SS\ShatteredSeasJourneytoZavithloa.h" />
+    <ClInclude Include="include\SS\ShatteredSeasPiratesPlot.h" />
+    <ClInclude Include="include\SS\ShatteredSeasRefugeReturn.h" />
+    <ClInclude Include="include\SS\ShatteredSeasRevelationsinHighhold.h" />
+    <ClInclude Include="include\SS\ShatteredSeasSeedsofMalice.h" />
+    <ClInclude Include="include\SS\ShatteredSeasTempleofDoom.h" />
+    <ClInclude Include="include\SS\ShatteredSeasTheGreyofGrimShales.h" />
+    <ClInclude Include="include\SS\ShatteredSeasTimeline.h" />
+    <ClInclude Include="include\SS\ShatteredSeasWokenScales.h" />
+    <ClInclude Include="include\SS\StarqueRavingMad.h" />
+    <ClInclude Include="include\SS\Stragglers.h" />
+    <ClInclude Include="include\SS\StretchedReality.h" />
+    <ClInclude Include="include\SS\TakingtheThunderPass.h" />
+    <ClInclude Include="include\SS\TestingtheMeat.h" />
+    <ClInclude Include="include\SS\TheAlluThoaMenace.h" />
+    <ClInclude Include="include\SS\TheBellTollsFour.h" />
+    <ClInclude Include="include\SS\TheFourArmedMan.h" />
+    <ClInclude Include="include\SS\ToCastaTrap.h" />
+    <ClInclude Include="include\SS\TouchoftheUndead.h" />
+    <ClInclude Include="include\SS\UpAgainsttheWall.h" />
+    <ClInclude Include="include\SS\ZavetasBladeRunner.h" />
+    <ClInclude Include="include\SS\ZavetasTreasureHunt.h" />
+    <ClInclude Include="include\StackyRacksforStabbySticks.h" />
+    <ClInclude Include="include\StickingMyOreIn.h" />
+    <ClInclude Include="include\Stowaways.h" />
+    <ClInclude Include="include\StowawaysHM.h" />
+    <ClInclude Include="include\StrangerFriends.h" />
+    <ClInclude Include="include\StrangerinDistress.h" />
+    <ClInclude Include="include\Stygian.h" />
+    <ClInclude Include="include\SubtunarianSubterfuge.h" />
+    <ClInclude Include="include\TakeFlag.h" />
+    <ClInclude Include="include\Taskmaster.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\AgentofGrowth.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\AltarRestoration.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\DeceiversFate.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\DroumlundIntruders.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\FamilyTies.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\GuardianoftheGrowth.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\HarrowingAttack.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\MeditationandAnnihilation.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\MothersBlessing.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\ParalyticPursuit.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\QuenchingtheParched.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\RageinKarakPeak.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\ReachingFraka.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\SeedingSerenity.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\SeizeontheBreeze.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\SentforSavtek.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\ShadowHunter.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\TearsofVeeshanTheEternalBroodlands.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\ThePurityofGrowth.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\TheSoulblighted.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\TotheBrim.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\UndertheVeil.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\VeiledThreat.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\VisionofScale.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\VyemmsVengeance.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\WatersofStrife.h" />
+    <ClInclude Include="include\TearsofVeeshanTimeline\WeedingtheGarden.h" />
+    <ClInclude Include="include\Temple.h" />
+    <ClInclude Include="include\TempleVisitor.h" />
+    <ClInclude Include="include\Teraradus.h" />
+    <ClInclude Include="include\TerrorsofThalumbraCraftingTimeline.h" />
+    <ClInclude Include="include\TestString.h" />
+    <ClInclude Include="include\TheCaptainsLament.h" />
+    <ClInclude Include="include\TheFrillikTide.h" />
+    <ClInclude Include="include\TheGardensAreInBloom.h" />
+    <ClInclude Include="include\THGSalvage.h" />
+    <ClInclude Include="include\THGTransmute.h" />
+    <ClInclude Include="include\Threading.h" />
+    <ClInclude Include="include\Thresinets.h" />
+    <ClInclude Include="include\Torso.h" />
+    <ClInclude Include="include\ToweroftheFourWindsTimeline\AccesstoToweroftheFourWinds.h" />
+    <ClInclude Include="include\ToweroftheFourWindsTimeline\BrotherLycabesTrialKnowledgeofaLostCity.h" />
+    <ClInclude Include="include\ToweroftheFourWindsTimeline\BrotherPangsTrialCombatingCorruption.h" />
+    <ClInclude Include="include\ToweroftheFourWindsTimeline\ImprovingRelationswiththeLocals.h" />
+    <ClInclude Include="include\ToweroftheFourWindsTimeline\MediatetheMasters.h" />
+    <ClInclude Include="include\ToweroftheFourWindsTimeline\TheBalanceofNature.h" />
+    <ClInclude Include="include\ToweroftheFourWindsTimeline\TheRift.h" />
+    <ClInclude Include="include\ToweroftheFourWindsTimeline\TheStolenTome.h" />
+    <ClInclude Include="include\ToweroftheFourWindsTimeline\ToweroftheFourWindsTimeline.h" />
+    <ClInclude Include="include\Transmute.h" />
+    <ClInclude Include="include\Treachery.h" />
+    <ClInclude Include="include\Tserrina.h" />
+    <ClInclude Include="include\UnderfootDefender.h" />
+    <ClInclude Include="include\Updater.h" />
+    <ClInclude Include="include\utf8string.h" />
+    <ClInclude Include="include\Valdoon.h" />
+    <ClInclude Include="include\Vessel.h" />
+    <ClInclude Include="include\Vexven.h" />
+    <ClInclude Include="include\Virtuoso.h" />
+    <ClInclude Include="include\WhatLiesBeneath.h" />
+    <ClInclude Include="include\WinThreading.h" />
+    <ClInclude Include="include\WizardsDen.h" />
+    <ClInclude Include="include\WriteLocs.h" />
+    <ClInclude Include="include\Xalgozian.h" />
+    <ClInclude Include="include\Zadune.h" />
+    <ClInclude Include="include\ZoneReset.h" />
+    <ClInclude Include="ISXRI.h" />
+    <ClInclude Include="ISXRIServices.h" />
+    <ClInclude Include="LGUIRIFrame.h" />
+    <ClInclude Include="Services.h" />
+    <ClInclude Include="TopLevelObjects.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\OrderofRimeFactionTimeline\FishingforFaction.dat" />
+    <None Include="include\OrderofRimeFactionTimeline\MoreFishfortheStew.dat" />
+    <None Include="include\OrderofRimeFactionTimeline\SetofBonePlates.dat" />
+    <None Include="include\OrderofRimeFactionTimeline\TheOrderofRimeTimelineRepeatables.dat" />
+    <None Include="include\OthmirEWFactionTimeline\AnimalMagnetism.dat" />
+    <None Include="include\OthmirEWFactionTimeline\AxingtheGiantsPlans.dat" />
+    <None Include="include\OthmirEWFactionTimeline\OthmirEWFactionTimeline.dat" />
+    <None Include="include\OthmirEWFactionTimeline\PrecariouslyPlacedPackage.dat" />
+    <None Include="include\OthmirEWFactionTimeline\PupDefender.dat" />
+    <None Include="include\OthmirEWFactionTimeline\TwoHeadedTrouble.dat" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

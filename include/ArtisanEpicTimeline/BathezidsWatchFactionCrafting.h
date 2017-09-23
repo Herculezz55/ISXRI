@@ -1,0 +1,5 @@
+string BathezidsWatchFactionCrafting[] = {"Bathezid Watch Faction Crafting", 
+"Custom", 
+"BathezidsWatchFactionCrafting", 
+"0 0 0", 
+};
