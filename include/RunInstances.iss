@@ -15125,7 +15125,7 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 		
 		RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	}
-	if ${_CheckQuestCompleted} && !${_QuestName.Replace[\",""].Find["Yun Zi"](exists)} && !${_QuestName.Replace[\",""].Find[Timeline](exists)} && !${_QuestName.Replace[\",""].Find["Losers Weepers"](exists)} && !${_QuestName.Replace[\",""].Find["New Lands New Profits"](exists)}
+	if ${_CheckQuestCompleted} && !${_QuestName.Replace[\",""].Find["Access to Tower of the Four Winds"](exists)} && !${_QuestName.Replace[\",""].Find["Yun Zi"](exists)} && !${_QuestName.Replace[\",""].Find[Timeline](exists)} && !${_QuestName.Replace[\",""].Find["Losers Weepers"](exists)} && !${_QuestName.Replace[\",""].Find["New Lands New Profits"](exists)}
 	{
 		squelch wait 100 ${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}
 		;echo \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}
@@ -20118,7 +20118,314 @@ function PathItemKill(int _PathLines, int _Distance, int _Precision, bool _Loop,
 	AnnounceText:Clear
 	Trigger:Set[FALSE]
 }
+function PathItem(int _PathLines, int _Distance, int _Precision, bool _Loop, bool _GoReverseAfterAllQuantitiesMet, bool _GoReverseAtLoopOrEnd, ... args)
+{	
+	Trigger:Set[FALSE]
+	;variable string echostr="int _PathLines=${_PathLines}, int _Distance=${_Distance}, int _Precision=${_Precision}, bool _Loop=${_Loop}, bool _GoReverseAfterAllQuantitiesMet=${_GoReverseAfterAllQuantitiesMet}, bool _GoReverseAtLoopOrEnd=${_GoReverseAtLoopOrEnd}, ... args="
+	;string _MobName, string _TriggerText, int _Quantity, int _HealthTrigger, string _ItemName
+	variable int _start
+	variable int _end
+	variable int _count
+	variable string _Query
+	variable int _ID
+	variable string _tempName
+	variable string _temp
+	variable index:int _AmountKilled
+	variable bool _AllQuantitiesMet
+	variable bool _IWasFlying=FALSE
+	variable bool _ItemCast=FALSE
+	variable bool _CheckQuestStep=FALSE
+	variable string _QuestStep=""
+	variable int _countor=0
+	AnnounceText:Clear
+	IncomingText:Clear
+	IncomingText2:Clear
+	_start:Set[${MainArrayCounter}]
 
+	for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
+	{
+		;echostr:Concat["${_count}-_MobName: ${args[${_count}]} ${Math.Calc[${_count}+1].Precision[0]}-_TriggerText: ${args[${Math.Calc[${_count}+1]}]} ${Math.Calc[${_count}+2].Precision[0]}-_Quantity: ${args[${Math.Calc[${_count}+2]}]} ${Math.Calc[${_count}+3].Precision[0]}-_HealthTrigger: ${args[${Math.Calc[${_count}+3]}]} ${Math.Calc[${_count}+4].Precision[0]}-_ItemName: ${args[${Math.Calc[${_count}+4]}]}"]
+		_AmountKilled:Insert[0]
+		_AmountKilled:Insert[0]
+		_AmountKilled:Insert[0]
+		_AmountKilled:Insert[0]
+		_AmountKilled:Insert[0]
+		
+		if ${args[${Math.Calc[${_count}+1]}].NotEqual[0]}
+		{
+			;echo ${args[${Math.Calc[${_count}+1]}].Left[3]}
+			;echo ${args[${Math.Calc[${_count}+1]}].Left[3].Equal[AT-]}
+			if ${args[${Math.Calc[${_count}+1]}].Left[3].Equal[AT-]}
+				AnnounceText:Insert[${args[${Math.Calc[${_count}+1]}].Right[-3]}]
+			elseif ${args[${Math.Calc[${_count}+1]}].Left[3].Equal[IT-]}
+				IncomingText:Insert[${args[${Math.Calc[${_count}+1]}].Right[-3]}]
+			elseif ${args[${Math.Calc[${_count}+1]}].Left[3].Equal[QS-]}
+			{
+				_QuestStep:Set[${args[${Math.Calc[${_count}+1]}].Right[-3]}]
+				_CheckQuestStep:Set[1]
+			}
+			else
+				AnnounceText:Insert[${args[${Math.Calc[${_count}+1]}]}]
+		}
+		else
+		{
+			IncomingText:Insert["You have killed"]
+			IncomingText2:Insert["${args[${_count}]}"]
+		}
+		_count:Inc
+		_count:Inc
+		_count:Inc
+		_count:Inc
+	}
+	; for(_count:Set[1];${_count}<=${AnnounceText.Used};_count:Inc)
+	; {
+		; echo ${AnnounceText.Get[${_count}]}
+	; }
+	;echo ${echostr}
+	_end:Set[${Math.Calc[${MainArrayCounter}+${_PathLines}]}]
+	for(;${MainArrayCounter}<=${_end};MainArrayCounter:Inc)
+	{
+		call RIMObj.CheckCombat
+		for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
+		{
+			;check for our node and if we are
+			if ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]}<${args[${Math.Calc[${_count}+2]}]}
+			{
+				if ${args[${_count}].Find[|](exists)}
+				{
+					_Query:Set["( "]
+					for(_countor:Set[1];${_countor}<=${Math.Calc[${args[${_count}].Count[|]}+1]};_countor:Inc)
+					{
+						if ${_countor}==${Math.Calc[${args[${_count}].Count[|]}+1]}
+							_Query:Concat["Name=-\"${args[${_count}].Token[${_countor},|]}\" ) && Distance<=${_Distance}"]
+						else
+							_Query:Concat["Name=-\"${args[${_count}].Token[${_countor},|]}\" || "]
+					}
+				}
+				else
+					_Query:Set["Name=-\"${args[${_count}]}\" && Distance<=${_Distance}"]
+				;echo ${_Query} // ${Actor[Query, ${_Query}](exists)}
+				if ${Actor[Query, ${_Query}](exists)}
+				{
+					;echo query exists
+					_ID:Set[${Actor[Query, ${_Query}].ID}]
+					;echo ( ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<15 || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) && !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
+					if ( ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<${_Precision} || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) && !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
+					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
+					{
+						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
+						{
+							if ${Me.FlyingUsingMount}
+								_IWasFlying:Set[TRUE]
+							call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Me.Y} ${Actor[Query, ID=${_ID}].Z} ${_Precision} 0 FALSE FALSE TRUE FALSE TRUE TRUE
+							if ${Me.FlyingUsingMount}
+								call RIMObj.FlyDown
+						}
+						else
+							call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_Precision} 0 FALSE FALSE TRUE FALSE TRUE TRUE
+						;wait 5
+						;call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_Precision} 0 0 0 1 0 1 1
+						wait 20
+						_tempName:Set[${Actor[Query, ID=${_ID}].Name}]
+						while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]}<${args[${Math.Calc[${_count}+2]}]}
+						{
+							;echo start of while loop ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} // ${Actor[Query, ID=${_ID} && IsDead=FALSE]} // ${_ID}
+							if ${Target.ID}!=${Actor[Query, ID=${_ID}].ID}
+								Actor[Query, ID=${_ID}]:DoTarget
+							wait 5
+							;echo ${Target.Health}<=${args[${Math.Calc[${_count}+3]}]} && !${_ItemCast} && ${Me.TargetLOS}
+							if !${_ItemCast} && ${Me.TargetLOS}
+							{
+
+								relay "${RI_Var_String_RelayGroup}" Me.Inventory["${args[${Math.Calc[${_count}+3]}]}"]:Use
+								wait 5
+								relay "${RI_Var_String_RelayGroup}" Me.Inventory["${args[${Math.Calc[${_count}+3]}]}"]:Use
+								wait 5 ${Me.CastingSpell}
+								wait 50 !${Me.CastingSpell}
+								wait 50
+								;unpause bots
+								_ItemCast:Set[TRUE]
+							}
+							if ${Actor[Query, ID=${_ID}].Distance}>${Math.Calc[${_Precision}+5]}
+								call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_Precision} 0 0 0 1 0 1 1
+							;echo end of while loop
+						}
+						_ItemCast:Set[FALSE]
+						call RIMObj.CheckCombat
+						wait 15
+						if ${_CheckQuestStep} && ${RIObj.QuestStepExists[${_QuestStep}]}
+						{
+							_AmountKilled.Get[${Math.Calc[${_count}+2]}]:Inc
+							;echo ISXRI: Killed ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+							echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+							Trigger:Set[FALSE]
+						}
+						if ${Trigger} || ( ${args[${Math.Calc[${_count}+1]}].Equal[*ITEMGONE*]} && !${Me.Inventory["${args[${Math.Calc[${_count}+4]}]}"](exists)} )
+						{
+							_AmountKilled.Get[${Math.Calc[${_count}+2]}]:Inc
+							;echo ISXRI: Killed ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+							echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
+							Trigger:Set[FALSE]
+						}
+						if ${_IWasFlying}
+						{
+							press -hold ${RI_Var_String_FlyUpKey}
+							wait 1
+							press -release ${RI_Var_String_FlyUpKey}
+							_IWasFlying:Set[FALSE]
+						}
+						call RIMObj.Move ${_temp} 1 0 0 0 1 0 1 1
+					}
+				}
+			}
+			_count:Inc
+			_count:Inc
+			_count:Inc
+			_count:Inc
+		}
+		call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} 1 0 0 0 1 1 1 1
+		_AllQuantitiesMet:Set[TRUE]
+		for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
+		{
+			_count:Inc
+			_count:Inc
+			;echo ${_count}: ${_AmountKilled.Get[${_count}]}<${args[${_count}]}
+			if ${_AmountKilled.Get[${_count}]}<${args[${_count}]}
+				_AllQuantitiesMet:Set[FALSE]
+			_count:Inc
+			_count:Inc
+		}
+		; if ${_GoReverseAfterAllQuantitiesMet} && ${_AllQuantitiesMet}
+		; {
+			; MainArrayCounter:Set[${_end}]
+			; echo TimeToEnd
+		; }
+		if ( ${MainArrayCounter}==${_end} && ${_GoReverseAtLoopOrEnd} ) || ( ${_GoReverseAfterAllQuantitiesMet} && ${_AllQuantitiesMet} )
+		{
+			MainArrayCounter:Dec
+			for(;${MainArrayCounter}>=${_start};MainArrayCounter:Dec)
+			{
+				call RIMObj.CheckCombat
+				for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
+				{
+					;check for our node and if we are
+					if ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]}<${args[${Math.Calc[${_count}+2]}]}
+					{
+						if ${args[${_count}].Find[|](exists)}
+						{
+							_Query:Set["( "]
+							for(_countor:Set[1];${_countor}<=${Math.Calc[${args[${_count}].Count[|]}+1]};_countor:Inc)
+							{
+								if ${_countor}==${Math.Calc[${args[${_count}].Count[|]}+1]}
+									_Query:Concat["Name=-\"${args[${_count}].Token[${_countor},|]}\" ) && Distance<=${_Distance}"]
+								else
+									_Query:Concat["Name=-\"${args[${_count}].Token[${_countor},|]}\" || "]
+							}
+						}
+						else
+							_Query:Set["Name=-\"${args[${_count}]}\" && Distance<=${_Distance}"]
+
+						;echo ${_Query} // ${Actor[Query, ${_Query}](exists)}
+						if ${Actor[Query, ${_Query}](exists)}
+						{
+							_ID:Set[${Actor[Query, ${_Query}].ID}]
+							;echo ( ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<15 || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) && !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
+							if ( ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<15 || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) && !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
+							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
+							{
+								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
+								{
+									if ${Me.FlyingUsingMount}
+										_IWasFlying:Set[TRUE]
+									call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Me.Y} ${Actor[Query, ID=${_ID}].Z} ${_Precision} 0 FALSE FALSE TRUE FALSE TRUE TRUE
+									if ${Me.FlyingUsingMount}
+										call RIMObj.FlyDown
+								}
+								else
+									call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_Precision} 0 FALSE FALSE TRUE FALSE TRUE TRUE
+								;wait 5
+								;call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_Precision} 0 0 0 1 0 1 1
+								wait 20
+								_tempName:Set[${Actor[Query, ID=${_ID}].Name}]
+								while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ( ${Actor[Query, ID=${_ID}].HighlightOnMouseHover} || !${_HighlightOnMouseHover} ) && ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]}<${args[${Math.Calc[${_count}+2]}]}
+								{
+									if ${Target.ID}!=${Actor[Query, ID=${_ID}].ID}
+										Actor[Query, ID=${_ID}]:DoTarget
+									if !${_ItemCast} && ${Me.TargetLOS}
+									{
+										relay "${RI_Var_String_RelayGroup}" Me.Inventory["${args[${Math.Calc[${_count}+3]}]}"]:Use
+										wait 5
+										relay "${RI_Var_String_RelayGroup}" Me.Inventory["${args[${Math.Calc[${_count}+3]}]}"]:Use
+										wait 5 ${Me.CastingSpell}
+										wait 50 !${Me.CastingSpell}
+										wait 50
+										_ItemCast:Set[TRUE]
+									}
+									if ${Actor[Query, ID=${_ID}].Distance}>${Math.Calc[${_Precision}+5]}
+										call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_Precision} 0 0 0 1 0 1 1
+								}
+								_ItemCast:Set[FALSE]
+								call RIMObj.CheckCombat
+								wait 15
+								if ${_CheckQuestStep} && ${RIObj.QuestStepExists[${_QuestStep}]}
+								{
+									_AmountKilled.Get[${Math.Calc[${_count}+2]}]:Inc
+									;echo ISXRI: Killed ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+									echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+									Trigger:Set[FALSE]
+								}
+								if ${Trigger} || ( ${args[${Math.Calc[${_count}+1]}].Equal[*ITEMGONE*]} && !${Me.Inventory["${args[${Math.Calc[${_count}+4]}]}"](exists)} )
+								;|| ${args[${Math.Calc[${_count}+1]}].Equal[0]}
+								{
+									_AmountKilled.Get[${Math.Calc[${_count}+2]}]:Inc
+									;echo ISXRI: Killed ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+									echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
+									Trigger:Set[FALSE]
+								}
+								if ${_IWasFlying}
+								{
+									press -hold ${RI_Var_String_FlyUpKey}
+									wait 1
+									press -release ${RI_Var_String_FlyUpKey}
+									_IWasFlying:Set[FALSE]
+								}
+								call RIMObj.Move ${_temp} 1 0 0 0 1 0 1 1
+							}
+						}
+					}
+					_count:Inc
+					_count:Inc
+					_count:Inc
+					_count:Inc
+				}
+				call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} 1 0 0 0 1 1 1 1
+				_AllQuantitiesMet:Set[TRUE]
+				for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
+				{
+					_count:Inc
+					_count:Inc
+					;echo ${_count}: ${_AmountKilled.Get[${_count}]}<${args[${_count}]}
+					if ${_AmountKilled.Get[${_count}]}<${args[${_count}]}
+						_AllQuantitiesMet:Set[FALSE]
+					_count:Inc
+					_count:Inc
+				}
+			}
+			;if !${_Loop}
+				MainArrayCounter:Set[${_end}]
+		}
+		if ${_Loop} && ${MainArrayCounter}==${_end} && !${_AllQuantitiesMet}
+		{
+			;echo looping because ${_Loop} && ${MainArrayCounter}==${_end} && !${_AllQuantitiesMet}
+			MainArrayCounter:Set[${_start}]
+		}
+	}
+	press -release ${RI_Var_String_ForwardKey}
+	AnnounceText:Clear
+	Trigger:Set[FALSE]
+}
 function PathHarvest(int _PathLines, int _Distance, bool _Loop, bool _GoReverseAfterAllQuantitiesMet, bool _GoReverseAtLoopOrEnd, bool _HighlightOnMouseHover=FALSE, ... args)
 {	
 	Trigger:Set[FALSE]
@@ -21339,6 +21646,9 @@ function ZoneDoor(string _Actor, int _DoorOption=-1, bool _LoopUntilNoHighlightO
 	
 	if ${_DoorOption}>-1
 		relay ${RI_Var_String_RelayGroup} -noredirect TimedCommand 50 RIMUIObj:Door[ALL,${_DoorOption}]
+	wait 50
+	if ${ChoiceWindow(Exists)} && ${EQ2.Zoning}==0
+		ChoiceWindow:DoChoice1
 	wait 600 ${EQ2.Zoning}==1
 	wait 600 ${EQ2.Zoning}==0
 }
@@ -21364,6 +21674,33 @@ function Teleporter(float _x, float _y, float _z, int _precision=1, int _maxdist
 	press -release ${RI_Var_String_ForwardKey}
 	wait 600 ${RIMObj.AllGroupWithinRange[5]}
 	wait 20
+}
+function RingEvent(int _Distance, ... args)
+{
+	variable int _countor
+	variable string _Query
+	;first build our add's Query
+	_Query:Set["( "]
+
+	for(_countor:Set[1];${_countor}<${args.Used};_countor:Inc)
+	{
+		if ${_countor}==${Math.Calc[${args.Used}-1]}
+			_Query:Concat["Name=-\"${args[${_countor}]}\" ) && Distance<=${_Distance} && IsLocked=FALSE && IsDead=FALSE && ( Type==\"NPC\" || Type==\"NamedNPC\" )"]
+		else
+			_Query:Concat["Name=-\"${args[${_countor}]}\" || "]
+	}
+	while !${Actor[Query, Name=-"${args[${args.Used}]}" && Distance<=${_Distance}](exists)}
+	{
+		if ${Actor[Query, ${_Query}](exists)} && ${Target.ID}!=${Actor[Query, ${_Query}].ID}
+			Actor[Query, ${_Query}]:DoTarget
+		wait 2
+	}
+	while ${Actor[Query, Name=-"${args[${args.Used}]}" && Distance<=${_Distance} && IsDead=FALSE](exists)}
+	{
+		if ${Target.ID}!=${Actor[Query, Name=-"${args[${args.Used}]}" && Distance<=${_Distance} && IsDead=FALSE].ID}
+			Actor[Query, Name=-"${args[${args.Used}]}" && Distance<=${_Distance} && IsDead=FALSE]:DoTarget
+		wait 2
+	}
 }
 function BuyFromVendor(string _VendorName, string _Item, int _Qty)
 {

@@ -1968,6 +1968,13 @@
 ;		Crypt of Dalnir: The Wizard's Den
 ;			Modified Nazkra
 ;				changed maintoon lockspot and added targeting for aggro
+;		Lost City of Torsis: The Spectral Market
+;			Ongnissim
+;				Fixed a bug that was only reading fighters and not Main toons
+;		RIMUIObj Members and Methods
+;			Changed TravelMap
+;				fixed a bug that was not reading the last zone in the list
+;		
 
 ;	RZ
 ;		Completely rewrote RZ now can queue up any number of Zones and RZ will run them and move between them as needed and as queued. (Only KA for now)
@@ -4801,7 +4808,7 @@ objectdef RIMUIObject
 				echo ISXRI: Kurns Tower Access Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Dragonbone Weapon Parts](exists)}]}
 				echo ISXRI: High Keep: The Bloodless Incursion Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[On the Heel of Nightmares](exists)}]}
 				echo ISXRI: Fallen Dynasty Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The Rift](exists)}]}
-				echo ISXRI: Vesspyr Isles Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Reaching Fraka](exists)}]}
+				echo ISXRI: Tears of Veeshan Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Reaching Fraka](exists)}]}
 				break
 			}
 			case fighter
