@@ -89,55 +89,129 @@ function PreGo(string _EXTVar)
 		istrMain:Insert[${${_EXTVar}[${MainArrayCounter}]}]
 	echo ISXRI: ${Time} Done Importing ZoneFile from Extension, to Load from File type ImportZoneFile filename.dat (omitting filename.dat, will attempt to load WriteLocs default file for the zone)
 }
-atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace[",",""]}.dat")
+atom ImportZoneFile(string _Zone)
 {
-	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
-	;check if ZineFileName exists, if not end
-	if !${FP.FileExists[${ZoneFileName}]}
-	{
-		echo ISXRI: ${Time} Missing ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}"
-		if ${QuestMode}
-			Script:End
-		else
-			return
-	}
-	else
-	{
-		echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}"
-	}
-	
-	variable file Filename
-	variable int Count
-	
-	variable string TempString
 	istrMain:Clear
-	Count:Set[1]
-	;set file to read in to Filename variable
-	Filename:SetFilename["${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}"]
-
-	;open the file
-	Filename:Open
-	
-	;seek to the beginning of file
-	Filename:Seek[0]
-	
-	;while we are not at the end of file
-	while !${Filename.EOF}
+	switch ${_Zone.Upper}
 	{
-		;store each line of the file in var
-		TempString:Set[${Filename.Read}]
-		if ${TempString.Equal[NULL]}
-			continue
-		istrMain:Insert[${TempString.Left[-1]}]
-		;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length}
-		Count:Inc
-		;waitframe
+		case KAESORA
+		{
+			istrMain:Insert[182.646912 -118.825867 -160.124619]
+			istrMain:Insert[179.241959 -69.218857 -166.021149]
+			istrMain:Insert[153.935852 -32.875347 -189.627106]
+			istrMain:Insert[128.791473 -3.191060 -221.428726]
+			istrMain:Insert[100.991234 9.898625 -260.874969]
+			istrMain:Insert[77.417007 38.798981 -294.364716]
+			istrMain:Insert[57.918842 72.666298 -325.754364]
+			istrMain:Insert[33.129749 85.940758 -367.369965]
+			istrMain:Insert[8.482460 84.029160 -410.859833]
+			istrMain:Insert[-16.213810 82.113777 -454.436249]
+			istrMain:Insert[-40.988400 80.192314 -498.150726]
+			istrMain:Insert[-65.792084 79.986656 -541.922791]
+			istrMain:Insert[-90.601685 79.981827 -585.705811]
+			istrMain:Insert[-115.372040 79.976974 -629.420044]
+			istrMain:Insert[-140.171539 79.972107 -673.186035]
+			istrMain:Insert[-153.889053 79.971298 -721.278931]
+			istrMain:Insert[-160.984756 79.971298 -770.932922]
+			istrMain:Insert[-165.737854 79.971298 -820.895264]
+			istrMain:Insert[-163.740234 79.971298 -870.865356]
+			istrMain:Insert[-147.752213 79.971298 -918.431152]
+			istrMain:Insert[-111.120026 79.971298 -952.905151]
+			istrMain:Insert[-71.941132 79.971298 -984.434265]
+			istrMain:Insert[-32.652782 79.971298 -1015.369690]
+			istrMain:Insert[6.776206 79.971298 -1046.416016]
+			istrMain:Insert[46.205173 79.971298 -1077.461792]
+			istrMain:Insert[85.649773 79.971298 -1108.519775]
+			istrMain:Insert[125.063194 79.971298 -1139.554688]
+			istrMain:Insert[164.538986 79.971298 -1170.640015]
+			istrMain:Insert[203.999161 79.971298 -1201.712646]
+			istrMain:Insert[244.139832 79.971298 -1231.965698]
+			istrMain:Insert[293.355682 71.552437 -1235.383301]
+			istrMain:Insert[304.826630 67.772789 -1236.646606]
+			istrMain:Insert[333.782623 58.869308 -1271.929810]
+			istrMain:Insert[348.353668 39.361343 -1291.254028]
+			istrMain:Insert[346.567902 29.337437 -1293.531494]
+			istrMain:Insert[346.108856 27.366489 -1296.947632]
+			istrMain:Insert[344.858917 20.766964 -1306.249268]
+			break
+		}
+		case TORSIS
+		{
+			istrMain:Insert[-150.956680 1.861307 -83.695122]
+			istrMain:Insert[-150.956680 51.874031 -83.695122]
+			istrMain:Insert[-163.266052 88.654266 -115.475006]
+			istrMain:Insert[-199.693329 118.839531 -132.713516]
+			istrMain:Insert[-243.483093 140.658600 -143.670242]
+			istrMain:Insert[-291.082855 152.911957 -153.506317]
+			istrMain:Insert[-339.985962 152.329498 -164.174484]
+			istrMain:Insert[-389.480255 149.825272 -171.241867]
+			istrMain:Insert[-439.466370 145.484055 -174.356110]
+			istrMain:Insert[-489.433289 141.144394 -177.469299]
+			istrMain:Insert[-539.226257 136.819962 -180.571548]
+			istrMain:Insert[-588.951599 130.803757 -181.668411]
+			istrMain:Insert[-639.019592 126.609009 -182.495941]
+			istrMain:Insert[-682.004028 121.373619 -207.632996]
+			istrMain:Insert[-651.817444 143.486694 -241.087753]
+			istrMain:Insert[-620.946716 149.481186 -280.182465]
+			istrMain:Insert[-589.991638 155.491989 -319.383636]
+			istrMain:Insert[-560.419922 165.292313 -358.874908]
+			istrMain:Insert[-531.559143 176.890060 -398.267517]
+			istrMain:Insert[-500.165710 200.711472 -429.188904]
+			istrMain:Insert[-457.458344 204.695633 -454.975281]
+			istrMain:Insert[-426.471802 206.903778 -494.389435]
+			istrMain:Insert[-399.208008 209.399506 -536.656372]
+			istrMain:Insert[-376.765961 210.956985 -581.721436]
+			istrMain:Insert[-354.618652 218.560425 -626.193359]
+			istrMain:Insert[-332.236938 220.113708 -671.135681]
+			istrMain:Insert[-309.942322 221.660995 -715.904541]
+			istrMain:Insert[-292.068970 226.514740 -762.486084]
+			istrMain:Insert[-278.808014 217.939651 -810.153992]
+			istrMain:Insert[-270.115906 206.891266 -858.195923]
+			istrMain:Insert[-261.378937 196.103088 -906.486572]
+			istrMain:Insert[-252.452805 195.569687 -955.822449]
+			istrMain:Insert[-249.393219 189.447571 -1005.751709]
+			istrMain:Insert[-252.950043 188.635956 -1055.675415]
+			istrMain:Insert[-254.702957 188.634933 -1105.838379]
+			istrMain:Insert[-257.967285 163.436356 -1149.255005]
+			istrMain:Insert[-257.893005 152.357834 -1169.341431]
+			break
+		}
+		case SPIRE
+		{
+			break
+		}
+		case DALNIR
+		{
+			istrMain:Insert[-208.259216 90.546265 -171.838242]
+			istrMain:Insert[-192.281799 117.245171 -178.418533]
+			istrMain:Insert[-145.389725 117.245171 -195.804733]
+			istrMain:Insert[-98.344231 117.245171 -213.247787]
+			istrMain:Insert[-51.386753 117.245171 -230.658188]
+			istrMain:Insert[-4.130384 117.245171 -248.179428]
+			istrMain:Insert[42.879860 117.245171 -265.609009]
+			istrMain:Insert[89.960487 117.245171 -283.064880]
+			istrMain:Insert[135.972824 117.245171 -302.680634]
+			istrMain:Insert[181.804108 117.245171 -323.377563]
+			istrMain:Insert[227.566986 117.245171 -344.042694]
+			istrMain:Insert[273.398132 117.245171 -364.739166]
+			istrMain:Insert[319.109344 117.245171 -385.381165]
+			istrMain:Insert[364.939758 117.245171 -406.077881]
+			istrMain:Insert[410.695251 117.245171 -426.740875]
+			istrMain:Insert[456.320190 117.245171 -447.345032]
+			istrMain:Insert[500.079712 108.536240 -469.953583]
+			istrMain:Insert[537.549561 85.659111 -494.129913]
+			istrMain:Insert[575.102966 62.730656 -518.360474]
+			istrMain:Insert[612.586243 39.844955 -542.545593]
+			istrMain:Insert[649.985535 17.010588 -566.676514]
+			istrMain:Insert[681.166870 -18.416731 -583.256104]
+			istrMain:Insert[705.750671 -60.858173 -593.075928]
+			istrMain:Insert[731.091370 -103.702263 -597.811401]
+			istrMain:Insert[759.797729 -129.857666 -594.005249]
+			istrMain:Insert[774.813354 -129.350403 -588.724670]
+			istrMain:Insert[792.112061 -129.383835 -583.020386]
+			break
+		}
 	}
-	
-	;close file
-	Filename:Close
-	
-	echo ISXRI: ${Time} Done Loading ZoneFile
 }
 function StartR(string _r)
 {
@@ -150,10 +224,11 @@ function RunK()
 	if !${Others}
 		call StartR rk
 
-	if ${KaesoraEntrance[1](exists)}
-		call PreGo "KaesoraEntrance"
-	else
-		ImportZoneFile "KaesoraEntrance.dat"
+	; if ${KaesoraEntrance[1](exists)}
+		; call PreGo "KaesoraEntrance"
+	; else
+		; ImportZoneFile "KaesoraEntrance.dat"
+	ImportZoneFile KAESORA
 	
 	call CheckNearStart "Fens of Nathsar"
 	
@@ -201,10 +276,12 @@ function RunL()
 	if !${Others}
 		call StartR rl
 
-	if ${KaesoraEntrance[1](exists)}
-		call PreGo "TorsisEntrance"
-	else
-		ImportZoneFile "TorsisEntrance.dat"
+	; if ${KaesoraEntrance[1](exists)}
+		; call PreGo "TorsisEntrance"
+	; else
+		; ImportZoneFile "TorsisEntrance.dat"
+		
+	ImportZoneFile TORSIS
 	
 	call CheckNearStart "Kunzar Jungle" 0 3
 	
@@ -252,10 +329,12 @@ function RunC()
 	if !${Others}
 		call StartR rc
 
-	if ${DalnirEntrance[1](exists)}
-		call PreGo "DalnirEntrance"
-	else
-		ImportZoneFile "DalnirEntrance.dat"
+	; if ${DalnirEntrance[1](exists)}
+		; call PreGo "DalnirEntrance"
+	; else
+		; ImportZoneFile "DalnirEntrance.dat"
+	
+	ImportZoneFile DALNIR
 	
 	call CheckNearStart "Obulus Frontier" 0 4
 	
