@@ -1624,6 +1624,27 @@
     <ClInclude Include="include\JarsathWastesTimeline\YourGlishisMyCommander.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\CityofQeynosTimeline\InTooDeep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CityofQeynosTimeline\MageCityofQeynosTimeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CityofQeynosTimeline\NoTimeforNecromancers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CityofQeynosTimeline\SavingtheShire.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CityofQeynosTimeline\SoIHeardYouLikePortals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CityofQeynosTimeline\ThatWhichisOurs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CityofQeynosTimeline\UndeadUprising.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\OrderofRimeFactionTimeline\FishingforFaction.dat">

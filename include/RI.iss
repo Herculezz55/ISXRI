@@ -1963,7 +1963,7 @@
 ;	RPG
 ;		Fixed the location of the portal, Again
 
-;v5.24 Changes 9-16-17
+;v5.24 Changes 10-5-17
 ;	RI
 ;		Crypt of Dalnir: The Wizard's Den
 ;			Modified Nazkra
@@ -1971,10 +1971,36 @@
 ;		Lost City of Torsis: The Spectral Market
 ;			Ongnissim
 ;				Fixed a bug that was only reading fighters and not Main toons
+;		Added the Following Instances:
+;			Crypt of Dalnir Ritual Chamber
+;				Pathing and Named Coding (Up until the 3 Linked Named)
+;			Kaesora Tomb of the Venerated
+;				Pathing and Named Coding
+;			The Ruins of Cabilis
+;				Pathing and Named Coding
+;			Mistmyr Manor
+;				Pathing
+;			Ravenscale Repository
+;				Pathing
 ;		RIMUIObj Members and Methods
 ;			Changed TravelMap
 ;				fixed a bug that was not reading the last zone in the list
-;		
+;	RPG
+;		Fixed a bug
+;	RQ
+;		Added the Following Quests/Timelines:
+;				Dark Mail Guantlets HQ Timeline
+;				An Eye for Power
+;				A Strange Black Rock
+;				Gogas Afadin
+;				The Bone Bladed Claymore
+;				The Symbol in the Flesh
+;				Kurns Tower Access Timeline
+;				The Mysteries of TikTok
+;				Othmir Great Divide Timeline
+;				Ry'Gorr Keep Timeline
+;				Shades of Drinal Timeline
+;				Koada'dal Magi's Craft
 
 ;	RZ
 ;		Completely rewrote RZ now can queue up any number of Zones and RZ will run them and move between them as needed and as queued. (Only KA for now)
@@ -5356,28 +5382,46 @@ objectdef RIMUIObject
 				
 				UIElement[QuestsListBox@RI]:AddItem[Jarsath Wastes Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Jarsath Wastes Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Koada'dal Magi's Craft]
+				UIElement[QuestsListBox@RI]:AddItem[Kurns Tower Access Timeline]
+				UIElement[QuestsListBox@RI].ItemByText[Kurns Tower Access Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Ning Yung Retreat Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Ning Yung Retreat Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Order of Rime Faction Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Order of Rime Faction Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Othmir Cobalt Scar Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Othmir Cobalt Scar Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Othmir Great Divide Timeline]
+				UIElement[QuestsListBox@RI].ItemByText[Othmir Great Divide Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Othmir EW Faction Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Othmir EW Faction Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Ry'Gorr Keep Timeline]
+				UIElement[QuestsListBox@RI].ItemByText[Ry'Gorr Keep Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Shades of Drinal Timeline]
+				UIElement[QuestsListBox@RI].ItemByText[Shades of Drinal Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Shattered Seas Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Shattered Seas Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Tears of Veeshan Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Tears of Veeshan Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[The City of Qeynos Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[The City of Qeynos Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[The Mysteries of TikTok]
 				UIElement[QuestsListBox@RI]:AddItem[Tower of the Four Winds Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Tower of the Four Winds Timeline]:SetTextColor[FFE8E200]
+			
 			}
 			elseif ${_CatName.Equal[Heritage Quests]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
 				UIElement[QuestsListBox@RI]:AddItem["A Source of Malediction"]
 				UIElement[QuestsListBox@RI]:AddItem[The White Dragonscale Cloak]
+				UIElement[QuestsListBox@RI]:AddItem[Dark Mail Guantlets HQ Timeline]
+				UIElement[QuestsListBox@RI].ItemByText[Dark Mail Guantlets HQ Timelin]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[An Eye for Power]
+				UIElement[QuestsListBox@RI]:AddItem[A Strange Black Rock]
+				UIElement[QuestsListBox@RI]:AddItem[Gogas Afadin]
+				UIElement[QuestsListBox@RI]:AddItem[The Bone Bladed Claymore]
+				UIElement[QuestsListBox@RI]:AddItem[The Symbol in the Flesh]
 			}
 		}
 	}

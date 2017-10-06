@@ -904,8 +904,11 @@ function PreGo(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 		case Crypt of Dalnir: Ritual Chamber [Heroic]
 		case Crypt of Dalnir: Ritual Chamber [Solo]
 		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
+			RI_CMD_Hidden_AddTLO CryptofDalnirRitualChamber
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[CryptofDalnirRitualChamber]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CryptofDalnirRitualChamber[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${CryptofDalnirRitualChamber[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
 		case Crypt of Dalnir: Wizard's Den [Advanced Solo]
@@ -923,16 +926,22 @@ function PreGo(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 		case The Ruins of Cabilis [Heroic]
 		case The Ruins of Cabilis [Solo]
 		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
+			RI_CMD_Hidden_AddTLO TheRuinsofCabilis
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[TheRuinsofCabilis]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheRuinsofCabilis[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${TheRuinsofCabilis[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
 		case Kaesora: Tomb of the Venerated [Expert Event]
 		case Kaesora: Tomb of the Venerated [Event Heroic]
 		case Kaesora: Tomb of the Venerated [Advanced Solo]
 		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
+			RI_CMD_Hidden_AddTLO KaesoraTomboftheVenerated
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[KaesoraTomboftheVenerated]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${KaesoraTomboftheVenerated[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${KaesoraTomboftheVenerated[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
 		case Lost City of Torsis: The Spectral Market [Expert]
@@ -1079,6 +1088,24 @@ function PreGo(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			LoadedTLOName:Set[TheUnderdepthsProvingGround]
 			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheUnderdepthsProvingGround[3rtZdjv7,#]};MainArrayCounter:Inc)
 				istrMain:Insert[${TheUnderdepthsProvingGround[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Mistmyr Manor
+		{
+			RI_CMD_Hidden_AddTLO MistmyrManor
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[MistmyrManor]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${MistmyrManor[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${MistmyrManor[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Ravenscale Repository
+		{
+			RI_CMD_Hidden_AddTLO RavenscaleRepository
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[RavenscaleRepository]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${RavenscaleRepository[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${RavenscaleRepository[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
 		default
@@ -11169,6 +11196,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -422.953339 1.228984 -183.556915 1 0 0 0 1 0 1 1
 				RI_CMD_PauseCombatBots 1
 				while ${Actor[Query, Name=-"Valve" && Distance<=5].HighlightOnMouseHover}
@@ -11178,6 +11206,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -412.846069 1.229390 -183.372772 1 0 0 0 1 1 1 1
 				call RIMObj.Move -402.701874 1.229717 -183.358627 1 0 0 0 1 1 1 1
 				call RIMObj.Move -393.441742 1.229717 -183.718185 1 0 0 0 1 0 1 1
@@ -11189,6 +11218,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -393.496704 1.229717 -193.839325 1 0 0 0 1 1 1 1
 				call RIMObj.Move -393.629456 1.229717 -196.658813 1 0 0 0 1 0 1 1
 				RI_CMD_PauseCombatBots 1
@@ -11199,6 +11229,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -383.286285 1.229717 -196.326172 1 0 0 0 1 1 1 1
 				call RIMObj.Move -373.043243 1.229717 -196.168442 1 0 0 0 1 1 1 1
 				call RIMObj.Move -362.852203 1.229717 -196.050262 1 0 0 0 1 1 1 1
@@ -11213,6 +11244,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -340.457672 1.230448 -186.440872 1 0 0 0 1 1 1 1
 				call RIMObj.Move -340.345917 1.230441 -183.257614 1 0 0 0 1 0 1 1
 				RI_CMD_PauseCombatBots 1
@@ -11223,6 +11255,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -330.252472 1.229717 -181.858521 1 0 0 0 1 1 1 1
 				call RIMObj.Move -320.326233 1.230079 -178.762466 1 0 0 0 1 1 1 1
 				call RIMObj.Move -312.260742 1.229631 -172.687546 1 0 0 0 1 1 1 1
@@ -11239,6 +11272,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -283.668152 1.229717 -152.392914 1 0 0 0 1 1 1 1
 				call RIMObj.Move -284.025452 1.229716 -162.424133 1 0 0 0 1 1 1 1
 				call RIMObj.Move -284.384338 1.229716 -172.498154 1 0 0 0 1 1 1 1
@@ -11257,6 +11291,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -277.544037 1.229716 -231.255127 1 0 0 0 1 1 1 1
 				call RIMObj.Move -271.144104 1.229716 -223.462326 1 0 0 0 1 1 1 1
 				call RIMObj.Move -264.372650 1.229717 -215.803024 1 0 0 0 1 1 1 1
@@ -11273,6 +11308,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -230.145538 1.230185 -194.872375 1 0 0 0 1 1 1 1
 				call RIMObj.Move -230.248947 1.227926 -195.544739 1 0 0 0 1 0 1 1
 				RI_CMD_PauseCombatBots 1
@@ -11283,6 +11319,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -222.110184 1.229717 -189.563309 1 0 0 0 1 1 1 1
 				call RIMObj.Move -214.028488 1.229863 -183.348450 1 0 0 0 1 1 1 1
 				call RIMObj.Move -206.193359 1.229835 -176.710144 1 0 0 0 1 1 1 1
@@ -11299,6 +11336,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -172.856415 1.229717 -151.151566 1 0 0 0 1 1 1 1
 				call RIMObj.Move -173.393265 1.229716 -161.381409 1 0 0 0 1 1 1 1
 				call RIMObj.Move -173.795288 1.229716 -171.374298 1 0 0 0 1 1 1 1
@@ -11317,6 +11355,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -168.503983 1.229716 -231.012238 1 0 0 0 1 1 1 1
 				call RIMObj.Move -162.210754 1.229716 -223.200546 1 0 0 0 1 1 1 1
 				call RIMObj.Move -155.094604 1.229717 -216.151230 1 0 0 0 1 1 1 1
@@ -11334,6 +11373,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -114.885887 1.229717 -194.986008 1 0 0 0 1 1 1 1
 				call RIMObj.Move -114.891426 1.229717 -195.405701 1 0 0 0 1 0 1 1
 				RI_CMD_PauseCombatBots 1
@@ -11344,6 +11384,7 @@ function Googantuan()
 				}
 				RI_CMD_PauseCombatBots 0
 				wait 20
+				Press f8
 				call RIMObj.Move -124.886337 1.229717 -193.252991 1 0 0 0 1 1 1 1
 				call RIMObj.Move -134.834396 1.229899 -191.915985 1 0 0 0 1 1 1 1
 				call RIMObj.Move -144.994232 1.229716 -190.776840 1 0 0 0 1 1 1 1
@@ -12584,7 +12625,7 @@ function Nazkra()
 		if ${RI_Var_Bool_GlobalOthers}
 			RI_Atom_SetLockSpot ALL 357.946594 -38.758297 -200.028015 
 		else
-			RI_Atom_SetLockSpot ALL 349.821960 -38.730247 -195.833969
+			RI_Atom_SetLockSpot ALL 352.231354 -38.734402 -196.402695
 		while ${Actor[Query, ID=${NazkraID} && IsDead=FALSE](exists)}
 		{
 			;if !${RI_Var_Bool_GlobalOthers}
@@ -21304,6 +21345,8 @@ function ReaversSigCheck()
 function TargetUntilAnnounce(string _TargetName, int _Distance, string _Announce)
 {
 	TriggerMessage:Set[""]
+	AnnounceText:Clear
+	AnnounceText:Insert["${_Announce}"]
 	while !${TriggerMessage.Find["${_Announce}"](exists)}
 	{
 		if ${Actor[Query, Name=-"${_TargetName}" && Distance<=${_Distance} && IsDead=FALSE](exists)}

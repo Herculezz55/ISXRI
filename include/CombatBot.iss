@@ -1,6 +1,8 @@
 ;CombatBot by Herculezz
 ;
 
+;Grim Aura MainIconID = 899, have it check for the ID and if not exist, and not in combat, equip the item, use it, set a 1min timer, reequip other ear (keep try to equip until its equipped) 
+
 ;need to put update for raid/group lists into the main loop maybe call it once every cpl secs or something.
 
 ;;;;;;;;change the add methods to take in the Text and The Value to add to the list box so it can also be done via code. -- DONE

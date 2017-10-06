@@ -461,7 +461,7 @@ objectdef CheckZoneObject
 			return ${Math.Calc[(86400-${Time.SecondsSinceMidnight})+${SecondsSinceMidnightTheZoneWasSetAt}]}
 		}
 	}
-	;check current seconds since midnight against locktimer return true or false
+	;check current seconds since midnight against locktimer return true or false, this function is not working need to add debug and zone in and out a few times seeing what is going on
 	member:int UnlockTime(string _InstanceMessage)
 	{
 		if ${_InstanceMessage.Find[This instance will expire in ](exists)}
@@ -515,8 +515,8 @@ atom EQ2_onIncomingText(string Text)
 	{
 		if ${Text.Find["This instance will expire in "](exists)} && !${Text.Find["125 days 6 hours"](exists)} && !${Text.Find["6 hours"](exists)}
 		{
-			;UnlockableTime:Set[${CheckZone.UnlockTime[${Text}]}]
-			UnlockableTime:Set[${CheckZone.UnlockTime[${Text.Left[29]}${Text.Right[-37]}]}]
+			UnlockableTime:Set[${CheckZone.UnlockTime[${Text}]}]
+			;UnlockableTime:Set[${CheckZone.UnlockTime[${Text.Left[29]}${Text.Right[-37]}]}]
 			;echo UnlockableTime: ${UnlockableTime}
 			if ${UnlockableTime}<1
 			{
