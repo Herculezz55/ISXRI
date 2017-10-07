@@ -2,12 +2,8 @@
 variable(global) RIInventoryObject RIInventoryObj
 variable filepath FP
 variable settingsetref RIInventorySet
-variable CountSetsObject2 CountSets
-variable CountSetsObject CountSets2
 variable(global) string RI_Var_String_RIInventoryScriptName=${Script.Filename}
-variable string TempGroup
-variable bool WaitForSessions=FALSE
-variable int TimeOutCNT=0
+
 function main(... args)
 {
 	;disable Debugging
