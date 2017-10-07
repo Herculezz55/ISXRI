@@ -2002,12 +2002,23 @@
 ;				Shades of Drinal Timeline
 ;				Koada'dal Magi's Craft
 
+;v5.25 Changes 10-6-17
+;	RI
+;		RIMUIObj Members and Methods
+;			Changed TravelMap
+;				fixed a bug that was not opening portals
+;	RQ
+;		Added
+;			The Circle of the Unseen Hand Timeline
+;	RZ
+;		Stopped group follow on MoveToZoneIn function
+
 ;	RZ
 ;		Completely rewrote RZ now can queue up any number of Zones and RZ will run them and move between them as needed and as queued. (Only KA for now)
 ;		RZO will handle pre-KA zones
 
 
-variable(global) float RI_Var_Float_Version=5.24
+variable(global) float RI_Var_Float_Version=5.25
 
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
@@ -3475,7 +3486,7 @@ function main()
 	RI_Index_String_AvailableRIMUICommands:Insert[ToggleWalkRun]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ToggleWalkRun - Toggles between walking and running\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[TravelMap]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[TravelMap - Clicks Argument2 on TravelMap and Zones there\n\nArgument 1: For Who\n\nArgument 2: Zone Name (case insesitive and partial zone names are fine)]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[TravelMap - Clicks Argument2 on TravelMap and Zones there\n\nArgument 1: For Who\n\nArgument 2: Zone Name (case insesitive and partial zone names are fine)\n\nArgument 3: Door Option (0 chooses Bottom option)\n\nArgument 4: Open Portal / Bell=1 Wizard=2 Druid=3]
 	RI_Index_String_AvailableRIMUICommands:Insert[TravelMapPop]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[TravelMapPop - Pops up the TravelMap UI]
 	RI_Index_String_AvailableRIMUICommands:Insert[UnloadISXRI]
@@ -5403,6 +5414,8 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI].ItemByText[Shattered Seas Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Tears of Veeshan Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Tears of Veeshan Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[The Circle of the Unseen Hand Timeline]
+				UIElement[QuestsListBox@RI].ItemByText[The Circle of the Unseen Hand Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[The City of Qeynos Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[The City of Qeynos Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[The Mysteries of TikTok]
@@ -5531,11 +5544,43 @@ objectdef RIMUIObject
 				Me.Inventory[Query, Location=="Inventory" && Name=-"${BookName}"]:Scribe
 		}
 	}
-	method TravelMap(string ForWho=ALL, string ZoneName=~NONE~, int ZoneOption=-1)
+	method TravelMap(string ForWho=ALL, string ZoneName=~NONE~, int ZoneOption=-1, int _BellWizardDruid=0)
 	{
 		if ${ZoneName.Equal[~NONE~]}
 			return
-		 if !${EQ2UIPage[Popup,TravelMap].IsVisible}
+		if ${_BellWizardDruid}>0
+		{
+			if ${_BellWizardDruid}==1
+			{
+				Actor[mariners_bell]:DoubleClick
+				Actor[mariner_bell_city_travel_qeynos]:DoubleClick
+				Actor[zone_to_guildhall_tier3]:DoubleClick
+				Actor[Zone to Friend]:DoubleClick
+				Actor[flight_cloud_large_1_to_medium_1]:DoubleClick
+				Actor[mariner_bell_city_travel_freeport]:DoubleClick
+				Actor["Ole Salt's Mariner Bell"]:DoubleClick
+				Actor["Navigator's Globe of Norrath"]:DoubleClick
+				Actor["Pirate Captain's Helmsman"]:DoubleClick
+				Actor["Explorer's Globe of Norrath"]:DoubleClick
+				TimedCommand 10 RIMUIObj:TravelMap[${ForWho},${ZoneName},${ZoneOption}]
+			}
+			elseif ${_BellWizardDruid}==2
+			{
+				Actor["Ulteran Spire"]:DoubleClick
+				TimedCommand 10 RIMUIObj:TravelMap[${ForWho},${ZoneName},${ZoneOption}]
+			}
+			elseif ${_BellWizardDruid}==3
+			{
+				Actor[guild,"Guild Portal Druid"]:DoFace
+				Actor[guild,"Guild Portal Druid"]:DoTarget
+				TimedCommand 5 eq2ex hail
+				TimedCommand 10 EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+				TimedCommand 20 Actor[tcg_druid_portal]:DoubleClick
+				TimedCommand 30 RIMUIObj:TravelMap[${ForWho},${ZoneName},${ZoneOption}]
+			}
+			return
+		}
+		if !${EQ2UIPage[Popup,TravelMap].IsVisible}
 		 	return
 			; Actor[mariners_bell]:DoubleClick
 			; Actor[mariner_bell_city_travel_qeynos]:DoubleClick

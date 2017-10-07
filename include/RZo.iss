@@ -1242,7 +1242,7 @@ function Zone1()
 {
 	;if we have ZoneEntranceMoveToZone TRUE, Do it
 	if ${ZoneEntranceMoveToZone}
-		call MoveC ${ZoneEntranceMoveToZoneLocX} ${ZoneEntranceMoveToZoneLocZ}
+		call MoveC ${ZoneEntranceMoveToZoneLocX} ${ZoneEntranceMoveToZoneLocZ} 0
 	elseif ${MalduraZone}
 		call MalduraFinder "${Zone1}"
 		
@@ -1394,7 +1394,7 @@ function Zone2()
 {
 	;if we have ZoneEntranceMoveToZone TRUE, Do it
 	if ${ZoneEntranceMoveToZone}
-		call MoveC ${ZoneEntranceMoveToZoneLocX} ${ZoneEntranceMoveToZoneLocZ}
+		call MoveC ${ZoneEntranceMoveToZoneLocX} ${ZoneEntranceMoveToZoneLocZ} 0
 	elseif ${MalduraZone}
 		call MalduraFinder "${Zone2}"
 		
@@ -1516,7 +1516,7 @@ function Zone3()
 {
 	;if we have ZoneEntranceMoveToZone TRUE, Do it
 	if ${ZoneEntranceMoveToZone}
-		call MoveC ${ZoneEntranceMoveToZoneLocX} ${ZoneEntranceMoveToZoneLocZ}
+		call MoveC ${ZoneEntranceMoveToZoneLocX} ${ZoneEntranceMoveToZoneLocZ} 0
 	elseif ${MalduraZone}
 		call MalduraFinder "${Zone3}"
 		
@@ -1989,12 +1989,15 @@ function FlyDown()
 	wait 10
 	relay ${RI_Var_String_RelayGroup} -noredirect press -release ${RI_Var_String_FlyDownKey}
 }
-function MoveC(float X1, float Z1)
+function MoveC(float X1, float Z1, _Follow=TRUE)
 {
 	wait 20
 	;start group following
-	call RIFollow
-	wait 5
+	if ${_Follow}
+	{
+		call RIFollow
+		wait 5
+	}
 	echo ${Time}: Moving to ${X1} ${Z1}
 	
 	;set lock spot to X1 Z1
