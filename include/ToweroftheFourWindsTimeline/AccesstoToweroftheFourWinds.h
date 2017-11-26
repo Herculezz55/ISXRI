@@ -1,5 +1,5 @@
 string AccesstoToweroftheFourWinds[] = {"Access to Tower of the Four Winds", 
 "Custom", 
-"MessageBox \"Answer Brother Lika's Questions Correctly and Resume when done\"", 
-"15.991307 33.703262 -153.174179", 
+"MessageBox \"Answer Brother Lika's Questions Correctly and Resume when done or if already completed\"", 
+"0 0 0", 
 };

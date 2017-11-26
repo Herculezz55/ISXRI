@@ -223,6 +223,7 @@ variable int AliasesCount
 variable(global) bool RI_Var_Bool_CastWhileMoving=FALSE
 variable(global) bool RI_Var_Bool_DoNotCastAE=FALSE
 variable(global) bool RI_Var_Bool_DoNotCastEncounter=FALSE
+variable(global) bool RI_Var_Bool_OnEventsEnabled=TRUE
 variable bool SkipAEWasSet=FALSE
 variable bool SkipEncounterWasSet=FALSE
 variable index:string istrProfiles
@@ -4576,7 +4577,27 @@ objectdef RI_Object_CB
 			FlushQueued
 		Script[${Script.Filename}]:QueueCommand["call RI_Obj_CB.SaveProfileFN ${_Profile}"]
 	}
-
+	method CreateProfile(string _Profile)
+	{
+		;MessageBox -skin eq2 "Coming Soon"
+		UIElement[ProfileNameTextEntry@BottomFrame@CombatBotUI]:SetText[""]
+		UIElement[CombatBotUI]:SetFocus
+		if ${_Profile.Equal[NULL]} || ${_Profile.Equal[""]}
+		{
+			MessageBox -skin eq2 "You must specify a profile to create"
+			return
+		}
+		if ${QueueCommands}
+			FlushQueued
+		Script[${Script.Filename}]:QueueCommand["call RI_Obj_CB.CreateProfileFN ${_Profile}"]
+	}
+	function CreateProfileFN(string _Profile) 
+	;save profile
+	{
+		MessageBox -skin eq2 -YesNo "Are you sure you want to create a new profile named ${_Profile}?"
+		if ${UserInput.Equal[Yes]}
+			This:SaveProfileYes[${_Profile}]
+	}
 	function SaveProfileFN(string _Profile) 
 	;save profile
 	{
@@ -4965,7 +4986,6 @@ function main()
 	Event[EQ2_onAnnouncement]:AttachAtom[EQ2_onAnnouncement]
 	Event[EQ2_onChoiceWindowAppeared]:AttachAtom[EQ2_onChoiceWindowAppeared]
 	Event[EQ2_onIncomingText]:AttachAtom[EQ2_onIncomingText]
-	Event[EQ2_onLootWindowAppeared]:AttachAtom[EQ2_onLootWindowAppeared]
 	Event[EQ2_FinishedZoning]:AttachAtom[EQ2_FinishedZoning]
 	declare FP filepath "${LavishScript.HomeDirectory}/"
 	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
@@ -5661,7 +5681,7 @@ function main()
 						{
 							intTimeChecksSF:Set[${Script.RunningTime}]
 							;echo it has been more than 5s since last summon familiar or we died
-							if !${RIMUIObj.MaintainedEffectExists[Summon Familiar: ]}
+							if !${RIMUIObj.MaintainedEffectExists[Summon Familiar: ]} && ${UIElement[SettingsCastAbilitiesCheckBox@SettingsFrame@CombatBotUI].Checked}
 							{
 								eq2ex summon_familiar
 							}
@@ -6028,6 +6048,11 @@ function main()
 			;}
 			;echo CheckAbility ${mainCount}
 			;echo ${Script.RunningTime} Before CheckAbility
+			if !${UIElement[SettingsCastAbilitiesCheckBox@SettingsFrame@CombatBotUI].Checked}
+			{
+				waitframe
+				continue
+			}
 			;echo before do casting
 			if ${DoCasting}
 			{
@@ -6086,7 +6111,10 @@ function main()
 					}
 				}
 				if ${DoCasting}
+				{
+					waitframe
 					continue
+				}
 				if ${boolPreCast}
 				{
 					if ${CombatBotDebug}
@@ -6900,20 +6928,6 @@ atom(script) EQ2_onChoiceWindowAppeared()
 		;ChoiceWindow:DoChoice1 - Dont need RI has
 		IWasResed:Set[TRUE]
 		TimedCommand 1200 CombatBotIDied:Set[FALSE]
-	}
-}
-atom EQ2_onLootWindowAppeared(string LootWindowID)
-{
-	if ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked}
-;	&& !${_CB_LootImmunity_}
-	;&& ${CurrentLootWindowID.NotEqual[${LootWindowID}]}
-	{
-;		_CB_LootImmunity_:Set[TRUE]
-;		TimedCommand 10 _CB_LootImmunity_:Set[FALSE]
-;		TimedCommand 20 _CB_LootImmunity_:Set[FALSE]
-		;CurrentLootWindowID:Set[${LootWindowID}]
-		;LootWindow[${LootWindowID}]:LootAll
-		LootWindow[${LootWindowID}]:RequestAll
 	}
 }
 ;atom triggered when Announcement is detected
@@ -10224,11 +10238,13 @@ function CastItemFN(string ItemName, string iCastTarget=FALSE)
 			Me.Equipment[${ItemName}]:Use
 			if ${DoCastingItem}
 			{
+				
 				DoCasting:Set[FALSE]
 				DoCastingItem:Set[FALSE]
 				ItemEquiped:Set[FALSE]
 				while ${Me.Equipment[${ItemName}].TimeUntilReady}<0 && ${GiveUpCnt:Inc}<250
 				{
+				echo 3
 					Me.Equipment[${ItemName}]:Use
 					waitframe
 				}
@@ -10245,13 +10261,14 @@ function CastItemFN(string ItemName, string iCastTarget=FALSE)
 				ItemEquiped:Set[FALSE]
 				while ${Me.Inventory[${ItemName}].TimeUntilReady}<0 && ${GiveUpCnt:Inc}<250
 				{
+					echo 5
 					Me.Inventory[${ItemName}]:Use
 					waitframe
 				}
 			}
 		}
-		wait 2 ${Me.CastingSpell} || ${DoCasting}
-		;wait 100 !${Me.CastingSpell} || ${DoCasting}
+		wait 5 ${Me.CastingSpell} || ${DoCasting}
+		wait 100 !${Me.CastingSpell} || ${DoCasting}
 		if ${boolBuff}
 			wait 5
 		wait 3
@@ -10286,8 +10303,8 @@ function CastItemFN(string ItemName, string iCastTarget=FALSE)
 			;echo Me.Inventory["${ItemName}"]:Use
 			Me.Inventory["${ItemName}"]:Use
 		}
-		wait 2 ${Me.CastingSpell} || ${DoCasting}
-		;wait 100 !${Me.CastingSpell} || ${DoCasting}
+		wait 5 ${Me.CastingSpell} || ${DoCasting}
+		wait 100 !${Me.CastingSpell} || ${DoCasting}
 		if ${boolBuff}
 			wait 5
 		wait 2

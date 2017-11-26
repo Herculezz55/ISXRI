@@ -3,7 +3,7 @@ Custom
 Quest "Improving Relations with the Locals"
 0 0 0
 Custom
-Quest "The Stolen Tome" 19
+Quest "The Stolen Tome" 20
 0 0 0
 45.189171 14.841008 -118.552887
 44.817001 14.882041 -115.605446
@@ -17,17 +17,15 @@ Quest "The Stolen Tome" 19
 -3.511185 20.262890 -139.233780
 2.628917 26.098492 -144.929596
 8.639725 32.346901 -150.664856
+14.111792 34.609016 -155.509109
 Custom
-Quest "Access to Tower of the Four Winds" 25
+Quest "Access to Tower of the Four Winds"
 0 0 0
-15.196313 33.705231 -152.656982
-10.378617 33.702175 -152.272858
-17.148512 35.757198 -159.558960
 Custom
 Quest "The Balance of Nature"
 0 0 0
 Custom
-Quest "Mediate the Masters" 49
+Quest "Mediate the Masters" 47
 0 0 0
 Custom
 ZoneDoor "door to village"
@@ -51,7 +49,7 @@ Custom
 Quest "Brother Pang's Trial: Combating Corruption"
 0 0 0
 Custom
-Quest "Brother Lycabe's Trial: Knowledge of a Lost City" 72
+Quest "Brother Lycabe's Trial: Knowledge of a Lost City" 69
 0 0 0
 22.163603 42.959106 -164.288528
 Wait

@@ -917,25 +917,14 @@ FlyDown
 582.198486 -60.548359 908.432922
 573.662048 -58.874428 913.624084
 Custom
-ClickActor Befallen
+ResetZone "Befallen: Necrotic Asylum"
 566.085510 -58.534153 915.406372
 Custom
-ExecuteCommand "Actor[Befallen]:DoubleClick"
-566.085510 -58.534153 915.406372
-Custom
-ExecuteCommand "Actor[Query, Name=-"Befallen"]:DoubleClick"
-566.085510 -58.534153 915.406372
-Custom
-ExecuteCommand "Actor[loc,0.000000,0.000000]:DoubleClick"
-566.085510 -58.534153 915.406372
-Custom
-ExecuteCommand "RIMUIObj:Zone[ALL]"
+ClickAllActors Befallen
 566.085510 -58.534153 915.406372
 Custom
 WaitForZoning
 566.085510 -58.534153 915.406372
-Custom
-ExecuteCommand "RI_Var_Bool_SkipLoot:Set[TRUE]"
 13.198716 -0.376320 -1.896579
 11.454190 -0.081450 -0.214387
 1.462252 0.002444 0.299732
@@ -1031,8 +1020,6 @@ ClimbLadder 320 -1
 -15.354795 0.002445 0.645039
 -5.264169 0.277492 -0.319081
 4.800450 0.002445 -0.277104
-Custom
-ExecuteCommand "RI_Var_Bool_SkipLoot:Set[FALSE]"
 16.370766 0.002445 0.519875
 Custom
 ZoneDoor "exit widget"

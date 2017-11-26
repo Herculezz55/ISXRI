@@ -24,7 +24,7 @@ function main()
      {
          do
          {
-            if (!${Me.Maintained[${Counter}].Find[Summon](exists)} &&${Me.Maintained[${Counter}].NotEqual[Possess Essence]} && ${Me.Maintained[${Counter}].Duration.Equal[-1]}) && ( ${Me.Maintained[${Counter}].TargetType.Equal[Raid]} || ${Me.Maintained[${Counter}].TargetType.Equal["Self Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Pet Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Group"]})
+            if ( !${Me.Maintained[${Counter}].Find[Grim Aura](exists)} && !${Me.Maintained[${Counter}].Find[Summon](exists)} && ${Me.Maintained[${Counter}].NotEqual[Possess Essence]} && ${Me.Maintained[${Counter}].Duration.Equal[-1]}) && ( ${Me.Maintained[${Counter}].TargetType.Equal[Raid]} || ${Me.Maintained[${Counter}].TargetType.Equal["Self Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Pet Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Group"]})
 				MaintainedEffects:Insert["${Me.Maintained[${Counter}].Name}"]
 				;echo "- ${Counter}. ${Me.Maintained[${Counter}].Name} (Duration: ${Me.Maintained[${Counter}].Duration}, TargetType: ${Me.Maintained[${Counter}].TargetType}) :: Should Be Hidden"
          

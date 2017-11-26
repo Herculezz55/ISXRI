@@ -93,7 +93,7 @@ ZoneDoor "to lake"
 Custom
 ClimbLadder 360 -23
 34.385590 -37.312363 60.550159
-33.191578 -22.908081 52.272564
+35.181107 -22.906603 56.144020
 30.828707 -25.139261 42.615005
 28.235739 -25.085375 32.712883
 Custom
@@ -344,13 +344,13 @@ ClickActor bookcase
 47.625343 15.236171 -25.661253
 42.619457 15.298124 -16.968153
 Custom
-ExecuteCommand "Target bookcase"
+ExecuteCommand "Actor[Query, TintFlags=3018 && HighlightOnMouseHover=TRUE]:DoTarget"
 40.390923 15.297998 -24.059635
 Custom
-ExecuteCommand "Actor[\${Target.ID}]:DoubleClick"
+ExecuteCommand "Actor[Query, TintFlags=3018 && HighlightOnMouseHover=TRUE]:DoubleClick"
 40.390923 15.297998 -24.059635
 Custom
-MessageBox "Click the bookcase to receive the item then resume"
+ClickAllActors TintFlags=3018
 40.390923 15.297998 -24.059635
 30.331516 15.298124 -26.154888
 20.549225 15.018589 -24.018444

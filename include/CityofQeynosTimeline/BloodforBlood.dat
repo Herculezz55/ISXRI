@@ -74,7 +74,10 @@ ZoneDoor zone_to_qey_north
 374.433472 -20.776489 15.404939
 375.401001 -20.790447 25.561724
 Custom
-ZoneDoor "Qeynos Guard Barracks"
+ClickAllActors "Qeynos Guard Barracks"
+375.196533 -20.824278 26.174248
+Custom
+WaitForZoning
 375.196533 -20.824278 26.174248
 -27.603001 -0.236768 -22.166189
 -19.588535 -0.213671 -15.943284

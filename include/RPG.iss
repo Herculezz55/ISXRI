@@ -27,11 +27,24 @@ variable(global) RPGObject RPGObj
 variable filepath FP
 variable settingsetref RPGSet
 variable CountSetsObject2 CountSets
+variable int BadInstanceCount=0
+;unlock time 5400=1.5 hours, 10800=3hours 16200=4.5 hours 21600=6 hours
+variable int vUnlockTime=10800
+variable int eUnlockTime=10800
 
 function main(... args)
 {
 	;disable debugging
 	Script:DisableDebugging
+	
+	;set the unlock time 5400=1.5 hours, 10800=3hours 16200=4.5 hours 21600=6 hours
+	if ${Devel.Equal[TRUE]}
+	{	
+		;how many seconds to reset from locktime, 1 hour 15 mins
+		variable int vUnlockTime=4500
+		;how many seconds to take away from expiration time , 4 hours 45 mins
+		variable int eUnlockTime=17100
+	}
 	
 	if ${args[1].Upper.Equal["EXIT"]} || ${args[1].Upper.Equal["END"]}
 		Script:End
@@ -413,8 +426,7 @@ function main(... args)
 ;checkzone object
 objectdef CheckZoneObject
 {
-	;set the unlock time 5400=1.5 hours, 10800=3hours 21600=6 hours
-	variable int vUnlockTime=10800
+	
 	;check current seconds since midnight against locktimer return true or false
 	member:bool Unlocked(int SecondsSinceMidnightTheZoneWasSetAt)
 	{
@@ -472,7 +484,7 @@ objectdef CheckZoneObject
 				SecondsUntilExpiration:Set[0]
 			SecondsUntilExpiration:Set[${Math.Calc[${SecondsUntilExpiration}+${Math.Calc[${Int[${_InstanceMessage.Right[${Math.Calc[-1*(${_InstanceMessage.Find[minutes]}-4)]}].Left[2].Replace[" ",""]}]}*60]}]}]
 						
-			return ${Int[${Math.Calc[${SecondsUntilExpiration}-${vUnlockTime}]}]}
+			return ${Int[${Math.Calc[${SecondsUntilExpiration}-(${eUnlockTime})]}]}
 		}
 	}
 	;open then close the zone timers window then, unlock zone ZoneName, 
@@ -518,23 +530,29 @@ atom EQ2_onIncomingText(string Text)
 			UnlockableTime:Set[${CheckZone.UnlockTime[${Text}]}]
 			;UnlockableTime:Set[${CheckZone.UnlockTime[${Text.Left[29]}${Text.Right[-37]}]}]
 			;echo UnlockableTime: ${UnlockableTime}
-			if ${UnlockableTime}<1
+			if ${UnlockableTime}<1 || ${BadInstanceCount}<1
 			{
 				echo ISXRI: It Seems we did not unlock, zoning out and trying again
+				BadInstanceCount:Inc
 				BadInstance:Set[TRUE]
 			}
 			else
 			{
 				;echo ${Math.Calc[${Time.SecondsSinceMidnight}+${UnlockableTime}]}>86400
-				if ${Math.Calc[${Time.SecondsSinceMidnight}-(10800-${UnlockableTime})]}>0
-					locktime[${_tooncount}]:Set[${Math.Calc[${Time.SecondsSinceMidnight}-(10800-${UnlockableTime})]}]
+				if ${Math.Calc[${Time.SecondsSinceMidnight}-(${vUnlockTime}-${UnlockableTime})]}>0
+					locktime[${_tooncount}]:Set[${Math.Calc[${Time.SecondsSinceMidnight}-(${vUnlockTime}-${UnlockableTime})]}]
 				else
-					locktime[${_tooncount}]:Set[${Math.Calc[86400-${Time.SecondsSinceMidnight}-(10800-${UnlockableTime})]}]
+					locktime[${_tooncount}]:Set[${Math.Calc[86400-${Time.SecondsSinceMidnight}-(${vUnlockTime}-${UnlockableTime})]}]
 				unlocked[${_tooncount}]:Set[0]
-				echo ISXRI: ${toons[${_tooncount}]} is Locked, Setting their locktimer to ${locktime[${_tooncount}]} seconds since midnight and zoning out
+				echo ISXRI: ${toons[${_tooncount}]} is Locked, Setting their locktimer to ${locktime[${_tooncount}]} seconds since midnight and zoning out, resetable in ${Math.Calc[${CheckZone.TimeUntilUnlocked[${locktime[${_tooncount}}]}]}/60]} minutes
 				;${locktime[${_tooncount}]}  //  ${Math.Calc[(${locktime[${_tooncount}]}-${Time.SecondsSinceMidnight})/60]}
 				BadInstance:Set[TRUE]
+				BadInstanceCount:Set[0]
 			}
+		}
+		elseif ${Text.Find["This instance will expire in 6 hours"](exists)}
+		{
+			BadInstanceCount:Set[0]
 		}
 	}
 	;check Text for Zone timer confirmation message
@@ -556,7 +574,7 @@ atom EQ2_onIncomingText(string Text)
 }
 atom EQ2_onRewardWindowAppeared()
 {
-	RewardWindow:Receive
+	TimedCommand 20 RewardWindow:Receive
 }
 atom(global) RPG(string what)
 {
@@ -893,6 +911,7 @@ objectdef CountSetsObject2
 		variable string temp
 		variable settingsetref Set4
 		variable int icCount=0
+		UIElement[AddedSessionsListbox@RPG]:ClearItems
 		for(icCount:Set[1];${icCount}<=${Count};icCount:Inc)
 		{
 			;echo checking ${icCount}

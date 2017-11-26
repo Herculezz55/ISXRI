@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.25 10-6-17"
-double EXTVER = 5.25;
+#define EXTENSION_VERSION "5.28 11-24-17"
+double EXTVER = 5.28;
 #include "ISXRI.h"
 
 
@@ -117,6 +117,7 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "RZo.h"
 #include "RPG.h"
 #include "Anaheed.h"
+#include "RIInventory.h"
 
 //Zone Dat Files
 #include "Acadechism.h"
@@ -1519,6 +1520,8 @@ void ISXRIUnRegisterCommands()
 	pISInterface->RemoveCommand("RI_GroupLogin");
 	pISInterface->RemoveCommand("RGL");
 	pISInterface->RemoveCommand("RICharList");
+	pISInterface->RemoveCommand("RI_Inventory");
+	pISInterface->RemoveCommand("RII");
 	
 	pISInterface->RemoveCommand("MD5");
 	pISInterface->RemoveCommand("RI_CMD_Hidden_AddTLO");
@@ -1585,6 +1588,7 @@ void updatefunction()
 	string ISXRPGXMLPath;
 	string ISXRGLXMLPath;
 	string ISXRICharListXMLPath;
+	string ISXRIIXMLPath;
 	char InnerspacePath[512];
 	char InnerspaceScriptsPath[512];
 	pISInterface->GetInnerSpacePath(InnerspacePath, sizeof(InnerspacePath));
@@ -1611,6 +1615,7 @@ void updatefunction()
 	ISXRPGXMLPath = InnerspaceScriptsPath;
 	ISXRGLXMLPath = InnerspaceScriptsPath;
 	ISXRICharListXMLPath = InnerspaceScriptsPath;
+	ISXRIIXMLPath = InnerspaceScriptsPath;
 	//strcat_s(ISXRIXMLPath, InnerspacePath);
 	//printf("XML: %s", ISXRIPath);
 	//strcat_s(ISXRIXMLPath, "\\Extensions\\ISXRI.xml");
@@ -1633,6 +1638,7 @@ void updatefunction()
 	ISXRISalvageXMLPath += "\\RI\\RISalvage.xml";
 	ISXRPGXMLPath += "\\RI\\RPG.xml";
 	ISXRGLXMLPath += "\\RI\\RIGroupLogin.xml";
+	ISXRIIXMLPath += "\\RI\\RIInventory.xml";
 	ISXRICharListXMLPath += "\\RI\\RICharListUI.xml";
 	ISXRIFolderPath += "\\RI";
 	ISXRICombatBotFolderPath += "\\RI\\CombatBot";
@@ -1656,6 +1662,7 @@ void updatefunction()
 	remove(ISXRPGXMLPath.c_str());
 	remove(ISXRGLXMLPath.c_str());
 	remove(ISXRICharListXMLPath.c_str());
+	remove(ISXRIIXMLPath.c_str());
 	Sleep(1000);
 	//printf("Folder: %s", InnerspacePath);
 	//printf("DLL: %s", ISXRIPath);
@@ -1687,6 +1694,7 @@ void updatefunction()
 	DeleteUrlCacheEntry("http://www.isxri.com/RPG.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RIGroupLogin.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RICharListUI.xml");
+	DeleteUrlCacheEntry("http://www.isxri.com/RIInventory.xml");
 	//download new RI.xml
 	HRESULT hRez1 = URLDownloadToFile(NULL, "http://www.isxri.com/RI.xml", ISXRIXMLPath.c_str(), 0, NULL);
 	//download new RZ.xml
@@ -1723,6 +1731,8 @@ void updatefunction()
 	HRESULT hRez16 = URLDownloadToFile(NULL, "http://www.isxri.com/RIGroupLogin.xml", ISXRGLXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez17 = URLDownloadToFile(NULL, "http://www.isxri.com/RICharListUI.xml", ISXRICharListXMLPath.c_str(), 0, NULL);
+	//download
+	HRESULT hRez18 = URLDownloadToFile(NULL, "http://www.isxri.com/RIInventory.xml", ISXRIIXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez = URLDownloadToFile(NULL, "http://www.isxri.com/ISXRI.dll", ISX_Orig_Path.c_str(), 0, NULL);
 
@@ -26150,6 +26160,24 @@ int __cdecl CMD_RZ(int argc, char *argv[])
 	pISInterface->RunScriptFromBuffer("RZ", buffer, sizeof(RZo), argc, args);
 	return 0;
 }
+int __cdecl CMD_RIInventory(int argc, char *argv[])
+{
+	char* args[1024];
+	/*if (argc > 1024)
+	{
+	printf("ISXRI: You have exceeded the max amount of arguments please enter less than 1024 arguments");
+	return 0;
+	}*/
+	//printf("ISXRI:Argument Count: %d", argc);
+	args[0] = "3rtZdjv7";
+	for (int i = 1; i < argc; i++)
+	{
+		args[i] = argv[i];
+	}
+	const char * buffer = (const char *)RIInventory;
+	pISInterface->RunScriptFromBuffer("RIInventory", buffer, sizeof(RIInventory), argc, args);
+	return 0;
+}
 int __cdecl CMD_RPG(int argc, char *argv[])
 {
 	char* args[1024];
@@ -26980,6 +27008,11 @@ void RegisterCommandsAfterAuth()
 	pISInterface->AddCommand("RI_Salvage", CMD_Salvage, true, false);
 	pISInterface->AddCommand("RI_Ascension", CMD_Ascension, true, false);
 	pISInterface->AddCommand("RQ", CMD_RQ, true, false);
+	//if (devel)
+	//{
+		pISInterface->AddCommand("RII", CMD_RIInventory, true, false);
+		pISInterface->AddCommand("RI_Inventory", CMD_RIInventory, true, false);
+	//}
 
 	//hidden commands
 	pISInterface->AddCommand("RI_CMD_Hidden_GetCharms", CMD_GC, true, true);

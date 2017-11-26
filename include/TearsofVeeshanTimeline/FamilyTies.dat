@@ -94,16 +94,10 @@ Wait
 20
 404.906860 183.300125 -829.726624
 Custom
-UseItem "Vizzeren's Arcanum Vision Elixir"
-404.906860 183.300125 -829.726624
-Wait
-20
+UseItem "Vizzeren's Arcanum Vision Elixir" 1
 404.906860 183.300125 -829.726624
 Custom
-UseItem "Vizzeren's Arcanum Vision Elixir"
-404.906860 183.300125 -829.726624
-Custom
-PathKill 30 25 7 1 1 1 "Arcane Slumber Urn" "while under the effect of Vizzeren's arcanum vision elixir (6/6)" 1
+PathKill 30 25 7 1 1 1 "Arcane Slumber Urn" "QS-Speak with Fraka Dar" 1
 404.906860 183.300125 -829.726624
 412.893158 183.275330 -835.904541
 420.574127 183.321289 -842.703735

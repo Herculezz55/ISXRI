@@ -2013,12 +2013,87 @@
 ;	RZ
 ;		Stopped group follow on MoveToZoneIn function
 
+;v5.26 Changes 10-24-17
+;	RI
+;		Fixed a few bugs in named coding that could potentially cause an infinite loop
+;	RIMUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			*method ResetZone(string _ForWho, ... args)
+;				Resets Zones
+;				Accepts an unlimited amount of args for arg 2
+;					string _ForWho, string _Zone
+;	RunInstances
+;		Fixed a bug in ClickActor function
+;		Added ReturnLOCS flag for Dat files to signify the end of the path before returning to the entrance
+;			RI will not attempt to check any of the locs after this point in its FindClosestWaypoint Function
+;		Lost City of Torsis: Reaver's Remnants
+;			Added the following Named Coding:
+;				A Spectral Beguiler
+;					mages will absorb magic when needed
+;				Residual Slime
+;					Auto target list
+;				Tzithrak
+;					jousting and auto target list
+;				Dread Wraith
+;					jousting
+;				Neh'Ashiir
+;					jousting
+;	RQ
+;		Fixed a bug in Movement function that would sometimes cause stuttering when there was an unsummonable chest
+;		Tower of the Four Winds Timeline
+;			fixed a bunch of little bugs
+;		Fixed some bugs in various Quests
+
+;v5.27 Changes 10-25-17
+;	RQ
+;		The City of Qeynos Timeline
+;			fixed various bugs
+;	RI
+;		Lost City of Torsis: Reaver's Remnants
+;			Modified the following Named Coding:
+; 				Dread Wraith
+;					fixed a bug that was preventing the function from terminating
+
+;v5.28 Changes 11-24-17
+;	RimUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			*method FastTravel(string ForWho=ALL, string ZoneName) - Opens FastTravel Map and Clicks ZoneName on TravelMap (case insesitive and partial zone names are fine)
+;			*method FastTravelPop(string ForWho=ALL, string ForWhoEx) - Opens a UserInput widow and Clicks Name entered on FastTravel Map(case insesitive and partial zone names are fine) (ForWho is who to popup the ui on, ForWhoEx is who to execute the ui options on after)
+;		Changed TravelMap
+;			really fixed a bug that was not opening portals (requires all 4 Arguments, example ALL, "Kunzar Jungle", 0, 3)
+;	CombatBot
+;		Fixed Create Profile button so it actually creates a profile
+;	RQ
+;		Shattered Seas Timeline
+;			Brokenskull Bay: Bilgewater Falls
+;				fixed pathing
+;	RI
+;		Added wait for health when below 75%
+;			for those brave enough you can turn this off via:
+;				RIMUIObj:RIWaitForHealth[0]
+;					this is a global session variable and will only need to be set once per session 
+;						(You can also add it as an OnLoad OnEvent for CB)
+;		Added RII / RI_Inventory
+;			script that will maintain a list of items and 4 actions to execute on the items
+;				Sell, Transmute, Salvage, Destroy
+;		Added RI Pull:
+;			Terris (Terris Thule)
+;				will stop casting for Seizure and Nigtmarish Manifestations (ignores daydream)
+;				includes a HUD timer for Drain Life / Hemmorahge
+;			Rak'Ashiir (Lord Rak'Ashiir)
+;				Moves non tanks behind mob
+;				Moves to and kills music boxes when up, moves back to center and behind mob when not
+;	AbilityCheck
+;		Added any Illusion ability to be added to AbilityInfo
+
+
+
 ;	RZ
 ;		Completely rewrote RZ now can queue up any number of Zones and RZ will run them and move between them as needed and as queued. (Only KA for now)
 ;		RZO will handle pre-KA zones
 
 
-variable(global) float RI_Var_Float_Version=5.25
+variable(global) float RI_Var_Float_Version=5.28
 
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
@@ -2046,6 +2121,7 @@ variable(global) string RI_Var_String_Poison4Name="Expert Marked Target"
 variable(global) string RI_Var_String_Poison5Name="Expert Warding Ebb"
 variable(global) string RI_Var_String_FoodName="Stormborn Souffle"
 variable(global) string RI_Var_String_DrinkName="Monsoon"
+variable(global) bool RI_Var_Bool_WaitForHealth=TRUE
 variable(global) bool RI_Var_Bool_Debug=FALSE
 variable(global) bool RI_Var_Bool_AcceptTrades=TRUE
 variable(global) bool RI_Var_Bool_SkipCheckToons=FALSE
@@ -2062,7 +2138,7 @@ variable(global) bool RI_Var_Bool_Start=FALSE
 variable(global) bool RI_Var_Bool_Paused=FALSE
 variable(global) string RI_Var_String_RelayGroup=NONE
 variable(global) string RI_Var_Int_RelayGroupSize=0
-
+variable(global) bool _RI_LootImmunity_=FALSE
 variable string RI_Var_String_ButtonToChange
 variable string RI_Var_String_ButtonChangeOriginalCommand
 variable bool TradePending=FALSE
@@ -2072,6 +2148,8 @@ variable bool IStartedTrade=FALSE
 ;
 ;for GuildStrategist use 10m distance2d
 ;
+variable bool BadChestTrigger=0
+variable index:int RI_Var_IndexInt_InvalidChest
 variable bool LoadRIMUI=FALSE
 variable bool RIMUILoaded=FALSE
 variable bool CommandQ=FALSE
@@ -2080,6 +2158,8 @@ variable bool RILSP=FALSE
 variable bool ASSP=FALSE
 variable bool DOORP=FALSE
 variable bool TMP=FALSE
+variable bool FaTrP=FALSE
+variable string PopForWho=~NONE~
 variable float JUX
 variable float JUY
 variable float JUZ
@@ -3334,7 +3414,7 @@ function main()
 	RI_Index_String_AvailableRIMUICommands:Insert[AcceptReward]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Accept Reward - Accepts pending reward (for rewards with options it simply closes the window until you zone again)\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[AssistPop]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[AssistPop - Pops up the Assist UI]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[AssistPop - Pops up the Assist UI\n\nArgument 1: ForWho To Show UI\n\nArgument 2(Optional): For Who To Execute After UI]
 	RI_Index_String_AvailableRIMUICommands:Insert[ApplyVerb]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ApplyVerb - execute's eq2's Apply Verb command\n\nArgument 1: For Who\nArgument 2: Actor Name or ID\nArgument 3: Verb]
 	RI_Index_String_AvailableRIMUICommands:Insert[Assist]
@@ -3376,7 +3456,7 @@ function main()
 	RI_Index_String_AvailableRIMUICommands:Insert[Door]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Door - Clicks door option\n\nArgument 1: For Who\nArgument 2: Door Option(#)]
 	RI_Index_String_AvailableRIMUICommands:Insert[DoorPop]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[DoorPop - Pops up the DoorOption UI]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[DoorPop - Pops up the DoorOption UI\n\nArgument 1: ForWho To Show UI\n\nArgument 2(Optional): For Who To Execute After UI]
 	RI_Index_String_AvailableRIMUICommands:Insert[EndBots]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[EndBots - Ends compatible running bot\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[EndScript]
@@ -3387,6 +3467,10 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ExecuteCommand - Executes a command\n\nArgument 1: For Who\nArgument 2: Command Name]
 	RI_Index_String_AvailableRIMUICommands:Insert[Evac]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Evac - Casts evac ability\n\nArgument 1: For Who]
+	RI_Index_String_AvailableRIMUICommands:Insert[FastTravel]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[FastTravel - Opens fast travel Clicks Argument2 on TravelMap and Zones there\n\nArgument 1: For Who\n\nArgument 2: Zone Name (case insesitive and partial zone names are fine)]
+	RI_Index_String_AvailableRIMUICommands:Insert[FastTravelPop]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[FastTravelPop - Pops up the FastTravel UI\n\nArgument 1: ForWho To Show UI\n\nArgument 2(Optional): For Who To Execute After UI]
 	RI_Index_String_AvailableRIMUICommands:Insert[Flag]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Flag - Takes/Gets a Flag from the closest Guild Strategist\n\nArgument 1: ForWho\nArgument 2: Get/Take]
 	RI_Index_String_AvailableRIMUICommands:Insert[FoodDrinkConsume]
@@ -3414,7 +3498,7 @@ function main()
 	RI_Index_String_AvailableRIMUICommands:Insert[LoadRaidGroupHud]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[LoadRaidGroupHud - Loads in game HUD with your raid/group, their target and their distance\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[LockSpotPop]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[LockSpotPop - Pops up the SetLockSpot UI]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[LockSpotPop - Pops up the SetLockSpot UI\n\nArgument 1: ForWho To Show UI\n\nArgument 2(Optional): For Who To Execute After UI]
 	RI_Index_String_AvailableRIMUICommands:Insert[LootOptions]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[LootOptions - Change groups loot options\n\nArgument 1: For Who\nArgument 2: Option\nLEADERONLY / LO\nFREEFORALL / FFA\nLOTTO / L\nNEEDBEFOREGREED / NBG\nROUNDROBIN/ RR]
 	RI_Index_String_AvailableRIMUICommands:Insert[Mentor]
@@ -3445,6 +3529,8 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[PreHeal - Casts your main single target and group heal abilities\n\nArgument 1: For Who\nArgument 2: On Who (For Single Target)]
 	RI_Index_String_AvailableRIMUICommands:Insert[Repair]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Repair - Repairs your gear at the nearest repair actor\n\nArgument 1: For Who]
+	RI_Index_String_AvailableRIMUICommands:Insert[ResetZone]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ResetZone - Resets zone's\n\nArgument 1: For Who\n\nArgument 2+: Zone or Zone's to Reset\n]
 	RI_Index_String_AvailableRIMUICommands:Insert[ResumeBot]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ResumeBot - Resumes whatever compatible bot you are running\n\nArgument 1: For Who\n]
 	RI_Index_String_AvailableRIMUICommands:Insert[ResumeRI]
@@ -3456,7 +3542,7 @@ function main()
 	RI_Index_String_AvailableRIMUICommands:Insert[RIFollowChange]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RIFollowChange - Changes min of RIFollow\n\nArgument 1: For Who (Default: ALL)\nArgument 2: Change(#)]
 	RI_Index_String_AvailableRIMUICommands:Insert[RIFollowPop]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RIFollowPop - Pops up the RIFollow UI]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RIFollowPop - Pops up the RIFollow UI\n\nArgument 1: ForWho To Show UI\n\nArgument 2(Optional): For Who To Execute After UI]
 	RI_Index_String_AvailableRIMUICommands:Insert[RunScript]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RunScript - Runs a script\n\nArgument 1: For Who\nArgument 2: Script Name]
 	RI_Index_String_AvailableRIMUICommands:Insert[ScribeBook]
@@ -3486,9 +3572,9 @@ function main()
 	RI_Index_String_AvailableRIMUICommands:Insert[ToggleWalkRun]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ToggleWalkRun - Toggles between walking and running\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[TravelMap]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[TravelMap - Clicks Argument2 on TravelMap and Zones there\n\nArgument 1: For Who\n\nArgument 2: Zone Name (case insesitive and partial zone names are fine)\n\nArgument 3: Door Option (0 chooses Bottom option)\n\nArgument 4: Open Portal / Bell=1 Wizard=2 Druid=3]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[TravelMap - Clicks Argument2 on TravelMap and Zones there\nArgument 1: For Who\nArgument 2: Zone Name (case insesitive and partial zone names are fine)\nArgument 3: Door Option (0 chooses Bottom option)\nArgument 4: Open Portal / Bell=1 Wizard=2 Druid=3]
 	RI_Index_String_AvailableRIMUICommands:Insert[TravelMapPop]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[TravelMapPop - Pops up the TravelMap UI]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[TravelMapPop - Pops up the TravelMap UI\n\nArgument 1: ForWho To Show UI\n\nArgument 2(Optional): For Who To Execute After UI]
 	RI_Index_String_AvailableRIMUICommands:Insert[UnloadISXRI]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[UnloadISXRI - Unloads the ISXRI extension\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[UnLoadNearestNPCHud]
@@ -3537,9 +3623,12 @@ function main()
 		}
 	}
 	
+	;events
 	Event[EQ2_onChoiceWindowAppeared]:AttachAtom[EQ2_onChoiceWindowAppeared]
 	Event[EQ2_onIncomingText]:AttachAtom[EQ2_onIncomingText]
 	Event[EQ2_onQuestOffered]:AttachAtom[EQ2_onQuestOffered]
+	Event[EQ2_FinishedZoning]:AttachAtom[EQ2_FinishedZoning]
+	Event[EQ2_onLootWindowAppeared]:AttachAtom[EQ2_onLootWindowAppeared]
 	
 	while 1
 	{
@@ -3578,7 +3667,7 @@ function main()
 			CurrentZoneName:Set["${Zone.Name}"]
 			RIMUIObj.NumFactions:Set[0]
 		}
-		if !${RI_Var_Bool_SkipLoot} && !${Me.Name.Find["Skyshrine "](exists)}
+		if !${RI_Var_Bool_SkipLoot} && !${Me.Name.Find["Skyshrine "](exists)} && !${LootWindow(exists)}
 		{
 			;if a corpse exists within 8m radius and corpse looting is on
 			if ${RI_Var_Bool_CorpseLoot} || ( ${UIElement[SettingsLootingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLootCorpsesCheckBox@SettingsFrame@CombatBotUI].Checked} )
@@ -3615,17 +3704,28 @@ function main()
 				}
 			}
 		}
+		elseif ${LootWindow(exists)} && !${_RI_LootImmunity_}
+		{
+			if ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
+			{
+				LootWindow[${LootWindowID}]:RequestAll
+				_RI_LootImmunity_:Set[TRUE]
+				TimedCommand 5 _RI_LootImmunity_:Set[FALSE]
+			}
+		}
 		;wait 1 ${MT} || ${JU} || ${QueuedCommands} || ${FactionsInit} || ${CommandQ} || ${TradePending} || ${RaidGroupHudLoaded} || ${NearesetNPCHudLoaded} || ${NearesetPlayerHudLoaded} || ${CurrentZoneName.NotEqual["${Zone.Name}"]}
 		if ${RIFP}
-			call RIFollowPop
+			call RIFollowPop ${PopForWho}
 		if ${RILSP}
-			call RILockSpotPop
+			call RILockSpotPop ${PopForWho}
 		if ${ASSP}
-			call AssistPop
+			call AssistPop ${PopForWho}
 		if ${DOORP}
-			call DoorPop
+			call DoorPop ${PopForWho}
 		if ${TMP}
-			call TravelMapPop
+			call TravelMapPop ${PopForWho}
+		if ${FaTrP}
+			call FastTravelPop ${PopForWho}
 		if ${JU}
 		{
 			RIMUIObj:StopMove[ALL]
@@ -3669,9 +3769,28 @@ function main()
 		wait 2
 	}
 }
+atom EQ2_FinishedZoning(string TimeInSeconds)
+{
+	RI_Var_IndexInt_InvalidChest:Clear
+}
+;atom triggered when a loot window is detected
+atom EQ2_onLootWindowAppeared(string LootWindowID)
+{
+	if ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} && !${_RI_LootImmunity_}
+	;&& ${CurrentLootWindowID.NotEqual[${LootWindowID}]}
+	{
+		_RI_LootImmunity_:Set[TRUE]
+		TimedCommand 5 _RI_LootImmunity_:Set[FALSE]
+		;CurrentLootWindowID:Set[${LootWindowID}]
+		;LootWindow[${LootWindowID}]:LootAll
+		LootWindow[${LootWindowID}]:RequestAll
+	}
+}
 ;atom triggered when incommingtext is detected
 atom EQ2_onIncomingText(string Text)
 {
+	if ${Text.Find["Not a valid chest to summon!"](exists)} || ${Text.Find["There are no chests in range for you to summon"](exists)}
+		BadChestTrigger:Set[1]
 	if ( !${Script[Buffer:CombatBot](exists)} || ${UIElement[SettingsAcceptTradesCheckBox@SettingsFrame@CombatBotUI].Checked} )
 	{
 		if ${Text.Find["You start a trade with"](exists)} 
@@ -3944,10 +4063,16 @@ objectdef RIMovementObject
 	}
 	function LootChest()
 	{
+		;IncomingText:Clear
+		;IncomingText:Insert[Not a valid chest to summon!]
+		;IncomingText:Insert[There are no chests in range for you to summon]
+		
 		if ${RI_Var_Bool_Debug}
 			echo ${Time}: Checking For Chests within 100 Radius
 		;if we find a chest and can run to it, do so and loot
 		if ${Actor["Treasure Chest",radius,100].Name.EqualCS["Treasure Chest"]} && ${Math.Distance[${Actor["Treasure Chest",radius,100].Loc},${Me.Loc}]}>5
+			return
+		if ${Actor["Gooey Hoard",radius,100].Name.EqualCS["Gooey Hoard"]} && ${Math.Distance[${Actor["Gooey Hoard Chest",radius,100].Loc},${Me.Loc}]}>5
 			return
 		if ${Actor[Chest,radius,100](exists)} && !${Me.IsSwimming} && !${Me.FlyingUsingMount}
 		;&& !${Me.CheckCollision[${Actor[Chest].X},${Actor[Chest].Z}]}
@@ -3959,7 +4084,7 @@ objectdef RIMovementObject
 			variable int ChestID=${Actor[Chest,radius,100].ID}
 			
 			;if ChestID is 0 leave function
-			if ${ChestID}==0
+			if ${ChestID}==0 || ${RIMUIObj.InvalidChestCheck[${ChestID}]}
 				return
 				
 			if ${RI_Var_Bool_Loot}
@@ -3968,7 +4093,17 @@ objectdef RIMovementObject
 				if !${Me.FlyingUsingMount} && ${Math.Distance[${Me.Loc},${Actor[${ChestID}].Loc}]}>7
 				{
 					eq2ex apply_verb ${ChestID} Summon
+					eq2ex summon ${ChestID}
+					;for some odd reason in some instances there will be a chest up but the game will not let us summon it, 
+					;this makes this wait cause a stutter in our movement, until i can find out why im removing the wait
+					;but we need this or it will not summon as we are moving
 					wait 10
+					if ${BadChestTrigger}
+					{
+						RI_Var_IndexInt_InvalidChest:Insert[${ChestID}]
+						BadChestTrigger:Set[0]
+						return
+					}
 				}
 				
 				;if the chest is not within 7m, move to it
@@ -4071,18 +4206,18 @@ objectdef RIMovementObject
 						wait 50
 				}
 				else
-				;if ${Developer}
+				if ${Developer}
 				{
 					relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${ShinyID}]:DoTarget
 					waitframe
 					relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${ShinyID}]:DoubleClick
 				}
-				; else
-				; {
-					; Actor[id,${ShinyID}]:DoTarget
-					; waitframe
-					; Actor[id,${ShinyID}]:DoubleClick
-				; }
+				else
+				{
+					Actor[id,${ShinyID}]:DoTarget
+					waitframe
+					Actor[id,${ShinyID}]:DoubleClick
+				}
 				wait 10
 				LootWindow:LootAll
 				;wait 20
@@ -4609,6 +4744,7 @@ objectdef RIMovementObject
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time} Ending Stop autorun
 	}
+	
 	function TravelMap(string _ZoneToZoneName, int _ZoneOption=0, int _BellWizardDruid=0)
 	{
 		;echo TravelMap(string _ZoneToZoneName=${_ZoneToZoneName}, int _ZoneOption=${_ZoneOption}, int _BellWizardDruid=${_BellWizardDruid})
@@ -4754,6 +4890,20 @@ objectdef RIMovementObject
 }
 objectdef RIMUIObject
 {
+	method RIWaitForHealth(bool _OnOff)
+	{
+		RI_Var_Bool_WaitForHealth:Set[${_OnOff}]
+	}
+	member InvalidChestCheck(int _ID)
+	{
+		variable int _cnt=1
+		for(_cnt:Set[1];${_cnt}<${RI_Var_IndexInt_InvalidChest.Used};_cnt:Inc)
+		{
+			if ${RI_Var_IndexInt_InvalidChest.Get[${_cnt}]}==${_ID}
+				return TRUE
+		}
+		return FALSE
+	}
 	method SetInGameFollow(... args)
 	{
 		;string _ForWho, string _WhoToFollow
@@ -4784,12 +4934,24 @@ objectdef RIMUIObject
 			count:inc;count:inc;count:inc;count:inc
 		}	
 	}
+	method ResetZone(string _ForWho, ... args)
+	{
+		variable int _count
+		if ${This.ForWhoCheck[${_ForWho}]}
+		{
+			for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
+			{
+				Me:ResetZoneTimer["${args[${_count}]}"]
+			}
+		}
+	}
 	method CheckEpic2PreReqs(string _ForWho=ALL)
 	{
 		if !${This.ForWhoCheck[${_ForWho}]}
 			return
 		variable bool CTD=0
 		variable bool SS=0
+		variable bool E1C=0
 		switch ${Me.Archetype}
 		{	
 			case mage
@@ -4799,7 +4961,12 @@ objectdef RIMUIObject
 					CTD:Set[1]
 				if ${Bool[${QuestJournalWindow.CompletedQuest[Shattered Seas: Epilogue in Dethknell Citadel](exists)}]}||${Bool[${QuestJournalWindow.CompletedQuest[Shattered Seas: Epilogue in Qeynos Castle](exists)}]}
 					SS:Set[1]
+				;illusionist,coercer,wizard,warlock,necromancer,conjurer
+				if ${QuestJournalWindow.CompletedQuest[The Maiden of Masks](exists)} || ${QuestJournalWindow.CompletedQuest[Leandre's Shard: Drusella's Extraction](exists)} || ${QuestJournalWindow.CompletedQuest[Of Fire and Ice: Suitable Components](exists)} || ${QuestJournalWindow.CompletedQuest[The Will of Kyrtoxxulous](exists)} || ${QuestJournalWindow.CompletedQuest[The Bones of Insanity](exists)} || ${QuestJournalWindow.CompletedQuest[The Domination of Phrotis](exists)}
+					E1C:Set[1]
+				
 				echo ISXRI: Artisan Level: ${Me.TSLevel}
+				echo ISXRI: Epic 1.0 Complete: ${E1C}
 				echo ISXRI: Kunark Ascending Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Kunark Ascending: A Nightmare Realized](exists)}]}
 				echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
 				echo ISXRI: Shattered Seas Timeline Complete: ${SS}
@@ -4809,6 +4976,8 @@ objectdef RIMUIObject
 				echo ISXRI: A Strange Black Rock Complete: ${Bool[${QuestJournalWindow.CompletedQuest[A Strange Black Rock](exists)}]}
 				echo ISXRI: An Eye for Power Complete: ${Bool[${QuestJournalWindow.CompletedQuest[An Eye for Power](exists)}]}
 				echo ISXRI: Vesspyr Isles Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Family Ties](exists)}]}
+				echo ISXRI: Words of Air (Uruvanian Language) Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Words of Air](exists)}]}
+				echo ISXRI: Voices from Beyond (Words of Shade Language) Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Voices from Beyond](exists)}]}
 				break
 			}
 			case priest
@@ -4816,7 +4985,12 @@ objectdef RIMUIObject
 				echo ISXRI: ${Me.Name}
 				if ${Bool[${QuestJournalWindow.CompletedQuest[Kaedrin's Fate](exists)}]}||${Bool[${QuestJournalWindow.CompletedQuest[Your Eternal Reward](exists)}]}
 					CTD:Set[1]
+				;fury,warden,defiler,mystic,templar,inquisitor,channeler
+				if ${QuestJournalWindow.CompletedQuest[Restored To Glory](exists)} || ${QuestJournalWindow.CompletedQuest[Broken Barrier: Lessons of the Fallen](exists)} || ${QuestJournalWindow.CompletedQuest[The Dream Scorcher](exists)} || ${QuestJournalWindow.CompletedQuest[A Sleeping Stone: The Cudgel of Obviation](exists)} || ${QuestJournalWindow.CompletedQuest[Bringing the Hammer Down on Venril](exists)} || ${QuestJournalWindow.CompletedQuest[The Saga of Yasva V'Alear](exists)} || ${QuestJournalWindow.CompletedQuest[The Red Shadow's Long Fingers](exists)}
+					E1C:Set[1]
+					
 				echo ISXRI: Artisan Level: ${Me.TSLevel}
+				echo ISXRI: Epic 1.0 Complete: ${E1C}
 				echo ISXRI: Kunark Ascending Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Kunark Ascending: A Nightmare Realized](exists)}]}
 				echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
 				echo ISXRI: Ning Yung Retreat Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Shaping a Clearer Mind](exists)}]}
@@ -4833,7 +5007,12 @@ objectdef RIMUIObject
 				echo ISXRI: ${Me.Name}
 				if ${Bool[${QuestJournalWindow.CompletedQuest[Kaedrin's Fate](exists)}]}||${Bool[${QuestJournalWindow.CompletedQuest[Your Eternal Reward](exists)}]}
 					CTD:Set[1]
+				;dirge,troubador,assassin,ranger,swashbuckler,brigand,beastlord
+				if ${QuestJournalWindow.CompletedQuest[Sing a Song of Sorrow](exists)} || ${QuestJournalWindow.CompletedQuest[An Ayonic Journey](exists)} || ${QuestJournalWindow.CompletedQuest[A Mysterious Trinket](exists)} || ${QuestJournalWindow.CompletedQuest[Removing the Darkness From Within...](exists)} || ${QuestJournalWindow.CompletedQuest[High Seas Adventure](exists)} || ${QuestJournalWindow.CompletedQuest[The Heart of Treachery](exists)} || ${QuestJournalWindow.CompletedQuest[A Chance For Redemption](exists)}
+					E1C:Set[1]
+					
 				echo ISXRI: Artisan Level: ${Me.TSLevel}
+				echo ISXRI: Epic 1.0 Complete: ${E1C}
 				if ${Bool[${QuestJournalWindow.CompletedQuest[Shattered Seas: Epilogue in Dethknell Citadel](exists)}]}||${Bool[${QuestJournalWindow.CompletedQuest[Shattered Seas: Epilogue in Qeynos Castle](exists)}]}
 					SS:Set[1]
 				echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
@@ -4857,7 +5036,12 @@ objectdef RIMUIObject
 					CTD:Set[1]
 				if ${Bool[${QuestJournalWindow.CompletedQuest[Putting the Rage in Ragefire](exists)}]}||${Bool[${QuestJournalWindow.ActiveQuest[Putting the Rage in Ragefire](exists)}]}
 					RF:Set[1]
+				;guardian,berserker,paladin,shadowknight,monk,bruiser
+				if ${QuestJournalWindow.CompletedQuest[The Search for Vel'Arek](exists)} || ${QuestJournalWindow.CompletedQuest[The Responsibilities of a Berserker's Rage](exists)} || ${QuestJournalWindow.CompletedQuest[The Consequences of a Berserker's Rage](exists)} || ${QuestJournalWindow.CompletedQuest[A Paladin's Crusade](exists)} || ${QuestJournalWindow.CompletedQuest[A Bloodmoon Rising!](exists)} || ${QuestJournalWindow.CompletedQuest[The Broken Hand](exists)} || ${QuestJournalWindow.CompletedQuest[The Broken Fist](exists)}
+					E1C:Set[1]
+					
 				echo ISXRI: Artisan Level: ${Me.TSLevel}
+				echo ISXRI: Epic 1.0 Complete: ${E1C}
 				echo ISXRI: Kunark Ascending Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Kunark Ascending: A Nightmare Realized](exists)}]}
 				echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
 				echo ISXRI: Tik-Tok Language Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The Mysteries of Tik-Tok](exists)}]}
@@ -5544,8 +5728,48 @@ objectdef RIMUIObject
 				Me.Inventory[Query, Location=="Inventory" && Name=-"${BookName}"]:Scribe
 		}
 	}
+	method FastTravel(string ForWho=ALL, string ZoneName=~NONE~)
+	{
+		if !${EQ2UIPage[Popup,TravelMap].IsVisible}
+		{
+			eq2ex /smp pon pon_teleport
+			TimedCommand 5 RIMUIObj:FastTravel[${Me.Name},${ZoneName}]
+		 	return
+			; Actor[mariners_bell]:DoubleClick
+			; Actor[mariner_bell_city_travel_qeynos]:DoubleClick
+			; Actor[zone_to_guildhall_tier3]:DoubleClick
+			; Actor[Zone to Friend]:DoubleClick
+			; Actor[flight_cloud_large_1_to_medium_1]:DoubleClick
+			; Actor[mariner_bell_city_travel_freeport]:DoubleClick
+			; Actor["Ole Salt's Mariner Bell"]:DoubleClick
+			; Actor["Navigator's Globe of Norrath"]:DoubleClick
+			; Actor["Pirate Captain's Helmsman"]:DoubleClick
+			; TimedCommand 10 RIMUIObj:TravelMap[${ForWho},${ZoneName},${ZoneOption}]
+			; return
+		}
+		else
+		{
+			variable int TMCount
+			for(TMCount:Set[1];${TMCount}<=${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].NumChildren};TMCount:Inc)
+			{
+				;echo Checking #${TMCount} <= ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].NumChildren} ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name]} against ${ZoneName} // ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name].Find[${ZoneName}](exists)}
+				if ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name].Find[${ZoneName}](exists)}
+				{
+					EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}]:LeftClick
+					TimedCommand 5 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[1]:LeftClick
+					TimedCommand 10 ChoiceWindow:DoChoice1
+					;click zone option if it exists
+					;if ${ZoneOption}>-1
+					;	TimedCommand 30 RIMUIObj:Door[${Me.Name},${ZoneOption}]
+					return
+				}
+			}
+		}
+		TimedCommand 10 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[2]:LeftClick
+	}
 	method TravelMap(string ForWho=ALL, string ZoneName=~NONE~, int ZoneOption=-1, int _BellWizardDruid=0)
 	{
+		;echo TravelMap(string ForWho=${ForWho}=ALL, string ZoneName=${ZoneName}=~NONE~, int ZoneOption=${ZoneOption}=-1, int _BellWizardDruid=${_BellWizardDruid}=0)
 		if ${ZoneName.Equal[~NONE~]}
 			return
 		if ${_BellWizardDruid}>0
@@ -5647,10 +5871,22 @@ objectdef RIMUIObject
 			This:DisplayAllFactions
 		FactionsInitializing:Set[FALSE]
 	}
-	method TravelMapPop(string ForWho)
+	method TravelMapPop(string TForWho, string ForWho=~NONE~)
 	{
-		if ${This.ForWhoCheck[${ForWho}]}
+		if ${This.ForWhoCheck[${TForWho}]}
+		{
+			PopForWho:Set[${ForWho}]
 			RI_Atom_TravelMapPop
+		}
+	}
+	method FastTravelPop(string TForWho, string ForWho=~NONE~)
+	{
+		;echo method FastTravelPop(string TForWho=${TForWho}, string ForWho=${ForWho}=~NONE~)
+		if ${This.ForWhoCheck[${TForWho}]}
+		{
+			PopForWho:Set[${ForWho}]
+			RI_Atom_FastTravelPop
+		}
 	}
 	method InitializeFactions(string ForWho=ALL)
 	{
@@ -7083,29 +7319,41 @@ objectdef RIMUIObject
 			ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml"
 		}
 	}
-	method LockSpotPop(string ForWho)
+	method LockSpotPop(string TForWho, string ForWho=~NONE~)
 	{
-		;load RIMovement
-		This:LoadRIMovement
-		if ${This.ForWhoCheck[${ForWho}]}
+		if ${This.ForWhoCheck[${TForWho}]}
+		{
+			;load RIMovement
+			This:LoadRIMovement
+			PopForWho:Set[${ForWho}]
 			RI_Atom_RILockSpotPop
+		}
 	}
-	method RIFollowPop(string ForWho)
+	method RIFollowPop(string TForWho, string ForWho=~NONE~)
 	{
-		;load RIMovement
-		This:LoadRIMovement
-		if ${This.ForWhoCheck[${ForWho}]}
+		if ${This.ForWhoCheck[${TForWho}]}
+		{
+			;load RIMovement
+			This:LoadRIMovement
+			PopForWho:Set[${ForWho}]
 			RI_Atom_RIFollowPop
+		}
 	}
-	method AssistPop(string ForWho)
+	method AssistPop(string TForWho, string ForWho=~NONE~)
 	{
-		if ${This.ForWhoCheck[${ForWho}]}
+		if ${This.ForWhoCheck[${TForWho}]}
+		{
+			PopForWho:Set[${ForWho}]
 			RI_Atom_AssistPop
+		}
 	}
-	method DoorPop(string ForWho)
+	method DoorPop(string TForWho, string ForWho=~NONE~)
 	{
-		if ${This.ForWhoCheck[${ForWho}]}
+		if ${This.ForWhoCheck[${TForWho}]}
+		{
+			PopForWho:Set[${ForWho}]
 			RI_Atom_DoorPop
+		}
 	}
 	method PreHeal(string phForWho=ALL, string phOnWho)
 	{
@@ -8671,28 +8919,30 @@ function LoadRIMUI()
 ;RIFollowPop function
 function RIFollowPop()
 {
-	InputBox "RI Follow For Who? Standard: ALL, Options: All, Class, Name, Off"
-	variable string RIFW=${UserInput}
-	if ${UserInput.NotEqual[NULL]}
+	if ${PopForWho.Equal[~NONE~]}
 	{
-		if ${UserInput.Equal[""]}
+		InputBox "RI Follow For Who? Standard: ALL, Options: All, Class, Name, Off"
+		;variable string RIFW=${UserInput}
+		if ${UserInput.NotEqual[NULL]}
 		{
-			RIFW:Set[ALL]
-			;echo Blank
+			if ${UserInput.Equal[""]}
+			{
+				PopForWho:Set[ALL]
+				;echo Blank
+			}
+			else
+			{
+				PopForWho:Set[${UserInput}]
+				;echo we got ${RIFW}
+			}
+			
 		}
-		else
+		else 
 		{
-			RIFW:Set[${UserInput}]
-			;echo we got ${RIFW}
+			;echo we got null or blank
+			PopForWho:Set[ALL]
 		}
-		
 	}
-	else 
-	{
-		;echo we got null or blank
-		RIFW:Set[ALL]
-	}
-	
 	InputBox "RI Follow On Who? Standard: ${Me.Name}, Options: Me, Name, Off"
 	variable string RIFOW=${UserInput}
 	if ${UserInput.NotEqual[NULL]}
@@ -8759,35 +9009,38 @@ function RIFollowPop()
 	}
 	;echo ${RIFOW}
 	;echo relay all ${RIFW} ${Actor[${RIFOW}].ID} ${RIFMin} ${RIFMax}
-	relay all RI_Atom_SetRIFollow ${RIFW} ${Actor[PC,${RIFOW}].ID} ${RIFMin} ${RIFMax}
+	relay all RI_Atom_SetRIFollow ${PopForWho} ${Actor[PC,${RIFOW}].ID} ${RIFMin} ${RIFMax}
 	CommandQ:Set[FALSE]
 	RIFP:Set[FALSE]
+	PopForWho:Set[~NONE~]
 }
 ;RILockSpotPop function
 function RILockSpotPop()
 {
-	InputBox "RI Lockspot For Who? Standard: ALL, Options: All, Class, Name, Off"
-	variable string RILSW=${UserInput}
-	if ${UserInput.NotEqual[NULL]}
+	if ${PopForWho.Equal[~NONE~]}
 	{
-		if ${UserInput.Equal[""]}
+		InputBox "RI Lockspot For Who? Standard: ALL, Options: All, Class, Name, Off"
+		;variable string RILSW=${UserInput}
+		if ${UserInput.NotEqual[NULL]}
 		{
-			RILSW:Set[ALL]
-			;echo Blank
+			if ${UserInput.Equal[""]}
+			{
+				PopForWho:Set[ALL]
+				;echo Blank
+			}
+			else
+			{
+				PopForWho:Set[${UserInput}]
+				;echo we got ${RILSW}
+			}
+			
 		}
-		else
+		else 
 		{
-			RILSW:Set[${UserInput}]
-			;echo we got ${RILSW}
+			;echo we got null or blank
+			PopForWho:Set[ALL]
 		}
-		
 	}
-	else 
-	{
-		;echo we got null or blank
-		RILSW:Set[ALL]
-	}
-	
 	InputBox "RI LockSpot Input(with Spaces): Standards X=${Me.X} Y=${Me.Y} Z=${Me.Z} Min=1 Max=100"
 	variable string RILSXYZMM=${UserInput}
 	if ${UserInput.NotEqual[NULL]}
@@ -8811,36 +9064,39 @@ function RILockSpotPop()
 	}
 	
 	;echo relay all RI_Atom_SetLockSpot ${RILSW} ${RILSXYZMM}
-	relay all RI_Atom_SetLockSpot ${RILSW} ${RILSXYZMM}
+	relay all RI_Atom_SetLockSpot ${PopForWho} ${RILSXYZMM}
 	CommandQ:Set[FALSE]
 	RILSP:Set[FALSE]
+	PopForWho:Set[~NONE~]
 }
 
 ;AssistPop function
 function AssistPop()
 {
-	InputBox "Assist For Who? Standard: ALL, Options: All, Class, Name, Off"
-	variable string ASSW=${UserInput}
-	if ${UserInput.NotEqual[NULL]}
+	if ${PopForWho.Equal[~NONE~]}
 	{
-		if ${UserInput.Equal[""]}
+		InputBox "Assist For Who? Standard: ALL, Options: All, Class, Name, Off"
+		;variable string ASSW=${UserInput}
+		if ${UserInput.NotEqual[NULL]}
 		{
-			ASSW:Set[ALL]
-			;echo Blank
+			if ${UserInput.Equal[""]}
+			{
+				PopForWho:Set[ALL]
+				;echo Blank
+			}
+			else
+			{
+				PopForWho:Set[${UserInput}]
+				;echo we got ${ASSW}
+			}
+			
 		}
-		else
+		else 
 		{
-			ASSW:Set[${UserInput}]
-			;echo we got ${ASSW}
+			;echo we got null or blank
+			PopForWho:Set[ALL]
 		}
-		
 	}
-	else 
-	{
-		;echo we got null or blank
-		ASSW:Set[ALL]
-	}
-	
 	InputBox "Assist on Who? Options: NAME, Off"
 	variable string ASSOW=${UserInput}
 	if ${UserInput.NotEqual[NULL]}
@@ -8862,36 +9118,39 @@ function AssistPop()
 		;echo we got null or blank
 		ASSOW:Set["OFF"]
 	}
-	echo relay all RIMUIObj:Assist[${ASSW},1,${ASSOW}]
-	relay all RIMUIObj:Assist[${ASSW},1,${ASSOW}]
+	echo relay all RIMUIObj:Assist[${PopForWho},1,${ASSOW}]
+	relay all RIMUIObj:Assist[${PopForWho},1,${ASSOW}]
 	CommandQ:Set[FALSE]
 	ASSP:Set[FALSE]
+	PopForWho:Set[~NONE~]
 }
 ;DoorPop Function
 function DoorPop()
 {
-	InputBox "Door For Who? Standard: ALL, Options: All, Class, Name, Off"
-	variable string DOORW=${UserInput}
-	if ${UserInput.NotEqual[NULL]}
+	if ${PopForWho.Equal[~NONE~]}
 	{
-		if ${UserInput.Equal[""]}
+		InputBox "Door For Who? Standard: ALL, Options: All, Class, Name, Off"
+		;variable string DOORW=${UserInput}
+		if ${UserInput.NotEqual[NULL]}
 		{
-			DOORW:Set[ALL]
-			;echo Blank
+			if ${UserInput.Equal[""]}
+			{
+				PopForWho:Set[ALL]
+				;echo Blank
+			}
+			else
+			{
+				PopForWho:Set[${UserInput}]
+				;echo we got ${ASSW}
+			}
+			
 		}
-		else
+		else 
 		{
-			DOORW:Set[${UserInput}]
-			;echo we got ${ASSW}
+			;echo we got null or blank
+			PopForWho:Set[ALL]
 		}
-		
 	}
-	else 
-	{
-		;echo we got null or blank
-		DOORW:Set[ALL]
-	}
-	
 	InputBox "Door Option?"
 	variable string DOOROP=${UserInput}
 	if ${UserInput.NotEqual[NULL]}
@@ -8914,35 +9173,38 @@ function DoorPop()
 		DOOROP:Set["OFF"]
 	}
 	
-	relay all RIMUIObj:Door[${DOORW},${DOOROP}]
+	relay all RIMUIObj:Door[${PopForWho},${DOOROP}]
 	CommandQ:Set[FALSE]
 	DOORP:Set[FALSE]
+	PopForWho:Set[~NONE~]
 }
 ;TravelMapPop Function
 function TravelMapPop()
 {
-	InputBox "TravelMap For Who? Standard: ALL, Options: All, Class, Name"
-	variable string TMW=${UserInput}
-	if ${UserInput.NotEqual[NULL]}
+	if ${PopForWho.Equal[~NONE~]}
 	{
-		if ${UserInput.Equal[""]}
+		InputBox "TravelMap For Who? Standard: ALL, Options: All, Class, Name"
+		;variable string TMW=${UserInput}
+		if ${UserInput.NotEqual[NULL]}
 		{
-			TMW:Set[ALL]
-			;echo Blank
+			if ${UserInput.Equal[""]}
+			{
+				PopForWho:Set[ALL]
+				;echo Blank
+			}
+			else
+			{
+				PopForWho:Set[${UserInput}]
+				;echo we got ${ASSW}
+			}
+			
 		}
-		else
+		else 
 		{
-			TMW:Set[${UserInput}]
-			;echo we got ${ASSW}
+			;echo we got null or blank
+			PopForWho:Set[ALL]
 		}
-		
 	}
-	else 
-	{
-		;echo we got null or blank
-		TMW:Set[ALL]
-	}
-	
 	InputBox "ZoneName?"
 	variable string TMZN=${UserInput}
 	if ${UserInput.NotEqual[NULL]}
@@ -8965,9 +9227,65 @@ function TravelMapPop()
 		TMZN:Set["~NONE~"]
 	}
 	
-	relay all RIMUIObj:TravelMap[${TMW},"${TMZN}"]
+	relay all RIMUIObj:TravelMap[${PopForWho},"${TMZN}"]
 	CommandQ:Set[FALSE]
 	TMP:Set[FALSE]
+	PopForWho:Set[~NONE~]
+}
+;FastTravelPop Function
+function FastTravelPop()
+{
+	;echo function FastTravelPop()  PopForWho=${PopForWho}
+	if ${PopForWho.Equal[~NONE~]}
+	{
+		InputBox "FastTravel For Who? Standard: ALL, Options: All, Class, Name"
+		;variable string FaTrW=${UserInput}
+		if ${UserInput.NotEqual[NULL]}
+		{
+			if ${UserInput.Equal[""]}
+			{
+				PopForWho:Set[ALL]
+				;echo Blank
+			}
+			else
+			{
+				PopForWho:Set[${UserInput}]
+				;echo we got ${ASSW}
+			}
+			
+		}
+		else 
+		{
+			;echo we got null or blank
+			PopForWho:Set[ALL]
+		}
+	}
+	InputBox "ZoneName?"
+	variable string FaTrZN=${UserInput}
+	if ${UserInput.NotEqual[NULL]}
+	{
+		if ${UserInput.Equal[""]}
+		{
+			FaTrZN:Set["~NONE~"]
+			;echo Blank
+		}
+		else
+		{
+			FaTrZN:Set[${UserInput}]
+			;echo we got ${TMZN}
+		}
+		
+	}
+	else 
+	{
+		;echo we got null or blank
+		FaTrZN:Set["~NONE~"]
+	}
+	
+	relay all RIMUIObj:FastTravel[${PopForWho},"${FaTrZN}"]
+	CommandQ:Set[FALSE]
+	FaTrP:Set[FALSE]
+	PopForWho:Set[~NONE~]
 }
 ;object CountSetsObject
 objectdef CountSetsObject
@@ -9138,6 +9456,11 @@ atom RI_Atom_TravelMapPop()
 {
 	CommandQ:Set[TRUE]
 	TMP:Set[TRUE]
+}
+atom RI_Atom_FastTravelPop()
+{
+	CommandQ:Set[TRUE]
+	FaTrP:Set[TRUE]
 }
 function atexit()
 {

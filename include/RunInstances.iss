@@ -86,7 +86,7 @@ variable(global) bool IJustZonedLessThan10SecondsAgo=FALSE
 variable(global) bool RI_Var_Bool_LoopZoneFile=FALSE
 variable bool LoadedTLO=FALSE
 variable string LoadedTLOName
-variable(global) bool _RI_LootImmunity_=FALSE
+
 ;; Including what i need from these files directly
 
 ; #ifndef _PositionUtils_
@@ -208,7 +208,6 @@ function main(string FunctionToRun=NONE)
 	Event[EQ2_ReplyDialogAppeared]:AttachAtom[EQ2_ReplyDialogAppeared]
 	Event[EQ2_onRewardWindowAppeared]:AttachAtom[EQ2_onRewardWindowAppeared]
 	Event[EQ2_onQuestOffered]:AttachAtom[EQ2_onQuestOffered]
-	Event[EQ2_onLootWindowAppeared]:AttachAtom[EQ2_onLootWindowAppeared]
 	
 	if ${Exit}
 		GlobalExitInstance:Set[TRUE]
@@ -444,21 +443,7 @@ atom(global) RI_Atom_AutoLoot(bool TF)
 	relay ${RI_Var_String_RelayGroup} RI_Var_Bool_Loot:Set[${TF}]
 	RI_Var_Bool_AcceptLoot:Set[${TF}]
 }
-;atom triggered when a loot window is detected
-atom EQ2_onLootWindowAppeared(string LootWindowID)
-{
-	if ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked}
-;	&& !${_RI_LootImmunity_}
-	;&& ${CurrentLootWindowID.NotEqual[${LootWindowID}]}
-	{
-;		_RI_LootImmunity_:Set[TRUE]
-;		TimedCommand 50 _RI_LootImmunity_:Set[FALSE]
-;		TimedCommand 100 _RI_LootImmunity_:Set[FALSE]
-		;CurrentLootWindowID:Set[${LootWindowID}]
-		;LootWindow[${LootWindowID}]:LootAll
-		LootWindow[${LootWindowID}]:RequestAll
-	}
-}
+
 atom EQ2_onQuestOffered(string Name, string Description, int Level, int StatusReward)
 {
 	if ${RewardWindow.NumRewards}==1
@@ -1172,6 +1157,15 @@ atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName]
 }
 function CheckImReady()
 {
+	if ${RI_Var_Bool_WaitForHealth} && ( ${Solo} || ${RI_Var_Bool_QuestMode} || ${InstanceMode} ) && ${Me.Health}<75
+	{
+		while ${RI_Var_Bool_WaitForHealth} && ( ${Solo} || ${RI_Var_Bool_QuestMode} || ${InstanceMode} ) && ${Me.Health}<100
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ISXRI: ${Time} Waiting while low health
+			wait 10
+		}
+	}
 	while ${EQ2.Zoning}!=0
 	{
 		IJustZonedLessThan10SecondsAgo:Set[TRUE]
@@ -1241,7 +1235,7 @@ function Go(bool _Quest=FALSE)
 	}
 	for(;${MainArrayCounter}<=${istrMain.Used};MainArrayCounter:Inc)
 	{
-		;make sure we are not dead or zoning or in the incorrect zone
+		;make sure we are not dead or zoning or in the incorrect zone or low health if solo
 		call CheckImReady
 		
 		if ${ArrayPosition}!=0
@@ -1336,6 +1330,10 @@ function Go(bool _Quest=FALSE)
 			MainArrayCounter:Inc
 			NamedLoc:Set[${istrMain.Get[${MainArrayCounter}]}]
 			call NamedFunction
+		}
+		elseif ${LineRead.Left[10].Equal[ReturnLOCS]}
+		{
+			noop
 		}
 		else
 			call EndForFunction
@@ -1787,8 +1785,10 @@ function FindClosestWaypoint(string InputArrayElement)
 		MainArrayCounter:Inc
 	elseif ${InputArrayElement.Length}<10
 		MainArrayCounter:Inc
+	elseif ${InputArrayElement.Equal[ReturnLOCS]}
+		MainArrayCounter:Set[${istrMain.Used}]
 	;found waypoint on line call waypointchecker
-	elseif ${InputArrayElement.NotEqual[Custom]} && ${InputArrayElement.NotEqual[Wait]} && ${InputArrayElement.NotEqual[ClickActor]} && ${InputArrayElement.NotEqual[HailActor]} && ${InputArrayElement.NotEqual[Named]} && ${InputArrayElement.NotEqual[CustomNamed]} && ${InputArrayElement.NotEqual[StandardNamed]} && ${InputArrayElement.NotEqual[SameLock]} && ${InputArrayElement.NotEqual[DontMoveBehind]} && ${InputArrayElement.NotEqual[MoveBehind]} && ${InputArrayElement.NotEqual[StopForCombat]} && ${InputArrayElement.NotEqual[DontStopForCombat]} && ${InputArrayElement.NotEqual[DontKillAdd]}
+	elseif ${InputArrayElement.NotEqual[Custom]} && ${InputArrayElement.NotEqual[Wait]} && ${InputArrayElement.NotEqual[ClickActor]} && ${InputArrayElement.NotEqual[HailActor]} && ${InputArrayElement.NotEqual[Named]} && ${InputArrayElement.NotEqual[CustomNamed]} && ${InputArrayElement.NotEqual[StandardNamed]} && ${InputArrayElement.NotEqual[SameLock]} && ${InputArrayElement.NotEqual[DontMoveBehind]} && ${InputArrayElement.NotEqual[MoveBehind]} && ${InputArrayElement.NotEqual[StopForCombat]} && ${InputArrayElement.NotEqual[DontStopForCombat]} && ${InputArrayElement.NotEqual[DontKillAdd]} && ${InputArrayElement.NotEqual[ReturnLOCS]}
 		call WaypointChecker ${InputArrayElement}
 }
 function WaypointChecker(float WX, float WY, float WZ)
@@ -2346,6 +2346,7 @@ function HailActor(string _Actor, int _NumberOfResponses=1, int _ResponseNumber=
 	if ${_Follow}
 		call RIMObj.follow
 }
+
 function ClickActor(string _Actor, bool _LoopUntilNoHighlightOnMouseHover=0, bool _LoopUntilDNE=0, int _GiveUpCNT=50)
 {
 	;echo ClickActor(string _Actor=${_Actor}, int _LoopUntilNoHighlightOnMouseHover=0=${_LoopUntilNoHighlightOnMouseHover}, int _GiveUpCNT=50=${_GiveUpCNT})
@@ -2353,11 +2354,15 @@ function ClickActor(string _Actor, bool _LoopUntilNoHighlightOnMouseHover=0, boo
 	;stop follow
 	variable int _Cnt=0
 	variable int _ID
-	if ${_Actor.Left[10].Equal[TintFlags-]} && ${_HighlightOnMouseHover}
+	if  ${_Actor.Left[5].Equal[ByLoc]} && ${_LoopUntilNoHighlightOnMouseHover}
+		_ID:Set[${Actor[Query, X=${_Actor.Token[2,|]} && Y=${_Actor.Token[3,|]} && Z=${_Actor.Token[4,|]} && HighlightOnMouseHover=TRUE].ID}]
+	elseif ${_Actor.Left[5].Equal[ByLoc]}
+		_ID:Set[${Actor[Query, X=${_Actor.Token[2,|]} && Y=${_Actor.Token[3,|]} && Z=${_Actor.Token[4,|]}].ID}]
+	elseif ${_Actor.Left[10].Equal[TintFlags-]} && ${_LoopUntilNoHighlightOnMouseHover}
 		_ID:Set[${Actor[Query, TintFlags=${_Actor.Right[-10]} && HighlightOnMouseHover=TRUE].ID}]
 	elseif ${_Actor.Left[10].Equal[TintFlags-]}
 		_ID:Set[${Actor[Query, TintFlags=${_Actor.Right[-10]}].ID}]
-	elseif ${_HighlightOnMouseHover}
+	elseif ${_LoopUntilNoHighlightOnMouseHover}
 		_ID:Set[${Actor[Query, Name=-"${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
 	else
 		_ID:Set[${Actor[Query, Name=-"${_Actor}"].ID}]
@@ -2437,6 +2442,53 @@ function ClickActor(string _Actor, bool _LoopUntilNoHighlightOnMouseHover=0, boo
 
 	}
 	relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
+}
+function PauseCombatBot(int _Pause=0)
+{
+	if ${_Pause}>0
+		relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
+	else
+		relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
+}
+function ClickAllActors(string _ActorQuery, int _Distance=0)
+{
+	;wait 20
+	;echo ISXRI: ${Time} Clicking any Actors within ${distance}
+		
+	variable index:actor Actors
+    variable iterator ActorIterator
+    if ${_ActorQuery.Find[TintFlags](exists)} && ${_Distance}>0
+		EQ2:QueryActors[Actors, ${_ActorQuery.Replace["-","="]} && Distance<=${_Distance}]
+	elseif ${_ActorQuery.Find[TintFlags](exists)} && ${_Distance}==0
+		EQ2:QueryActors[Actors, ${_ActorQuery.Replace["-","="]}]
+	elseif ${_Distance}>0
+		EQ2:QueryActors[Actors, Name=-"${_ActorQuery}" && Distance<=${_Distance}]
+	else
+		EQ2:QueryActors[Actors, Name=-"${_ActorQuery}"]
+    Actors:GetIterator[ActorIterator]
+  
+    if ${ActorIterator:First(exists)}
+    {
+        do
+        {
+			echo ISXRI: ${Time} Clicking Actor ID: ${ActorIterator.Value.ID} at ${ActorIterator.Value.Loc}
+			;if ${ActorIterator.Value.Name.Equal[""]}
+			;	echo this one has no name
+            ; relay ${RI_Var_String_RelayGroup} -noredirect execute noop ${Actor[Query, ID=${ActorIterator.Value.ID}]:DoubleClick}
+			; wait 1
+			; relay ${RI_Var_String_RelayGroup} -noredirect execute noop ${Actor[Query, ID=${ActorIterator.Value.ID}]:DoubleClick}
+			; wait 1
+			; relay ${RI_Var_String_RelayGroup} -noredirect execute noop ${Actor[Query, ID=${ActorIterator.Value.ID}]:DoubleClick}
+			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${ActorIterator.Value.ID}]:DoubleClick
+			wait 1
+			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${ActorIterator.Value.ID}]:DoubleClick
+			wait 1
+			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${ActorIterator.Value.ID}]:DoubleClick
+			wait 50 !${Me.CastingSpell}
+        }
+        while ${ActorIterator:Next(exists)}
+    }
+	;wait 20
 }
 function ClickNoNameActor(int distance=5)
 {
@@ -2609,6 +2661,7 @@ function ExecuteQueued()
 ;code to execute when close is pressed on ui
 function atexit()
 {
+	RI_Var_Bool_Paused:Set[0]
 	squelch HUD -remove east
 	squelch HUD -remove west
 	if ${LoadedTLO} && ${Extension[ISXRI](exists)}
@@ -3225,11 +3278,9 @@ function Orbs()
 }
 function _MoveC(float X1, float Z1, bool CheckDeath, bool TargetSelf)
 {
-	RI_Atom_SetLockSpot ${Me.Name}
-	wait 1
-	RI_Atom_ChangeLockSpot ALL ${X1} 0 ${Z1}
 	while ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}>2
 	{
+		RIMUIObj:SetLockSpot[${Me.Name},${X1},0,${Z1}]
 		if ${CheckDeath}
 			call RIMObj.checktoons
 		if ${TargetSelf}
@@ -3463,7 +3514,7 @@ function Bipsie()
 		}
 		wait 1
 	}
-	while ${Actor[Bipsie](exists)} && !${Actor[Bipsie].IsDead}
+	while ${Actor[Query, Name=-"Bipsie" && IsDead=FALSE](exists)}
 	;unpause bots
 	RI_CMD_PauseCombatBots 0
 }
@@ -3492,7 +3543,7 @@ function _MoveToTopOfRamp()
 		echo ${Time}: Moving to top of ramp
 	call _MoveC 44 -46
 	wait 5
-	while ${BipsieCasting}
+	while ${BipsieCasting} && ${Actor[Query, Name=-"Bipsie" && IsDead=FALSE](exists)}
 		wait 2
 	wait 15
 }
@@ -3505,7 +3556,7 @@ function _MoveToHerSpawnPoint()
 	call _MoveC 47 8
 	call _MoveC 47 23
 	wait 5
-	while ${BipsieCasting}
+	while ${BipsieCasting} && ${Actor[Query, Name=-"Bipsie" && IsDead=FALSE](exists)}
 		wait 2
 	wait 15
 	call _MoveC 47 8
@@ -3519,7 +3570,7 @@ function _MoveToBottomOfRampByCorner()
 	call _MoveC 44 -46
 	call _MoveC 40 8
 	wait 5
-	while ${BipsieCasting}
+	while ${BipsieCasting} && ${Actor[Query, Name=-"Bipsie" && IsDead=FALSE](exists)}
 		wait 2
 	wait 15
 	call _MoveC 44 -46
@@ -3531,7 +3582,7 @@ function _MoveToRats()
 	call _MoveC 56 -47
 	call _MoveC 57 -17
 	wait 5
-	while ${BipsieCasting}
+	while ${BipsieCasting} && ${Actor[Query, Name=-"Bipsie" && IsDead=FALSE](exists)}
 		wait 2
 	wait 15
 	call _MoveC 56 -47
@@ -3543,7 +3594,7 @@ function _MoveToOutlook()
 		echo ${Time}:Moving to outlook
 	call _MoveC -14 -58
 	wait 5
-	while ${BipsieCasting}
+	while ${BipsieCasting} && ${Actor[Query, Name=-"Bipsie" && IsDead=FALSE](exists)}
 		wait 2
 	wait 15
 }
@@ -3879,6 +3930,7 @@ function BilgewaterSigCheck()
 {
 	if ${QuestJournalWindow.ActiveQuest[Shattered Seas: Pirates' Plot](exists)}
 	{
+		call _Move3 -29.273731 120.691887 -243.175934
 		wait 50
 		call ClickActor "treasure chest"
 		wait 50
@@ -3904,6 +3956,7 @@ function BilgewaterSigCheck()
 		call _Move3 29.013916 146.794250 -431.079285
 		call ClickActor "treasure chest"
 		wait 50
+		call _Move3 -20.169353 120.691895 -251.030228
 	}
 }
 function Bilgewater()
@@ -9596,7 +9649,7 @@ function Vhankmin()
 		RI_Atom_SetLockSpot ${Me.Name} -185.950378 48.913849 427.578949
 	}
 	
-	while ${Actor[Vhankmin](exists)} && !${Actor[Vhankmin].IsDead}
+	while ${Actor[Query, Name=-"Vhankmin" && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
@@ -9617,8 +9670,8 @@ function Vhankmin()
 			}
 			else
 			{
-				if ${Target.ID}!=${Actor[NamedNPC,Vhankmin].ID}
-					Actor[Vhankmin]:DoTarget
+				if ${Target.ID}!=${Actor[Query, Name=-"Vhankmin" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"Vhankmin" && IsDead=FALSE]:DoTarget
 			}
 		}
 		wait 1
@@ -9641,12 +9694,12 @@ function Eghonz()
 		RI_Atom_SetLockSpot ${Me.Name} -343.833862 -17.118542 518.056519
 	}
 	
-	while ${Actor[Eghonz](exists)} && !${Actor[Eghonz].IsDead}
+	while ${Actor[Query, Name=-"Eghonz" && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
-			if ${Target.ID}!=${Actor[Eghonz].ID}
-				Actor[Eghonz]:DoTarget
+			if ${Target.ID}!=${Actor[Query, Name=-"Eghonz" && IsDead=FALSE].ID}
+				Actor[Query, Name=-"Eghonz" && IsDead=FALSE]:DoTarget
 		}
 		if ${Trigger}
 		{
@@ -9662,7 +9715,7 @@ function Eghonz()
 			
 			Trigger:Set[FALSE]
 			
-			while !${Trigger}
+			while !${Trigger} && ${Actor[Query, Name=-"Eghonz" && IsDead=FALSE](exists)}
 				wait 1
 				
 			;turn on assisting
@@ -9685,12 +9738,12 @@ function Janosz()
 	
 	if !${RI_Var_Bool_GlobalOthers}
 	{
-		Actor[Janosz]:DoTarget
-		wait 100 ${Actor[Janosz].Distance}<10
+		Actor[Query, Name=-"Janosz" && IsDead=FALSE]:DoTarget
+		wait 100 ${Actor[Query, Name=-"Janosz" && IsDead=FALSE].Distance}<10
 		RI_Atom_SetLockSpot ${Me.Name} -561.612244 -2.201538 265.963348
 	}
 	
-	while ${Actor[Janosz](exists)} && !${Actor[Janosz].IsDead}
+	while ${Actor[Query, Name=-"Janosz" && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
@@ -9701,8 +9754,8 @@ function Janosz()
 			}
 			else
 			{
-				if ${Target.ID}!=${Actor[Janosz].ID}
-					Actor[Janosz]:DoTarget
+				if ${Target.ID}!=${Actor[Query, Name=-"Janosz" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"Janosz" && IsDead=FALSE]:DoTarget
 			}
 		}
 		if ${Trigger}
@@ -9719,7 +9772,7 @@ function Janosz()
 			
 			Trigger:Set[FALSE]
 			
-			while !${Trigger}
+			while !${Trigger} && ${Actor[Query, Name=-"Janosz" && IsDead=FALSE](exists)}
 				wait 1
 				
 			;turn on assisting
@@ -9824,9 +9877,9 @@ function Queshaun()
 	
 	RI_Atom_SetLockSpot ALL -549.282593 9.066755 -81.277527
 	
-	Actor[Query, Name=-"Queshaun" && Type=="NamedNPC" && IsDead=FALSE]:DoTarget
+	Actor[Query, Name=-"Queshaun" && IsDead=FALSE]:DoTarget
 	
-	while ${Actor[Query, Name=-"Queshaun" && Type=="NamedNPC" && IsDead=FALSE].Distance}>9
+	while ${Actor[Query, Name=-"Queshaun" && IsDead=FALSE].Distance}>9
 		wait 2
 	
 	if !${RI_Var_Bool_GlobalOthers}
@@ -9834,12 +9887,12 @@ function Queshaun()
 	;else
 	;	RI_Atom_SetLockSpot ALL -549.282593 9.066755 -81.277527
 	
-	while ${Actor[Query, Name=-"Queshaun" && Type=="NamedNPC" && IsDead=FALSE](exists)}
+	while ${Actor[Query, Name=-"Queshaun" && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
-			if ${Target.ID}!=${Actor[Query, Name=-"Queshaun" && Type=="NamedNPC" && IsDead=FALSE].ID}
-				Actor[Query, Name=-"Queshaun" && Type=="NamedNPC" && IsDead=FALSE]:DoTarget
+			if ${Target.ID}!=${Actor[Query, Name=-"Queshaun" && IsDead=FALSE].ID}
+				Actor[Query, Name=-"Queshaun" && IsDead=FALSE]:DoTarget
 		}
 		if ${Trigger} && ${TriggerMessage.Find[plagues](exists)}
 		{
@@ -9855,7 +9908,7 @@ function Queshaun()
 			
 			Trigger:Set[FALSE]
 			
-			while !${Trigger}
+			while !${Trigger} && ${Actor[Query, Name=-"Queshaun" && IsDead=FALSE](exists)}
 				wait 1
 				
 			;turn on assisting
@@ -9882,7 +9935,7 @@ function Caelan'Gael()
 	else
 		RI_Atom_SetLockSpot ALL -606.482300 -8.309934 12.990896
 	
-	while ${Actor[Query, Name=-"Caelan'Gael" && Type=="NamedNPC" && IsDead=FALSE](exists)}
+	while ${Actor[Query, Name=-"Caelan'Gael" && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
@@ -9898,8 +9951,8 @@ function Caelan'Gael()
 			}
 			else
 			{
-				if ${Target.ID}!=${Actor[Query, Name=-"Caelan'Gael" && Type=="NamedNPC" && IsDead=FALSE].ID}
-					Actor[Query, Name=-"Caelan'Gael" && Type=="NamedNPC" && IsDead=FALSE]:DoTarget
+				if ${Target.ID}!=${Actor[Query, Name=-"Caelan'Gael" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"Caelan'Gael" && IsDead=FALSE]:DoTarget
 			}
 		}
 		wait 1
@@ -9941,7 +9994,7 @@ function Lachina()
 		
 		RI_Atom_SetLockSpot ALL -344.327759 -8.355633 17.309353
 	}
-	while ${Actor[Query, Name=-"Lachina" && Type =="NamedNPC" && IsDead=FALSE](exists)}
+	while ${Actor[Query, Name=-"Lachina" && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
@@ -9952,8 +10005,8 @@ function Lachina()
 			}
 			else
 			{
-				if ${Target.ID}!=${Actor[Query, Name=-"Lachina" && IsDead=FALSE && Type =="NamedNPC"].ID}
-					Actor[Query, Name=-"Lachina" && IsDead=FALSE && Type =="NamedNPC"]:DoTarget
+				if ${Target.ID}!=${Actor[Query, Name=-"Lachina" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"Lachina" && IsDead=FALSE]:DoTarget
 			}
 		}
 		if ${Trigger} && ${TriggerMessage.Find[plagues](exists)}
@@ -9970,7 +10023,7 @@ function Lachina()
 			
 			Trigger:Set[FALSE]
 
-			while !${Trigger}
+			while !${Trigger} && ${Actor[Query, Name=-"Lachina" && IsDead=FALSE](exists)}
 				wait 1
 				
 			eq2ex target_none
@@ -10014,12 +10067,12 @@ function Tabor'Zaai()
 	{
 		RI_Atom_SetLockSpot ALL -13.980902 8.654903 -162.166992
 	}
-	while ${Actor[Tabor'Zaai](exists)} && !${Actor[Tabor'Zaai].IsDead}
+	while ${Actor[Query, Name=-"Tabor'Zaai" && IsDead=FALSE](exists)}
 	{
 		;if !${RI_Var_Bool_GlobalOthers}
 		;{
-			if ${Target.ID}!=${Actor[NamedNPC,Tabor'Zaai].ID}
-				Actor[NamedNPC,Tabor'Zaai]:DoTarget
+			if ${Target.ID}!=${Actor[Query, Name=-"Tabor'Zaai" && IsDead=FALSE].ID}
+				Actor[Query, Name=-"Tabor'Zaai" && IsDead=FALSE]:DoTarget
 		;}
 		if ${Trigger}
 		{
@@ -10027,7 +10080,7 @@ function Tabor'Zaai()
 			Actor[remnant]:DoTarget
 						
 			Trigger:Set[FALSE]
-			while !${Trigger}
+			while !${Trigger} && ${Actor[Query, Name=-"Tabor'Zaai" && IsDead=FALSE](exists)}
 				wait 1
 			
 			Trigger:Set[FALSE]
@@ -10216,83 +10269,10 @@ function Sorceress()
 	}
 	echo Ending Sorceress
 }
-function 148685214SorceressOLD()
-{
-	echo ISXRI: Starting Sorceress 
-	
-	RI_Atom_SetLockSpot ALL -425.161926 30.653168 -56.651722
-	
-	variable int _SorceressID
-	_SorceressID:Set[${Actor["Sorceress Gwen'vae"].ID}]
-	
-	while ${Actor[Query, ID=${_SorceressID} && IsDead=FALSE](exists)}
-	{
-		if !${RI_Var_Bool_GlobalOthers}
-		{
-			if ${Actor[id,${_SorceressID},radius,30](exists)}
-			{
-				if ${Target.ID}!=${_SorceressID}
-					Actor[id,${_SorceressID}]:DoTarget
-			}
-			else
-			{
-				if ${Target.ID}!=${Actor[vestigial,radius,30].ID}
-					Actor[vestigial,radius,30]:DoTarget
-			}
-		}
-		;need to add in code for mages to dispell with absorb magic, need to get named and id's of det
-		;if we are a mage watch for spell's MainIconID and cast absorb magic
-		if ${Me.Archetype.Equal[mage]}
-		{
-		
-			;if we see "Astral Dominion" (MainIconID=22) on "Sorceress Gwen'vae", pause bot, stop casting and cast Absorb Magic
-			if ${RIObj.MainIconIDExists[${_SorceressID},22]} && ${Me.Ability[id,1812025739].IsReady}
-			{
-				;echo ${Time}: Astral Dominion Found
-				
-				;turn off assisting
-				RI_CMD_Assisting 0
-				
-				;pause bots
-				RI_CMD_PauseCombatBots 1
-				
-				;target "Sorceress Gwen'vae"
-				Actor[Query, ID="${_SorceressID}"]:DoTarget
-				
-				;cancel spellcast and clear ability queue
-				eq2ex cancel_spellcast
-				eq2ex clearabilityqueue 
-				
-				;wait until we are not casting
-				wait 200 !${Me.CastingSpell}
-				
-				;keep attempting to cast absorb magic (ID=1812025739) until it is no longer ready (aka casted)
-				do
-				{
-					if ${Target.ID}==${_SorceressID}
-						Me.Ability[id,1812025739]:Use
-					else
-						Actor[Query, ID="${_SorceressID}"]:DoTarget
-					wait 1
-				}
-				while ${Me.Ability[id,1812025739].IsReady}
-				
-				;wait until we are not casting
-				wait 200 !${Me.CastingSpell}
-				
-				;turn on assisting
-				RI_CMD_Assisting 1
-				
-				;unpause bots
-				RI_CMD_PauseCombatBots 0
-			}
-		}
-		wait 1
-	}
-	echo Ending Sorceress
-}
 
 ;;;;;;;; END Arcanna'se Spire: Vessel of the Sorceress
+
+
 function Xerxes'kade()
 {
 	call Xerxes'Kade
@@ -10304,14 +10284,14 @@ function Xerxes'Kade()
 		RI_Atom_SetLockSpot ALL -5.626295 5.593339 -101.020767
 	else
 		RI_Atom_SetLockSpot ALL -0.011539 5.593339 -92.666107
-	while ${Actor[Xerxes'Kade](exists)} && !${Actor[Xerxes'Kade].IsDead}
+	while ${Actor[Query, Name=-"Xerxes'Kade" && IsDead=FALSE](exists)}
 	{
-		if ${Actor[Protector,radius,30](exists)}
+		if ${Actor[Protector of Xerxes,radius,30](exists)}
 		{
 			if !${RI_Var_Bool_GlobalOthers}
 			{
-				if ${Target.ID}!=${Actor[Protector,radius,30].ID}
-					Actor[Protector,radius,30]:DoTarget
+				if ${Target.ID}!=${Actor[Protector of Xerxes,radius,30].ID}
+					Actor[Protector of Xerxes,radius,30]:DoTarget
 			}
 			relay all "RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Item:Bottled Endless Courage,TRUE]"
 		}
@@ -10319,8 +10299,8 @@ function Xerxes'Kade()
 		{
 			if !${RI_Var_Bool_GlobalOthers}
 			{
-				if ${Target.ID}!=${Actor[NamedNPC,Xerxes'Kade].ID}
-					Actor[NamedNPC,Xerxes'Kade]:DoTarget
+				if ${Target.ID}!=${Actor[Query, Name=-"Xerxes'Kade" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"Xerxes'Kade" && IsDead=FALSE]:DoTarget
 			}
 			relay all "RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Item:Bottled Endless Courage,FALSE]"
 		}
@@ -10477,7 +10457,7 @@ function Gooblin()
 	echo ISXRI: Starting Gooblin 
 	
 	variable int _GooblinID
-	_GooblinID:Set[${Actor[Query, Name="The Gooblin King", Type="NamedNPC"].ID}]
+	_GooblinID:Set[${Actor[Query, Name=-"The Gooblin King"].ID}]
 	variable int _Counter
 	_Counter:Set[1]
 	variable int _PullTime
@@ -11033,7 +11013,7 @@ function Frenzied()
 	
 	RI_Atom_SetLockSpot ${Me.Name} -600.047791 0.769289 -282.796021
 	
-	while ${Actor[Frenzied](exists)} && !${Actor[Frenzied].IsDead}
+	while ${Actor[Query, Name=-"Frenzied" && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
@@ -11049,8 +11029,8 @@ function Frenzied()
 			}
 			else
 			{
-				if ${Target.ID}!=${Actor[Frenzied].ID}
-					Actor[Frenzied]:DoTarget
+				if ${Target.ID}!=${Actor[Query, Name=-"Frenzied" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"Frenzied" && IsDead=FALSE]:DoTarget
 			}
 		}
 		wait 1
@@ -14470,6 +14450,251 @@ function Ongnissim()
 	echo Ending Ongnissim v1
 }
 ;;;;;;;;;;;;;;;; End The Lost City of Torsis: The Spectral Market ;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;; Start The Lost City of Torsis: Reaver's Remnants ;;;;;;;;;;;;;;;;;;;;;;
+
+function Beguiler()
+{
+	echo Starting Beguiler
+	
+	;turn off absorb magic in combatbot
+	RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Absorb Magic,0]
+	
+	variable int _BeguilerID=${Actor[Query, Name="A Spectral Beguiler"].ID}
+	variable int _SlowReactionsMainIconID=171
+	;main loop until A Spectral Beguiler DNE (if we are a mage)
+	do
+	{
+		if ${Me.Archetype.Equal[mage]}
+		{
+			;if Absorb Magic is ready and we see "Slow Reactions" on "A Spectral Beguiler", pause bot, stop casting and cast Absorb Magic (ID=1812025739)
+			if ${RIMUIObj.MainIconIDExists[${_BeguilerID},${_SlowReactionsMainIconID}]} && ${Me.Ability[id,1812025739].IsReady} && (${Me.Arcane}>0 || ${Me.Group[1].Arcane}>0 || ${Me.Group[2].Arcane} || ${Me.Group[3].Arcane} || ${Me.Group[4].Arcane} || ${Me.Group[5].Arcane})
+			{
+				;echo ${Time}: Slow Reactions Found
+				
+				;turn off assisting
+				RI_CMD_Assisting 0
+				
+				;pause bots
+				RI_CMD_PauseCombatBots 1
+				
+				;target "A Spectral Beguiler"
+				Actor[Query, ID="${_BeguilerID}"]:DoTarget
+				
+				;cancel spellcast and clear ability queue
+				eq2ex cancel_spellcast
+				eq2ex clearabilityqueue 
+				
+				;wait until we are not casting
+				wait 200 !${Me.CastingSpell}
+				
+				;keep attempting to cast absorb magic (ID=1812025739) until it is no longer ready (aka casted)
+				do
+				{
+					if ${Target.ID}==${_BeguilerID}
+						Me.Ability[id,1812025739]:Use
+					else
+						Actor[Query, ID="${_BeguilerID}"]:DoTarget
+					wait 1
+				}
+				while ${Me.Ability[id,1812025739].IsReady}
+				
+				;wait until we are not casting
+				wait 200 !${Me.CastingSpell}
+				
+				;turn on assisting
+				RI_CMD_Assisting 1
+				
+				;unpause bots
+				RI_CMD_PauseCombatBots 0
+			}
+			if !${RI_Var_Bool_GlobalOthers}
+			{
+				if ${Actor[id,${_BeguilerID},radius,30](exists)}
+				{
+					if ${Target.ID}!=${_BeguilerID}
+						Actor[id,${_BeguilerID}]:DoTarget
+				}
+			}
+		}
+		wait 2
+	}
+	while ${Actor[id,${_BeguilerID}](exists)}
+}
+function Residual()
+{
+	echo Starting Residual
+	
+	while ${Actor[Query, Name=-"A Residual Slime" && IsDead=FALSE](exists)}
+	{
+		if !${RI_Var_Bool_GlobalOthers}
+		{
+			if ${Actor[Query, Name=-"a Torsis scrubber" && IsDead=FALSE](exists)}
+			{
+				if ${Target.ID}!=${Actor[Query, Name=-"a Torsis scrubber" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"a Torsis scrubber" && IsDead=FALSE]:DoTarget
+			}
+			else
+			{
+				if ${Target.ID}!=${Actor[Query, Name=-"A Residual Slime" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"A Residual Slime" && IsDead=FALSE]:DoTarget
+			}
+		}
+	}
+}
+function Tzirathk()
+{
+	IncomingText:Clear
+	IncomingText:Insert[The brazier increases in heat!]
+	
+	RIMUIObj:SetLockSpot[${Me.Name},5.09,-5.37,-698.66]
+	
+	echo Starting Tzirathk
+	
+	while ${Actor[Query, Name=-"Tzirathk" && IsDead=FALSE](exists)}
+	{
+		if ${Trigger}
+		{
+			if ${Math.Distance[${Me.Loc}5.169329,-5.374262,-698.659912]}>12     
+				RIMUIObj:SetLockSpot[${Me.Name},5.169329,-5.374262,-698.659912]		    
+			elseif ${Math.Distance[${Me.Loc},28.662748,-5.374262,-698.636475]}>12
+				RIMUIObj:SetLockSpot[${Me.Name},28.662748,-5.374262,-698.636475]
+			Trigger:Set[0]
+		}
+		if !${RI_Var_Bool_GlobalOthers}
+		{
+			if ${Actor[Query, Name=-"a Reflection of Tzirathk" && IsDead=FALSE](exists)}
+			{
+				if ${Target.ID}!=${Actor[Query, Name=-"a Reflection of Tzirathk" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"a Reflection of Tzirathk" && IsDead=FALSE]:DoTarget
+			}
+			else
+			{
+				if ${Target.ID}!=${Actor[Query, Name=-"Tzirathk" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"Tzirathk" && IsDead=FALSE]:DoTarget
+			}
+		}
+	}
+	echo Ending Tzirathk
+}
+function Wraith()
+{
+	echo Starting Wraith
+	
+	IncomingText:Clear
+	IncomingText:Insert[eyes begin to burn into your soul]
+	AnnounceText:Clear
+	AnnounceText:Insert[eyes begin to burn into your soul]
+	
+	variable index:string _Locs
+	variable int _cnt=0
+	_Locs:Insert["-6.958926,-6.117686,-839.407227"]
+	_Locs:Insert["-19.859524,-6.117686,-839.922180"]
+	_Locs:Insert["-31.926943,-6.117686,-839.876404"]
+	_Locs:Insert["-44.186760,-6.117686,-839.925842"]
+	_Locs:Insert["-56.527271,-6.117686,-839.757690"]
+	_Locs:Insert["-69.011292,-6.117686,-839.844788"]
+	_Locs:Insert["-82.784027,-5.803309,-839.643188"]
+	_Locs:Insert["-98.194130,-5.169047,-839.658691"]
+	_Locs:Insert["-99.000206,-5.521029,-825.362244"]
+	_Locs:Insert["-98.810120,-6.117686,-809.697632"]
+	_Locs:Insert["-98.851677,-6.117686,-797.874817"]
+	_Locs:Insert["-98.685219,-6.117686,-785.632568"]
+	_Locs:Insert["-98.761787,-5.584048,-770.861023"]
+	_Locs:Insert["-98.851974,-5.169047,-756.256958"]
+	_Locs:Insert["-85.716125,-5.257937,-756.300110"]
+	_Locs:Insert["-73.734222,-6.117686,-756.253052"]
+	_Locs:Insert["-60.192242,-5.960313,-756.646790"]
+	_Locs:Insert["-45.851540,-4.488030,-756.833313"]
+	_Locs:Insert["-25.844765,-4.168133,-756.751404"]
+	_Locs:Insert["-24.912683,-4.423313,-735.742737"]
+	_Locs:Insert["-24.972208,-4.423321,-717.648438"]
+	_Locs:Insert["-24.865658,-4.174296,-696.309387"]
+	_Locs:Insert["-41.010700,-4.182609,-695.898376"]
+	_Locs:Insert["-42.345108,-4.423136,-674.846497"]
+	_Locs:Insert["-42.026604,-4.423135,-656.919189"]
+	_Locs:Insert["-41.902122,-4.423136,-640.170166"]
+	_Locs:Insert["-41.614822,-4.188455,-618.963745"]
+	
+	RIMUIObj:SetLockSpot[${Me.Name},16.888502,-5.169047,-839.361877]
+	
+	while ${Actor[Query, Name=-"Dread Wraith" && IsDead=FALSE](exists)}
+	{
+		if ${Trigger}
+		{
+			RIMUIObj:SetLockSpot[${Me.Name},${_Locs.Get[${_cnt:Inc}]}]
+			Trigger:Set[0]
+		}
+		if !${RI_Var_Bool_GlobalOthers}
+		{
+			if ${Target.ID}!=${Actor[Query, Name=-"Dread Wraith" && IsDead=FALSE].ID}
+				Actor[Query, Name=-"Dread Wraith" && IsDead=FALSE]:DoTarget
+		}
+	}
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		;start group follow
+		call RIMObj.follow
+		
+		for(;${_cnt}>0;_cnt:Dec)
+		{
+			call RIMObj.Move ${_Locs.Get[${_cnt}].Replace[","," "]}
+		}
+	}
+	echo Ending Wraith
+}
+function Neh'Ashiir()
+{
+	call Neh'ashiir
+}
+function Neh'ashiir()
+{
+	echo Starting Neh'Ashiir
+	variable int _cnt
+	
+	RIMUIObj:SetLockSpot[${Me.Name},16.651793,-4.743321,-1076.422729]
+	while ${Actor[Query, Name=-"Neh'Ashiir" && IsDead=FALSE](exists)}
+	{
+		if ${RIMUIObj.MainIconIDExists[${Me.ID},291]}
+		{
+			for(_cnt:Set[1];${_cnt}<${Me.Group};_cnt:Inc)
+			{
+				if ${Me.Group[${_cnt}].Cursed}==-1 && ${Me.Group[${_cnt}].Name.Compare[${Me.Name}]}>0
+				{
+					RIMUIObj:SetLockSpot[${Me.Name},17.050190,-4.743229,-1054.201050]
+					_cnt:Set[7]
+				}
+				elseif ${Me.Group[${_cnt}].Cursed}==-1 && ${Me.Group[${_cnt}].Name.Compare[${Me.Name}]}<0
+				{
+					RIMUIObj:SetLockSpot[${Me.Name},16.566122,-4.743642,-1098.454712]
+					_cnt:Set[7]
+				}
+				elseif ${_cnt}==5
+					RIMUIObj:SetLockSpot[${Me.Name},16.640079,-4.743278,-1052.199463]
+			}
+			while ${RIMUIObj.MainIconIDExists[${Me.ID},291]}
+			{
+				wait 1
+			}
+			RIMUIObj:SetLockSpot[${Me.Name},16.651793,-4.743321,-1076.422729]
+		}
+		if !${RI_Var_Bool_GlobalOthers}
+		{
+			if ${Actor[Query, Name=-"A Black Reaver" && IsDead=FALSE && Distance<15](exists)}
+			{
+				if ${Target.ID}!=${Actor[Query, Name=-"A Black Reaver" && IsDead=FALSE && Distance<15].ID}
+					Actor[Query, Name=-"A Black Reaver" && IsDead=FALSE && Distance<15]:DoTarget
+			}
+			else
+			{
+				if ${Target.ID}!=${Actor[Query, Name=-"Neh'Ashiir" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"Neh'Ashiir" && IsDead=FALSE]:DoTarget
+			}
+		}
+		wait 1
+	}
+	echo Ending Neh'Ashiir
+}
+;;;;;;;;;;;;;;;; End The Lost City of Torsis: Reaver's Remnants ;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;; Start The Ruins of Cabilis ;;;;;;;;;;;;;;;;;;;;;;
 function Smithy()
 {
@@ -14477,35 +14702,35 @@ function Smithy()
 	AnnounceText:Clear
 	AnnounceText:Insert["Time seems to stop and stand still around"]
 	Trigger:Set[FALSE]
-	if ${Me.Archetype.Equal[fighter]}
+	if !${RI_Var_Bool_GlobalOthers}
 		RI_Atom_SetLockSpot ALL 213.440582 95.755623 249.844040
 	else
 		RI_Atom_SetLockSpot ALL 214.999786 96.036880 242.236938
-	while ${Actor[Smithy](exists)} && !${Actor[Smithy].IsDead}
+	while ${Actor[Query, Name=-"Smithy" && IsDead=FALSE](exists)}
 	{
-		if ${Me.Archetype.Equal[fighter]}
+		if !${RI_Var_Bool_GlobalOthers}
 		{
 			; if ${Actor["a fallen apprentice",radius,50](exists)}
 			; {
 				; if ${Target.ID}!=${Actor["a fallen apprentice",radius,50].ID}
 					; Actor["a fallen apprentice",radius,50]:DoTarget
 			; }
-			if ${Target.ID}!=${Actor[Smithy].ID}
-				Actor[Smithy]:DoTarget
+			if ${Target.ID}!=${Actor[Query, Name=-"Smithy" && IsDead=FALSE].ID}
+				Actor[Query, Name=-"Smithy" && IsDead=FALSE]:DoTarget
 		}
 		if ${Trigger}
 		{
 			Trigger:Set[FALSE]
 			if ${Math.Distance[${Me.X},${Me.Z},213,250]}<10
 			{
-				if ${Me.Archetype.Equal[fighter]}
+				if !${RI_Var_Bool_GlobalOthers}
 					RI_Atom_ChangeLockSpot ALL 220.344635 95.754509 214.686325
 				else
 					RI_Atom_ChangeLockSpot ALL 218.647171 96.036858 221.176727
 			}
 			if ${Math.Distance[${Me.X},${Me.Z},220,215]}<10
 			{
-				if ${Me.Archetype.Equal[fighter]}
+				if !${RI_Var_Bool_GlobalOthers}
 					RI_Atom_ChangeLockSpot ALL 213.440582 95.755623 249.844040
 				else
 					RI_Atom_ChangeLockSpot ALL 214.999786 96.036880 242.236938
@@ -14642,7 +14867,10 @@ function Zann()
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+function ResetZone(string _ZoneName)
+{
+	relay ${RG_Var_String_RelayGroup} RIMUIObj:ResetZone[ALL,"${_ZoneName}"]
+}
 function QuestM(string QuestOrTimeLineName=~NONE~)
 {
 	MainQuestName:Clear
@@ -15124,6 +15352,10 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	variable bool _Repeatable
 	if ${istrMain.Get[2].Equal[Repeatable]}
 		_Repeatable:Set[TRUE]
+	
+	if ${_QuestName.Replace[\",""].Find["Brother Pang's Trial"](exists)}
+		_QuestName:Concat[" "]
+		
 	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)} && !${_Repeatable}
 	{
 		;MessageBox -skin eq2 "${_QuestName} is already completed"
@@ -15166,6 +15398,7 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 		
 		RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	}
+
 	if ${_CheckQuestCompleted} && !${_QuestName.Replace[\",""].Find["Access to Tower of the Four Winds"](exists)} && !${_QuestName.Replace[\",""].Find["Yun Zi"](exists)} && !${_QuestName.Replace[\",""].Find[Timeline](exists)} && !${_QuestName.Replace[\",""].Find["Losers Weepers"](exists)} && !${_QuestName.Replace[\",""].Find["New Lands New Profits"](exists)}
 	{
 		squelch wait 100 ${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}
@@ -15242,7 +15475,7 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 		if ${istrMain.Get[2].Equal[Repeatable]}
 			_Repeatable:Set[TRUE]
 		
-		echo ISXRI: Starting ${_QuestName.Replace[\",""]}
+		echo ISXRI: Starting ${_QuestName.Replace[\",""]} #${_qcount} of ${_NumRepeats}
 		
 		call Go TRUE
 		
@@ -15327,7 +15560,10 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 	variable bool _Repeatable
 	if ${istrMain.Get[2].Equal[Repeatable]}
 		_Repeatable:Set[TRUE]
-	
+		
+	if ${_QuestName.Replace[\",""].Find["Brother Pang's Trial"](exists)}
+		_QuestName:Concat[" "]
+		
 	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)} && !${_Repeatable}
 	{
 		;MessageBox -skin eq2 "${_QuestName} is already completed"
@@ -16868,6 +17104,36 @@ function BDCheckForShade()
 		}
 	}
 }
+function ShatteredSeasTempleofDoom()
+{
+	variable in _cnt=0
+	while !${Actor[Query, Name=-"a Shissar Invader" && IsDead=FALSE](exists)} && ${_cnt:Inc}<=36000
+		wait 1
+	while ${Actor[Query, Name=-"a Shissar Invader" && IsDead=FALSE](exists)}
+	{
+		if ${Target.ID}!=${Actor[Query, Name=-"a Shissar Invader" && IsDead=FALSE].ID}
+			Actor[Query, Name=-"a Shissar Invader"]:DoTarget
+		if ${Me.Ability[id,1850803929].IsReady}
+			Me.Ability[id,1850803929]:Use
+		elseif ${Me.Ability[id,425080399].IsReady}
+			Me.Ability[id,425080399]:Use
+		elseif ${Me.Ability[id,507245142].IsReady}
+			Me.Ability[id,507245142]:Use
+		elseif ${Me.Ability[id,4030043002].IsReady}
+			Me.Ability[id,4030043002]:Use
+		elseif ${Me.Ability[id,2268242924].IsReady}
+			Me.Ability[id,2268242924]:Use
+		wait 1
+	}
+	while ${Actor[Query, TintFlags=5987](exists)}
+	{
+		if ${Target.ID}!=${Actor[Query, TintFlags=5987].ID}
+			Actor[Query, TintFlags=5987]:DoTarget
+		if ${Me.Ability[id,2153736181].IsReady}
+			Me.Ability[id,2153736181]:Use
+		wait 1
+	}
+}
 function PathHail(int _PathLines, int _Distance, bool _Loop, bool _GoReverseAfterAllQuantitiesMet, bool _GoReverseAtLoopOrEnd, ... args)
 {	
 	Trigger:Set[FALSE]
@@ -18017,7 +18283,7 @@ function PathKill(int _PathLines, int _Distance, int _Precision, bool _Loop, boo
 	}
 	; for(_count:Set[1];${_count}<=${AnnounceText.Used};_count:Inc)
 	; {
-		; echo ${AnnounceText.Get[${_count}]}
+	;	 echo ${AnnounceText.Get[${_count}]}
 	; }
 	; echo ${echostr}
 	_end:Set[${Math.Calc[${MainArrayCounter}+${_PathLines}]}]
@@ -18117,6 +18383,13 @@ function PathKill(int _PathLines, int _Distance, int _Precision, bool _Loop, boo
 						}
 						call RIMObj.Move ${_temp} 1 0 0 0 1 0 1 1
 					}
+				}
+				if ${_CheckQuestStep} && ${RIObj.QuestStepExists[${_QuestStep}]}
+				{
+					_AmountKilled.Get[${Math.Calc[${_count}+2]}]:Inc
+					;echo ISXRI: Killed ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+					echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+					Trigger:Set[FALSE]
 				}
 				if ${Trigger}
 				{
@@ -18244,6 +18517,13 @@ function PathKill(int _PathLines, int _Distance, int _Precision, bool _Loop, boo
 								}
 								call RIMObj.Move ${_temp} 1 0 0 0 1 0 1 1
 							}
+						}
+						if ${_CheckQuestStep} && ${RIObj.QuestStepExists[${_QuestStep}]}
+						{
+							_AmountKilled.Get[${Math.Calc[${_count}+2]}]:Inc
+							;echo ISXRI: Killed ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+							echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+							Trigger:Set[FALSE]
 						}
 						if ${Trigger}
 						{
@@ -20484,6 +20764,8 @@ function PathHarvest(int _PathLines, int _Distance, bool _Loop, bool _GoReverseA
 	variable bool _AllQuantitiesMet
 	variable bool _IWasFlying=FALSE
 	variable int _YINC=2
+	variable bool _CheckQuestStep=FALSE
+	variable string _QuestStep=""
 	AnnounceText:Clear
 	IncomingText:Clear
 	IncomingText2:Clear
@@ -20523,6 +20805,11 @@ function PathHarvest(int _PathLines, int _Distance, bool _Loop, bool _GoReverseA
 			AnnounceText:Insert[${args[${Math.Calc[${_count}+1]}].Right[-3]}]
 		elseif ${args[${Math.Calc[${_count}+1]}].Left[3].Equal[IT-]}
 			IncomingText:Insert[${args[${Math.Calc[${_count}+1]}].Right[-3]}]
+		elseif ${args[${Math.Calc[${_count}+1]}].Left[3].Equal[QS-]}
+		{
+			_QuestStep:Set[${args[${Math.Calc[${_count}+1]}].Right[-3]}]
+			_CheckQuestStep:Set[1]
+		}
 		else
 			AnnounceText:Insert[${args[${Math.Calc[${_count}+1]}]}]
 		_count:Inc
@@ -20627,6 +20914,14 @@ function PathHarvest(int _PathLines, int _Distance, bool _Loop, bool _GoReverseA
 							wait 2
 							;echo ${Time}: Before: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
 							;echo ${Trigger} // ${TriggerMessage}
+							wait 15
+							if ${_CheckQuestStep} && ${RIObj.QuestStepExists[${_QuestStep}]}
+							{
+								_AmountHarvested.Get[${Math.Calc[${_count}+2]}]:Inc
+								;echo ISXRI: Killed ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+								echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+								Trigger:Set[FALSE]
+							}
 							if ${Trigger}
 							{
 								_AmountHarvested.Get[${Math.Calc[${_count}+2]}]:Inc
@@ -20650,6 +20945,13 @@ function PathHarvest(int _PathLines, int _Distance, bool _Loop, bool _GoReverseA
 						}
 						call RIMObj.Move ${_temp} 1 0 FALSE FALSE TRUE FALSE
 					}
+				}
+				if ${_CheckQuestStep} && ${RIObj.QuestStepExists[${_QuestStep}]}
+				{
+					_AmountHarvested.Get[${Math.Calc[${_count}+2]}]:Inc
+					;echo ISXRI: Killed ${_AmountKilled.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+					echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+					Trigger:Set[FALSE]
 				}
 				if ${Trigger}
 				{
@@ -20737,6 +21039,14 @@ function PathHarvest(int _PathLines, int _Distance, bool _Loop, bool _GoReverseA
 									wait 2
 									;echo ${Time}: Before: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
 									;echo ${Trigger} // ${TriggerMessage}
+									wait 15
+									if ${_CheckQuestStep} && ${RIObj.QuestStepExists[${_QuestStep}]}
+									{
+										_AmountHarvested.Get[${Math.Calc[${_count}+2]}]:Inc
+										;echo ISXRI: Killed ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+										echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+										Trigger:Set[FALSE]
+									}
 									if ${Trigger}
 									{
 										_AmountHarvested.Get[${Math.Calc[${_count}+2]}]:Inc
@@ -20761,6 +21071,13 @@ function PathHarvest(int _PathLines, int _Distance, bool _Loop, bool _GoReverseA
 								}
 								call RIMObj.Move ${_temp} 1 0 FALSE FALSE TRUE FALSE
 							}
+						}
+						if ${_CheckQuestStep} && ${RIObj.QuestStepExists[${_QuestStep}]}
+						{
+							_AmountHarvested.Get[${Math.Calc[${_count}+2]}]:Inc
+							;echo ISXRI: Killed ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]} of ${_tempName}
+							echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+							Trigger:Set[FALSE]
 						}
 						if ${Trigger}
 						{
@@ -21435,13 +21752,13 @@ function DrusellaSigCheck2()
 	if ${QuestJournalWindow.ActiveQuest[Kunark Ascending: Resurrection Machination](exists)}
 	{
 		wait 50
-		call MoveToNoNameActor
+		call MoveToActor TF-7683
 		wait 50
-		call ClickNoNameActor
+		call ClickActor TF-7683
 		wait 5
-		call ClickNoNameActor
+		call ClickActor TF-7683
 		wait 5
-		call ClickNoNameActor
+		call ClickActor TF-7683
 		wait 20
 		RI_Var_Bool_SkipLoot:Set[FALSE]
 	}
@@ -21817,7 +22134,7 @@ function CastInvis()
 		}
 	}
 }
-function CheckQuestStep(string _Step, int _ArrayCounterSetter=0)
+function CheckQuestStep(string _Step, int _ArrayCounterSetter=0, bool _Exists=TRUE)
 {
     variable index:collection:string Details    
     variable iterator DetailsIterator
@@ -21857,8 +22174,20 @@ function CheckQuestStep(string _Step, int _ArrayCounterSetter=0)
         }
         while ${DetailsIterator:Next(exists)}
     }
-	if ${_FoundIt}
-		MainArrayCounter:Set[${_ArrayCounterSetter}]
+	if ${_FoundIt} && ${_Exists}
+	{
+		if ${_ArrayCounterSetter}>0
+			MainArrayCounter:Set[${_ArrayCounterSetter}]
+		else
+			call MessageBox "We are not on the correct quest step: ${_Step} / Get to this step and resume at this spot"
+	}
+	elseif !${_FoundIt} && !${_Exists}
+	{
+		if ${_ArrayCounterSetter}>0
+			MainArrayCounter:Set[${_ArrayCounterSetter}]
+		else
+			call MessageBox "We are not on the correct quest step: ${_Step} / Get to this step and resume at this spot"
+	}
 	;else
 	;	echo didnt find it
 }
@@ -22265,4 +22594,179 @@ function Shanaira()
 		wait 2
 	}
 	echo ISXRI: Ending Shanaira
+}
+;Terris v15
+function Terris()
+{
+	declare TerrisStopCasting bool global 0
+	declare HC_Var_Int_Counter int global 0
+	declare HC_Var_Int_CastCounter int global 0
+	declare HC_Var_String_NameForHud string global "Drain Life/Hemmorahge in"
+	declare HC_Var_Bool_JustCasted bool global FALSE
+	declare CastTime int global ${Time.SecondsSinceMidnight}
+	declare CastSeconds int 105
+	declare CalcVar int 0
+	
+	echo ${Time}: Starting Terris
+	;events
+	Event[EQ2_onIncomingText]:AttachAtom[TerrisEQ2_onIncomingText]
+	HC_Var_Int_Counter:Set[0]
+	
+	;create hud
+	Squelch HUD -add HudCountdown 600,300 ${HC_Var_String_NameForHud}: ${HC_Var_Int_Counter}s
+
+	while !${Me.InCombat}
+		wait 1
+	
+	while ${Actor[Query, Name=-"Terris" && IsDead=FALSE](exists)} || ${Me.IsDead}
+	{
+		call TerrisCheckMIDandTarget
+		if !${HC_Var_Bool_JustCasted} && ( ${Me.GetGameData[Target.Casting].Label.Equal[Drain Life]} || ${Me.GetGameData[Target.Casting].Label.Equal[Hemorrhage]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Drain Life]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Hemorrhage]} )
+		{
+			CastTime:Set[${Time.SecondsSinceMidnight}]
+			HC_Var_Bool_JustCasted:Set[TRUE]
+			TimedCommand 50 HC_Var_Bool_JustCasted:Set[FALSE]
+		}
+		call TerrisUpdateHUD
+		waitframe
+	}
+	deletevariable TerrisStopCasting
+	deletevariable HC_Var_Int_Counter
+	deletevariable HC_Var_Int_CastCounter
+	deletevariable HC_Var_String_NameForHud
+	deletevariable HC_Var_Bool_JustCasted
+	;detach atom
+	Event[EQ2_onIncomingText]:DetachAtom[TerrisEQ2_onIncomingText]
+	echo ${Time}: Ending Terris
+	Squelch HUD -remove HudCountdown
+}
+
+function TerrisCheckMIDandTarget()
+{
+	if ${RIMUIObj.MainIconIDExists[${Me.ID},478]} || ${RIMUIObj.MainIconIDExists[${Me.ID},54]} || ${Me.Cursed} || ${Me.GetGameData[Target.Casting].Label.Equal[Daydream]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Daydream]} || ${RIMUIObj.MainIconIDExists[${Me.ID},540]} || ${TerrisStopCasting}
+	{
+		if ${RIMUIObj.MainIconIDExists[${Me.ID},478]} || ${RIMUIObj.MainIconIDExists[${Me.ID},540]} || ${TerrisStopCasting}
+			RIMUIObj:SetUISetting[ALL,SettingsCastAbilitiesCheckBox,0]
+		RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+		RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+		eq2ex cancel_spellcast
+		while ${RIMUIObj.MainIconIDExists[${Me.ID},478]} || ${RIMUIObj.MainIconIDExists[${Me.ID},54]} || ${Me.Cursed} || ${Me.GetGameData[Target.Casting].Label.Equal[Daydream]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Daydream]} || ${RIMUIObj.MainIconIDExists[${Me.ID},540]} || ${TerrisStopCasting}
+		{
+			if ${RIMUIObj.MainIconIDExists[${Me.ID},478]} || ${RIMUIObj.MainIconIDExists[${Me.ID},540]} || ${TerrisStopCasting}
+			{
+				RIMUIObj:SetUISetting[ALL,SettingsCastAbilitiesCheckBox,0]
+				eq2ex cancel_spellcast
+			}
+			if ${RIMUIObj.MainIconIDExists[${Me.ID},478]} || ${RIMUIObj.MainIconIDExists[${Me.ID},54]} || ${Me.Cursed} || ${Me.GetGameData[Target.Casting].Label.Equal[Daydream]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Daydream]} || ${RIMUIObj.MainIconIDExists[${Me.ID},540]}
+				TerrisStopCasting:Set[0]
+			waitframe
+			call TerrisUpdateHUD
+		}
+		RIMUIObj:SetUISetting[ALL,SettingsCastAbilitiesCheckBox,1]
+		RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+		RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+	}
+	elseif ${Me.Archetype.Equal[fighter]} && ${Me.InCombat}
+	{
+			if ${Target.ID}!=${Actor[Query, Name=-"Terris" && IsDead=FALSE].ID} && !${Actor[Query, Name=-"waking" && IsDead=FALSE](exists)}
+				Actor[Query, Name=-"Terris" && IsDead=FALSE]:DoTarget
+	}
+}
+;atom triggered when incoming text is detected
+atom TerrisEQ2_onIncomingText(string Message, string SoundType, float Timer)
+{
+	if ${Message.Find[The air around you crackles with planar magic]}
+	{
+		TerrisStopCasting:Set[1]
+		TimedCommand 150 TerrisStopCasting:Set[0]
+		eq2ex r Stopping casting!
+	}
+	if ${Message.Find[Drain Life]} || ${Message.Find[Hemmorahge]}
+	{
+		CastTime:Set[${Time.SecondsSinceMidnight}]
+	}
+}
+;UpdateHUD function
+function TerrisUpdateHUD()
+{
+	CalcVar:Set[${Math.Calc[${CastSeconds}-((${Time.SecondsSinceMidnight}-${CastTime})+1)]}]
+	if ${CalcVar}>0
+		HC_Var_Int_Counter:Set[${CalcVar}]
+	else
+		HC_Var_Int_Counter:Set[0]
+}
+function Rak'Ashiir()
+{
+	call RakAshiir
+}
+function Rakashiir()
+{
+	call RakAshiir
+}
+function RakAshiir()
+{
+	declare MusicBoxUP bool FALSE
+	echo ISXRI: Starting Rak'Ashiir
+	
+	while !${Me.InCombat}
+		wait 1
+	while ${Actor[Query, Name=-"Rak'Ashiir" && IsDead=FALSE](exists)} || ${Me.IsDead}
+	{
+		if ${Actor[Query, Name=-"a Torsis Music Box" && IsDead=FALSE](exists)}
+		{
+			MusicBoxUP:Set[1]
+			if ${Math.Distance[${Actor[Music].Loc},-32.775524,-4.997875,-1086.396118]}<30 && ${Math.Distance[${Me.Loc},${Actor[Music].Loc}]}>30
+				call MoveToMusicBox "-32.775524,-4.997875,-1086.396118"
+			if ${Math.Distance[${Actor[Music].Loc},65.249672,-4.997911,-1085.140625]}<30 && ${Math.Distance[${Me.Loc},${Actor[Music].Loc}]}>30
+				call MoveToMusicBox "65.249672,-4.997911,-1085.140625"
+			if ${Math.Distance[${Actor[Music].Loc},-32.554836,-4.995754,-1052.578003]}<30 && ${Math.Distance[${Me.Loc},${Actor[Music].Loc}]}>30
+				call MoveToMusicBox "-32.554836,-4.995754,-1052.578003"
+			if ${Math.Distance[${Actor[Music].Loc},66.168198,-4.996263,-1054.251221]}<30 && ${Math.Distance[${Me.Loc},${Actor[Music].Loc}]}>30
+				call MoveToMusicBox "66.168198,-4.996263,-1054.251221"
+			if ${Me.Archetype.Equal[fighter]} && ${Target.ID}!=${Actor[music].ID}
+				Actor[Query, Name=-"a Torsis Music Box" && IsDead=FALSE]:DoTarget
+		}
+		else
+		{
+			if ${MusicBoxUP}
+			{
+				if ${Math.Distance[${Me.Loc},-32.775524,-4.997875,-1086.396118]}<30
+					call MoveFromMusicBox "-32.775524,-4.997875,-1086.396118"
+				if ${Math.Distance[${Me.Loc},65.249672,-4.997911,-1085.140625]}<30
+					call MoveFromMusicBox "65.249672,-4.997911,-1085.140625"
+				if ${Math.Distance[${Me.Loc},-32.554836,-4.995754,-1052.578003]}<30
+					call MoveFromMusicBox "-32.554836,-4.995754,-1052.578003"
+				if ${Math.Distance[${Me.Loc},66.168198,-4.996263,-1054.251221]}<30
+					call MoveFromMusicBox "66.168198,-4.996263,-1054.251221"
+				MusicBoxUP:Set[0]
+			}
+			if ${Me.Archetype.NotEqual[fighter]} && ${Math.Distance[${Actor[Query, Name=-"Rak'Ashiir" && IsDead=FALSE].Loc},17.957945,-4.742667,-1069.569702]}<20
+			{
+				RIMUIObj:SetLockSpot[ALL,OFF]
+				RIMUIObj:SetMoveBehind[ALL,1,1,1]
+			}
+			else
+			{
+				RIMUIObj:SetMoveBehind[ALL,0]
+				RIMUIObj:SetLockSpot[${Me.Name},17.957945,-4.742667,-1069.569702,1,500]
+			}
+		}
+		wait 1
+	}
+	echo ISXRI: Ending Rak'Ashiir
+}
+function MoveToMusicBox(string _Loc)
+{
+	RIMUIObj:SetLockSpot[${Me.Name},${_Loc},1,500]
+	while ${Math.Distance[${Me.Loc},${_Loc}]}>5
+		wait 1
+	RIMUIObj:SetLockSpot[${Me.Name},${Actor[Music].X},${Actor[Music].Y},${Actor[Music].Z},5,500]
+	while ${Math.Distance[${Me.Loc},${Actor[Music].Loc}]}>7
+		wait 1
+}
+function MoveFromMusicBox(string _Loc)
+{
+	RIMUIObj:SetLockSpot[${Me.Name},${_Loc},1,500]
+	while ${Math.Distance[${Me.Loc},${_Loc}]}>5
+		wait 1
 }

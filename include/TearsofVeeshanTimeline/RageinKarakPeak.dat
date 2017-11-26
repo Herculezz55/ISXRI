@@ -9,7 +9,7 @@ HailActor Jortreva 5
 -492.326935 135.476486 -369.346222
 -495.682404 136.075409 -378.869659
 Custom
-HailActor Gortrov 5
+HailActor Gortov 5
 -494.188995 136.658096 -388.221710
 Custom
 PathKill 35 35 35 1 1 1 "a rage-afflicted thrashwood" "I've destroyed enough of the rage-afflicted thrashwoods" 1
@@ -52,5 +52,5 @@ PathKill 35 35 35 1 1 1 "a rage-afflicted thrashwood" "I've destroyed enough of 
 -495.237701 136.610260 -387.723846
 -495.237701 136.610260 -387.723846
 Custom
-HailActor Gortrov 2
+HailActor Gortov 2
 -495.237701 136.610260 -387.723846

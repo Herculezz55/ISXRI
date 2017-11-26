@@ -70,6 +70,8 @@ ZoneDoor "zone_to_qey_elddar"
 Custom
 ZoneDoor "zone_to_qey_village05"
 809.853210 -21.581669 -561.293762
+Custom
+ExecuteCommand "RIMUIObj:BalanceTrash[0]"
 810.926636 -21.284081 -566.928955
 814.699097 -21.225489 -571.424438
 Custom
@@ -215,6 +217,8 @@ Wait
 834.726685 -19.942066 -597.866089
 829.788879 -19.627981 -589.123108
 823.825012 -20.975468 -581.036011
+Custom
+ExecuteCommand "RIMUIObj:BalanceTrash[1]"
 817.417725 -21.200613 -573.207520
 Custom
 ZoneDoor "zone_to_qey_elddar"

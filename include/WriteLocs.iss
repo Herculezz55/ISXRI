@@ -384,8 +384,9 @@ function RP()
 	press -release ${RI_Var_String_ForwardKey}
 	TestRun:Set[FALSE]
 }
-function Write(bool Custom, bool ClickActor, bool HailActor, bool Named, bool Wait, ... _args)
+function Write(... _args)
 {
+;bool Custom, bool ClickActor, bool HailActor, bool Named, bool Wait,
 	LastXYZ:Set["${Me.X} ${Me.Y} ${Me.Z}"]
 	LastXYZC:Set["${Me.X},${Me.Y},${Me.Z}"]
 
@@ -401,9 +402,183 @@ function Write(bool Custom, bool ClickActor, bool HailActor, bool Named, bool Wa
 			}
 			case -wait
 			{
-				UIElement[LocsList@WriteLocs]:AddItem["Wait"]
-				UIElement[LocsList@WriteLocs]:AddItem["${_args[${Math.Calc[${_count}+1]}]}"]
+				if ${_args.Used}>1
+				{
+					UIElement[LocsList@WriteLocs]:AddItem["Wait"]
+					UIElement[LocsList@WriteLocs]:AddItem["${_args[${Math.Calc[${_count}+1]}]}"]
+					UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+				}
+				else
+				{
+					InputBox -skin eq2 "Enter Wait Time"
+					while ${UserInput.Equal[""]} 
+					{
+						MessageBox -skin eq2 "You must enter a wait time"
+						InputBox -skin eq2 "Enter Wait Time"
+						wait 1
+					}
+					if ${String[${UserInput}].Equal[NULL]}
+						return
+					if ${RI_Var_Bool_Debug}
+						echo Adding Wait for ${UserInput} at LOC: ${LastXYZ} 
+					;Filename:Write["Wait\n"]
+					;Filename:Write[${UserInput}\n]
+					;Filename:Write[${LastXYZ}\n]
+					UIElement[LocsList@WriteLocs]:AddItem["Wait"]
+					UIElement[LocsList@WriteLocs]:AddItem["${UserInput}"]
+					UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+				}
+				break
+			}
+			case -flydown
+			{
+				UIElement[LocsList@WriteLocs]:AddItem["Custom"]
+				UIElement[LocsList@WriteLocs]:AddItem["FlyDown"]
 				UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+				break
+			}
+			case -hailactor
+			{
+				if ${Target(exists)}
+					InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor NumberOfResponses=1 ResponseNumber=1 Hail=TRUE Follow=TRUE ExactName=FALSE" "\"${Target}\" "
+				else
+					InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor NumberOfResponses=1 ResponseNumber=1 Hail=TRUE Follow=TRUE ExactName=FALSE"
+				while ${UserInput.Equal[""]}
+				{
+					MessageBox -skin eq2 "You must enter arguments"
+					InputBox -skin eq2 "Enter arguments seperated by a space in this order (Actor NumberOfResponses=1 ResponseNumber=1 Hail=TRUE Follow=TRUE ExactName=FALSE)"
+					wait 1
+				}
+				if ${String[${UserInput}].Equal[NULL]}
+					return
+				if ${RI_Var_Bool_Debug}
+					echo Writing HailActor ${UserInput} LOC: ${LastXYZ}
+				UIElement[LocsList@WriteLocs]:AddItem["Custom"]
+				UIElement[LocsList@WriteLocs]:AddItem["HailActor ${UserInput}"]
+				UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+				break
+			}
+			case -clickactor
+			{
+				if ${Target(exists)}
+					InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor LoopUntilNoHighlightOnMouseHover=FALSE LoopUntilDNE=FALSE GiveUpCNT=50" "\"${Target}\" "
+				else
+					InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor LoopUntilNoHighlightOnMouseHover=FALSE LoopUntilDNE=FALSE GiveUpCNT=50"
+				while ${UserInput.Equal[""]}
+				{
+					MessageBox -skin eq2 "You must enter arguments"
+					InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor LoopUntilNoHighlightOnMouseHover=FALSE LoopUntilDNE=FALSE GiveUpCNT=50"
+					wait 1
+				}
+				if ${String[${UserInput}].Equal[NULL]}
+					return
+				if ${RI_Var_Bool_Debug}
+					echo Writing ClickActor ${UserInput} LOC: ${LastXYZ}
+				UIElement[LocsList@WriteLocs]:AddItem["Custom"]
+				UIElement[LocsList@WriteLocs]:AddItem["ClickActor ${UserInput}"]
+				UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+				break
+			}
+			case -named
+			{
+				InputBox -skin eq2 "Enter Name"
+				while ${UserInput.Equal[""]} 
+				{
+					MessageBox -skin eq2 "You must enter a name"
+					InputBox -skin eq2 "Enter Name"
+					wait 1
+				}
+				if ${String[${UserInput}].Equal[NULL]}
+					return
+				NamedName:Set[${UserInput}]
+				if ${RI_Var_Bool_Debug}
+					echo Writing Named ${UserInput} LOC: ${LastXYZ}
+				UIElement[LocsList@WriteLocs]:AddItem["Named"]
+				UIElement[LocsList@WriteLocs]:AddItem["${NamedName}"]
+				MessageBox -skin eq2 -yesno "Standard Named?"
+				if ${UserInput.Equal[No]}
+					UIElement[LocsList@WriteLocs]:AddItem["CustomNamed"]
+				else
+				{
+					UIElement[LocsList@WriteLocs]:AddItem["StandardNamed"]
+					MessageBox -skin eq2 -yesno "Same LockSpot For Entire Group?"
+					if ${UserInput.Equal[Yes]}
+						UIElement[LocsList@WriteLocs]:AddItem["SameLock"]
+					else
+					{
+						UIElement[LocsList@WriteLocs]:AddItem["DiffLock"]
+						MessageBox  -skin eq2 "Move to 2nd lock position and click OK"
+						UIElement[LocsList@WriteLocs]:AddItem["${Me.X} ${Me.Y} ${Me.Z}"]
+						MessageBox  -skin eq2 "Move back to 1st lock position and click OK"
+					}
+					MessageBox -skin eq2 -yesno "Kill Add?"
+					if ${UserInput.Equal[Yes]}
+					{
+						
+						InputBox -skin eq2 "Enter Add Name"
+						while ${UserInput.Equal[""]} 
+						{
+							MessageBox -skin eq2 "You must enter a add name"
+							InputBox -skin eq2 "Enter Add Name"
+							wait 1
+						}
+						if ${String[${UserInput}].NotEqual[NULL]}
+						{
+							UIElement[LocsList@WriteLocs]:AddItem["KillAdd"]
+							UIElement[LocsList@WriteLocs]:AddItem["${UserInput}"]
+						}
+						else
+							UIElement[LocsList@WriteLocs]:AddItem["DontKillAdd"]
+					}
+					else
+						UIElement[LocsList@WriteLocs]:AddItem["DontKillAdd"]
+					MessageBox -skin eq2 -yesno "Move group behind named?"
+					if ${UserInput.Equal[Yes]}
+						UIElement[LocsList@WriteLocs]:AddItem["MoveBehind"]
+					else
+						UIElement[LocsList@WriteLocs]:AddItem["DontMoveBehind"]
+				}
+				UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+			}
+			case -custom
+			{
+				if ${_args.Used}==1
+				{
+					InputBox -skin eq2 "What would you like to do here?"
+					while ${UserInput.Equal[""]} 
+					{
+						MessageBox -skin eq2 "You must enter a custom function"
+						InputBox -skin eq2 "What would you like to do here?"
+						wait 1
+					}
+					if ${String[${UserInput}].Equal[NULL]}
+						return
+					if ${RI_Var_Bool_Debug}
+						echo Adding Custom: ${UserInput} LOC: ${LastXYZ}
+					UIElement[LocsList@WriteLocs]:AddItem["Custom"]
+					UIElement[LocsList@WriteLocs]:AddItem["${UserInput}"]
+					UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+				}
+				else
+				{
+					InputBox -skin eq2 "${_args[${Math.Calc[${_count}+1]}]}"
+					while ${UserInput.Equal[""]} 
+					{
+						MessageBox -skin eq2 "You must enter your input"
+						InputBox -skin eq2 "${_args[${Math.Calc[${_count}+1]}]}"
+						wait 1
+					}
+					if ${String[${UserInput}].Equal[NULL]}
+						return
+					if ${RI_Var_Bool_Debug}
+						echo Adding Custom: ${UserInput} LOC: ${LastXYZ}
+					UIElement[LocsList@WriteLocs]:AddItem["Custom"]
+					if ${_args.Used}==2
+						UIElement[LocsList@WriteLocs]:AddItem["${UserInput}"]
+					else
+						UIElement[LocsList@WriteLocs]:AddItem["${_args[${Math.Calc[${_count}+2]}]} \"${UserInput}\""]
+					UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+				}
 				break
 			}
 			default
@@ -411,7 +586,7 @@ function Write(bool Custom, bool ClickActor, bool HailActor, bool Named, bool Wa
 		}
 	}
 
-	if !${Custom} && !${ClickActor} && !${HailActor} && !${Named} && !${Wait} && ${_args.Used}==0
+	if ${_args.Used}==0
 	{
 		if ${UIElement[LocsList@WriteLocs].SelectedItem(exists)} && ${UIElement[TEEdit@WriteLocs].Text.NotEqual[""]}
 		{
@@ -424,152 +599,15 @@ function Write(bool Custom, bool ClickActor, bool HailActor, bool Named, bool Wa
 	}
 	elseif ${Custom}
 	{
-		InputBox -skin eq2 "What would you like to do here?"
-		while ${UserInput.Equal[""]} 
-		{
-			MessageBox -skin eq2 "You must enter a custom function"
-			InputBox -skin eq2 "What would you like to do here?"
-			wait 1
-		}
-		if ${String[${UserInput}].Equal[NULL]}
-			return
-		if ${RI_Var_Bool_Debug}
-			echo Adding Custom: ${UserInput} LOC: ${LastXYZ}
-;			to ${Filename.Path} ${Filename}
-		;Filename:Write["Custom\n"]
-		;Filename:Write[${UserInput}\n]
-		;Filename:Write[${LastXYZ}\n]
 		
-		UIElement[LocsList@WriteLocs]:AddItem["Custom"]
-		UIElement[LocsList@WriteLocs]:AddItem["${UserInput}"]
-		UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
-	}
-	elseif ${Wait}
-	{
-		InputBox -skin eq2 "Enter Wait Time"
-		while ${UserInput.Equal[""]} 
-		{
-			MessageBox -skin eq2 "You must enter a wait time"
-			InputBox -skin eq2 "Enter Wait Time"
-			wait 1
-		}
-		if ${String[${UserInput}].Equal[NULL]}
-			return
-		if ${RI_Var_Bool_Debug}
-			echo Adding Wait for ${UserInput} at LOC: ${LastXYZ} 
-		;Filename:Write["Wait\n"]
-		;Filename:Write[${UserInput}\n]
-		;Filename:Write[${LastXYZ}\n]
-		UIElement[LocsList@WriteLocs]:AddItem["Wait"]
-		UIElement[LocsList@WriteLocs]:AddItem["${UserInput}"]
-		UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
 	}
 	elseif ${ClickActor}
 	{
-		if ${Target(exists)}
-			InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor LoopUntilNoHighlightOnMouseHover=FALSE LoopUntilDNE=FALSE GiveUpCNT=50" "\"${Target}\" "
-		else
-			InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor LoopUntilNoHighlightOnMouseHover=FALSE LoopUntilDNE=FALSE GiveUpCNT=50"
-		while ${UserInput.Equal[""]}
-		{
-			MessageBox -skin eq2 "You must enter arguments"
-			InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor LoopUntilNoHighlightOnMouseHover=FALSE LoopUntilDNE=FALSE GiveUpCNT=50"
-			wait 1
-		}
-		if ${String[${UserInput}].Equal[NULL]}
-			return
-		if ${RI_Var_Bool_Debug}
-			echo Writing ClickActor ${UserInput} LOC: ${LastXYZ}
-		; Filename:Write["ClickActor\n"]
-		; Filename:Write[${UserInput}\n]
-		; Filename:Write[${LastXYZ}\n]
-		UIElement[LocsList@WriteLocs]:AddItem["Custom"]
-		UIElement[LocsList@WriteLocs]:AddItem["ClickActor ${UserInput}"]
-		UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
-	}
-	elseif ${HailActor}
-	{
-		if ${Target(exists)}
-			InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor NumberOfResponses=1 ResponseNumber=1 Hail=TRUE Follow=TRUE ExactName=FALSE" "\"${Target}\" "
-		else
-			InputBox -skin eq2 "Enter arguments seperated by a space in this order Actor NumberOfResponses=1 ResponseNumber=1 Hail=TRUE Follow=TRUE ExactName=FALSE"
-		while ${UserInput.Equal[""]}
-		{
-			MessageBox -skin eq2 "You must enter arguments"
-			InputBox -skin eq2 "Enter arguments seperated by a space in this order (Actor NumberOfResponses=1 ResponseNumber=1 Hail=TRUE Follow=TRUE ExactName=FALSE)"
-			wait 1
-		}
-		if ${String[${UserInput}].Equal[NULL]}
-			return
-		if ${RI_Var_Bool_Debug}
-			echo Writing HailActor ${UserInput} LOC: ${LastXYZ}
-		; Filename:Write["HailActor\n"]
-		; Filename:Write[${UserInput}\n]
-		; Filename:Write[${LastXYZ}\n]
-		UIElement[LocsList@WriteLocs]:AddItem["Custom"]
-		UIElement[LocsList@WriteLocs]:AddItem["HailActor ${UserInput}"]
-		UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+		
 	}
 	elseif ${Named}
 	{
-		InputBox -skin eq2 "Enter Name"
-		while ${UserInput.Equal[""]} 
-		{
-			MessageBox -skin eq2 "You must enter a name"
-			InputBox -skin eq2 "Enter Name"
-			wait 1
-		}
-		if ${String[${UserInput}].Equal[NULL]}
-			return
-		NamedName:Set[${UserInput}]
-		if ${RI_Var_Bool_Debug}
-			echo Writing Named ${UserInput} LOC: ${LastXYZ}
-		UIElement[LocsList@WriteLocs]:AddItem["Named"]
-		UIElement[LocsList@WriteLocs]:AddItem["${NamedName}"]
-		MessageBox -skin eq2 -yesno "Standard Named?"
-		if ${UserInput.Equal[No]}
-			UIElement[LocsList@WriteLocs]:AddItem["CustomNamed"]
-		else
-		{
-			UIElement[LocsList@WriteLocs]:AddItem["StandardNamed"]
-			MessageBox -skin eq2 -yesno "Same LockSpot For Entire Group?"
-			if ${UserInput.Equal[Yes]}
-				UIElement[LocsList@WriteLocs]:AddItem["SameLock"]
-			else
-			{
-				UIElement[LocsList@WriteLocs]:AddItem["DiffLock"]
-				MessageBox  -skin eq2 "Move to 2nd lock position and click OK"
-				UIElement[LocsList@WriteLocs]:AddItem["${Me.X} ${Me.Y} ${Me.Z}"]
-				MessageBox  -skin eq2 "Move back to 1st lock position and click OK"
-			}
-			MessageBox -skin eq2 -yesno "Kill Add?"
-			if ${UserInput.Equal[Yes]}
-			{
-				
-				InputBox -skin eq2 "Enter Add Name"
-				while ${UserInput.Equal[""]} 
-				{
-					MessageBox -skin eq2 "You must enter a add name"
-					InputBox -skin eq2 "Enter Add Name"
-					wait 1
-				}
-				if ${String[${UserInput}].NotEqual[NULL]}
-				{
-					UIElement[LocsList@WriteLocs]:AddItem["KillAdd"]
-					UIElement[LocsList@WriteLocs]:AddItem["${UserInput}"]
-				}
-				else
-					UIElement[LocsList@WriteLocs]:AddItem["DontKillAdd"]
-			}
-			else
-				UIElement[LocsList@WriteLocs]:AddItem["DontKillAdd"]
-			MessageBox -skin eq2 -yesno "Move group behind named?"
-			if ${UserInput.Equal[Yes]}
-				UIElement[LocsList@WriteLocs]:AddItem["MoveBehind"]
-			else
-				UIElement[LocsList@WriteLocs]:AddItem["DontMoveBehind"]
-		}
-		UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+		
 	}
 	UIElement[LocsList@WriteLocs].FindUsableChild[Vertical,Scrollbar]:SetValue[0]
 	;Filename:Flush
