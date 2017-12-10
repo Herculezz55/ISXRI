@@ -2086,6 +2086,93 @@
 ;	AbilityCheck
 ;		Added any Illusion ability to be added to AbilityInfo
 
+;v5.29 Changes 11-27-17
+;	RI
+;		Fixed a bug in the Movement function
+;	RunInstances
+;		Fixed a bug in method QuestStepExists
+
+;
+
+;v5.30 Changes 11-28-17
+;	RI
+;		Updated to support new sub system
+;	RIMovement
+;		Updated MoveBehind/MoveInFront Functions
+
+;v5.31 Changes 11-28-17
+;	CombatBot
+;		Removed AutoDeity
+
+;v5.32 Changes 12-2-17
+;	RQ
+;		Added:
+;			Planes of Prophecy Timeline (only first 2 quests so far)
+;				Legacy of Power: Secrets in an Arcane Land
+;				Legacy of Power: Hero's Devotion
+;			House Yrzu Faction Timeline
+;			Lighter Studies (Repeatable) 
+;				also includes More Specific Resonance Repeatble
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 4 times to get enough faction to progress (Timeline handles this for you)
+;			Vetted Rocks (Repeatable)
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 18 times to get enough faction to progress
+
+;v5.33 Changes 12-3-17
+;	RQ
+;		Fixed a bug that was not asking for the Qty For Repeatables
+;		Added a delay to end of hail actor function to help with lag
+
+;v5.34 Changes 12-4-17
+;	Version bump for testing
+
+;v5.35 Changes 12-4-17
+;	RQ
+;		Fixed a bug that was not asking for the Qty For Repeatables
+
+;v5.36 Changes 12-9-17
+;	RQ
+;		Modified all PoP quests to use new HailActorGetQuest and QuestRepeatFaction functions
+;		Fixed a bug on the Run Button in RQ
+;		Light Studies / Lighter Studies
+;			Updated the Announce Triggers to what DBG changed them too
+;		Added:
+;			House Vahla Faction Timeline (All Quests Including Below:)
+;			Steal It All Back (Repeatable) 
+;				also includes Still Not For Breakfast Repeatable
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 6 times to get enough faction to progress (Timeline handles this for you)
+;			Removing Some Competition (Repeatable) 
+;				also includes Between a Rock and a Hard Beak Repeatable
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 9 times to get 50k faction to progress or below
+;			Fawning Over Flora (Repeatable)
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 19 times to get 50k faction to progress or above	
+;			Pride Pakiat Faction Timeline (All Quests Including Below:)
+;			The Missing Heart Leaves Another Hole (Repeatable) 
+;				also includes Can't Step in the Same River Twice, Twice Repeatable
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 6 times to get enough faction to progress (Timeline handles this for you)
+;			Green Fruit For Rut Part Deux (Repeatable) 
+;				also includes Operation Crustacean Station Continuation Repeatable
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 4 times to get enough faction to progress (Timeline handles this for you)	
+;			Consoling the Souls: A Contemplation			
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 13 times to get 50k faction to progress or any of the below:
+;			The Mootuingo Job			
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 13 times to get 50k faction to progress or the above or any of the below:
+;			The River Job
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 13 times to get 50k faction to progress or the any of the above or the below:
+;			The Starfire Collection
+;				Will be green in RQ list, this means RQ will ask how many times you wanna run it
+;				You need to run it 13 times to get 50k faction to progress or the any of the above:
+;			**Recommended to do Pakiat before Vahla as Vahla has several quests in Pakiat Bluffs and its
+;			**best to be non KOS to those epics
 
 
 ;	RZ
@@ -2093,7 +2180,7 @@
 ;		RZO will handle pre-KA zones
 
 
-variable(global) float RI_Var_Float_Version=5.28
+variable(global) float RI_Var_Float_Version=5.36
 
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
@@ -4556,11 +4643,11 @@ objectdef RIMovementObject
 					press -release ${RI_Var_String_ForwardKey}
 				;execute queued commands
 				call This.ExecuteQueued
-				wait 5 ( ${Math.Distance[${Me.Heading},${Me.HeadingTo[${X1},${Me.Y},${Z1}]}]}>1 || ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}<=${MPrecision} )
-				; if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
-					; wait 2
-				; else
-					; waitframe
+				;wait 5 ( ${Math.Distance[${Me.Heading},${Me.HeadingTo[${X1},${Me.Y},${Z1}]}]}>1 || ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}<=${MPrecision} )
+				if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
+					wait 2
+				else
+					waitframe
 			}
 			if ${Math.Distance[${Me.Y},${Y1}]}>5 && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 			{
@@ -4634,11 +4721,11 @@ objectdef RIMovementObject
 					press -release ${RI_Var_String_FlyDownKey}
 					;wait 1
 				}
-				wait 5 ${Math.Distance[${Me.Y},${Y1}]}<=5
-				; if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
-					; wait 2
-				; else
-					; waitframe
+				;wait 5 ${Math.Distance[${Me.Y},${Y1}]}<=5
+				if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
+					wait 2
+				else
+					waitframe
 			}
 			;stop flying up or down
 			if !${KeepMoving}
@@ -5403,6 +5490,14 @@ objectdef RIMUIObject
 		else
 			return FALSE
 	}
+	method RQEngage(string _Item)
+	{
+		;echo RQEngage(string _Item="${_Item}")
+		if ${_Item.Find[|Repeatable](exists)}
+			This:RQ["${_Item}"]
+		else
+			This:RQ["${_Item.Token[1,|]}"]
+	}
 	method RQCat(string _CatName=!NONE!)
 	{
 		if ${_CatName.Equal[!NONE!]}
@@ -5620,6 +5715,31 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[The Bone Bladed Claymore]
 				UIElement[QuestsListBox@RI]:AddItem[The Symbol in the Flesh]
 			}
+			elseif ${_CatName.Equal[Planes of Prophecy]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem[Planes of Prophecy Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Secrets in an Arcane Land]
+				UIElement[QuestsListBox@RI]:AddItem[House Yrzu Faction Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Lighter Studies,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[Vetted Rocks,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[The Majestrix's Trust]
+				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Hero's Devotion]
+				UIElement[QuestsListBox@RI]:AddItem[Pride Pakiat Faction Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[The Missing Heart Leaves Another Hole,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[Green Fruit For Rut Part Deux,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[Consoling the Souls: A Contemplation,Repeatable,FF00b33c]	
+				UIElement[QuestsListBox@RI]:AddItem[The Mootuingo Job,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[The River Job,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[The Starfire Collection,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[Reflection of Recollection]
+				UIElement[QuestsListBox@RI]:AddItem[House Vahla Faction Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Steal It All Back,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[Removing Some Competition,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[Fawning Over Flora,Repeatable,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem[Dedication Rewarded]
+				
+			}
 		}
 	}
 	method RQ(string _QuestName=!NONE!)
@@ -5648,7 +5768,8 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:AddItem[Greenmist Heritage]
 			UIElement[CategoryComboBox@RI]:AddItem[Epic 2.0 Pre Reqs]
 			UIElement[CategoryComboBox@RI]:AddItem[Heritage Quests]
-			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Epic 2.0 Pre Reqs].ID}]
+			UIElement[CategoryComboBox@RI]:AddItem[Planes of Prophecy]
+			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Planes of Prophecy].ID}]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FF5DA5CF]
@@ -9522,576 +9643,582 @@ function atexit()
 }
 atom(global) ri(... args)
 {
-	if ${args.Size}==0
-		RI_RunInstances
-	else
+	if ${PaidMem.Equal[TRUE]}
 	{
-		switch ${args[1]}
+		if ${args.Size}==0 
+			RI_RunInstances
+		else
 		{
-			case GI
-			case GC
+			switch ${args[1]}
 			{
-				break
-			}
-			case UNLOAD	
-			case UNLOADEXTENSION
-			{
-				ext -unload isxri
-				break
-			}
-			case END
-			{
-				if ${args.Size}==2
+				case GI
+				case GC
 				{
-					switch ${args[2]}
-					{
-						case RIMUI
-						{
-							RIMUIObj:RIMUIClose
-							break
-						}
-						case RIMOVEMENT
-						{
-							if ${Script[Buffer:RIMovement](exists)}
-								Script[Buffer:RIMovement]:End
-							break
-						}
-						case CB
-						{
-							RI_Obj_CB:EndBot
-							break
-						}
-						case RUNINSTANCES
-						case RI
-						{
-							RIObj:EndScript
-							break
-						}
-						case RIMOBHUD
-						{
-							if ${Script[${RI_Var_String_RIMobHudScriptName}](exists)}
-								Script[${RI_Var_String_RIMobHudScriptName}]:End
-							break
-						}
-					}
+					break
 				}
-				break
-			}
-			case Pull
-			{
-				if ${args.Size}==2
+				case UNLOAD	
+				case UNLOADEXTENSION
 				{
-					;start ri
-					RI_RunInstances MAIN-${args[2]}
+					ext -unload isxri
+					break
 				}
-				else
-				{
-					echo ISXRI: You must say the name of the Named you want to pull.
-				}
-				break
-			}
-			case Quest
-			{
-				if ${args.Size}==2
-				{
-					;start ri
-					RI_RunInstances "QUEST-${args[2]}"
-				}
-				else
-				{
-					echo ISXRI: You must specify a quest name or timeline name, USAGE: RI Quest "Quest or Timeline Name", Example RI Quest \"Sokokar Timeline Crafting\" 
-				}
-				break
-			}
-			case Zadune
-			{
-				if !${Script[Buffer:Zadune](exists)}
-					RI_Zadune
-				break
-			}
-			
-			case Looter
-			{
-				if !${Script[Buffer:RILooter](exists)}
-					RI_Looter
-				break
-			}
-			case Farozth
-			{
-				if !${Script[Buffer:Farozth](exists)}
-					RI_Farozth
-				break
-			}
-			case Evac
-			{
-				if !${Script[Buffer:Evac](exists)}
-					RI_Evac
-				break
-			}
-			case RIMovement
-			case RIM
-			{
-				if !${Script[Buffer:RIMovement](exists)}
-					RIMovement
-				break
-			}
-			case FDR
-			case FoodDrinkReplenish
-			{
-				if !${Script[Buffer:FDR](exists)}
-					RI_FDR
-				break
-			}
-			case POTR
-			case PotionReplenish
-			{
-				if !${Script[Buffer:POTR](exists)}
-					RI_POTR
-				break
-			}
-			case RIMovementUI
-			case RIMUI
-			{
-				RIMUIObj:RIMUILoad
-				break
-			}
-			case Ferun
-			{
-				if !${Script[Buffer:Ferun](exists)}
-					RI_Ferun
-				break
-			}
-			case Grethah
-			{
-				if !${Script[Buffer:Grethah](exists)}
-					RI_Grethah
-				break
-			}
- 			case Grevog
-			{
-				if !${Script[Buffer:Grevog](exists)}
-					RI_Grevog
-				break
-			}
-			case Icon
-			{
-				if !${Script[Buffer:Icon](exists)}
-					RI_Icon
-				break
-			}
-			case RRG
-			case RaidRelayGroup
-			{
-				if !${Script[Buffer:RaidRelayGroup](exists)}
-					 RRG
-				break
-			}
-			case RG
-			case RelayGroup
-			{
-				if !${Script[Buffer:RelayGroup](exists)}
-					RG
-				break
-			}
-			case Jessip
-			{
-				if !${Script[Buffer:Jessip](exists)}
-					RI_Jessip
-				break
-			}
-			case Kerridicus
-			{
-				if !${Script[Buffer:Kerridicus](exists)}
-					RI_Kerridicus
-				break
-			}
-			case RZ
-			case RunZones
-			{
-				if !${Script[Buffer:RZ](exists)}
-					RZ
-				break
-			}
-			case AggroControl
-			{
-				if !${Script[Buffer:AggroControl](exists)}
-					RI_AggroControl
-				break
-			}
-			case Protector
-			{
-				if !${Script[Buffer:Protector](exists)}
-					RI_Protector
-				break
-			}
-			case AntiAFK
-			{
-				if !${Script[Buffer:AntiAFK](exists)}
-					RI_AntiAFK
-				break
-			}
-			case Sacrificer
-			{
-				if !${Script[Buffer:Sacrificer](exists)}
-					RI_Sacrificer
-				break
-			}
-			case Captain
-			{
-				if !${Script[Buffer:Captain](exists)}
-					RI_Captain
-				break
-			}
-			case Teraradus
-			{
-				if !${Script[Buffer:Teraradus](exists)}
-					RI_Teraradus
-				break
-			}
-			case Charanda
-			{
-				if !${Script[Buffer:Charanda](exists)}
-					RI_Charanda
-				break
-			}
-			case Torso
-			{
-				if !${Script[Buffer:Torso](exists)}
-					RI_Torso
-				break
-			}
-  			case Ritual
-			{
-				if !${Script[Buffer:Ritual](exists)}
-					RI_Ritual
-				break
-			}
-			case Tserrina
-			{
-				if !${Script[Buffer:Tserrina](exists)}
-					RI_Tserrina
-				break
-			}
- 			case Repair
-			{
-				if !${Script[Buffer:Repair](exists)}
-					RI_Repair
-				break
-			}
- 			case Flag
-			{
-				if !${Script[Buffer:Flag](exists)}
-					RI_Flag
-				break
-			}
-			case ZR
- 			case ZoneReset
-			{
-				if !${Script[Buffer:ZoneReset](exists)}
-					RI_ZoneReset
-				break
-			}
- 			case Login
-			{
-				if !${Script[Buffer:RILogin](exists)}
-					RILogin ${args[2]}
-				break
-			}
- 			case RIMobHud
-			{
-				if !${Script[Buffer:RIMobHud](exists)}
-					RIMobHud
-				break
-			}
-			case CAM
- 			case CancelAllMaintained
-			{
-				RI_CMD_CancelAllMaintained
-				break
-			}
-			case AT
-			case AutoTarget
-			{
-				if !${Script[Buffer:RIAutoTarget](exists)}
-					RI_AutoTarget
-				else
-					UIElement[RIAutoTarget]:Show
-				break
-			}
-			case WL
-			case WriteLocs
-			{
-				if !${Script[Buffer:RIWriteLocs](exists)}
-					RI_WriteLocs
-				break
-			}
-			case Harvest
-			{
-				if !${Script[Buffer:RIHarvest](exists)}
-					RI_Harvest
-				break
-			}
-			case DM
-			case DeleteMissions
-			{
-				if !${Script[Buffer:DeleteMissions](exists)}
-					RI_DeleteMissions
-				break
-			}
-			case SM
-			case ShareMissions
-			{
-				if !${Script[Buffer:ShareMissions](exists)}
-					RI_ShareMissions
-				break
-			}
-			case Balance
-			{
-				if !${Script[Buffer:RIBalance](exists)}
-					RI_Balance
-				break
-			}
-			case Collections
-			{
-				if !${Script[Buffer:Collections](exists)}
-					RI_Collections
-				break
-			}
-			case HideEffects
-			{
-				if !${Script[Buffer:HideEffects](exists)}
-					RI_HideEffects
-				break
-			}
-			case Transmute
-			{
-				if !${Script[Buffer:RITransmute](exists)}
-					RI_Transmute
-				break
-			}
-			case Salvage
-			{
-				if !${Script[Buffer:RISalvage](exists)}
-					RI_Salvage
-				break
-			}
-			case CB
-			case CombatBot
-			{
-				if !${Script[Buffer:CombatBot](exists)}
-					RI_CombatBot
-				else
-					UIElement[CombatBotMiniUI]:Show
-				break
-			}
-			case AbilityCheck
-			{
-				if !${Script[Buffer:AbilityCheck](exists)}
-					RI_AbilityCheck
-				break
-			}
-			case AD
-			case AutoDeity
-			{
-				if !${Script[Buffer:RIAutoDeity](exists)}
+				case END
 				{
 					if ${args.Size}==2
-						RI_AutoDeity ${args[2]}
-					elseif ${args.Size}==3
-						RI_AutoDeity ${args[2]} ${args[3]}
-					else
-						RI_AutoDeity
+					{
+						switch ${args[2]}
+						{
+							case RIMUI
+							{
+								RIMUIObj:RIMUIClose
+								break
+							}
+							case RIMOVEMENT
+							{
+								if ${Script[Buffer:RIMovement](exists)}
+									Script[Buffer:RIMovement]:End
+								break
+							}
+							case CB
+							{
+								RI_Obj_CB:EndBot
+								break
+							}
+							case RUNINSTANCES
+							case RI
+							{
+								RIObj:EndScript
+								break
+							}
+							case RIMOBHUD
+							{
+								if ${Script[${RI_Var_String_RIMobHudScriptName}](exists)}
+									Script[${RI_Var_String_RIMobHudScriptName}]:End
+								break
+							}
+						}
+					}
+					break
 				}
-				break
-			}
-			case E2
-			case Epic2
-			case Epic2PreReqs
-			{
-				RIMUIObj:CheckEpic2PreReqs[ALL]
-				break
-			}
-			case AC
-			case AvailableCommands
-			{
-				echo ISXRI: Available RI and !RI commands:
-				echo UNLOAD	
-				echo UNLOADEXTENSION
-				echo END (RIMUI,RIMOVEMENT,CB,RI,RIMOBHUD)
-				echo Zadune
-				echo Looter
-				echo Farozth
-				echo Evac
-				echo RIMovement
-				echo RIM
-				echo FDR
-				echo FoodDrinkReplenish
-				echo RIMovementUI
-				echo RIMUI
-				echo Ferun
-				echo Grethah
-				echo Grevog
-				echo Icon
-				echo RRG
-				echo RaidRelayGroup
-				echo RG
-				echo RelayGroup
-				echo Jessip
-				echo Kerridicus
-				echo RZ
-				echo RunZones
-				echo AggroControl
-				echo Protector
-				echo AntiAFK
-				echo Sacrificer
-				echo Captain
-				echo Teraradus
-				echo Charanda
-				echo Torso
-				echo Ritual
-				echo Repair
-				echo Flag
-				echo ZR
-				echo ZoneReset
-				echo Login
-				echo RIMH
-				echo RIMob
-				echo RIMobHud
-				echo CAM
-				echo CancelAllMaintained
-				echo AutoTarget
-				echo CombatBot
-				echo CB
-				echo CombatBot
-				echo AbilityCheck
-				echo AutoDeity
-				echo DeleteMissions
-				echo ShareMissions
-				echo Harvest
-				echo Balance
-				echo WriteLocs
-				echo Harvest
-				echo DeleteMissions
-				echo ShareMissions
-				echo Balance
-				echo HideEffects
-				echo Collections
-				echo Transmute
-				echo Salvage
-				echo E2
-				break
-			}
- 			; case AbilityEnableDisable
-			; {
-				; RI_CMD_AbilityEnableDisable 
-				; break
-			; }
+				case Pull
+				{
+					if ${args.Size}==2
+					{
+						;start ri
+						RI_RunInstances MAIN-${args[2]}
+					}
+					else
+					{
+						echo ISXRI: You must say the name of the Named you want to pull.
+					}
+					break
+				}
+				case Quest
+				{
+					if ${args.Size}==2
+					{
+						;start ri
+						RI_RunInstances "QUEST-${args[2]}"
+					}
+					else
+					{
+						echo ISXRI: You must specify a quest name or timeline name, USAGE: RI Quest "Quest or Timeline Name", Example RI Quest \"Sokokar Timeline Crafting\" 
+					}
+					break
+				}
+				case Zadune
+				{
+					if !${Script[Buffer:Zadune](exists)}
+						RI_Zadune
+					break
+				}
+				
+				case Looter
+				{
+					if !${Script[Buffer:RILooter](exists)}
+						RI_Looter
+					break
+				}
+				case Farozth
+				{
+					if !${Script[Buffer:Farozth](exists)}
+						RI_Farozth
+					break
+				}
+				case Evac
+				{
+					if !${Script[Buffer:Evac](exists)}
+						RI_Evac
+					break
+				}
+				case RIMovement
+				case RIM
+				{
+					if !${Script[Buffer:RIMovement](exists)}
+						RIMovement
+					break
+				}
+				case FDR
+				case FoodDrinkReplenish
+				{
+					if !${Script[Buffer:FDR](exists)}
+						RI_FDR
+					break
+				}
+				case POTR
+				case PotionReplenish
+				{
+					if !${Script[Buffer:POTR](exists)}
+						RI_POTR
+					break
+				}
+				case RIMovementUI
+				case RIMUI
+				{
+					RIMUIObj:RIMUILoad
+					break
+				}
+				case Ferun
+				{
+					if !${Script[Buffer:Ferun](exists)}
+						RI_Ferun
+					break
+				}
+				case Grethah
+				{
+					if !${Script[Buffer:Grethah](exists)}
+						RI_Grethah
+					break
+				}
+				case Grevog
+				{
+					if !${Script[Buffer:Grevog](exists)}
+						RI_Grevog
+					break
+				}
+				case Icon
+				{
+					if !${Script[Buffer:Icon](exists)}
+						RI_Icon
+					break
+				}
+				case RRG
+				case RaidRelayGroup
+				{
+					if !${Script[Buffer:RaidRelayGroup](exists)}
+						 RRG
+					break
+				}
+				case RG
+				case RelayGroup
+				{
+					if !${Script[Buffer:RelayGroup](exists)}
+						RG
+					break
+				}
+				case Jessip
+				{
+					if !${Script[Buffer:Jessip](exists)}
+						RI_Jessip
+					break
+				}
+				case Kerridicus
+				{
+					if !${Script[Buffer:Kerridicus](exists)}
+						RI_Kerridicus
+					break
+				}
+				case RZ
+				case RunZones
+				{
+					if !${Script[Buffer:RZ](exists)}
+						RZ
+					break
+				}
+				case AggroControl
+				{
+					if !${Script[Buffer:AggroControl](exists)}
+						RI_AggroControl
+					break
+				}
+				case Protector
+				{
+					if !${Script[Buffer:Protector](exists)}
+						RI_Protector
+					break
+				}
+				case AntiAFK
+				{
+					if !${Script[Buffer:AntiAFK](exists)}
+						RI_AntiAFK
+					break
+				}
+				case Sacrificer
+				{
+					if !${Script[Buffer:Sacrificer](exists)}
+						RI_Sacrificer
+					break
+				}
+				case Captain
+				{
+					if !${Script[Buffer:Captain](exists)}
+						RI_Captain
+					break
+				}
+				case Teraradus
+				{
+					if !${Script[Buffer:Teraradus](exists)}
+						RI_Teraradus
+					break
+				}
+				case Charanda
+				{
+					if !${Script[Buffer:Charanda](exists)}
+						RI_Charanda
+					break
+				}
+				case Torso
+				{
+					if !${Script[Buffer:Torso](exists)}
+						RI_Torso
+					break
+				}
+				case Ritual
+				{
+					if !${Script[Buffer:Ritual](exists)}
+						RI_Ritual
+					break
+				}
+				case Tserrina
+				{
+					if !${Script[Buffer:Tserrina](exists)}
+						RI_Tserrina
+					break
+				}
+				case Repair
+				{
+					if !${Script[Buffer:Repair](exists)}
+						RI_Repair
+					break
+				}
+				case Flag
+				{
+					if !${Script[Buffer:Flag](exists)}
+						RI_Flag
+					break
+				}
+				case ZR
+				case ZoneReset
+				{
+					if !${Script[Buffer:ZoneReset](exists)}
+						RI_ZoneReset
+					break
+				}
+				case Login
+				{
+					if !${Script[Buffer:RILogin](exists)}
+						RILogin ${args[2]}
+					break
+				}
+				case RIMobHud
+				{
+					if !${Script[Buffer:RIMobHud](exists)}
+						RIMobHud
+					break
+				}
+				case CAM
+				case CancelAllMaintained
+				{
+					RI_CMD_CancelAllMaintained
+					break
+				}
+				case AT
+				case AutoTarget
+				{
+					if !${Script[Buffer:RIAutoTarget](exists)}
+						RI_AutoTarget
+					else
+						UIElement[RIAutoTarget]:Show
+					break
+				}
+				case WL
+				case WriteLocs
+				{
+					if !${Script[Buffer:RIWriteLocs](exists)}
+						RI_WriteLocs
+					break
+				}
+				case Harvest
+				{
+					if !${Script[Buffer:RIHarvest](exists)}
+						RI_Harvest
+					break
+				}
+				case DM
+				case DeleteMissions
+				{
+					if !${Script[Buffer:DeleteMissions](exists)}
+						RI_DeleteMissions
+					break
+				}
+				case SM
+				case ShareMissions
+				{
+					if !${Script[Buffer:ShareMissions](exists)}
+						RI_ShareMissions
+					break
+				}
+				case Balance
+				{
+					if !${Script[Buffer:RIBalance](exists)}
+						RI_Balance
+					break
+				}
+				case Collections
+				{
+					if !${Script[Buffer:Collections](exists)}
+						RI_Collections
+					break
+				}
+				case HideEffects
+				{
+					if !${Script[Buffer:HideEffects](exists)}
+						RI_HideEffects
+					break
+				}
+				case Transmute
+				{
+					if !${Script[Buffer:RITransmute](exists)}
+						RI_Transmute
+					break
+				}
+				case Salvage
+				{
+					if !${Script[Buffer:RISalvage](exists)}
+						RI_Salvage
+					break
+				}
+				case CB
+				case CombatBot
+				{
+					if !${Script[Buffer:CombatBot](exists)}
+						RI_CombatBot
+					else
+						UIElement[CombatBotMiniUI]:Show
+					break
+				}
+				case AbilityCheck
+				{
+					if !${Script[Buffer:AbilityCheck](exists)}
+						RI_AbilityCheck
+					break
+				}
+				; case AD
+				; case AutoDeity
+				; {
+					; if !${Script[Buffer:RIAutoDeity](exists)}
+					; {
+						; if ${args.Size}==2
+							; RI_AutoDeity ${args[2]}
+						; elseif ${args.Size}==3
+							; RI_AutoDeity ${args[2]} ${args[3]}
+						; else
+							; RI_AutoDeity
+					; }
+					; break
+				; }
+				case E2
+				case Epic2
+				case Epic2PreReqs
+				{
+					RIMUIObj:CheckEpic2PreReqs[ALL]
+					break
+				}
+				case AC
+				case AvailableCommands
+				{
+					echo ISXRI: Available RI and !RI commands:
+					echo UNLOAD	
+					echo UNLOADEXTENSION
+					echo END (RIMUI,RIMOVEMENT,CB,RI,RIMOBHUD)
+					echo Zadune
+					echo Looter
+					echo Farozth
+					echo Evac
+					echo RIMovement
+					echo RIM
+					echo FDR
+					echo FoodDrinkReplenish
+					echo RIMovementUI
+					echo RIMUI
+					echo Ferun
+					echo Grethah
+					echo Grevog
+					echo Icon
+					echo RRG
+					echo RaidRelayGroup
+					echo RG
+					echo RelayGroup
+					echo Jessip
+					echo Kerridicus
+					echo RZ
+					echo RunZones
+					echo AggroControl
+					echo Protector
+					echo AntiAFK
+					echo Sacrificer
+					echo Captain
+					echo Teraradus
+					echo Charanda
+					echo Torso
+					echo Ritual
+					echo Repair
+					echo Flag
+					echo ZR
+					echo ZoneReset
+					echo Login
+					echo RIMH
+					echo RIMob
+					echo RIMobHud
+					echo CAM
+					echo CancelAllMaintained
+					echo AutoTarget
+					echo CombatBot
+					echo CB
+					echo CombatBot
+					echo AbilityCheck
+					;echo AutoDeity
+					echo DeleteMissions
+					echo ShareMissions
+					echo Harvest
+					echo Balance
+					echo WriteLocs
+					echo Harvest
+					echo DeleteMissions
+					echo ShareMissions
+					echo Balance
+					echo HideEffects
+					echo Collections
+					echo Transmute
+					echo Salvage
+					echo E2
+					break
+				}
+				; case AbilityEnableDisable
+				; {
+					; RI_CMD_AbilityEnableDisable 
+					; break
+				; }
 
-			; RI_CMD_AbilityEnableDisable
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+				; RI_CMD_AbilityEnableDisable
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
-				; RI_CMD_Assisting
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+					; RI_CMD_Assisting
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
- ; RI_CMD_PauseCombatBots
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+	 ; RI_CMD_PauseCombatBots
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
- ; RI_CMD_ReloadBots
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+	 ; RI_CMD_ReloadBots
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
- ; RI_CMD_AbilityTypeEnableDisable
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+	 ; RI_CMD_AbilityTypeEnableDisable
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
- ; RI_CMD_FoodDrinkConsume
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+	 ; RI_CMD_FoodDrinkConsume
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
- ; RI_CMD_Cast
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+	 ; RI_CMD_Cast
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
- ; RI_CMD_CastOn
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+	 ; RI_CMD_CastOn
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
- ; RI_CMD_PauseRIMovement
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+	 ; RI_CMD_PauseRIMovement
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
- ; RI_CMD_PotionConsume
-			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+	 ; RI_CMD_PotionConsume
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
- ; RI_CMD_ChangeFaceNPC 
- 			; case
-			; {
-				; if !${Script[Buffer:](exists)}
-					; RI_
-				; break
-			; }
+	 ; RI_CMD_ChangeFaceNPC 
+				; case
+				; {
+					; if !${Script[Buffer:](exists)}
+						; RI_
+					; break
+				; }
 
-			default
-			{
-				RILogin ${args[1]}
+				default
+				{
+					RILogin ${args[1]}
+				}
 			}
 		}
 	}
 }
 atom(global) !ri(... args)
 {
-	variable int count=0
-	variable string executecomm
-	executecomm:Set["ri"]
-	for(count:Set[1];${count}<=${args.Size};count:Inc)
+	if ${PaidMem.Equal[TRUE]}
 	{
-		executecomm:Concat[" ${args[${count}]}"]
+		variable int count=0
+		variable string executecomm
+		executecomm:Set["ri"]
+		for(count:Set[1];${count}<=${args.Size};count:Inc)
+		{
+			executecomm:Concat[" ${args[${count}]}"]
+		}
+		execute "${executecomm.Escape}"
 	}
-	execute "${executecomm.Escape}"
 }
 atom(global) rilogin(... args)
 {

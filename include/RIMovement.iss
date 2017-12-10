@@ -45,6 +45,7 @@ variable(global) bool RI_Var_Bool_RIMPaused=FALSE
 
 variable(global) bool RI_Var_Bool_MovingBehind
 variable(global) int RI_Var_Int_MoveBehindDistance
+variable(global) int RI_Var_Int_MoveBehindMaxMeleeRangeMod=0
 variable(global) int RI_Var_Int_MoveBehindHealth
 variable(global) int RI_Var_Int_MoveBehindMobID
 variable(global) string RI_Var_String_MoveBehindFallBackPCName
@@ -52,9 +53,11 @@ variable(global) bool RI_Var_Bool_MoveBehindIgnoreAggroCheck=FALSE
 
 variable(global) bool RI_Var_Bool_MovingInFront
 variable(global) int RI_Var_Int_MoveInFrontDistance
+variable(global) int RI_Var_Int_MoveInFrontMaxMeleeRangeMod=0
 variable(global) int RI_Var_Int_MoveInFrontHealth
 variable(global) int RI_Var_Int_MoveInFrontMobID
 variable(global) string RI_Var_String_MoveInFrontFallBackPCName
+variable(global) bool RI_Var_Bool_MoveInFrontIgnoreAggroCheck=FALSE
 
 variable(global) bool RI_Var_Bool_LockSpotting
 variable(global) float RI_Var_Float_LockSpotX=0
@@ -816,7 +819,7 @@ function StopAutoRun()
 	;while ${Me.IsMoving}
 	RI_Var_Bool_AutoRunning:Set[FALSE]
 }
-function RIMoveBehind()
+function RIMoveBehindOLD()
 {
 	if ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${RI_Var_Int_MoveBehindDistance} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health}<=${RI_Var_Int_MoveBehindHealth} && !${RI_Var_Bool_LockSpotting}
 	{
@@ -825,7 +828,7 @@ function RIMoveBehind()
 		;set point behind the mob
 		PointBehindMob:Set[${Position.PointAtAngle[${RI_Var_Int_MoveBehindMobID},1]}]
 		;if we are already in melee range and behind continue
-		if (${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}<30)
+		if (${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}>${Math.Calc[${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]}-1]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}<30)
 		{
 			if ${RI_Var_Bool_Debug}
 				echo ${Time}: we are in range and behind (${Actor[${RI_Var_Int_MoveBehindMobID}].Distance2D}<${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}<30)
@@ -850,7 +853,8 @@ function RIMoveBehind()
 		;turn off FaceNPC
 		RI_CMD_ChangeFaceNPC 0
 		;loop until we are in melee range and behind the mob
-		while ${RI_Var_Bool_MovingBehind} && (${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}>${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} || ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}>30) && ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveBehindMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
+		
+		while ${RI_Var_Bool_MovingBehind} && (${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}>${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} || ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}>0) && ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveBehindMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
 		{
 			if ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Target.ID}==${Me.ID} && !${RI_Var_Bool_MoveBehindIgnoreAggroCheck}
 				return
@@ -867,9 +871,11 @@ function RIMoveBehind()
 			;hold forward, if it isnt already
 			;if !${Input.Button[${RI_Var_String_ForwardKey}].Pressed}
 				press -hold ${RI_Var_String_ForwardKey}
+				press -release ${RI_Var_String_BackwardKey}
 			wait 1
 		}
-		while ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${Math.Distance[${Me.X},${Me.Y},${Me.Z},${PointBehindMob}]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}<30 && ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveBehindMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
+		;while ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${Math.Distance[${Me.X},${Me.Y},${Me.Z},${PointBehindMob}]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}<30 && ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveBehindMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
+		while ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${Math.Calc[${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]}-1]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}<30 && ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveBehindMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
 		{
 			if ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Target.ID}==${Me.ID} && !${RI_Var_Bool_MoveBehindIgnoreAggroCheck}
 			{
@@ -884,9 +890,10 @@ function RIMoveBehind()
 			;set point behind the mob
 			PointBehindMob:Set[${Position.PointAtAngle[${RI_Var_Int_MoveBehindMobID},1]}]
 			;face mob
-			Face ${Actor[id,${RI_Var_Int_MoveBehindMobID}].X} $${Actor[id,${RI_Var_Int_MoveBehindMobID}].Z}
+			Actor[id,${RI_Var_Int_MoveBehindMobID}:DoFace
 			;hold backward, if it isnt already
 			;if !${Input.Button[${RI_Var_String_BackwardKey}].Pressed}
+			press -release ${RI_Var_String_ForwardKey}
 				press -hold ${RI_Var_String_BackwardKey}
 			wait 1
 		}
@@ -920,6 +927,102 @@ function RIMoveBehind()
 		RI_CMD_ChangeFaceNPC 1
 	}
 }
+function RIMoveBehind()
+{
+	if ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${RI_Var_Int_MoveBehindDistance} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health}<=${RI_Var_Int_MoveBehindHealth} && !${RI_Var_Bool_LockSpotting}
+	{
+		;declaration
+		variable point3f PointBehindMob
+		;set point Behind the mob
+		PointBehindMob:Set[${Position.PointAtAngle[${RI_Var_Int_MoveBehindMobID},1]}]
+		;if we are already in melee range and Behind continue
+		if (${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}>${Math.Calc[${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]}-1]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}<30)
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: We are in range and Behind (${Target.Target.Distance2D}<${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}<30)
+			;checking if we are too close 
+			if ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}>${Math.Distance[${Me.X},${Me.Y},${Me.Z},${PointBehindMob}]}
+				return
+		}
+		;if there collision detected or if we have aggro, do not move
+		if ${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${PointBehindMob.X},${Math.Calc[${PointBehindMob.Y}+2]},${PointBehindMob.Z}]}
+		{	
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: MoveBehind: our collision check is true
+			return
+		}
+		if ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Target.ID}==${Me.ID} && !${RI_Var_Bool_MoveBehindIgnoreAggroCheck}
+		{	
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: MoveBehind: we our hated
+			return
+		}
+		;turn off FaceNPC
+		RI_CMD_ChangeFaceNPC 0
+		;loop until we are in melee range and Behind the mob
+		while ${RI_Var_Bool_MovingBehind} && (${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}>${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} || ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}>30) && ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveBehindMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: Moving into position Behind ${Actor[id,${RI_Var_Int_MoveBehindMobID}]}: ${Target.Target.Distance2D} > ${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} / ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}
+			;check if we are swimming and if we should be staying afloat
+			;call CheckSwimming
+			;set point Behind the mob
+			PointBehindMob:Set[${Position.PointAtAngle[${RI_Var_Int_MoveBehindMobID},1]}]
+			;face point
+			Face ${PointBehindMob.X} ${PointBehindMob.Z}
+			;hold forward, if it isnt already
+			;if !${Input.Button[${RI_Var_String_ForwardKey}].Pressed}
+				press -hold ${RI_Var_String_ForwardKey}
+				press -release ${RI_Var_String_BackwardKey}
+			wait 1
+		}
+		;while ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${Math.Distance[${Me.X},${Me.Y},${Me.Z},${PointBehindMob}]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}>30 && ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveBehindMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
+		while ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${Math.Calc[${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]}-1]} && ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}<30 && ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveBehindMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: We are too close from Behind ${Actor[id,${RI_Var_Int_MoveBehindMobID}]}: ${Target.Target.Distance2D} > ${Position.GetMeleeMaxRange[${RI_Var_Int_MoveBehindMobID}]} / ${Position.Angle[${RI_Var_Int_MoveBehindMobID}]}
+			;check if we are swimming and if we should be staying afloat
+			;call CheckSwimming
+			;set point Behind the mob
+			;PointBehindMob:Set[${Position.PointAtAngle[${RI_Var_Int_MoveBehindMobID},1]}]
+			;face mob
+			Actor[id,${RI_Var_Int_MoveBehindMobID}]:DoFace
+			;hold backward, if it isnt already
+			;if !${Input.Button[${RI_Var_String_BackwardKey}].Pressed}
+			press -release ${RI_Var_String_ForwardKey}
+				press -hold ${RI_Var_String_BackwardKey}
+			wait 1
+		}
+		;we are Behind, release forward and backward
+		press -release ${RI_Var_String_ForwardKey}
+		press -release ${RI_Var_String_BackwardKey}
+		;turn on FaceNPC
+		RI_CMD_ChangeFaceNPC 1
+		wait 1
+	}
+	;else if we are too far move to our fallback PC character if it exists
+	elseif ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}>${RI_Var_Int_MoveBehindDistance} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health}<=${RI_Var_Int_MoveBehindHealth} && ${Actor[${RI_Var_String_MoveBehindFallBackPCName}](exists)} && ${Actor[${RI_Var_String_MoveBehindFallBackPCName}].Distance2D}>5 && !${RI_Var_Bool_LockSpotting}
+	{
+		;turn off FaceNPC
+		RI_CMD_ChangeFaceNPC 0
+		while ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}>${RI_Var_Int_MoveBehindDistance} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health}<=${RI_Var_Int_MoveBehindHealth} && ${Actor[${RI_Var_String_MoveBehindFallBackPCName}](exists)} && ${Actor[${RI_Var_String_MoveBehindFallBackPCName}].Distance2D}>5 && !${RI_Var_Bool_LockSpotting}
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: We are too far away to move Behind, moving to our fallback PC character: ${RI_Var_String_MoveBehindFallBackPCName}
+			;check if we are swimming and if we should be staying afloat
+			;call CheckSwimming
+			;face Actor
+			Actor[${RI_Var_String_MoveBehindFallBackPCName}]:DoFace
+			;hold forward, if it isnt already
+			;if !${Input.Button[${RI_Var_String_ForwardKey}].Pressed}
+				press -hold ${RI_Var_String_ForwardKey}
+			wait 1
+		}
+		press -release ${RI_Var_String_ForwardKey}
+		;turn on FaceNPC
+		RI_CMD_ChangeFaceNPC 1
+	}
+}
 function RIMoveInFront()
 {
 	if ${RI_Var_Bool_MovingInFront} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Distance2D}<${RI_Var_Int_MoveInFrontDistance} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Health}<=${RI_Var_Int_MoveInFrontHealth} && !${RI_Var_Bool_LockSpotting}
@@ -929,19 +1032,25 @@ function RIMoveInFront()
 		;set point InFront the mob
 		PointInFrontMob:Set[${Position.PointAtAngle[${RI_Var_Int_MoveInFrontMobID},180]}]
 		;if we are already in melee range and InFront continue
-		if (${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Distance2D}<${Position.GetMeleeMaxRange[${RI_Var_Int_MoveInFrontMobID}]} && ${Position.Angle[${RI_Var_Int_MoveInFrontMobID}]}>150)
+		if (${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Distance2D}<${Position.GetMeleeMaxRange[${RI_Var_Int_MoveInFrontMobID}]} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Distance2D}>${Math.Calc[${Position.GetMeleeMaxRange[${RI_Var_Int_MoveInFrontMobID}]}-1]} && ${Position.Angle[${RI_Var_Int_MoveInFrontMobID}]}>150)
 		{
 			if ${RI_Var_Bool_Debug}
-				echo ${Time}: We are in range and in front (${Target.Target.Distance2D}<${Position.GetMeleeMaxRange[${RI_Var_Int_MoveInFrontMobID}]} && ${Position.Angle[${RI_Var_Int_MoveInFrontMobID}]}>150)
+				echo ${Time}: We are in range and InFront (${Target.Target.Distance2D}<${Position.GetMeleeMaxRange[${RI_Var_Int_MoveInFrontMobID}]} && ${Position.Angle[${RI_Var_Int_MoveInFrontMobID}]}>150)
 			;checking if we are too close 
 			if ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Distance2D}>${Math.Distance[${Me.X},${Me.Y},${Me.Z},${PointInFrontMob}]}
 				return
 		}
 		;if there collision detected or if we have aggro, do not move
-		if (${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${PointInFrontMob.X},${Math.Calc[${PointInFrontMob.Y}+2]},${PointInFrontMob.Z}]} || ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Target.ID}==${Me.ID})
+		if ${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${PointInFrontMob.X},${Math.Calc[${PointInFrontMob.Y}+2]},${PointInFrontMob.Z}]}
 		{	
 			if ${RI_Var_Bool_Debug}
-			echo ${Time}: Move In Front: We are either hated or our collision check is true
+			echo ${Time}: MoveInFront: Our collision check is true
+			return
+		}
+		if ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Target.ID}==${Me.ID} && !${RI_Var_Bool_MoveInFrontIgnoreAggroCheck}
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: MoveInFront: We are hated
 			return
 		}
 		;turn off FaceNPC
@@ -960,9 +1069,11 @@ function RIMoveInFront()
 			;hold forward, if it isnt already
 			;if !${Input.Button[${RI_Var_String_ForwardKey}].Pressed}
 				press -hold ${RI_Var_String_ForwardKey}
+				press -release ${RI_Var_String_BackwardKey}
 			wait 1
 		}
-		while ${RI_Var_Bool_MovingInFront} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Distance2D}<${Math.Distance[${Me.X},${Me.Y},${Me.Z},${PointInFrontMob}]} && ${Position.Angle[${RI_Var_Int_MoveInFrontMobID}]}>150 && ${RI_Var_Bool_MovingInFront} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveInFrontMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
+		;while ${RI_Var_Bool_MovingInFront} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Distance2D}<${Math.Distance[${Me.X},${Me.Y},${Me.Z},${PointInFrontMob}]} && ${Position.Angle[${RI_Var_Int_MoveInFrontMobID}]}>150 && ${RI_Var_Bool_MovingInFront} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveInFrontMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
+		while ${RI_Var_Bool_MovingInFront} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Distance2D}<${Math.Calc[${Position.GetMeleeMaxRange[${RI_Var_Int_MoveInFrontMobID}]}-1]} && ${Position.Angle[${RI_Var_Int_MoveInFrontMobID}]}>150 && ${RI_Var_Bool_MovingInFront} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}](exists)} && !${Actor[id,${RI_Var_Int_MoveInFrontMobID}].IsDead} && !${RI_Var_Bool_LockSpotting}
 		{
 			if ${RI_Var_Bool_Debug}
 				echo ${Time}: We are too close from InFront ${Actor[id,${RI_Var_Int_MoveInFrontMobID}]}: ${Target.Target.Distance2D} > ${Position.GetMeleeMaxRange[${RI_Var_Int_MoveInFrontMobID}]} / ${Position.Angle[${RI_Var_Int_MoveInFrontMobID}]}
@@ -971,9 +1082,10 @@ function RIMoveInFront()
 			;set point InFront the mob
 			PointInFrontMob:Set[${Position.PointAtAngle[${RI_Var_Int_MoveInFrontMobID},180]}]
 			;face mob
-			Face ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].X} $${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Z}
+			Actor[id,${RI_Var_Int_MoveInFrontMobID}]:DoFace
 			;hold backward, if it isnt already
 			;if !${Input.Button[${RI_Var_String_BackwardKey}].Pressed}
+			press -release ${RI_Var_String_ForwardKey}
 				press -hold ${RI_Var_String_BackwardKey}
 			wait 1
 		}

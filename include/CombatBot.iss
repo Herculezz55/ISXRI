@@ -361,7 +361,7 @@ variable(global) bool CombatBotCSCDebug=FALSE
 variable int LastSavageryCastTime=1
 variable bool SavageryAbility=FALSE
 variable string CurrentLootWindowID=0
-variable(global) bool RI_Var_Bool_AutoDeityDisabled=0
+;variable(global) bool RI_Var_Bool_AutoDeityDisabled=0
 variable int PotencyCount=0
 variable int CritBonusCount=0
 variable int StaminaCount=0
@@ -1550,8 +1550,8 @@ objectdef RI_Object_CB
 	{
 		if ${Script[Buffer:RILooter](exists)} && !${Script[Buffer:RunInstances](exists)}
 			Script[Buffer:RILooter]:End
-		if ${Script[Buffer:RIAutoDeity](exists)}
-			Script[Buffer:RIAutoDeity]:End	
+		;if ${Script[Buffer:RIAutoDeity](exists)}
+			;Script[Buffer:RIAutoDeity]:End	
 		Script:End
 	}
 	
@@ -5626,51 +5626,51 @@ function main()
 				{	
 					;echo checks
 					intTimeChecks:Set[${Script.RunningTime}]
-					if !${RI_Var_Bool_AutoDeityDisabled} && ${Me.GetGameData["Achievement.AvailableDeityPoints"].Label}>${Int[${UIElement[SettingsDeitySpendTextEntry@SettingsFrame@CombatBotUI].Text}]}
-					{	
-						if ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==0
-						{
-							if ${PotencyCount}<=${CritBonusCount} && ${PotencyCount}<=${StaminaCount}
-								call PotencySpender
-							elseif ${CritBonusCount}<=${PotencyCount} && ${CritBonusCount}<=${StaminaCount}
-								call CritBonusSpender
-							elseif ${StaminaCount}<=${PotencyCount} && ${StaminaCount}<=${CritBonusCount}
-								call StaminaSpender
-						}
-						elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==1
-						{
-							call PotencySpender
-						}
-						elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==2
-						{
-							call CritBonusSpender
-						}
-						elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==3
-						{
-							call StaminaSpender
-						}
-						elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==4
-						{
-							if ${PotencyCount}<=${CritBonusCount}
-								call PotencySpender
-							else
-								call CritBonusSpender
-						}
-						elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==5
-						{
-							if ${PotencyCount}<=${StaminaCount}
-								call PotencySpender
-							else
-								call StaminaSpender
-						}
-						elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==6
-						{
-							if ${CritBonusCount}<=${StaminaCount}
-								call CritBonusSpender
-							else
-								call StaminaSpender
-						}
-					}
+					; if !${RI_Var_Bool_AutoDeityDisabled} && ${Me.GetGameData["Achievement.AvailableDeityPoints"].Label}>${Int[${UIElement[SettingsDeitySpendTextEntry@SettingsFrame@CombatBotUI].Text}]}
+					; {	
+						; if ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==0
+						; {
+							; if ${PotencyCount}<=${CritBonusCount} && ${PotencyCount}<=${StaminaCount}
+								; call PotencySpender
+							; elseif ${CritBonusCount}<=${PotencyCount} && ${CritBonusCount}<=${StaminaCount}
+								; call CritBonusSpender
+							; elseif ${StaminaCount}<=${PotencyCount} && ${StaminaCount}<=${CritBonusCount}
+								; call StaminaSpender
+						; }
+						; elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==1
+						; {
+							; call PotencySpender
+						; }
+						; elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==2
+						; {
+							; call CritBonusSpender
+						; }
+						; elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==3
+						; {
+							; call StaminaSpender
+						; }
+						; elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==4
+						; {
+							; if ${PotencyCount}<=${CritBonusCount}
+								; call PotencySpender
+							; else
+								; call CritBonusSpender
+						; }
+						; elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==5
+						; {
+							; if ${PotencyCount}<=${StaminaCount}
+								; call PotencySpender
+							; else
+								; call StaminaSpender
+						; }
+						; elseif ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==6
+						; {
+							; if ${CritBonusCount}<=${StaminaCount}
+								; call CritBonusSpender
+							; else
+								; call StaminaSpender
+						; }
+					; }
 					if ${Target(exists)} && !${Target.Name(exists)}
 						eq2ex target_none
 					if ${RI_Obj_CB.GetUISetting[SettingsSummonFamiliarCheckBox]} && !${Me.Name.Find["Skyshrine "](exists)}
@@ -5774,11 +5774,31 @@ function main()
 								WasRIFollowing:Set[FALSE]
 							}
 						}
-						;move infront
-						if ${UIElement[SettingsMoveInFrontCheckBox@SettingsFrame@CombatBotUI].Checked} && ( ${Actor[id,${KillTargetID}].Health}<=${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]} || ${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked} )
+						if ${UIElement[SettingsMoveInFrontCheckBox@SettingsFrame@CombatBotUI].Checked}
 						{
-							;setup move infront for ${KillTargetID}
-							noop
+							;echo setup move behind for ${KillTargetID}
+							if ${RI_Var_Bool_RIFollowing}
+							{
+								RI_Var_Bool_RIFollowing:Set[FALSE]
+								WasRIFollowing:Set[TRUE]
+							}
+							if !${RI_Var_Bool_MovingInFront} || ${RI_Var_Int_MoveInFrontMobID}!=${KillTargetID} || ( ${RI_Var_Int_MoveInFrontHealth}!=${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]} && !${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked} )
+							{
+								if ${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked}
+									RI_Atom_MoveInFront ${Me.Name} ${KillTargetID} 30 100
+								else
+									RI_Atom_MoveInFront ${Me.Name} ${KillTargetID} 30 ${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]}
+							}
+						}
+						elseif ${RI_Var_Bool_MovingInFront}
+						{
+							
+							RI_Atom_MoveInFront OFF
+							if ${WasRIFollowing}
+							{
+								RI_Var_Bool_RIFollowing:Set[TRUE]
+								WasRIFollowing:Set[FALSE]
+							}
 						}
 						;movein
 						if ${UIElement[SettingsMoveInCheckBox@SettingsFrame@CombatBotUI].Checked} && ( ${Actor[id,${KillTargetID}].Health}<=${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]} || ${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked} )
@@ -5874,11 +5894,31 @@ function main()
 									WasRIFollowing:Set[FALSE]
 								}
 							}
-							;move infront
-							if ${UIElement[SettingsMoveInFrontCheckBox@SettingsFrame@CombatBotUI].Checked} && ( ${Actor[id,${KillTargetID}].Health}<=${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]} || ${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked} )
+							if ${UIElement[SettingsMoveInFrontCheckBox@SettingsFrame@CombatBotUI].Checked}
 							{
-								;setup move infront for ${KillTargetID}
-								noop
+								;echo setup move behind for ${KillTargetID}
+								if ${RI_Var_Bool_RIFollowing}
+								{
+									RI_Var_Bool_RIFollowing:Set[FALSE]
+									WasRIFollowing:Set[TRUE]
+								}
+								if !${RI_Var_Bool_MovingInFront} || ${RI_Var_Int_MoveInFrontMobID}!=${KillTargetID} || ( ${RI_Var_Int_MoveInFrontHealth}!=${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]} && !${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked} )
+								{
+									if ${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked}
+										RI_Atom_MoveInFront ${Me.Name} ${KillTargetID} 30 100
+									else
+										RI_Atom_MoveInFront ${Me.Name} ${KillTargetID} 30 ${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]}
+								}
+							}
+							elseif ${RI_Var_Bool_MovingInFront}
+							{
+								
+								RI_Atom_MoveInFront OFF
+								if ${WasRIFollowing}
+								{
+									RI_Var_Bool_RIFollowing:Set[TRUE]
+									WasRIFollowing:Set[FALSE]
+								}
 							}
 							;movein
 							if ${UIElement[SettingsMoveInCheckBox@SettingsFrame@CombatBotUI].Checked} && ( ${Actor[id,${KillTargetID}].Health}<=${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]} || ${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked} )
@@ -5952,6 +5992,8 @@ function main()
 							}
 							if ${RI_Var_Bool_MovingBehind}
 								RI_Atom_MoveBehind OFF
+							if ${RI_Var_Bool_MovingInFront}
+								RI_Atom_MoveInFront OFF
 							if ${Me.AutoAttackOn} && ${UIElement[SettingsCancelAutoCheckBox@SettingsFrame@CombatBotUI].Checked}
 								eq2execute autoattack 0
 							if !${Me.InCombat} && !${Me.IsHated} && ${Me.IsInvis} && ${UIElement[SettingsCancelInvisCheckBox@SettingsFrame@CombatBotUI].Checked}
@@ -5978,6 +6020,8 @@ function main()
 						;echo no valid target
 						if ${RI_Var_Bool_MovingBehind}
 							RI_Atom_MoveBehind OFF
+						if ${RI_Var_Bool_MovingInFront}
+							RI_Atom_MoveInFront OFF
 						if ${WasRIFollowing}
 						{
 							RI_Var_Bool_RIFollowing:Set[TRUE]
@@ -6268,48 +6312,48 @@ function StaminaSpender()
 	wait 5
 	StaminaCount:Inc
 }
-atom(global) RIAutoDeity_ChangeMode(int _Mode=0)
-{
-	if ${_Mode}>-1
-	{
-		RI_Var_Bool_AutoDeityDisabled:Set[0]
-		UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI]:SelectItem[${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].ItemByValue[${_Mode}].ID}]
-	}
-	else 
-		RI_Var_Bool_AutoDeityDisabled:Set[1]
-	if ${_Mode}==-1
-	{
-		echo ISXRI: AutoDeity: Disabled
-	}
-	if ${_Mode}==0
-	{
-		echo ISXRI: AutoDeity: Changing mode to: Balance ALL
-	}
-	elseif ${_Mode}==1
-	{
-		echo ISXRI: AutoDeity: Changing mode to: Spend all points in Potency
-	}
-	elseif ${_Mode}==2
-	{
-		echo ISXRI: AutoDeity: Changing mode to: Spend all points in Crit Bonus
-	}
-	elseif ${_Mode}==3
-	{
-		echo ISXRI: AutoDeity: Changing mode to: Spend all points in Stamina
-	}
-	elseif ${_Mode}==4
-	{
-		echo ISXRI: AutoDeity: Changing mode to: Balance Only Potency and Crit Bonus
-	}
-	elseif ${_Mode}==5
-	{
-		echo ISXRI: AutoDeity: Changing mode to: Balance Only Potency and Stamina
-	}
-	elseif ${_Mode}==6
-	{
-		echo ISXRI: AutoDeity: Changing mode to: Balance Only Crit Bonus and Stamina
-	} 
-}
+; atom(global) RIAutoDeity_ChangeMode(int _Mode=0)
+; {
+	; if ${_Mode}>-1
+	; {
+		; RI_Var_Bool_AutoDeityDisabled:Set[0]
+		; UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI]:SelectItem[${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].ItemByValue[${_Mode}].ID}]
+	; }
+	; else 
+		; RI_Var_Bool_AutoDeityDisabled:Set[1]
+	; if ${_Mode}==-1
+	; {
+		; echo ISXRI: AutoDeity: Disabled
+	; }
+	; if ${_Mode}==0
+	; {
+		; echo ISXRI: AutoDeity: Changing mode to: Balance ALL
+	; }
+	; elseif ${_Mode}==1
+	; {
+		; echo ISXRI: AutoDeity: Changing mode to: Spend all points in Potency
+	; }
+	; elseif ${_Mode}==2
+	; {
+		; echo ISXRI: AutoDeity: Changing mode to: Spend all points in Crit Bonus
+	; }
+	; elseif ${_Mode}==3
+	; {
+		; echo ISXRI: AutoDeity: Changing mode to: Spend all points in Stamina
+	; }
+	; elseif ${_Mode}==4
+	; {
+		; echo ISXRI: AutoDeity: Changing mode to: Balance Only Potency and Crit Bonus
+	; }
+	; elseif ${_Mode}==5
+	; {
+		; echo ISXRI: AutoDeity: Changing mode to: Balance Only Potency and Stamina
+	; }
+	; elseif ${_Mode}==6
+	; {
+		; echo ISXRI: AutoDeity: Changing mode to: Balance Only Crit Bonus and Stamina
+	; } 
+; }
 objectdef DirgeNumberObject
 {
 	member:int MyNum()
@@ -6956,11 +7000,11 @@ atom EQ2_onAnnouncement(string Text, string SoundType, float Timer)
 atom EQ2_onIncomingText(string Text)
 {
 	;check we have ToT
-	if ${Text.Find[You must have expansion 12 to use this feature](exists)}
-	{
-		echo ISXRI: You do not have Terrors of Thalumbra Expansion
-		RI_Var_Bool_AutoDeityDisabled:Set[1]
-	}
+	; if ${Text.Find[You must have expansion 12 to use this feature](exists)}
+	; {
+		; echo ISXRI: You do not have Terrors of Thalumbra Expansion
+		; RI_Var_Bool_AutoDeityDisabled:Set[1]
+	; }
 	;check for OnEvent
 	;echo OnInc
 	variable int i

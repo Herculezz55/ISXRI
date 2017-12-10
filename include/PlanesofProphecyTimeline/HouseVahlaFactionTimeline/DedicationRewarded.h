@@ -1,0 +1,8 @@
+string DedicationRewarded[] = {"Dedication Rewarded", 
+"Custom", 
+"HailActorGetQuest -Actor \"Mindfold Matriarch Taneesha\"", 
+"-295.846863 581.539063 -663.412720", 
+"Custom", 
+"ClickActor \"House Vahla Chest\"", 
+"-295.846863 581.539063 -663.412720", 
+};

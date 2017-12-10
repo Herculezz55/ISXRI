@@ -1,0 +1,8 @@
+string TheMajestrixsTrust[] = {"The Majestrix's Trust", 
+"Custom", 
+"HailActorGetQuest -Actor \"Majestrix Sangeeta\"", 
+"294.309052 597.343140 -625.744263", 
+"Custom", 
+"ClickActor \"Yrzu Treasure Coffer\" 1", 
+"294.309052 597.343140 -625.744263", 
+};

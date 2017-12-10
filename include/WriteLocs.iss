@@ -89,7 +89,7 @@ function main(... args)
 				;echo ${args[2]}
 				_quest:Set[TRUE]
 				UIElement[TEFilename@WriteLocs]:SetText["${args[${Math.Calc[${_count}+1]}].Replace[".",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}.dat"]
-				call Write 0 0 0 0 0 -quest "${args[${Math.Calc[${_count}+1]}]}"
+				call Write -quest "${args[${Math.Calc[${_count}+1]}]}"
 				break
 			}
 			default
@@ -559,9 +559,18 @@ function Write(... _args)
 					UIElement[LocsList@WriteLocs]:AddItem["${UserInput}"]
 					UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
 				}
+				elseif ${_args.Used}==2
+				{
+					UIElement[LocsList@WriteLocs]:AddItem["Custom"]
+					UIElement[LocsList@WriteLocs]:AddItem["${_args[${Math.Calc[${_count}+1]}]}"]
+					UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+				}
 				else
 				{
-					InputBox -skin eq2 "${_args[${Math.Calc[${_count}+1]}]}"
+					if ${_args.Used}>3
+						InputBox -skin eq2 "${_args[${Math.Calc[${_count}+1]}]}" "${_args[${Math.Calc[${_count}+3]}]}"
+					else
+						InputBox -skin eq2 "${_args[${Math.Calc[${_count}+1]}]}"
 					while ${UserInput.Equal[""]} 
 					{
 						MessageBox -skin eq2 "You must enter your input"
@@ -576,7 +585,7 @@ function Write(... _args)
 					if ${_args.Used}==2
 						UIElement[LocsList@WriteLocs]:AddItem["${UserInput}"]
 					else
-						UIElement[LocsList@WriteLocs]:AddItem["${_args[${Math.Calc[${_count}+2]}]} \"${UserInput}\""]
+						UIElement[LocsList@WriteLocs]:AddItem["${_args[${Math.Calc[${_count}+2]}]} ${UserInput}"]
 					UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
 				}
 				break
@@ -621,7 +630,7 @@ function Auto(int Distance)
 			if ${RI_Var_Bool_Debug}
 				echo we are more than ${Distance} from ${LastXYZC} Adding new point, ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${LastXYZC}]}
 			;write a new point to file
-			call Write FALSE FALSE FALSE FALSE FALSE
+			call Write
 		}
 		else
 			call ExecuteQueued
