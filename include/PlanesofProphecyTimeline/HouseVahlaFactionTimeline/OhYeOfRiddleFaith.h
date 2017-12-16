@@ -1,6 +1,6 @@
 string OhYeOfRiddleFaith[] = {"Oh Ye\",\" Of Riddle Faith", 
 "Custom", 
-"HailActorGetQuest -Actor \"Pannaxxun\"", 
+"HailActorGetQuest -Actor \"Pannaxxun\" -QuestName \"Oh Ye, Of Riddle Faith\"", 
 "-195.680817 573.565369 -553.063538", 
 "Custom", 
 "FlyUp ", 

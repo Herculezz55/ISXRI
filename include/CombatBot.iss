@@ -366,6 +366,8 @@ variable int PotencyCount=0
 variable int CritBonusCount=0
 variable int StaminaCount=0
 variable(global) bool _CB_LootImmunity_=FALSE
+variable bool CB_Bool_MoveBehindOn=0
+
 atom(global) RI_Atom_CB_SetUISetting(string _SettingName, string Value)
 {	
 	RI_Obj_CB:SetUISetting[${_SettingName},${Value}]
@@ -5762,11 +5764,12 @@ function main()
 									RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} 30 100
 								else
 									RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} 30 ${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]}
+								CB_Bool_MoveBehindOn:Set[1]
 							}
 						}
-						elseif ${RI_Var_Bool_MovingBehind}
+						elseif ${CB_Bool_MoveBehindOn}
 						{
-							
+							CB_Bool_MoveBehindOn:Set[0]
 							RI_Atom_MoveBehind OFF
 							if ${WasRIFollowing}
 							{
@@ -6918,50 +6921,7 @@ atom EQ2_FinishedZoning(string TimeInSeconds)
 	}
 	if ${UIElement[SettingsAutoShareMissionsCheckBox@SettingsFrame@CombatBotUI].Checked}
 	{
-		;format zonename
-		variable string _FormattedZoneName
-		variable string _ZoneTier
-		if ${Zone.Name.Find["[Heroic]"](exists)} || ${Zone.Name.Find["[Expert]"](exists)}
-		{
-			_FormattedZoneName:Set["${Zone.Name.Left[-9]}"]
-			_ZoneTier:Set["[Heroic]"]
-		}
-		elseif ${Zone.Name.Find["[Event Heroic]"](exists)}
-		{
-			_FormattedZoneName:Set["${Zone.Name.Left[-15]}"]
-			_ZoneTier:Set["[Event Heroic]"]
-		}
-		elseif ${Zone.Name.Find["[Solo]"](exists)}
-		{
-			_FormattedZoneName:Set["${Zone.Name.Left[-7]}"]
-			_ZoneTier:Set["[Solo]"]
-		}
-		elseif ${Zone.Name.Find["[Advanced Solo]"](exists)}
-		{
-			_FormattedZoneName:Set["${Zone.Name.Left[-16]}"]
-			_ZoneTier:Set["[Advanced Solo]"]
-		}
-		elseif ${Zone.Name.Find["[Challenge Heroic]"](exists)}
-		{
-			_FormattedZoneName:Set["${Zone.Name.Left[-19]}"]
-			_ZoneTier:Set["[Challenge Heroic]"]
-		}
-		elseif ${Zone.Name.Find["[Expert]"](exists)}
-		{
-			_FormattedZoneName:Set["${Zone.Name.Left[-9]}"]
-			_ZoneTier:Set["[Heroic]"]
-		}
-		elseif ${Zone.Name.Find["[Expert Event]"](exists)}
-		{
-			_FormattedZoneName:Set["${Zone.Name.Left[-15]}"]
-			_ZoneTier:Set["[Event Heroic]"]
-		}
-		elseif ${Zone.Name.Find["[Expert Challenge]"](exists)}
-		{
-			_FormattedZoneName:Set["${Zone.Name.Left[-19]}"]
-			_ZoneTier:Set["[Challenge Heroic]"]
-		}
-		RIMUIObj:ShareMissions["${_FormattedZoneName}","${_ZoneTier}",1]
+		RIMUIObj:ShareMissions["${Zone.Name}","${_ZoneTier}",1]
 	}
 }
 ;atom triggered when ChoiceWindow is detected

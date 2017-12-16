@@ -2174,13 +2174,53 @@
 ;			**Recommended to do Pakiat before Vahla as Vahla has several quests in Pakiat Bluffs and its
 ;			**best to be non KOS to those epics
 
+;v5.39 Changes 12-15-17
+;	CB
+;		Updated ShareMissions to support PoP Missions
+;	RQ
+;		Fixed a bug in HailActorGetQuest function
+;		Added
+;			Legacy of Power: An Innovative Approach
+;	RI
+;		Fixed a bug in MoveBehind declaration for named's
+;		Added .IsRooted check to all Group Members that are PC for movement
+;		Added:
+;			Planes of Innovation: Masks of the Marvelous
+;				Ancient Clockwork Protocol (RI Pull Ancient)
+;					Handles targeting of the non immune Mob 
+;					until one is dead then kills the adds
+;					then the named, moves group members behind
+;				Clockwork Scrounger XVII (RI Pull Scrounger)
+;					Spreads group out evenly around a circle 
+;					with MainToon in the middle
+;				The Glitched Guardian 10101 (RI Pull Glitched)
+;					Jousts his explosion
+;				Security Sweeper (RI Pull Poimomss)
+;					Waits until he is at the leftmost tunnel end and runs
+;				Glitched Cell Keeper (RI Pull Keeper)
+;					Jousts his red circle
+;				Gearclaw the Collector (RI Pull Gearclaw)
+;					MainToon Moves in range and Reenergizes him
+;					Dispells his Energized buff (Mages only)
+;			Planes of Innovation: Gears in the Machine
+;				Toa The Shiny (RI Pull Toa)
+;					Handles targeting and moves group behind
+;				Powered Mechanization (RI Pull Mechanization)
+;					Jousts his spell
+;				The Junk Beast (No RI Pull)
+;					Moves group behind named entire fight 
+;				The Manaetic Behemoth (RI Pull Manaetic)
+;					Moves group behind named
+;					Jousts circles
 
 ;	RZ
-;		Completely rewrote RZ now can queue up any number of Zones and RZ will run them and move between them as needed and as queued. (Only KA for now)
-;		RZO will handle pre-KA zones
+;		Completely rewrote RZ now can queue up any number of Zones 
+;		and RZ will run them and move between them as needed and 
+;		as queued. (Only PoP for now)
+;		RZO will handle pre-PoP zones
 
 
-variable(global) float RI_Var_Float_Version=5.36
+variable(global) float RI_Var_Float_Version=5.39
 
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
@@ -4402,7 +4442,7 @@ objectdef RIMovementObject
 		}
 		while (${Me.Group[1].IsDead} || ${Me.Group[2].IsDead} || ${Me.Group[3].IsDead} || ${Me.Group[4].IsDead} || ${Me.Group[5].IsDead})
 			wait 10
-		if ( ${Me.Group[1].Distance}>60 && ${Me.Group[1].Type.Equal[PC]} ) || ( ${Me.Group[2].Distance}>60 && ${Me.Group[2].Type.Equal[PC]} ) || ( ${Me.Group[3].Distance}>60 && ${Me.Group[3].Type.Equal[PC]} ) || ( ${Me.Group[4].Distance}>60 && ${Me.Group[4].Type.Equal[PC]} ) || ( ${Me.Group[5].Distance}>60 && ${Me.Group[5].Type.Equal[PC]} )
+		if ( ${Me.Group[1].Distance}>60 && ${Me.Group[1].Type.Equal[PC]} ) || ( ${Me.Group[2].Distance}>60 && ${Me.Group[2].Type.Equal[PC]} ) || ( ${Me.Group[3].Distance}>60 && ${Me.Group[3].Type.Equal[PC]} ) || ( ${Me.Group[4].Distance}>60 && ${Me.Group[4].Type.Equal[PC]} ) || ( ${Me.Group[5].Distance}>60 && ${Me.Group[5].Type.Equal[PC]} ) || ( ${Me.Group[1].IsRooted} && ${Me.Group[1].Type.Equal[PC]} ) || ( ${Me.Group[2].IsRooted} && ${Me.Group[2].Type.Equal[PC]} ) || ( ${Me.Group[3].IsRooted} && ${Me.Group[3].Type.Equal[PC]} ) || ( ${Me.Group[4].IsRooted} && ${Me.Group[4].Type.Equal[PC]} ) || ( ${Me.Group[5].IsRooted} && ${Me.Group[5].Type.Equal[PC]} )
 		{
 			if ${Me.FlyingUsingMount}
 			{
@@ -4417,7 +4457,7 @@ objectdef RIMovementObject
 			press -release ${RI_Var_String_FlyUpKey}
 			press -release ${RI_Var_String_FlyDownKey}
 		}
-		while ( ${Me.Group[1].Distance}>60 && ${Me.Group[1].Type.Equal[PC]} ) || ( ${Me.Group[2].Distance}>60 && ${Me.Group[2].Type.Equal[PC]} ) || ( ${Me.Group[3].Distance}>60 && ${Me.Group[3].Type.Equal[PC]} ) || ( ${Me.Group[4].Distance}>60 && ${Me.Group[4].Type.Equal[PC]} ) || ( ${Me.Group[5].Distance}>60 && ${Me.Group[5].Type.Equal[PC]} )
+		while ( ${Me.Group[1].Distance}>60 && ${Me.Group[1].Type.Equal[PC]} ) || ( ${Me.Group[2].Distance}>60 && ${Me.Group[2].Type.Equal[PC]} ) || ( ${Me.Group[3].Distance}>60 && ${Me.Group[3].Type.Equal[PC]} ) || ( ${Me.Group[4].Distance}>60 && ${Me.Group[4].Type.Equal[PC]} ) || ( ${Me.Group[5].Distance}>60 && ${Me.Group[5].Type.Equal[PC]} ) || ( ${Me.Group[1].IsRooted} && ${Me.Group[1].Type.Equal[PC]} ) || ( ${Me.Group[2].IsRooted} && ${Me.Group[2].Type.Equal[PC]} ) || ( ${Me.Group[3].IsRooted} && ${Me.Group[3].Type.Equal[PC]} ) || ( ${Me.Group[4].IsRooted} && ${Me.Group[4].Type.Equal[PC]} ) || ( ${Me.Group[5].IsRooted} && ${Me.Group[5].Type.Equal[PC]} )
 		{
 			call This.follow
 			wait 50
@@ -4977,6 +5017,14 @@ objectdef RIMovementObject
 }
 objectdef RIMUIObject
 {
+	method StarFormation(int _Distance=10)
+	{
+		relay is2 RIMUIObj:SetLockSpot[ALL,${Math.Calc[${Me.X}+${_Distance}]},${Me.Y},${Me.Z}]
+		relay is3 RIMUIObj:SetLockSpot[ALL,${Math.Calc[${Me.X}+(${_Distance}*.37)]},${Me.Y},${Math.Calc[${Me.Z}+(${_Distance}*.92)]}]
+		relay is4 RIMUIObj:SetLockSpot[ALL,${Math.Calc[${Me.X}+(${_Distance}*.37)]},${Me.Y},${Math.Calc[${Me.Z}-(${_Distance}*.92)]}]
+		relay is5 RIMUIObj:SetLockSpot[ALL,${Math.Calc[${Me.X}-(${_Distance}*.80)]},${Me.Y},${Math.Calc[${Me.Z}+(${_Distance}*.61)]}]
+		relay is6 RIMUIObj:SetLockSpot[ALL,${Math.Calc[${Me.X}-(${_Distance}*.80)]},${Me.Y},${Math.Calc[${Me.Z}-(${_Distance}*.61)]}]
+	}
 	method RIWaitForHealth(bool _OnOff)
 	{
 		RI_Var_Bool_WaitForHealth:Set[${_OnOff}]
@@ -5145,22 +5193,66 @@ objectdef RIMUIObject
 			}
 		}
 	}
-	method ShareMissions(string _ZoneName, string _Tier)
+	method ShareMissions(string _ZoneName, bool _WaitTillGroupAllInZone=TRUE)
 	{
-		if ${_ZoneName.Equal[NULL]} || ${_Tier.Equal[NULL]}
+		if ${_ZoneName.Equal[NULL]}
 			return
-		;echo ShareMissions(string _ZoneName=${_ZoneName}, string _Tier=${_Tier})
+		;echo ShareMissions(string _ZoneName=${_ZoneName}, bool _WaitTillGroupAllInZone=${_WaitTillGroupAllInZone})
 		if ${QueueCommands}
 			FlushQueued
-		Script[${Script.Filename}]:QueueCommand["call RIMUIObj.ShareMissionsFN \"${_ZoneName}\" \"${_Tier}\""]
+		Script[${Script.Filename}]:QueueCommand["call RIMUIObj.ShareMissionsFN \"${_ZoneName}\" ${_WaitTillGroupAllInZone}"]
 	}
-	function ShareMissionsFN(string _ZoneName, string _Tier, bool _WaitTillGroupAllInZone=FALSE)
+	function ShareMissionsFN(string _ZoneName, bool _WaitTillGroupAllInZone=TRUE)
 	{
 		if ${_WaitTillGroupAllInZone}
 		{
 			wait 600 ${RIMObj.AllGroupInZone}
 		}
-		;echo ShareMissionsFN(string _ZoneName=${_ZoneName}, string _Tier=${_Tier})
+		;echo ShareMissionsFN(string _ZoneName=${_ZoneName}, bool _WaitTillGroupAllInZone=${_WaitTillGroupAllInZone})
+		
+		;format zonename
+		variable string _FormattedZoneName
+		variable string _ZoneTier
+		if ${Zone.Name.Find["[Heroic]"](exists)} || ${Zone.Name.Find["[Expert]"](exists)}
+		{
+			_FormattedZoneName:Set["${Zone.Name.Left[-9]}"]
+			_ZoneTier:Set["[Heroic]"]
+		}
+		elseif ${Zone.Name.Find["[Event Heroic]"](exists)}
+		{
+			_FormattedZoneName:Set["${Zone.Name.Left[-15]}"]
+			_ZoneTier:Set["[Event Heroic]"]
+		}
+		elseif ${Zone.Name.Find["[Solo]"](exists)}
+		{
+			_FormattedZoneName:Set["${Zone.Name.Left[-7]}"]
+			_ZoneTier:Set["[Solo]"]
+		}
+		elseif ${Zone.Name.Find["[Advanced Solo]"](exists)}
+		{
+			_FormattedZoneName:Set["${Zone.Name.Left[-16]}"]
+			_ZoneTier:Set["[Advanced Solo]"]
+		}
+		elseif ${Zone.Name.Find["[Challenge Heroic]"](exists)}
+		{
+			_FormattedZoneName:Set["${Zone.Name.Left[-19]}"]
+			_ZoneTier:Set["[Challenge Heroic]"]
+		}
+		elseif ${Zone.Name.Find["[Expert]"](exists)}
+		{
+			_FormattedZoneName:Set["${Zone.Name.Left[-9]}"]
+			_ZoneTier:Set["[Heroic]"]
+		}
+		elseif ${Zone.Name.Find["[Expert Event]"](exists)}
+		{
+			_FormattedZoneName:Set["${Zone.Name.Left[-15]}"]
+			_ZoneTier:Set["[Event Heroic]"]
+		}
+		elseif ${Zone.Name.Find["[Expert Challenge]"](exists)}
+		{
+			_FormattedZoneName:Set["${Zone.Name.Left[-19]}"]
+			_ZoneTier:Set["[Challenge Heroic]"]
+		}
 		
 		variable index:quest Quests
 		variable iterator QuestsIterator
@@ -5174,7 +5266,8 @@ objectdef RIMUIObject
 			{
 				if ${QuestsIterator.Value.Category.Equal[Mission]} || ${QuestsIterator.Value.Category.Equal[Mission: Weekly]}
 				{
-					if ${QuestsIterator.Value.CurrentZone.Equal[${_ZoneName}]} && ${QuestsIterator.Value.Name.Find[${_Tier}](exists)}
+					;echo ${QuestsIterator.Value.CurrentZone} // ${QuestsIterator.Value.CurrentZone.Equal["${_ZoneName}"]} // ${QuestsIterator.Value.Name} // ${QuestsIterator.Value.Name.Find[${_Tier}](exists)}
+					if ( ${QuestsIterator.Value.CurrentZone.Equal[${_FormattedZoneName}]} && ${QuestsIterator.Value.Name.Find[${_Tier}](exists)} ) || ${QuestsIterator.Value.CurrentZone.Equal["${_ZoneName}"]}
 					{
 						echo ISXRI: Sharing: "${QuestsIterator.Value.Name}"
 						QuestsIterator.Value:Share
@@ -5725,6 +5818,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[Vetted Rocks,Repeatable,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem[The Majestrix's Trust]
 				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Hero's Devotion]
+				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: An Innovative Approach]
 				UIElement[QuestsListBox@RI]:AddItem[Pride Pakiat Faction Timeline,0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[The Missing Heart Leaves Another Hole,Repeatable,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem[Green Fruit For Rut Part Deux,Repeatable,FF00b33c]
