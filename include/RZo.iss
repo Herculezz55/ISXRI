@@ -542,7 +542,7 @@ function main(... args)
 	
 	;load ui
 	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml"
+	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZo.xml"
 	
 	;set zones checked
 	UIElement[RunZ1@RZ]:SetChecked
@@ -2394,6 +2394,6 @@ function atexit()
 	if !${DontEchoExit}
 	{
 		echo ${Time}: Ending RZ
-		ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml"
+		ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RZo.xml"
 	}
 }

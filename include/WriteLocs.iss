@@ -539,6 +539,7 @@ function Write(... _args)
 						UIElement[LocsList@WriteLocs]:AddItem["DontMoveBehind"]
 				}
 				UIElement[LocsList@WriteLocs]:AddItem["${LastXYZ}"]
+				break
 			}
 			case -custom
 			{

@@ -15,7 +15,7 @@ variable index:int ZoneUnlockTime
 variable(global) bool RZ_Var_Bool_Start=FALSE
 variable(global) bool RZ_Var_Bool_Paused=FALSE
 variable(global) string RI_Var_String_RZScriptName=${Script.Filename}
-
+variable int RZ_Var_Int_Loops=1
 variable bool ResetConfirmation=FALSE
 variable(global) RZObject RZObj
 variable bool RecentlyAntiAFK=FALSE
@@ -41,7 +41,7 @@ function BuildIndexes()
 	ZoneExitPopupSelection:Insert[0]
 	ZoneExitLoc:Insert[]
 	ZoneEntrance:Insert["zone_to_poi"]
-	ZoneEntranceLoc:Insert[-90.543472 2.938255 156.630249]
+	ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 	ZonePathFile:Insert[0]
 	ZoneUnlocked:Insert[TRUE]
 	ZoneSetTime:Insert[0]
@@ -56,7 +56,7 @@ function BuildIndexes()
 	ZoneExitPopupSelection:Insert[0]
 	ZoneExitLoc:Insert[]
 	ZoneEntrance:Insert["zone_to_poi"]
-	ZoneEntranceLoc:Insert[-90.543472 2.938255 156.630249]
+	ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 	ZonePathFile:Insert[0]
 	ZoneUnlocked:Insert[TRUE]
 	ZoneSetTime:Insert[0]
@@ -71,7 +71,7 @@ function BuildIndexes()
 	ZoneExitPopupSelection:Insert[0]
 	ZoneExitLoc:Insert[]
 	ZoneEntrance:Insert["zone_to_poi"]
-	ZoneEntranceLoc:Insert[-90.543472 2.938255 156.630249]
+	ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 	ZonePathFile:Insert[0]
 	ZoneUnlocked:Insert[TRUE]
 	ZoneSetTime:Insert[0]
@@ -86,7 +86,7 @@ function BuildIndexes()
 	ZoneExitPopupSelection:Insert[0]
 	ZoneExitLoc:Insert[]
 	ZoneEntrance:Insert["zone_to_poi"]
-	ZoneEntranceLoc:Insert[-90.543472 2.938255 156.630249]
+	ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 	ZonePathFile:Insert[0]
 	ZoneUnlocked:Insert[TRUE]
 	ZoneSetTime:Insert[0]
@@ -119,41 +119,64 @@ function main(... args)
 	Developer:Set[TRUE]
 	
 	variable int Count=1
-	variable int _acnt=1
-	variable bool JustZone=0
-	variable string ZoneName
-	variable string ZoneExitActorName
+	; variable int _acnt=1
+	; variable bool JustZone=0
+	; variable string ZoneName
+	; variable string ZoneExitActorName
 	
-	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
-	{
-		;echo args ${_acnt} : ${args[${_acnt}]}
-		switch ${args[${_acnt}]}
-		{
-			case -JustZone
-			{
-				JustZone:Set[1]
-				ZoneName:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
-				ZoneExitActorName:Set["${args[${Math.Calc[${_acnt}+2]}]}"]
-				break
-			}
-		}
-	}
+	; for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
+	; {
+		; ;echo args ${_acnt} : ${args[${_acnt}]}
+		; switch ${args[${_acnt}]}
+		; {
+			; case -JustZone
+			; {
+				; JustZone:Set[1]
+				; ZoneName:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				; ZoneExitActorName:Set["${args[${Math.Calc[${_acnt}+2]}]}"]
+				; break
+			; }
+		; }
+	; }
 	
-	;echo ${Zones} // ${Exclusions} // ${JustZone} // ${ZoneExitActorName} // ${ZoneName}
-	if ${JustZone}
+	; ;echo ${Zones} // ${Exclusions} // ${JustZone} // ${ZoneExitActorName} // ${ZoneName}
+	; if ${JustZone}
+	; {
+		; echo Zoning Out of "${ZoneName}" using "${ZoneExitActorName}"
+		; call ZoneOut "${ZoneExitActorName}" "${ZoneName}"
+		; DontEchoExit:Set[TRUE]
+		; Script:End
+		; ;echo done zoning out
+	; }
+	;check if RZ.xml exists, if not create
+	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/"
+	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
+	if !${FP.PathExists}
 	{
-		echo Zoning Out of "${ZoneName}" using "${ZoneExitActorName}"
-		call ZoneOut "${ZoneExitActorName}" "${ZoneName}"
-		DontEchoExit:Set[TRUE]
-		Script:End
-		;echo done zoning out
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/"]
+		FP:MakeSubdirectory[RI]	
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
 	}
-
+	if !${FP.FileExists[RZ.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RZ.XML
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml" http://www.isxri.com/RZ.xml
+		wait 50
+	}
+	if !${FP.FileExists[RZm.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RZm.XML
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml" http://www.isxri.com/RZm.xml
+		wait 50
+	}
 	echo ISXRI: ${Time}: Starting RZ
 	
 	;load ui
 	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml"
+	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml"
 	RZObj:Maximize
 	
 	UIElement[ExpacComboBox@RZ]:AddItem["Planes of Prophecy"]
@@ -186,6 +209,16 @@ function main(... args)
 	;main loop
 	while 1
 	{
+		;wait until start is pushed
+		while !${RZ_Var_Bool_Start}
+		{
+			;execute queued commands
+			if ${QueuedCommands}
+			{
+				ExecuteQueued
+			}
+			wait 5
+		}
 		;if we are not zoning
 		if ${EQ2.Zoning}==0
 		{
@@ -193,9 +226,23 @@ function main(... args)
 			
 			for(Count:Set[1];${Count}<=${UIElement[AddedZoneList@RZ].Items};Count:Inc)
 			{
-				echo checking if ${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]} at ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]} is unlocked: ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]}]}
-				;if ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]}]}
-				;	call Zone ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]}
+				if ${Count}==1 && !${UIElement[InfiniteLoopListCheckBox@RZ].Checked}
+				{
+					;echo limited loops checking ${RZ_Var_Int_Loops}<=${UIElement[LoopCountTextEntry@RZ].Text}
+					if ${RZ_Var_Int_Loops}<=${UIElement[LoopCountTextEntry@RZ].Text}
+						RZ_Var_Int_Loops:Inc
+					else
+					{
+						RZObj:Stop
+						Count:Set[${Math.Calc[${UIElement[AddedZoneList@RZ].Items}+1]}]
+						continue
+					}
+				}
+				;call CheckZones function
+				call RZObj.CheckZones
+				;echo checking if ${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]} at ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]} is unlocked: ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]}]}
+				if ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]}]}
+					call Zone ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]}
 			}
 			
 			;call CheckZones function
@@ -204,7 +251,15 @@ function main(... args)
 		}
 	}
 }
-
+atom(global) displayindexes()
+{
+	variable int _count
+	;go through our index and find the zone that was just locked
+	for(_count:Set[1];${_count}<=${_Zone.Used};_count:Inc)
+	{
+		echo ${_Zone.Get[${_count}]} // ${ZoneUnlocked.Get[${_count}]} // ${ZoneSetTime.Get[${_count}]} // ${ZoneUnlockTime.Get[${_count}]}
+	}
+}
 ;atom triggered when incommingtext is detected
 atom EQ2_onIncomingText(string Text)
 {
@@ -262,10 +317,10 @@ function Zone(int _IndexPosition)
 	;${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]}
 	;${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]}
 	;${ZoneEntranceLoc.Get[${_IndexPosition}].Token[3," "]}
-	
+	;echo if ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10 && !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]},${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[3," "]}]} && ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}<200
 	if ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10 && !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]},${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[3," "]}]} && ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}<200
 		call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 10 0 0 1 1 0 1 1
-	else
+	elseif ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10
 	{
 		call RIMObj.Move 0.199857 6.007895 -0.344092 3 0 0 1 1 0 1 1
 		call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 10 0 0 1 1 0 1 1
@@ -282,6 +337,12 @@ function Zone(int _IndexPosition)
 	
 	RZObj:GetZoneLists
 	wait 20
+	variable int _ZCNT=0
+	while ${RZObj.RowByName["${_Zone.Get[${_IndexPosition}]}"]}==0 && ${_ZCNT:Inc}<10
+	{
+		RZObj:GetZoneLists
+		wait 5
+	}
 	if ${RZObj.RowByName["${_Zone.Get[${_IndexPosition}]}"]}==0
 	{
 		echo ISXRI: Can't find that zone in the Destination list
@@ -357,15 +418,14 @@ function Zone(int _IndexPosition)
 	; }
 	
 	;wait until we have a zone open so we stay hidden.
-	if !${RZObj.CheckAllZonesUnlocked}
+	if ${RZObj.CheckAllZonesLocked}
 		echo ${Time}: No Zones are Unlocked, Waiting to Zone Out
 		
-	while !${RZObj.CheckAllZonesUnlocked}
+	while ${RZObj.CheckAllZonesLocked}
 	{
-		echo ISXRI: ${Time}: Waiting until a zone is unlocked
-
 		;call CheckZones function
-		call RZObj.CheckZones
+		;call RZObj.CheckZones
+		;echo ISXRI: ${Time}: Waiting until a zone is unlocked
 
 		wait 50
 	}
@@ -422,59 +482,41 @@ objectdef RZObject
 {
 	method Start()
 	{
-		UIElement[StartButton@RZ]:SetText[Pause]
+		if ${UIElement[AddedZoneList@RZ].Items}<1
+			return
+		UIElement[StartButton@RZm]:SetText[Pause]
+		UIElement[StartButton@RZm]:SetFocus
+		UIElement[AddedZoneList@RZ]:ClearSelection
+		UIElement[ZonesAvail@RZ]:ClearSelection
+		RZ_Var_Int_Loops:Set[1]
 		RZ_Var_Bool_Start:Set[1]
 		This:Minimize
 	}
+	method Stop()
+	{
+		UIElement[StartButton@RZm]:SetText[Start]
+		RZ_Var_Bool_Start:Set[0]
+		This:Maximize
+	}
 	method Pause()
 	{
-		UIElement[StartButton@RZ]:SetText[Resume]
+		UIElement[StartButton@RZm]:SetText[Resume]
 		RZ_Var_Bool_Paused:Set[1]
 	}
 	method Resume()
 	{
-		UIElement[StartButton@RZ]:SetText[Pause]
+		UIElement[StartButton@RZm]:SetText[Pause]
 		RZ_Var_Bool_Paused:Set[0]
 	}
 	method Maximize()
 	{
-		UIElement[StartButton@RZ]:SetX[535]
-		UIElement[StartButton@RZ]:SetX[535]
-		UIElement[MinButton@RZ]:SetX[535]
-		UIElement[MinButton@RZ]:SetText[Minimize]
-		UIElement[RZ]:SetWidth[600]
-		UIElement[RZ]:SetHeight[400]
-		UIElement[ZonesAvailText@RZ]:Show
-		UIElement[ZonesAvail@RZ]:Show
-		UIElement[AddedZoneText@RZ]:Show
-		UIElement[AddedZoneList@RZ]:Show
-		UIElement[ExpacText@RZ]:Show
-		UIElement[ExpacComboBox@RZ]:Show
-		UIElement[SaveButton@RZ]:Show
-		UIElement[LoopListCheckBox@RZ]:Show
-		UIElement[InfiniteLoopListCheckBox@RZ]:Show
-		UIElement[LoopCountText@RZ]:Show
-		UIElement[LoopCountTextEntry@RZ]:Show
+		UIElement[MinButton@RZm]:SetText[Minimize]
+		UIElement[RZ]:Show
 	}
 	method Minimize()
 	{
-		UIElement[StartButton@RZ]:SetX[15]
-		
-		UIElement[MinButton@RZ]:SetX[15]
-		UIElement[MinButton@RZ]:SetText[Maximize]
-		UIElement[RZ]:SetWidth[80]
-		UIElement[RZ]:SetHeight[70]
-		UIElement[ZonesAvailText@RZ]:Hide
-		UIElement[ZonesAvail@RZ]:Hide
-		UIElement[AddedZoneText@RZ]:Hide
-		UIElement[AddedZoneList@RZ]:Hide
-		UIElement[ExpacText@RZ]:Hide
-		UIElement[ExpacComboBox@RZ]:Hide
-		UIElement[SaveButton@RZ]:Hide
-		UIElement[LoopListCheckBox@RZ]:Hide
-		UIElement[InfiniteLoopListCheckBox@RZ]:Hide
-		UIElement[LoopCountText@RZ]:Hide
-		UIElement[LoopCountTextEntry@RZ]:Hide
+		UIElement[MinButton@RZm]:SetText[Maximize]
+		UIElement[RZ]:Hide
 	}
 	member:int ZoneIndexPosition(string _ZoneName)
 	{
@@ -491,7 +533,7 @@ objectdef RZObject
 	}
 	method AddZone(string _ZoneName)
 	{
-		echo ${_ZoneName}
+		;echo ${_ZoneName}
 		if ${_ZoneName.NotEqual[""]} && ${_ZoneName.NotEqual[NULL]}
 			UIElement[AddedZoneList@RZ]:AddItem["${_ZoneName}"]
 	}
@@ -510,17 +552,18 @@ objectdef RZObject
 			{
 				if ${_Zone.Get[${_count2}].Equal["${UIElement[AddedZoneList@RZ].OrderedItem[${_count}]}"]}
 				{
-					;echo Checking ${UIElement[AddedZoneList@RZ].OrderedItem[${_count}]} is Unlocked: ${RZObj.Unlocked[${ZoneSetTime.Get[${_count2}]}]} && ${ZoneSetTime.Get[${_count2}]}!=0
+					;echo Checking ${UIElement[AddedZoneList@RZ].OrderedItem[${_count}]} is Unlocked: ${RZObj.Unlocked[${ZoneSetTime.Get[${_count2}]},${ZoneUnlockTime.Get[${_count2}]}]} && ${ZoneSetTime.Get[${_count2}]}!=0
 					if !${ZoneUnlocked.Get[${_count2}]} && ${ZoneSetTime.Get[${_count2}]}!=0
 					{
-						echo ISXRI: ${Time}: ${UIElement[AddedZoneList@RZ].OrderedItem[${_count}]}, Unlocked: ${RZObj.Unlocked[${ZoneSetTime.Get[${_count2}]}]}
-						if ${RZObj.Unlocked[${ZoneSetTime.Get[${_count2}]}]}
-							call RZObj.Unlock "${Zone.Get[${_count2}]}"
+						;echo ISXRI: ${Time}: ${UIElement[AddedZoneList@RZ].OrderedItem[${_count}]}, Unlocked: ${RZObj.Unlocked[${ZoneUnlockTime.Get[${_count2}]},${ZoneSetTime.Get[${_count2}]}]}
+						if ${RZObj.Unlocked[${ZoneSetTime.Get[${_count2}]},${ZoneUnlockTime.Get[${_count2}]}]}
+							call RZObj.Unlock "${_Zone.Get[${_count2}]}"
 					}
 				}
 			}
 		}
 	}
+	
 	member:bool _CheckAllHere()
 	{
 		variable bool _AllHere
@@ -562,6 +605,28 @@ objectdef RZObject
 			}
 		}
 		return ${_AllUnLocked}
+	}
+	member:bool CheckAllZonesLocked()
+	{
+		variable bool _AllLocked
+		variable int _count
+		variable int _count2
+		_AllLocked:Set[TRUE]
+		;check the list of added zones for locks  
+		;go through our list and find the zones that are unlocked
+		for(_count:Set[1];${_count}<=${UIElement[AddedZoneList@RZ].Items};_count:Inc)
+		{
+			;find each zone in our index's
+			for(_count2:Set[1];${_count2}<=${_Zone.Used};_count2:Inc)
+			{
+				if ${_Zone.Get[${_count2}].Equal["${UIElement[AddedZoneList@RZ].OrderedItem[${_count}]}"]}
+				{
+					if ${ZoneUnlocked.Get[${_count2}]} || ${RZObj.Unlocked[${ZoneSetTime.Get[${_count2}]},${ZoneUnlockTime.Get[${_count2}]}]}
+						_AllLocked:Set[FALSE]
+				}
+			}
+		}
+		return ${_AllLocked}
 	}
 	variable index:string ZoneList
 	method GetZoneLists()
@@ -668,5 +733,19 @@ function atexit()
 	{
 		echo ISXRI: ${Time}: Ending RZ
 		ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml"
+		ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml"
 	}
+	Squelch press -release ${RI_Var_String_ForwardKey}
+	Squelch press -release ${RI_Var_String_BackwardKey}
+	Squelch press -release ${RI_Var_String_FlyUpKey}
+	if ${Me.IsMoving}
+	{
+		press ${RI_Var_String_BackwardKey}
+		press ${RI_Var_String_BackwardKey}
+		press ${RI_Var_String_BackwardKey}
+	}
+	press -release ${RI_Var_String_StrafeLeftKey}
+	press -release ${RI_Var_String_StrafeRightKey}
+	press -release ${RI_Var_String_FlyUpKey}
+	press -release ${RI_Var_String_FlyDownKey}
 }

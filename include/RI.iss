@@ -2213,14 +2213,58 @@
 ;					Moves group behind named
 ;					Jousts circles
 
+;v5.40 Changes 12-22-17
+;	Will now download any XML files you are missing when loaded
+;	Combatbot
+;		Added Settings options for Confront Fear
+;	RI
+;		Fixed a bug with MoveBehind and BalanceMobs
+;		Increased targeting delay in BalanceMobs to 5s
+;		Modified
+;			Planes of Innovation: Masks of the Marvelous
+;				Ancient Clockwork Prototype (RI Pull Ancient)
+;					Fixed a bug in the targeting
+;				Clockwork Scrounger XVII (RI Pull Scrounger)
+;					Disabled Ethershadow Assassin when he calls his electric
+;					Moved group behind named until he calls his electric
+;						then spread out as before
+;						once clear back to behind named
+;			Planes of Innovation: Gears in the Machine
+;				Powered Mechanization (RI Pull Mechanization)
+;					Changed 2nd joust spot
+;				The Manaetic Behemoth (RI Pull Manaetic)
+;					Fixed a bug that would move group to diff lockspot
+;				Toa the Shiny
+;					Fixed targeting
+;				The Junk Beast
+;					Fixed a bug in activating
+;					Fixed a bug in move behind
+;				The Manaetic Behemoth
+;					Disables Pets and Temp Pets
+;					Added pet backoff during jousting (In case it misses any pets)
 ;	RZ
 ;		Completely rewrote RZ now can queue up any number of Zones 
 ;		and RZ will run them and move between them as needed and 
-;		as queued. (Only PoP for now)
+;		as queued. (Only PoP for now) (Only zones that are coded in RI)
 ;		RZO will handle pre-PoP zones
+;	RIMUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			*method DisablePets(string ForWho=ALL) - Disables and Cancels maintained for all Until Canceled Pets
+;			*method DisableTempPets(string ForWho=ALL) - Disables all temp Pets
+;			*method EnablePets(string ForWho=ALL) - Enables all Until Canceled Pets
+;			*method EnableTempPets(string ForWho=ALL) - Enables all temp Pets
+;	HideEffects
+;		Will now unhide all effects first
+;		Stopped hiding of most Until Canceled Pets		
+;	RICharList
+;		modified handling of xml in some situations
+
+;v5.41 Changes 12-22-17
+;	RQ
+;		Fixed missing dat file for Legacy of Power: An Innovative Approach
 
 
-variable(global) float RI_Var_Float_Version=5.39
+variable(global) float RI_Var_Float_Version=5.41
 
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
@@ -3538,6 +3582,171 @@ function main()
 	;disable RI_Var_Bool_Debugging
 	Script:DisableDebugging
 	
+	
+	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/"
+	;check if RIMUI.xml exists, if not create
+	;FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
+	if !${FP.PathExists}
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/"]
+		FP:MakeSubdirectory[RI]	
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
+	}
+	if !${FP.FileExists[RI.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RI.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml" http://www.isxri.com/RI.xml
+		wait 50
+	}
+	if !${FP.FileExists[RIAutoTarget.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIAutoTarget.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIAutoTarget.xml" http://www.isxri.com/RIAutoTarget.xml
+		wait 50
+	}
+	if !${FP.FileExists[RIBalance.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIBalance.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIBalance.xml" http://www.isxri.com/RIBalance.xml
+		wait 50
+	}
+	if !${FP.FileExists[RICharListUI.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RICharListUI.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RICharListUI.xml" http://www.isxri.com/RICharListUI.xml
+		wait 50
+	}
+	if !${FP.FileExists[RIGroupLogin.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIGroupLogin.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIGroupLogin.xml" http://www.isxri.com/RIGroupLogin.xml
+		wait 50
+	}
+	if !${FP.FileExists[RIInventory.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIInventory.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIInventory.xml" http://www.isxri.com/RIInventory.xml
+		wait 50
+	}
+	if !${FP.FileExists[RIMobHud.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIMobHud.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIMobHud.xml" http://www.isxri.com/RIMobHud.xml
+		wait 50
+	}
+	if !${FP.FileExists[RIMovement.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIMovement.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIMovement.xml" http://www.isxri.com/RIMovement.xml
+		wait 50
+	}
+	if !${FP.FileExists[RISalvage.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RISalvage.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RISalvage.xml" http://www.isxri.com/RISalvage.xml
+		wait 50
+	}
+	if !${FP.FileExists[RITransmute.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RITransmute.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RITransmute.xml" http://www.isxri.com/RITransmute.xml
+		wait 50
+	}
+	if !${FP.FileExists[RPG.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RPG.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RPG.xml" http://www.isxri.com/RPG.xml
+		wait 50
+	}
+	if !${FP.FileExists[RZ.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RZ.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml" http://www.isxri.com/RZ.xml
+		wait 50
+	}
+	if !${FP.FileExists[RZm.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RZm.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml" http://www.isxri.com/RZm.xml
+		wait 50
+	}
+	if !${FP.FileExists[RZo.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RZo.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RZo.xml" http://www.isxri.com/RZo.xml
+		wait 50
+	}
+	if !${FP.FileExists[ZoneReset.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting ZoneReset.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/ZoneReset.xml" http://www.isxri.com/ZoneReset.xml
+		wait 50
+	}
+	if !${FP.FileExists[WriteLocs.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting WriteLocs.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/WriteLocs.xml" http://www.isxri.com/WriteLocs.xml
+		wait 50
+	}
+	if !${FP.FileExists[RIMUI.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIMUI.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml" http://www.isxri.com/RIMUI.xml
+		wait 50
+	}
+	if !${FP.FileExists[RIMUICustom.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIMUICustom.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIMUICustom.xml" http://www.isxri.com/RIMUICustom.xml
+		wait 50
+	}
+	if !${FP.FileExists[RIMUIEdit.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIMUIEdit.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml" http://www.isxri.com/RIMUIEdit.xml
+		wait 50
+	}
+	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/"]
+	if !${FP.PathExists}
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
+		FP:MakeSubdirectory[CombatBot]	
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/"]
+	}
+	if !${FP.FileExists[CombatBotMiniUI.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting CombatBotMiniUI.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/CombatBotMiniUI.xml" http://www.isxri.com/CombatBotMiniUI.xml
+		wait 50
+	}
+	if !${FP.FileExists[CombatBotUI.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting CombatBotUI.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI//CombatBot/CombatBotUI.xml" http://www.isxri.com/CombatBotUI.xml
+		wait 50
+	}
+	
 	RI_Index_String_AvailableRIMUICommands:Insert[AcceptReward]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Accept Reward - Accepts pending reward (for rewards with options it simply closes the window until you zone again)\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[AssistPop]
@@ -4087,7 +4296,7 @@ objectdef RIMovementObject
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Ending FlyDown
 	}
-	function CheckCombat(bool FollowAfter=FALSE)
+	function CheckCombat(bool FollowAfter=TRUE)
 	{
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Starting CheckCombat
@@ -4162,15 +4371,16 @@ objectdef RIMovementObject
 	{
 		if ${RI_Var_Bool_Debug}
 			echo ${Time}: Starting Follow!
-		if ${IGFollow} && !${RI_Var_Bool_GlobalOthers}
-			relay "other ${RI_Var_String_RelayGroup}" -noredirect eq2execute follow ${Me.Name}
-		elseif ${SFollow} && !${RI_Var_Bool_GlobalOthers}
+		;if ${IGFollow} && !${RI_Var_Bool_GlobalOthers}
+		;	relay "other ${RI_Var_String_RelayGroup}" -noredirect eq2execute follow ${Me.Name}
+		;else ${SFollow} && 
+		if !${RI_Var_Bool_GlobalOthers}
 		{
 			; if ${ISXOgre(exists)}
 				; relay ${RI_Var_String_RelayGroup} -noredirect OgreBotAtom a_QueueCommand DoNotMove
 			relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
 			;relay ${RI_Var_String_RelayGroup} -noredirect RI_Atom_SetLockSpot OFF
-			relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},${Distance},100]
+			relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},2,100]
 			;relay "other ${RI_Var_String_RelayGroup}" -noredirect RI_Atom_SetRIFollow ALL ${Me.ID} ${Distance} 100
 		}
 		if ${RI_Var_Bool_Debug}
@@ -4319,6 +4529,7 @@ objectdef RIMovementObject
 				TempY:Set[${Me.Y}]
 				TempZ:Set[${Me.Z}]
 				wait 5
+				call This.follow
 				call This.Move ${Actor[${ShinyID}].X} ${Math.Calc[${Actor[${ShinyID}].Y}+0.01]} ${Actor[${ShinyID}].Z} ${Precision} 10 FALSE TRUE TRUE FALSE TRUE
 				declare count int 0
 				for (count:Set[1];${count}<50;count:Inc)
@@ -5017,6 +5228,133 @@ objectdef RIMovementObject
 }
 objectdef RIMUIObject
 {
+	method DisablePets(string _ForWho)
+	{
+		if ${This.ForWhoCheck[${_ForWho}]}
+		{
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Possess Essence,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Spirit Companion,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Personae Reflection,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Aery Hunter,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Fiery Magician,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Grim Sorcerer,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Create Construct,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Earthen Avatar,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Nightshade,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Undead Knight,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Avian,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Bear,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Boar,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Bovid,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Canine,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Dire,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Drake,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Enchanted,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Feline,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Mystical,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Rodent,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Warboar,0]
+			Me.Maintained[Possess Essence]:Cancel
+			Me.Maintained[Summon Spirit Companion]:Cancel
+			Me.Maintained[Personae Reflection]:Cancel
+			Me.Maintained[Aery Hunter]:Cancel
+			Me.Maintained[Fiery Magician]:Cancel
+			Me.Maintained[Grim Sorcerer]:Cancel
+			Me.Maintained[Create Construct]:Cancel
+			Me.Maintained[Earthen Avatar]:Cancel
+			Me.Maintained[Nightshade]:Cancel
+			Me.Maintained[Undead Knight]:Cancel
+			Me.Maintained[Summon Warder: Avian]:Cancel
+			Me.Maintained[Summon Warder: Bear]:Cancel
+			Me.Maintained[Summon Warder: Boar]:Cancel
+			Me.Maintained[Summon Warder: Bovid]:Cancel
+			Me.Maintained[Summon Warder: Canine]:Cancel
+			Me.Maintained[Summon Warder: Dire]:Cancel
+			Me.Maintained[Summon Warder: Drake]:Cancel
+			Me.Maintained[Summon Warder: Enchanted]:Cancel
+			Me.Maintained[Summon Warder: Feline]:Cancel
+			Me.Maintained[Summon Warder: Mystical]:Cancel
+			Me.Maintained[Summon Warder: Rodent]:Cancel
+			Me.Maintained[Summon Warder: Warboar]:Cancel
+		}
+	}
+	method EnablePets(string _ForWho)
+	{
+		if ${This.ForWhoCheck[${_ForWho}]}
+		{
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Possess Essence,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Spirit Companion,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Personae Reflection,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Aery Hunter,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Fiery Magician,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Grim Sorcerer,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Create Construct,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Earthen Avatar,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Nightshade,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Undead Knight,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Avian,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Bear,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Boar,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Bovid,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Canine,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Dire,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Drake,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Enchanted,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Feline,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Mystical,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Rodent,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Summon Warder: Warboar,1]
+		}
+	}
+	
+	method DisableTempPets(string _ForWho)
+	{
+		if ${This.ForWhoCheck[${_ForWho}]}
+		{
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Granite Protector,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Elemental Amalgamation,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Bloatfly,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Shadow,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Awaken Grave,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Ancestral Sentry,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Ball of Lightning,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Band of Thugs,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Blighted Horde,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Doppelganger,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Holy Avenger,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Puppetmaster,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Ring of Fire,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Undead Horde,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Unswerving Hammer,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Dark Infestation,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Furnace of Ro,0]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Protoflame,0]
+		}
+	}
+	method EnableTempPets(string _ForWho)
+	{
+		if ${This.ForWhoCheck[${_ForWho}]}
+		{
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Granite Protector,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Elemental Amalgamation,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Bloatfly,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Shadow,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Awaken Grave,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Ancestral Sentry,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Ball of Lightning,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Band of Thugs,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Blighted Horde,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Doppelganger,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Holy Avenger,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Puppetmaster,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Ring of Fire,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Undead Horde,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Unswerving Hammer,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Dark Infestation,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Furnace of Ro,1]
+			RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Protoflame,1]
+		}
+	}
 	method StarFormation(int _Distance=10)
 	{
 		relay is2 RIMUIObj:SetLockSpot[ALL,${Math.Calc[${Me.X}+${_Distance}]},${Me.Y},${Me.Z}]
@@ -9056,48 +9394,6 @@ atom aLoadRIMUI()
 function LoadRIMUI()
 {
 	RIMUILoaded:Set[TRUE]
-	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/"
-	;check if RIMUI.xml exists, if not create
-	;FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
-	if !${FP.PathExists}
-	{
-		FP:Set["${LavishScript.HomeDirectory}/Scripts/"]
-		FP:MakeSubdirectory[RI]	
-		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
-	}
-	if ${FP.FileExists[RIMUI.xml]}
-	{
-		noop
-	}
-	else
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Getting RIMUI.xml
-		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml" http://www.isxri.com/RIMUI.xml
-		wait 50
-	}
-	if ${FP.FileExists[RIMUICustom.xml]}
-	{
-		noop
-	}
-	else
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Getting RIMUICustom.xml
-		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIMUICustom.xml" http://www.isxri.com/RIMUICustom.xml
-		wait 50
-	}
-	if ${FP.FileExists[RIMUIEdit.xml]}
-	{
-		noop
-	}
-	else
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Getting RIMUIEdit.xml
-		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml" http://www.isxri.com/RIMUIEdit.xml
-		wait 50
-	}
 	;IterateSet
 	;return
 	;load xmlfile

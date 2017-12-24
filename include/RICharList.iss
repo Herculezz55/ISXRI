@@ -77,16 +77,17 @@ objectdef RICharListObject
 		;echo Set: ${This.Count[${Set2}]}==0
 		numSets:Set[${This.Count[${Set2}]}]
 		declare strSets[${numSets}] string script
-		if ${This.Count[${Set2}]}==0
-		{
-			MessageBox -skin eq2 "We were unable to read your RICharList.xml file"
-			Script:End
-		}
-		if ${strSets[1].Equal[AccountLogin]}
-		{
-			MessageBox -skin eq2 "You must edit your RICharList.xml file and add your accounts and toons"
-			Script:End
-		}
+		;if ${This.Count[${Set2}]}==0
+		;{
+		;	MessageBox -skin eq2 "We were unable to read your RICharList.xml file"
+		;	Script:End
+		;}
+		;this is not needed eventually we will delete these temp placeholders but for now just ignore
+		; if ${strSets[1].Equal[AccountLogin]}
+		; {
+			; MessageBox -skin eq2 "You must edit your RICharList.xml file and add your accounts and toons"
+			; Script:End
+		; }
 		This:PopulateAccounts[${Set2}]
 	}
 	method PopulateAccounts(settingsetref Set4)

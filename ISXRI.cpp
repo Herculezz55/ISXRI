@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.39 12-15-17"
-double EXTVER = 5.39;
+#define EXTENSION_VERSION "5.41 12-22-17"
+double EXTVER = 5.41;
 #include "ISXRI.h"
 
 
@@ -115,6 +115,7 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "GetItems.h"
 #include "HideEffects.h"
 #include "RZo.h"
+#include "RZ.h"
 #include "RPG.h"
 #include "Anaheed.h"
 #include "RIInventory.h"
@@ -1619,7 +1620,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("THESUPREMEARTOFTEACHING");
 	pISInterface->RemoveTopLevelObject("THEVEXINGGOLDENCOIN");
 	pISInterface->RemoveTopLevelObject("THEWICKISCURIOSITY");
-	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERANINNOVATIVEAPPROACH.DAT");
+	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERANINNOVATIVEAPPROACH");
 
 }
 
@@ -1660,6 +1661,7 @@ void ISXRIUnRegisterCommands()
 	pISInterface->RemoveCommand("RI_Tserrina");
 	pISInterface->RemoveCommand("RI_Depot");
 	pISInterface->RemoveCommand("RZ");
+	pISInterface->RemoveCommand("RZo");
 	pISInterface->RemoveCommand("RI_AntiAFK");
 	//pISInterface->RemoveCommand("ftperoni");
 	pISInterface->RemoveCommand("RI_SessionName");
@@ -1771,6 +1773,8 @@ void updatefunction()
 {
 	string ISXRIXMLPath;
 	string ISXRZXMLPath;
+	string ISXRZoXMLPath;
+	string ISXRZmXMLPath;
 	string ISXZoneResetXMLPath;
 	string ISXRIMobHudXMLPath;
 	string ISXRIWriteLocsXMLPath;
@@ -1798,6 +1802,8 @@ void updatefunction()
 	string ISXRIPath = InnerspacePath;
 	ISXRIXMLPath = InnerspaceScriptsPath;
 	ISXRZXMLPath = InnerspaceScriptsPath;
+	ISXRZoXMLPath = InnerspaceScriptsPath;
+	ISXRZmXMLPath = InnerspaceScriptsPath;
 	ISXZoneResetXMLPath = InnerspaceScriptsPath;
 	ISXRIMobHudXMLPath = InnerspaceScriptsPath;
 	ISXRIWriteLocsXMLPath = InnerspaceScriptsPath;
@@ -1824,6 +1830,8 @@ void updatefunction()
 	ISXRIPath += "\\Extensions\\ISXDK35\\ISXRI.dll";
 	ISXRIXMLPath += "\\RI\\RI.xml";
 	ISXRZXMLPath += "\\RI\\RZ.xml";
+	ISXRZoXMLPath += "\\RI\\RZo.xml";
+	ISXRZmXMLPath += "\\RI\\RZm.xml";
 	ISXZoneResetXMLPath += "\\RI\\ZoneReset.xml";
 	ISXRIMobHudXMLPath += "\\RI\\RIMobHud.xml";
 	ISXRIWriteLocsXMLPath += "\\RI\\WriteLocs.xml";
@@ -1847,6 +1855,8 @@ void updatefunction()
 	bool CreateISXRICombatBotFolder = CreateDirectory(ISXRICombatBotFolderPath.c_str(),0);
 	remove(ISXRIXMLPath.c_str());
 	remove(ISXRZXMLPath.c_str());
+	remove(ISXRZoXMLPath.c_str());
+	remove(ISXRZmXMLPath.c_str());
 	remove(ISXZoneResetXMLPath.c_str());
 	remove(ISXRIMobHudXMLPath.c_str());
 	remove(ISXRIWriteLocsXMLPath.c_str());
@@ -1875,6 +1885,8 @@ void updatefunction()
 	DeleteUrlCacheEntry("http://www.isxri.com/RI.xml");
 	//delete file in cache if it exists
 	DeleteUrlCacheEntry("http://www.isxri.com/RZ.xml");
+	DeleteUrlCacheEntry("http://www.isxri.com/RZo.xml");
+	DeleteUrlCacheEntry("http://www.isxri.com/RZm.xml");
 	//delete file in cache if it exists
 	DeleteUrlCacheEntry("http://www.isxri.com/ISXRI.dll");
 	DeleteUrlCacheEntry("http://www.isxri.com/35/ISXRI.dll");
@@ -1900,6 +1912,10 @@ void updatefunction()
 	HRESULT hRez1 = URLDownloadToFile(NULL, "http://www.isxri.com/RI.xml", ISXRIXMLPath.c_str(), 0, NULL);
 	//download new RZ.xml
 	HRESULT hRez2 = URLDownloadToFile(NULL, "http://www.isxri.com/RZ.xml", ISXRZXMLPath.c_str(), 0, NULL);
+	//download new RZo.xml
+	HRESULT hRez2a = URLDownloadToFile(NULL, "http://www.isxri.com/RZo.xml", ISXRZoXMLPath.c_str(), 0, NULL);
+	//download new RZm.xml
+	HRESULT hRez2b = URLDownloadToFile(NULL, "http://www.isxri.com/RZm.xml", ISXRZmXMLPath.c_str(), 0, NULL);
 	//download new ZoneReset.xml
 	HRESULT hRez3 = URLDownloadToFile(NULL, "http://www.isxri.com/ZoneReset.xml", ISXZoneResetXMLPath.c_str(), 0, NULL);
 	//download new RIMobHud.xml
@@ -28605,8 +28621,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 		if (tlo == "THEWICKISCURIOSITY")
 			pISInterface->AddTopLevelObject("THEWICKISCURIOSITY", TLO_TheWickisCuriosity);
 
-		if (tlo == "LEGACYOFPOWERANINNOVATIVEAPPROACH.DAT")
-			pISInterface->AddTopLevelObject("LEGACYOFPOWERANINNOVATIVEAPPROACH.DAT", TLO_LegacyofPowerAnInnovativeApproach);
+		if (tlo == "LEGACYOFPOWERANINNOVATIVEAPPROACH")
+			pISInterface->AddTopLevelObject("LEGACYOFPOWERANINNOVATIVEAPPROACH", TLO_LegacyofPowerAnInnovativeApproach);
 	}
 	return 1;
 }
@@ -29947,7 +29963,7 @@ int __cdecl CMD_PoisonReplenish(int argc, char *argv[])
 	return 1;
 }*/
 
-int __cdecl CMD_RZ(int argc, char *argv[])
+int __cdecl CMD_RZo(int argc, char *argv[])
 {
 	char* args[10];
 	/*if (argc > 1024)
@@ -29962,7 +29978,25 @@ int __cdecl CMD_RZ(int argc, char *argv[])
 		args[i] = argv[i];
 	}
 	const char * buffer = (const char *)RZo;
-	pISInterface->RunScriptFromBuffer("RZ", buffer, sizeof(RZo), argc, args);
+	pISInterface->RunScriptFromBuffer("RZo", buffer, sizeof(RZo), argc, args);
+	return 0;
+}
+int __cdecl CMD_RZ(int argc, char *argv[])
+{
+	char* args[10];
+	/*if (argc > 1024)
+	{
+	printf("ISXRI: You have exceeded the max amount of arguments please enter less than 1024 arguments");
+	return 0;
+	}*/
+	//printf("ISXRI:Argument Count: %d", argc);
+	args[0] = "3rtZdjv7";
+	for (int i = 1; i < argc; i++)
+	{
+		args[i] = argv[i];
+	}
+	const char * buffer = (const char *)RZ;
+	pISInterface->RunScriptFromBuffer("RZ", buffer, sizeof(RZ), argc, args);
 	return 0;
 }
 int __cdecl CMD_RIInventory(int argc, char *argv[])
@@ -30835,6 +30869,7 @@ void RegisterCommandsAfterAuth()
 		//pISInterface->AddCommand("Vexven", CMD_Vexven, true, false);
 		pISInterface->AddCommand("RI_CoT", CMD_CoT, true, false);
 		pISInterface->AddCommand("RZ", CMD_RZ, true, false);
+		pISInterface->AddCommand("RZo", CMD_RZo, true, false);
 		pISInterface->AddCommand("RRG", CMD_RaidRelayGroup, true, false);
 		pISInterface->AddCommand("RPG", CMD_RPG, true, false);
 		/* disabling until moved to ri pull

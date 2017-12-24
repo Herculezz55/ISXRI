@@ -353,7 +353,8 @@ variable int InPlainStealthUPTime=-7000
 ;variable bool GetCharms=TRUE
 variable bool IWasResed=FALSE
 variable(global) bool CombatBotIDied=FALSE
-variable string RI_Var_String_CB_ConfrontFearText="need a confront fear"
+variable(global) string RI_Var_String_CB_ConfrontFearText="need a confront fear"
+variable(global) bool RI_Var_Bool_CB_CallForConfrontFear=1
 variable string ImportingOgre=FALSE
 variable bool WasRIFollowing=FALSE
 variable(global) bool CombatBotCSCDebug=FALSE
@@ -1619,12 +1620,12 @@ objectdef RI_Object_CB
 			elseif ${Value.Equal[0]} || ${Value.Equal[FALSE]}
 				UIElement[${_SettingName}@SettingsFrame@CombatBotUI]:UnsetChecked
 		}
-		elseif ${_SettingName.Left[8].Upper.Equal[SETTINGS]} && ${_SettingName.Find[TextEntry](exists)} && !${_SettingName.Find[Key](exists)}
+		elseif ${_SettingName.Left[8].Upper.Equal[SETTINGS]} && ${_SettingName.Find[TextEntry](exists)} && !${_SettingName.Find[Key](exists)} && !${_SettingName.Find[Confront](exists)}
 		{
 			if ${Value.NotEqual[""]} && ${Int[${Value}]}>=0 && ${Int[${Value}]}<=100
 				UIElement[${_SettingName}@SettingsFrame@CombatBotUI]:SetText[${Int[${Value}]}]
 		}
-		elseif ${_SettingName.Left[8].Upper.Equal[SETTINGS]} && ${_SettingName.Find[TextEntry](exists)} && ${_SettingName.Find[Key](exists)}
+		elseif ${_SettingName.Left[8].Upper.Equal[SETTINGS]} && ${_SettingName.Find[TextEntry](exists)} && ( ${_SettingName.Find[Key](exists)} || ${_SettingName.Find[Confront](exists)} )
 		{
 			if ${Value.NotEqual[""]}
 			{
@@ -4684,8 +4685,8 @@ objectdef RI_Object_CB
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsFlyDownKeyTextEntry,${RI_Obj_CB.GetUISetting[SettingsFlyDownKeyTextEntry]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsFlyDownKeyTextEntry,${RI_Obj_CB.GetUISetting[SettingsFlyDownKeyTextEntry]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsFlyDownKeyTextEntry,${RI_Obj_CB.GetUISetting[SettingsFlyDownKeyTextEntry]}]
-		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsDeitySpendTextEntry,${RI_Obj_CB.GetUISetting[SettingsDeitySpendTextEntry]}]
-		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsDeityComboBox,${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}]
+		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsCallConfrontFearCheckBox,${RI_Obj_CB.GetUISetting[SettingsCallConfrontFearCheckBox]}]
+		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsConfrontFearCallTextEntry,${RI_Obj_CB.GetUISetting[SettingsConfrontFearCallTextEntry]}]
 		
 		;CastStack
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack]:Clear
@@ -5721,11 +5722,13 @@ function main()
 											wait 10
 											;SummonMount:Set[FALSE]
 										}
-										if ${Me.Raid}>0
-											TimedCommand 10 execute \${If[\${Me.IsDead},noop,eq2execute r ${RI_Var_String_CB_ConfrontFearText}]}
-										else
-											TimedCommand 10 execute \${If[\${Me.IsDead},noop,eq2execute g ${RI_Var_String_CB_ConfrontFearText}]}
-											
+										if ${RI_Var_Bool_CB_CallForConfrontFear}
+										{
+											if ${Me.Raid}>0
+												TimedCommand 10 execute \${If[\${Me.IsDead},noop,eq2execute r ${RI_Var_String_CB_ConfrontFearText}]}
+											else
+												TimedCommand 10 execute \${If[\${Me.IsDead},noop,eq2execute g ${RI_Var_String_CB_ConfrontFearText}]}
+										}	
 									;}
 									SawCFTime:Set[${Script.RunningTime}]
 									IWasResed:Set[FALSE]
@@ -6792,9 +6795,9 @@ atom LoadProfile(string _Profile=${CombatBotDefaultProfile})
 	RI_Obj_CB:SetUISetting[SettingsSkipAbilityCollisionCheckBox,${SettingsSet.FindSetting[SettingsSkipAbilityCollisionCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsAutoTargetMobsCheckBox,${SettingsSet.FindSetting[SettingsAutoTargetMobsCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsAutoRunKeyTextEntry,${SettingsSet.FindSetting[SettingsAutoRunKeyTextEntry]}]
-	RI_Obj_CB:SetUISetting[SettingsDeitySpendTextEntry,${SettingsSet.FindSetting[SettingsDeitySpendTextEntry]}]
-	UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI]:SelectItem[${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].ItemByValue[${SettingsSet.FindSetting[SettingsDeityComboBox]}].ID}]
-
+	RI_Obj_CB:SetUISetting[SettingsCallConfrontFearCheckBox,${SettingsSet.FindSetting[SettingsCallConfrontFearCheckBox]}]
+	if ${SettingsSet.FindSetting[SettingsConfrontFearCallTextEntry](exists)}
+		RI_Obj_CB:SetUISetting[SettingsConfrontFearCallTextEntry,${SettingsSet.FindSetting[SettingsConfrontFearCallTextEntry]}]
 	
 	if ${RI_Obj_CB.GetUISetting[SettingsAutoRunKeyTextEntry].Find[" "](exists)}
 		RI_Var_String_AutoRunKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsAutoRunKeyTextEntry]}\"]
@@ -7044,7 +7047,7 @@ atom EQ2_onIncomingText(string Text)
 			CurseName:Set[${strTemp1.Left[-${Math.Calc[${strTemp1.Length}-${strTemp1.Find[/a]}+1]}]}]
 		}
 	}
-	if ${Text.Find["need a confront fear"](exists)}
+	if ${Text.Find["${RI_Var_String_CB_ConfrontFearText}"](exists)}
 	{
 		CFSeen:Set[TRUE]
 		if ${Text.Find["You say"](exists)} || ${Text.Find["You shout"](exists)}

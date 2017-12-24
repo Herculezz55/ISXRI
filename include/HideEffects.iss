@@ -6,6 +6,8 @@ function main()
 	Script:DisableDebugging
 	
 	echo ISXRI: Hiding Effects
+	eq2ex hidden_effects clear
+	wait 5
 	;;Read all the effects that we should hide (Duration -1, TargetType = Group,Raid,Self Only,Pet Only) and put in the index
 	
     variable string Duration
@@ -24,7 +26,15 @@ function main()
      {
          do
          {
-            if ( !${Me.Maintained[${Counter}].Find[Grim Aura](exists)} && !${Me.Maintained[${Counter}].Find[Summon](exists)} && ${Me.Maintained[${Counter}].NotEqual[Possess Essence]} && ${Me.Maintained[${Counter}].Duration.Equal[-1]}) && ( ${Me.Maintained[${Counter}].TargetType.Equal[Raid]} || ${Me.Maintained[${Counter}].TargetType.Equal["Self Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Pet Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Group"]})
+		 ; Personae Reflection
+			; Aery Hunter
+			; Fiery Magician
+			; Grim Sorcerer
+			; Create Construct
+			; Earthen Avatar
+			; Nightshade
+			; Undead Knight
+            if ( !${Me.Maintained[${Counter}].Name.Find[Aery Hunter](exists)} && !${Me.Maintained[${Counter}].Name.Find[Fiery Magician](exists)} && !${Me.Maintained[${Counter}].Name.Find[Grim Sorcerer](exists)} && !${Me.Maintained[${Counter}].Name.Find[Create Construct](exists)} && !${Me.Maintained[${Counter}].Name.Find[Earthen Avatar](exists)} && !${Me.Maintained[${Counter}].Name.Find[Nightshade](exists)} && !${Me.Maintained[${Counter}].Name.Find[Undead Knight](exists)} && !${Me.Maintained[${Counter}].Name.Find[Personae Reflection](exists)} && !${Me.Maintained[${Counter}].Name.Find[Grim Aura](exists)} && !${Me.Maintained[${Counter}].Name.Find[Summon](exists)} && ${Me.Maintained[${Counter}].Name.NotEqual[Possess Essence]} && ${Me.Maintained[${Counter}].Duration.Equal[-1]}) && ( ${Me.Maintained[${Counter}].TargetType.Equal[Raid]} || ${Me.Maintained[${Counter}].TargetType.Equal["Self Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Pet Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Group"]})
 				MaintainedEffects:Insert["${Me.Maintained[${Counter}].Name}"]
 				;echo "- ${Counter}. ${Me.Maintained[${Counter}].Name} (Duration: ${Me.Maintained[${Counter}].Duration}, TargetType: ${Me.Maintained[${Counter}].TargetType}) :: Should Be Hidden"
          
