@@ -92,6 +92,66 @@ function BuildIndexes()
 	ZoneSetTime:Insert[0]
 	ZoneUnlockTime:Insert[5400]
 	
+	;Zone
+	_Zone:Insert["Plane of Disease: Outbreak [Solo]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: Outbreak [Solo]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_pod"]
+	ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["Plane of Disease: Outbreak [Heroic]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: Outbreak [Heroic]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_pod"]
+	ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["Plane of Disease: The Source [Solo]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: The Source [Solo]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_pod"]
+	ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["Plane of Disease: The Source [Heroic]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: The Source [Heroic]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_pod"]
+	ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
 	return
 	
 	;Zone

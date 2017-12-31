@@ -1108,9 +1108,29 @@ function PreGo(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 				istrMain:Insert[${PlaneofInnovationGearsintheMachine[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
+		case Plane of Disease: Outbreak [Solo]
+		case Plane of Disease: Outbreak [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO PlaneofDiseaseOutbreak
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[PlaneofDiseaseOutbreak]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofDiseaseOutbreak[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${PlaneofDiseaseOutbreak[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Plane of Disease: The Source [Solo]
+		case Plane of Disease: The Source [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO PlaneofDiseaseTheSource 
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[PlaneofDiseaseTheSource]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofDiseaseTheSource[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${PlaneofDiseaseTheSource[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
 		default
 		{
-		;need to put in here for default loading of zones with names stripping [Heroic] [Event Heroic] [Solo] [Advanced Solo] [Agnostic] [Expert] etc
+			;need to put in here for default loading of zones with names stripping [Heroic] [Event Heroic] [Solo] [Advanced Solo] [Agnostic] [Expert] etc
 			;MessageBox "This is not a supported zone, please contact Herculezz on Either forums or IRC and let him know the zone name: ${Me.GetGameData[Self.ZoneName].Label} to be added, Best to get and post a screenshot of this."
 			;Script:End
 			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
@@ -1123,7 +1143,31 @@ atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName]
 {
 	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
 	;check if ZineFileName exists, if not end
-	if !${FP.FileExists[${ZoneFileName}.dat]}
+	if !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[Solo](exists)} && ${FP.FileExists[${ZoneFileName.Left[-4]}.dat]}
+	{
+		ZoneFileName:Set[${ZoneFileName.Left[-4]}]
+		if ${_Verbose}
+			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
+	}
+	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[Heroic](exists)} && ${FP.FileExists[${ZoneFileName.Left[-6]}.dat]}
+	{
+		ZoneFileName:Set[${ZoneFileName.Left[-6]}]
+		if ${_Verbose}
+			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
+	}
+	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[Duo](exists)} && ${FP.FileExists[${ZoneFileName.Left[-3]}.dat]}
+	{
+		ZoneFileName:Set[${ZoneFileName.Left[-3]}]
+		if ${_Verbose}
+			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
+	}
+	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[EventHeroic](exists)} && ${FP.FileExists[${ZoneFileName.Left[-11]}.dat]}
+	{
+		ZoneFileName:Set[${ZoneFileName.Left[-11]}]
+		if ${_Verbose}
+			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
+	}
+	elseif !${FP.FileExists[${ZoneFileName}.dat]}
 	{
 		echo ISXRI: ${Time} Missing ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
 		if ${RI_Var_Bool_QuestMode}
@@ -23963,7 +24007,7 @@ function Mechanization()
 	wait 20
 	RIMUIObj:SetLockSpot[ALL,6.343683,3.793154,-125.300911]
 
-	echo ISXRI: Starting Glitched 
+	echo ISXRI: Starting Mechanization 
 	while ${Actor[Query, ID=${_MechanizationID} && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
@@ -23976,8 +24020,9 @@ function Mechanization()
 		}
 		if ${Trigger}
 		{
+			wait 10
 			;here need to check the mobs location if its one of the 2 on the opposite side of the room then lockspot to the opposite and vice versa
-			if ${Math.Distance[${Actor[Query, ID=${_MechanizationID} && IsDead=FALSE].Loc},4.310000,3.667451,-120.360001]}<10 || ${Math.Distance[${Actor[Query, ID=${_MechanizationID} && IsDead=FALSE].Loc},-37.971889,4.147045,-122.584358]}<10
+			if ${Math.Distance[${Actor[Query, ID=${_MechanizationID} && IsDead=FALSE].Loc},4.310000,3.667451,-120.360001]}<5
 				RIMUIObj:SetLockSpot[ALL,5.699681,4.450512,-106.275620]
 			else
 				RIMUIObj:SetLockSpot[ALL,6.343683,3.793154,-125.300911]
@@ -24216,9 +24261,19 @@ function Manaetic()
 
 function Felkruk()
 {
+	while ${Me.Inventory[Query, Location=="Inventory" && Name=="Springview Healer Mask"](exists)}
+	{
+		Me.Inventory[Query, Location=="Inventory" && Name=="Springview Healer Mask"]:Destroy
+		waitframe
+	}
 	echo ISXRI: Starting Felkruk 
 	variable int _FelkrukID=${Actor[Query, Name=-"Felkruk" && IsDead=FALSE].ID}
-	
+	variable int _Cnt
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["Your affliction awakens!"]
+	AnnounceText:Clear
+	AnnounceText:Insert["Your affliction awakens!"]
 	;set lockspot
 	if !${RI_Var_Bool_GlobalOthers}
 	{
@@ -24232,9 +24287,25 @@ function Felkruk()
 		wait 20
 		call MoveBehind 1
 	}
-	
+	ISXEQ2:EnableAfflictionEvents
+	Event[EQ2_onGroupMemberAfflicted]:AttachAtom[EQ2_onGroupMemberAfflictedFelkruk]
+	Event[EQ2_onMeAfflicted]:AttachAtom[EQ2_onMeAfflictedFelkruk]
+	;declare global variables
+	declare _Cursed index:int global
+	RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Cure Curse,0]
+	;variable int tempcnt=0
+	variable bool _CursedDone=0
 	while ${Actor[Query, ID=${_FelkrukID} && IsDead=FALSE](exists)}
 	{
+		; if ${_Cursed.Used}>${tempcnt}
+		; {
+			; tempcnt:Inc
+			; echo Cursed: ${_Cursed.Used}
+			; for(_Cnt:Set[1];${_Cnt}<=${_Cursed.Used};_Cnt:Inc)
+			; {
+				; echo ${_Cnt}: ${Actor[id,${_Cursed.Get[${_Cnt}]}].Name}
+			; }
+		; }
 		if !${RI_Var_Bool_GlobalOthers}
 		{
 			if ${Actor[Query, ID=${_FelkrukID} && IsDead=FALSE](exists)}
@@ -24243,18 +24314,99 @@ function Felkruk()
 					Actor[Query, ID=${_FelkrukID} && IsDead=FALSE]:DoTarget
 			}
 		}
+		if ${Trigger}
+		{
+			_CursedDone:Set[0]
+			Trigger:Set[0]
+		}
+		if ${_Cursed.Used}==${Me.Group} && !${_CursedDone}
+		{
+			Event[EQ2_onGroupMemberAfflicted]:DetachAtom[EQ2_onGroupMemberAfflictedFelkruk]
+			Event[EQ2_onMeAfflicted]:DetachAtom[EQ2_onMeAfflictedFelkruk]
+			;pause bots
+			RI_CMD_PauseCombatBots 1
+			if ${Me.Archetype.Equal[Priest]}
+			{
+				for(_Cnt:Set[1];${_Cnt}<=${_Cursed.Used};_Cnt:Inc)
+				{
+					if ${_Cursed.Get[${_Cnt}]}==${Me.ID}
+					{
+						while ${Me.Cursed}==1
+						{
+							if !${Me.CastingSpell}
+							{
+								;echo eq2execute useabilityonplayer ${Me.Name} "Cure Curse"
+								eq2execute useabilityonplayer ${Me.Name} "Cure Curse"
+								eq2execute clearabilityqueue
+							}
+							wait 2 ${Me.CastingSpell}
+						}
+					}
+					else
+					{
+						while ${Me.Group[id,${_Cursed.Get[${_Cnt}]}].Cursed}==1
+						{
+							if !${Me.CastingSpell}
+							{
+								echo eq2execute useabilityonplayer ${Actor[id,${_Cursed.Get[${_Cnt}]}].Name} "Cure Curse"
+								eq2execute useabilityonplayer ${Actor[id,${_Cursed.Get[${_Cnt}]}].Name} "Cure Curse"
+								eq2execute clearabilityqueue
+							}
+							wait 2 ${Me.CastingSpell}
+						}
+					}
+				}
+			}
+			;unpause bots
+			RI_CMD_PauseCombatBots 0
+			_CursedDone:Set[1]
+		}
 		wait 2
 	}
+	ISXEQ2:DisableAfflictionEvents
+	Event[EQ2_onGroupMemberAfflicted]:DetachAtom[EQ2_onGroupMemberAfflictedFelkruk]
+	Event[EQ2_onMeAfflicted]:DetachAtom[EQ2_onMeAfflictedFelkruk]
+	deletevariable _Cursed
+	RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Cure Curse,1]
 	call MoveBehind 0
 	wait 2
 	call RIMObj.follow
 	echo ISXRI: Ending Felkruk 
 }
+;need to check the index first before adding so in case they are already cursed they dont get added again
+atom EQ2_onGroupMemberAfflictedFelkruk(int ActorID, int TraumaCounter, int ArcaneCounter, int NoxiousCounter, int ElementalCounter, int CursedCounter)
+{
+	variable int _cnt=0
+	variable bool _cursedalready:Set[0]
+	for(_cnt:Set[1];${_cnt}<=${_Cursed.Used};_cnt:Inc)
+	{
+		if ${ActorID}==${_Cursed.Get[${_cnt}]}
+			_cursedalready:Set[1]
+	}
+	if ${CursedCounter}>0 && !${_cursedalready}
+	{
+		_Cursed:Insert[${ActorID}]
+	}
+}
+atom EQ2_onMeAfflictedFelkruk(int TraumaCounter, int ArcaneCounter, int NoxiousCounter, int ElementalCounter, int CursedCounter)
+{
+	variable int _cnt=0
+	variable bool _cursedalready:Set[0]
+	for(_cnt:Set[1];${_cnt}<=${_Cursed.Used};_cnt:Inc)
+	{
+		if ${Me.ID}==${_Cursed.Get[${_cnt}]}
+			_cursedalready:Set[1]
+	}
+	if ${CursedCounter}>0 && !${_cursedalready}
+	{
+		_Cursed:Insert[${Me.ID}]
+	}
+}
 function Larva()
 {
 	echo ISXRI: Starting Larva 
 	variable int _LarvaID=${Actor[Query, Name=-"Carrion Larva" && IsDead=FALSE].ID}
-	variable int _MLarvaID=${Actor[Query, Name=-"Malarion Larva" && IsDead=FALSE].ID}
+	variable int _MLarvaID=${Actor[Query, Name=-"Malarian Larva" && IsDead=FALSE].ID}
 	;set lockspot
 	if !${RI_Var_Bool_GlobalOthers}
 	{
@@ -24269,7 +24421,7 @@ function Larva()
 		call MoveBehind 1
 	}
 	
-	while ${Actor[Query, ID=${_LarvaID} && IsDead=FALSE](exists)}
+	while ${Actor[Query, ID=${_LarvaID} && IsDead=FALSE](exists)} || ${Actor[Query, ID=${_MLarvaID} && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
@@ -24293,14 +24445,17 @@ function Larva()
 }
 function Flesh()
 {
+	if ${RI_Var_Bool_GlobalOthers}
+		call UseItem "Hirudin Extract" 1
+	wait 50
 	echo ISXRI: Starting Flesh 
 	variable int _FleshID=${Actor[Query, Name=-"The Flesh Eater" && IsDead=FALSE].ID}
-	
+	RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Absorb Magic,1]
 	;set lockspot
 	if !${RI_Var_Bool_GlobalOthers}
 	{
 		Actor[Query, ID=${_FleshID} && IsDead=FALSE]:DoTarget
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,222.015564,391.765411,18.385115]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,232.244095,391.621765,-3.057931]
 		;wait 25
 		;relay "other ${RI_Var_String_RelayGroup}" RI_Var_String_MoveBehindFallBackPCName:Set[${Me.ID}]
 	}
@@ -24320,10 +24475,53 @@ function Flesh()
 					Actor[Query, ID=${_FleshID} && IsDead=FALSE]:DoTarget
 			}
 		}
+		if ${Me.Archetype.Equal[mage]}
+		{
+			if ${Me.Ability[id,1812025739].IsReady}
+			{
+				;turn off assisting
+				RI_CMD_Assisting 0
+				
+				;pause bots
+				RI_CMD_PauseCombatBots 1
+				
+				;target
+				Actor[Query, ID=${_FleshID}]:DoTarget
+				
+				;cancel spellcast and clear ability queue
+				eq2ex cancel_spellcast
+				eq2ex clearabilityqueue 
+				
+				;wait until we are not casting
+				wait 200 !${Me.CastingSpell}
+				
+				;keep attempting to cast absorb magic (ID=1812025739) until it is no longer ready (aka casted)
+				do
+				{
+					if ${Target.ID}==${_FleshID}
+						Me.Ability[id,1812025739]:Use
+					else
+						Actor[Query, ID=${_FleshID}]:DoTarget
+					wait 1
+				}
+				while ${Me.Ability[id,1812025739].IsReady}
+				
+				;wait until we are not casting
+				wait 200 !${Me.CastingSpell}
+				
+				;turn on assisting
+				RI_CMD_Assisting 1
+				
+				;unpause bots
+				RI_CMD_PauseCombatBots 0
+			}
+		}
 		wait 2
 	}
 	;call MoveBehind 0
-	;wait 2
+	wait 50
+	relay ${RI_Var_String_RelayGroup} press esc
+	
 	call RIMObj.follow
 	echo ISXRI: Ending Flesh 
 }
@@ -24335,34 +24533,75 @@ function Valiar()
 {
 	echo ISXRI: Starting Valiar 
 	variable int _ValiarID=${Actor[Query, Name=-"High Dragoon V'Aliar" && IsDead=FALSE].ID}
+	variable int _tempcnt
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["Planar static increases around High Dragoon V'Aliar"]
 	
 	;set lockspot
 	if !${RI_Var_Bool_GlobalOthers}
 	{
-		call MessageBox "Kill this mob then resume"
-		return
 		Actor[Query, ID=${_ValiarID} && IsDead=FALSE]:DoTarget
-		RIMUIObj:SetLockSpot[ALL,222.015564,391.765411,18.385115]
-		wait 25
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,23.710468,93.825264,-203.361816]
+		wait 150 ${Math.Distance[${Me.Loc},23.710468,93.825264,-203.361816]}<3
+		wait 150 ${Actor[Query, ID=${_ValiarID} && IsDead=FALSE].Distance}<8
+		wait 10
 		relay "other ${RI_Var_String_RelayGroup}" RI_Var_String_MoveBehindFallBackPCName:Set[${Me.ID}]
 	}
 	else
 	{
-		return
-		wait 20
+		wait 150 ${Math.Distance[${Me.Loc},23.710468,93.825264,-203.361816]}<3
+		wait 150 ${Actor[Query, ID=${_ValiarID} && IsDead=FALSE].Distance}<8
 		call MoveBehind 1
 	}
-	
+	Trigger:Set[FALSE]
 	while ${Actor[Query, ID=${_ValiarID} && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
-			if ${Actor[Query, ID=${_ValiarID} && IsDead=FALSE](exists)}
+			if ${Actor[Query, Name=="a metallic squire" && IsDead=FALSE](exists)}
+			{
+				if ${Target.ID}!=${Actor[Query, Name=="a metallic squire" && IsDead=FALSE].ID}
+					Actor[Query, Name=="a metallic squire" && IsDead=FALSE]:DoTarget
+			}
+			elseif ${Actor[Query, ID=${_ValiarID} && IsDead=FALSE](exists)}
 			{
 				if ${Target.ID}!=${_ValiarID}
 					Actor[Query, ID=${_ValiarID} && IsDead=FALSE]:DoTarget
 			}
+			if ${Trigger}
+			{
+				if ${Math.Distance[${Me.Loc},23.710468,93.825264,-203.361816]}<5
+				{
+					relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-4.524120,95.223457,-181.931030]
+					wait 150 ${Math.Distance[${Me.Loc},-4.524120,95.223457,-181.931030]}<3
+				}
+				else
+				{
+					relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,23.710468,93.825264,-203.361816]
+					wait 150 ${Math.Distance[${Me.Loc},23.710468,93.825264,-203.361816]}<3
+				}
+				_tempcnt:Set[0]
+				while ${Actor[Query, ID=${_ValiarID} && IsDead=FALSE].Distance}>7 && ${_tempcnt:Inc}<300
+				{
+					if ${Actor[Query, Name=="a metallic squire" && IsDead=FALSE](exists)}
+					{
+						if ${Target.ID}!=${Actor[Query, Name=="a metallic squire" && IsDead=FALSE].ID}
+							Actor[Query, Name=="a metallic squire" && IsDead=FALSE]:DoTarget
+					}
+					elseif ${Actor[Query, ID=${_ValiarID} && IsDead=FALSE](exists)}
+					{
+						if ${Target.ID}!=${_ValiarID}
+							Actor[Query, ID=${_ValiarID} && IsDead=FALSE]:DoTarget
+					}
+					wait 1
+				}
+			
+				Trigger:Set[FALSE]
+				relay "other ${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+			}
 		}
+		
 		wait 2
 	}
 	call MoveBehind 0
@@ -24373,22 +24612,132 @@ function Valiar()
 function Rallius()
 {
 	echo ISXRI: Starting Rallius 
+	RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Battle Coordination,0]
+	Me.Maintained[Battle Coordination]:Cancel
 	variable int _RalliusID=${Actor[Query, Name=-"Rallius Rattican" && IsDead=FALSE].ID}
-	
+	variable int _sid=0
+	variable string _MainWep
+	variable string _SecWep
 	;set lockspot
 	if !${RI_Var_Bool_GlobalOthers}
 	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-182.239761,129.033844,-270.444580]
+		relay ${RI_Var_String_RelayGroup} RI_CMD_PauseCombatBots 1
+		relay ${RI_Var_String_RelayGroup} press F1
+		RIMUIObj:SetLockSpot[OFF]
+		;getspores
+		while ${Me.Inventory[Query, Location="Inventory" && Name=="Bileburn Spore"].Quantity}<4
+		{
+			if ${Actor[Query, TintFlags=29909](exists)}
+			{
+				_sid:Set[${Actor[Query, TintFlags=29909].ID}]
+				while ${Actor[Query, ID=${_sid}](exists)}
+				{
+					while !${Actor[Query, ID=${_sid} && Distance<6](exists)}
+					{
+						Actor[Query, ID=${_sid}]:DoFace
+						Actor[Query, ID=${_sid}]:DoubleClick
+						press -hold ${RI_Var_String_ForwardKey}
+						waitframe
+					}
+					press -release ${RI_Var_String_ForwardKey}
+					Actor[Query, ID=${_sid}]:DoubleClick
+					wait 2
+					Actor[Query, ID=${_sid}]:DoubleClick
+					wait 2
+					Actor[Query, ID=${_sid}]:DoubleClick
+				}
+				RIMUIObj:SetLockSpot[ALL,-182.239761,129.033844,-270.444580]
+				wait 150 ${Math.Distance[${Me.Loc},-182.239761,129.033844,-270.444580]}<3
+				RIMUIObj:SetLockSpot[OFF]
+				wait 10
+			}
+			wait 1
+		}
+		;use the items on the bats
+		;bat 1
+		call RIMObj.Move -168.319351 125.583504 -256.463470
+		RIMUIObj:SetLockSpot[OFF]
+		while ${Actor[Query, Name=-"a patron of plagues" && X=-138.330002 && Z=-249.130005].IsAggro}
+		{ 
+			Actor[Query, Name=-"a patron of plagues" && X=-138.330002 && Z=-249.130005]:DoTarget
+			Me.Inventory[Query, Location="Inventory" && Name=="Bileburn Spore"]:Use
+			wait 50 !${Actor[Query, Name=-"a patron of plagues" && X=-138.330002 && Z=-249.130005].IsAggro}
+		}
+		;bat 2
+		while ${Actor[Query, Name=-"a patron of plagues" && X=-144.910004 && Z=-257.079987].IsAggro}
+		{ 
+			Actor[Query, Name=-"a patron of plagues" && X=-144.910004 && Z=-257.079987]:DoTarget
+			Me.Inventory[Query, Location="Inventory" && Name=="Bileburn Spore"]:Use
+			wait 50 !${Actor[Query, Name=-"a patron of plagues" && X=-144.910004 && Z=-257.079987].IsAggro}
+		}
+		;bat 3
+		call RIMObj.Move -164.674362 125.745636 -269.627563
+		while ${Actor[Query, Name=-"a patron of plagues" && X=-139.279999 && Z=-264.179993].IsAggro}
+		{ 
+			Actor[Query, Name=-"a patron of plagues" && X=-139.279999 && Z=-264.179993]:DoTarget
+			Me.Inventory[Query, Location="Inventory" && Name=="Bileburn Spore"]:Use
+			wait 50 !${Actor[Query, Name=-"a patron of plagues" && X=-139.279999 && Z=-264.179993].IsAggro}
+		}
+		;bat 4
+		while ${Actor[Query, Name=-"a patron of plagues" && X=-134.830002 && Z=-272.589996].IsAggro}
+		{ 
+			Actor[Query, Name=-"a patron of plagues" && X=-134.830002 && Z=-272.589996]:DoTarget
+			Me.Inventory[Query, Location="Inventory" && Name=="Bileburn Spore"]:Use
+			wait 50 !${Actor[Query, Name=-"a patron of plagues" && X=-134.830002 && Z=-272.589996].IsAggro}
+		}
+		;turn on Singular Focus 4026518400  or if guardian Focused Offensive 1432018334
+		if ${Me.SubClass.Equal[guardian]} && ${Me.Ability[id,1432018334].IsReady}
+		{
+			while !${Me.Maintained[Focused Offensive](exists)}
+			{
+				while ${Me.Ability[id,1432018334].IsReady}
+				{
+					Me.Ability[id,1432018334]:Use
+					wait 5 ${Me.Maintained[Focused Offensive](exists)}
+				}
+				wait 5 ${Me.Maintained[Focused Offensive](exists)}
+			}
+		}
+		elseif ${Me.Ability[id,4026518400].IsReady}
+		{
+			
+			while !${Me.Maintained[Singular Focus](exists)}
+			{
+				while ${Me.Ability[id,4026518400].IsReady}
+				{
+					Me.Ability[id,4026518400]:Use
+					wait 5 ${Me.Maintained[Singular Focus](exists)}
+				}
+				wait 5 ${Me.Maintained[Singular Focus](exists)}
+			}
+		}
+		;remove main and sec weps
+		_MainWep:Set[${Me.Equipment[1]:UnEquip}]
+		_SecWep:Set[${Me.Equipment[2]:UnEquip}]
+			
+		call RIMObj.Move -166.562790 126.222031 -266.624634 1
+		wait 5		
 		Actor[Query, ID=${_RalliusID} && IsDead=FALSE]:DoTarget
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-166.040909,126.254005,-268.804016]
-		wait 25
-		relay "other ${RI_Var_String_RelayGroup}" RI_Var_String_MoveBehindFallBackPCName:Set[${Me.ID}]
+		Actor[Query, ID=${_RalliusID} && IsDead=FALSE]:DoFace
+		;echo turning on ranged
+		eq2execute setautoattackmode 2
+		eq2execute togglerangedattack
+		wait 150 ${Actor[Query, ID=${_RalliusID} && IsDead=FALSE].Distance}<8
+		RIMUIObj:SetLockSpot[ALL,-182.239761,129.033844,-270.444580]
+		wait 150 ${Math.Distance[${Me.Loc},-182.239761,129.033844,-270.444580]}<3
+		;waitfor mob to be within 7
+		wait 150 ${Actor[Query, ID=${_RalliusID} && IsDead=FALSE].Distance}<8
+		if ${Me.SubClass.Equal[guardian]}
+			Me.Maintained[Focused Offensive]:Cancel
+		else
+			Me.Maintained[Singular Focus]:Cancel
+		relay ${RI_Var_String_RelayGroup} RI_CMD_PauseCombatBots 0
+		Me.Inventory[Query,Location=="Inventory" && Name=="${_MainWep}"]:Equip
+		wait 30
+		Me.Inventory[Query,Location=="Inventory" && Name=="${_SecWep}"]:Equip
 	}
-	;else
-	;{
-	;	wait 20
-	;	call MoveBehind 1
-	;}
-	
+
 	while ${Actor[Query, ID=${_RalliusID} && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
@@ -24399,11 +24748,36 @@ function Rallius()
 					Actor[Query, ID=${_RalliusID} && IsDead=FALSE]:DoTarget
 			}
 		}
+		;if i have the detrimental
+		if ${RIMUIObj.MainIconIDExists[${Me.ID},864,1]}
+		{
+			;while I still have the detrimental, loop
+			while ${RIMUIObj.MainIconIDExists[${Me.ID},864,1]}
+			{
+				wait 1
+			}
+			;pause until my Y is > then 175
+			RI_CMD_PauseCombatBots 1
+			RIMUIObj:SetLockSpot[OFF]
+			RIMUIObj:SetRIFollow[ALL,OFF]
+			Actor[id,${Me.ID}]:DoTarget
+			while ${Me.Y}<176
+				wait 1
+			RIMUIObj:SetLockSpot[ALL,-172.480133,124.239014,-294.307678]
+			wait 150 ${Math.Distance[${Me.Loc},-172.480133,124.239014,-294.307678]}<3
+			RIMUIObj:SetLockSpot[ALL,-182.239761,129.033844,-270.444580]
+			RI_CMD_PauseCombatBots 0
+		}
 		wait 2
 	}
 	;call MoveBehind 0
 	;wait 2
 	call RIMObj.follow
+	if ${Me.SubClass.Equal[guardian]}
+		Me.Maintained[Focused Offensive]:Cancel
+	else
+		Me.Maintained[Singular Focus]:Cancel
+	RI_Obj_CB:ModifyCastStackAbiltiesListBoxItem[Battle Coordination,1]
 	echo ISXRI: Ending Rallius 
 }
 ;;;;;;;; End Plane of Disease: Outbreak
@@ -24438,6 +24812,22 @@ function Blighthorn()
 					Actor[Query, ID=${_BlighthornID} && IsDead=FALSE]:DoTarget
 			}
 		}
+		;if i have the detrimental
+		if ${RIMUIObj.MainIconIDExists[${Me.ID},651,1]}
+		{
+			while ${RIMUIObj.MainIconIDExists[${Me.ID},651,1]}
+			{
+				RIMUIObj:SetLockSpot[ALL,-197.141556,30.502598,298.417053]
+				;turn off assisting
+				RI_CMD_Assisting 0
+				Actor[${Me.ID}]:DoTarget
+				wait 1
+			}
+			;turn on assisting
+			RI_CMD_Assisting 1
+			RIMUIObj:SetLockSpot[OFF]
+		}
+		
 		wait 2
 	}
 	call MoveBehind 0
@@ -24454,14 +24844,7 @@ function Rancine()
 	if !${RI_Var_Bool_GlobalOthers}
 	{
 		Actor[Query, ID=${_RancineID} && IsDead=FALSE]:DoTarget
-		RIMUIObj:SetLockSpot[ALL,-82.178215,22.833746,471.703705]
-		wait 25
-		relay "other ${RI_Var_String_RelayGroup}" RI_Var_String_MoveBehindFallBackPCName:Set[${Me.ID}]
-	}
-	else
-	{
-		wait 20
-		call MoveBehind 1
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-111.69,20.87,518.85]
 	}
 	
 	while ${Actor[Query, ID=${_RancineID} && IsDead=FALSE](exists)}
@@ -24476,9 +24859,8 @@ function Rancine()
 		}
 		wait 2
 	}
-	call MoveBehind 0
-	wait 2
 	call RIMObj.follow
+	call RIMObj.Move -81.888199 22.394815 477.555389
 	echo ISXRI: Ending Rancine 
 }
 function Gryme()
@@ -24510,7 +24892,8 @@ function Gryme()
 					Actor[Query, ID=${_GrymeID} && IsDead=FALSE]:DoTarget
 			}
 		}
-		wait 2
+		eq2ex "apply_verb ${Actor[Query, ID=${_GrymeID} && IsDead=FALSE].ID} Bite calf"
+		wait 10
 	}
 	call MoveBehind 0
 	wait 2
@@ -24522,19 +24905,24 @@ function Darwol()
 	echo ISXRI: Starting Darwol 
 	variable int _DarwolID=${Actor[Query, Name=-"Darwol Adan" && IsDead=FALSE].ID}
 	
+	IncomingText:Clear
+	IncomingText2:Clear
+	;IncomingText:Insert["Darwol's affliction washes over you as he prepares to devour your souls"]
+	IncomingText:Insert["prepares to devour the souls"]
+	
+	while ${Actor[Query, ID=${_DarwolID}].Distance}>20
+		wait 5
+	
 	;set lockspot
 	if !${RI_Var_Bool_GlobalOthers}
 	{
-		call MessageBox "Kill this mob then resume"
-		return
 		Actor[Query, ID=${_DarwolID} && IsDead=FALSE]:DoTarget
-		RIMUIObj:SetLockSpot[ALL,]
+		RIMUIObj:SetLockSpot[ALL,23.710468,93.825264,-203.361816]
 		wait 25
 		relay "other ${RI_Var_String_RelayGroup}" RI_Var_String_MoveBehindFallBackPCName:Set[${Me.ID}]
 	}
 	else
 	{
-		return
 		wait 20
 		call MoveBehind 1
 	}
@@ -24543,56 +24931,209 @@ function Darwol()
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
-			if ${Actor[Query, ID=${_DarwolID} && IsDead=FALSE](exists)}
+			if ${Actor[Query, Name=-"a barrel of volatile pus" && IsDead=FALSE](exists)}
+			{
+				if ${Target.ID}!=${Actor[Query, Name=-"a barrel of volatile pus" && IsDead=FALSE].ID}
+					Actor[Query, Name=-"a barrel of volatile pus" && IsDead=FALSE]:DoTarget
+			}
+			elseif ${Actor[Query, ID=${_DarwolID} && IsDead=FALSE](exists)}
 			{
 				if ${Target.ID}!=${_DarwolID}
 					Actor[Query, ID=${_DarwolID} && IsDead=FALSE]:DoTarget
 			}
+			if ${Trigger}
+			{
+				RIMUIObj:SetLockSpot[OFF]
+				Trigger:Set[FALSE]
+				call MoveToActor "Pus Barrel" 2 1
+				Actor[Pus Barrel]:DoubleClick
+				wait 2
+				Actor[Pus Barrel]:DoubleClick
+				call MoveToActor "Darwol Adan" 5 1
+				call PlaceHouseItem
+				RIMUIObj:SetLockSpot[ALL,23.710468,93.825264,-203.361816]
+			}
 		}
-		wait 2
+		wait 1
 	}
-	call MoveBehind 0
-	wait 2
-	call RIMObj.follow
-	echo ISXRI: Ending Darwol 
-}
-function Bahly()
-{
-	echo ISXRI: Starting Bahly 
-	variable int _BahlyID=${Actor[Query, Name=-"Bahly Adan" && IsDead=FALSE].ID}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[OFF]
+	wait 150 ${Actor[Query, Name=-"Wavadozzik Adan" && IsDead=FALSE](exists)}
 	
+	variable int _WavadozzikID=${Actor[Query, Name=-"Wavadozzik Adan" && IsDead=FALSE].ID}
+	
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Query, ID=${_WavadozzikID} && IsDead=FALSE].Loc},5]
+	wait 150 ${Math.Distance[${Me.Loc},${Actor[Query, ID=${_WavadozzikID} && IsDead=FALSE].Loc}]}<6
+	Actor[Query, ID=${_WavadozzikID} && IsDead=FALSE]:DoTarget
+	
+	variable int _Nest1ID
+	variable int _Nest2ID
+	variable int _Nest3ID
+	variable int _Nest4ID
 	;set lockspot
 	if !${RI_Var_Bool_GlobalOthers}
 	{
-		call MessageBox "Kill this mob then resume"
-		return
-		Actor[Query, ID=${_BahlyID} && IsDead=FALSE]:DoTarget
+		Actor[Query, ID=${_WavadozzikID} && IsDead=FALSE]:DoTarget
 		RIMUIObj:SetLockSpot[ALL,]
 		wait 25
 		relay "other ${RI_Var_String_RelayGroup}" RI_Var_String_MoveBehindFallBackPCName:Set[${Me.ID}]
 	}
 	else
 	{
-		return
 		wait 20
 		call MoveBehind 1
 	}
 	
-	while ${Actor[Query, ID=${_BahlyID} && IsDead=FALSE](exists)}
+	while ${Actor[Query, ID=${_WavadozzikID} && IsDead=FALSE](exists)}
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
-			if ${Actor[Query, ID=${_BahlyID} && IsDead=FALSE](exists)}
+			if ${Actor[Query, ID=${_WavadozzikID} && IsDead=FALSE](exists)}
 			{
-				if ${Target.ID}!=${_BahlyID}
-					Actor[Query, ID=${_BahlyID} && IsDead=FALSE]:DoTarget
+				if ${Target.ID}!=${_WavadozzikID}
+					Actor[Query, ID=${_WavadozzikID} && IsDead=FALSE]:DoTarget
+			}
+			if ${Actor[Query, Name=-"an arachnae nest" && IsDead=FALSE && Type=="NPC"](exists)}
+			{
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-82.285934,-521.090698,87.611549]
+				wait 150 ${Math.Distance[${Me.Loc},-82.285934,-521.090698,87.611549]}<3
+				_Nest1ID:Set[${Actor[Query, Name=-"an arachnae nest" && IsDead=FALSE && Type=="NPC"].ID}]
+				while ${Actor[Query, ID=${_Nest1ID} && IsDead=FALSE](exists)}
+				{
+					if !${RI_Var_Bool_GlobalOthers}
+					{
+						if ${Actor[Query, ID=${_Nest1ID} && IsDead=FALSE](exists)}
+						{
+							if ${Target.ID}!=${_Nest1ID}
+								Actor[Query, ID=${_Nest1ID} && IsDead=FALSE]:DoTarget
+						}
+					}
+					wait 2
+				}
+				_Nest2ID:Set[${Actor[Query, Name=-"an arachnae nest" && IsDead=FALSE && Type=="NPC"].ID}]
+				while ${Actor[Query, ID=${_Nest2ID} && IsDead=FALSE](exists)}
+				{
+					if !${RI_Var_Bool_GlobalOthers}
+					{
+						if ${Actor[Query, ID=${_Nest2ID} && IsDead=FALSE](exists)}
+						{
+							if ${Target.ID}!=${_Nest2ID}
+								Actor[Query, ID=${_Nest2ID} && IsDead=FALSE]:DoTarget
+						}
+					}
+					wait 2
+				}
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-67.848167,-521.433044,121.959526]
+				wait 150 ${Math.Distance[${Me.Loc},-67.848167,-521.433044,121.959526]}<3
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-81.447945,-521.090759,155.660599]
+				wait 150 ${Math.Distance[${Me.Loc},-81.447945,-521.090759,155.660599]}<3
+				_Nest3ID:Set[${Actor[Query, Name=-"an arachnae nest" && IsDead=FALSE && Type=="NPC"].ID}]
+				while ${Actor[Query, ID=${_Nest3ID} && IsDead=FALSE](exists)}
+				{
+					if !${RI_Var_Bool_GlobalOthers}
+					{
+						if ${Actor[Query, ID=${_Nest3ID} && IsDead=FALSE](exists)}
+						{
+							if ${Target.ID}!=${_Nest3ID}
+								Actor[Query, ID=${_Nest3ID} && IsDead=FALSE]:DoTarget
+						}
+					}
+					wait 2
+				}
+				_Nest4ID:Set[${Actor[Query, Name=-"an arachnae nest" && IsDead=FALSE && Type=="NPC"].ID}]
+				while ${Actor[Query, ID=${_Nest4ID} && IsDead=FALSE](exists)}
+				{
+					if !${RI_Var_Bool_GlobalOthers}
+					{
+						if ${Actor[Query, ID=${_Nest4ID} && IsDead=FALSE](exists)}
+						{
+							if ${Target.ID}!=${_Nest4ID}
+								Actor[Query, ID=${_Nest4ID} && IsDead=FALSE]:DoTarget
+						}
+					}
+					wait 2
+				}
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-67.848167,-521.433044,121.959526]
+				wait 150 ${Math.Distance[${Me.Loc},-67.848167,-521.433044,121.959526]}<3
 			}
 		}
+		
 		wait 2
 	}
+	
 	call MoveBehind 0
 	wait 2
 	call RIMObj.follow
-	echo ISXRI: Ending Bahly 
+	echo ISXRI: Ending Darwol 
+}
+
+function Bhaly()
+{
+	echo ISXRI: Starting Bhaly 
+	variable int _BhalyID=${Actor[Query, Name=-"Bhaly Adan" && IsDead=FALSE].ID}
+	variable int _Orb1ID
+	variable int _Orb2ID
+	variable int _Orb3ID
+	variable int _Orb4ID
+	;set lockspot
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		Actor[Query, ID=${_BhalyID} && IsDead=FALSE]:DoTarget
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,4.619247,-473.034576,-90.528389]
+	}
+	wait 150 ${Math.Distance[${Me.Loc},4.619247,-473.034576,-90.528389]}<3
+	wait 20
+	while ${Actor[Query, ID=${_BhalyID} && IsDead=FALSE](exists)}
+	{
+		if !${RI_Var_Bool_GlobalOthers}
+		{
+			if ${Actor[Query, ID=${_BhalyID} && IsDead=FALSE](exists)}
+			{
+				if ${Target.ID}!=${_BhalyID}
+					Actor[Query, ID=${_BhalyID} && IsDead=FALSE]:DoTarget
+			}
+		}
+		if ${Actor[Query, Name=-"Infected Microbe" && IsDead=FALSE && Overlay=="design_sphere_green_no_glow"](exists)}
+		{
+			RIMUIObj:SetLockSpot[ALL,64.270439,-483.178680,-90.064362,2,500]
+			wait 150 ${Math.Distance[${Me.Loc},64.270439,-483.178680,-90.064362]}<3
+			_Orb1ID:Set[${Actor[Query, Name=-"Infected Microbe" && IsDead=FALSE && Distance<20 && Overlay=="design_sphere_green_no_glow"].ID}]
+			while ${Actor[Query, ID=${_Orb1ID} && IsDead=FALSE].Overlay.Equal["design_sphere_green_no_glow"]}
+			{
+				Actor[Query, ID=${_Orb1ID} && IsDead=FALSE]:DoubleClick
+				wait 2
+			}
+			RIMUIObj:SetLockSpot[ALL,-7.936667,-482.834015,-147.8382729,2,500]
+			wait 150 ${Math.Distance[${Me.Loc},-7.936667,-482.834015,-147.838272]}<3
+			_Orb2ID:Set[${Actor[Query, Name=-"Infected Microbe" && IsDead=FALSE && Distance<20 && Overlay=="design_sphere_green_no_glow"].ID}]
+			while ${Actor[Query, ID=${_Orb2ID} && IsDead=FALSE].Overlay.Equal["design_sphere_green_no_glow"]}
+			{
+				Actor[Query, ID=${_Orb2ID} && IsDead=FALSE]:DoubleClick
+				wait 2
+			}
+			RIMUIObj:SetLockSpot[ALL,-79.244186,-483.178680,-89.907211,2,500]
+			wait 150 ${Math.Distance[${Me.Loc},-79.244186,-483.178680,-89.907211]}<3
+			_Orb3ID:Set[${Actor[Query, Name=-"Infected Microbe" && IsDead=FALSE && Distance<20 && Overlay=="design_sphere_green_no_glow"].ID}]
+			while ${Actor[Query, ID=${_Orb3ID} && IsDead=FALSE].Overlay.Equal["design_sphere_green_no_glow"]}
+			{
+				Actor[Query, ID=${_Orb3ID} && IsDead=FALSE]:DoubleClick
+				wait 2
+			}
+			RIMUIObj:SetLockSpot[ALL,-7.106198,-482.834045,-30.564457,2,500]
+			wait 150 ${Math.Distance[${Me.Loc},-7.106198,-482.834045,-30.564457]}<3
+			_Orb4ID:Set[${Actor[Query, Name=-"Infected Microbe" && IsDead=FALSE && Distance<20 && Overlay=="design_sphere_green_no_glow"].ID}]
+			while ${Actor[Query, ID=${_Orb4ID} && IsDead=FALSE].Overlay.Equal["design_sphere_green_no_glow"]}
+			{
+				Actor[Query, ID=${_Orb4ID} && IsDead=FALSE]:DoubleClick
+				wait 2
+			}
+			RIMUIObj:SetLockSpot[ALL,38.271618,-482.833191,-90.715889,2,500]
+			wait 150 ${Math.Distance[${Me.Loc},38.271618,-482.833191,-90.715889]}<3
+			RIMUIObj:SetLockSpot[ALL,4.619247,-473.034576,-90.528389,2,500]
+			wait 150 ${Math.Distance[${Me.Loc},4.619247,-473.034576,-90.528389]}<3
+		}
+		wait 2
+	}
+	call RIMObj.follow
+	echo ISXRI: Ending Bhaly 
 }
 ;;;;;;;; End Plane of Disease: The Source

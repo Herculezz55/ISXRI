@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.41 12-22-17"
-double EXTVER = 5.41;
+#define EXTENSION_VERSION "5.42 12-29-17"
+double EXTVER = 5.42;
 #include "ISXRI.h"
 
 
@@ -172,7 +172,8 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 //pop
 #include "PlaneofInnovationMasksoftheMarvelous.h"
 #include "PlaneofInnovationGearsintheMachine.h"
-
+#include "PlaneofDiseaseOutbreak.h"
+#include "PlaneofDiseaseTheSource.h"
 //Quest Dat Files
 #include "AnythingforJumjum.h"
 #include "AnEyeintheSky.h"
@@ -793,6 +794,7 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "TheVexingGoldenCoin.h"
 #include "TheWickisCuriosity.h"
 #include "LegacyofPowerAnInnovativeApproach.h"
+#include "LegacyofPowerRealmofthePlaguebringer.h"
 
 //#include ".h"
 //End Quest Dat Files
@@ -1000,7 +1002,8 @@ void ISXRIUnRegisterTLOs()
 	//pop
 	pISInterface->RemoveTopLevelObject("PlaneofInnovationMasksoftheMarvelous");
 	pISInterface->RemoveTopLevelObject("PlaneofInnovationGearsintheMachine");
-
+	pISInterface->RemoveTopLevelObject("PlaneofDiseaseOutbreak");
+	pISInterface->RemoveTopLevelObject("PlaneofDiseaseTheSource");
 	//Quest TLO's
 	pISInterface->RemoveTopLevelObject("ANYTHINGFORJUMJUM");
 	pISInterface->RemoveTopLevelObject("ANEYEINTHESKY");
@@ -1621,6 +1624,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("THEVEXINGGOLDENCOIN");
 	pISInterface->RemoveTopLevelObject("THEWICKISCURIOSITY");
 	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERANINNOVATIVEAPPROACH");
+	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERREALMOFTHEPLAGUEBRINGER");
 
 }
 
@@ -27273,6 +27277,114 @@ bool __cdecl TLO_LegacyofPowerAnInnovativeApproach(int argc, char *argv[], LSTYP
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_LegacyofPowerRealmofthePlaguebringer(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(LegacyofPowerRealmofthePlaguebringer) / sizeof(LegacyofPowerRealmofthePlaguebringer[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = LegacyofPowerRealmofthePlaguebringer[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PlaneofDiseaseOutbreak(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(PlaneofDiseaseOutbreak) / sizeof(PlaneofDiseaseOutbreak[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = PlaneofDiseaseOutbreak[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PlaneofDiseaseTheSource(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(PlaneofDiseaseTheSource) / sizeof(PlaneofDiseaseTheSource[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = PlaneofDiseaseTheSource[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -27386,6 +27498,10 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("PlaneofInnovationMasksoftheMarvelous", TLO_PlaneofInnovationMasksoftheMarvelous);
 		if (tlo == "PlaneofInnovationGearsintheMachine")
 			pISInterface->AddTopLevelObject("PlaneofInnovationGearsintheMachine", TLO_PlaneofInnovationGearsintheMachine);
+		if (tlo == "PlaneofDiseaseOutbreak")
+			pISInterface->AddTopLevelObject("PlaneofDiseaseOutbreak", TLO_PlaneofDiseaseOutbreak);
+		if (tlo == "PlaneofDiseaseTheSource")
+			pISInterface->AddTopLevelObject("PlaneofDiseaseTheSource", TLO_PlaneofDiseaseTheSource);
 
 		if (tlo == "ANYTHINGFORJUMJUM")
 			pISInterface->AddTopLevelObject("ANYTHINGFORJUMJUM", TLO_ANYTHINGFORJUMJUM);
@@ -28623,6 +28739,9 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 
 		if (tlo == "LEGACYOFPOWERANINNOVATIVEAPPROACH")
 			pISInterface->AddTopLevelObject("LEGACYOFPOWERANINNOVATIVEAPPROACH", TLO_LegacyofPowerAnInnovativeApproach);
+		if (tlo == "LEGACYOFPOWERREALMOFTHEPLAGUEBRINGER")
+			pISInterface->AddTopLevelObject("LEGACYOFPOWERREALMOFTHEPLAGUEBRINGER", TLO_LegacyofPowerRealmofthePlaguebringer);
+		
 	}
 	return 1;
 }

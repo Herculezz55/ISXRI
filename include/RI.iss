@@ -2185,7 +2185,7 @@
 ;		Fixed a bug in MoveBehind declaration for named's
 ;		Added .IsRooted check to all Group Members that are PC for movement
 ;		Added:
-;			Planes of Innovation: Masks of the Marvelous
+;			Plane of Innovation: Masks of the Marvelous
 ;				Ancient Clockwork Protocol (RI Pull Ancient)
 ;					Handles targeting of the non immune Mob 
 ;					until one is dead then kills the adds
@@ -2202,7 +2202,7 @@
 ;				Gearclaw the Collector (RI Pull Gearclaw)
 ;					MainToon Moves in range and Reenergizes him
 ;					Dispells his Energized buff (Mages only)
-;			Planes of Innovation: Gears in the Machine
+;			Plane of Innovation: Gears in the Machine
 ;				Toa The Shiny (RI Pull Toa)
 ;					Handles targeting and moves group behind
 ;				Powered Mechanization (RI Pull Mechanization)
@@ -2221,7 +2221,7 @@
 ;		Fixed a bug with MoveBehind and BalanceMobs
 ;		Increased targeting delay in BalanceMobs to 5s
 ;		Modified
-;			Planes of Innovation: Masks of the Marvelous
+;			Plane of Innovation: Masks of the Marvelous
 ;				Ancient Clockwork Prototype (RI Pull Ancient)
 ;					Fixed a bug in the targeting
 ;				Clockwork Scrounger XVII (RI Pull Scrounger)
@@ -2229,7 +2229,7 @@
 ;					Moved group behind named until he calls his electric
 ;						then spread out as before
 ;						once clear back to behind named
-;			Planes of Innovation: Gears in the Machine
+;			Plane of Innovation: Gears in the Machine
 ;				Powered Mechanization (RI Pull Mechanization)
 ;					Changed 2nd joust spot
 ;				The Manaetic Behemoth (RI Pull Manaetic)
@@ -2259,12 +2259,58 @@
 ;	RICharList
 ;		modified handling of xml in some situations
 
-;v5.41 Changes 12-22-17
+;v5.41 Changes 12-29-17
 ;	RQ
 ;		Fixed missing dat file for Legacy of Power: An Innovative Approach
+;		Added
+;			Legacy of Power: Realm of the Plaguebringer
+;	RI
+;		Modified
+;			Plane of Innovation: Gears in the Machine
+;				Powered Mechanization (RI Pull Mechanization)
+;					Fixed a bug that would sometimes not joust on first joust
+;		Added
+;			Plane of Disease: Outbreak
+;				Felkruk (RI Pull Felkruk)
+;					Move group behind named
+;					Cure curses in correct order
+;				The Carrion Larva and The Malarian Larva (RI Pull Larva)
+;					Move group behind named
+;				The Flesh Eater
+;					Cast absorb magic for mages
+;					Cancels cut scene
+;				High Dragoon V'Aliar
+;					Move group behind named
+;					Jousts
+;				Rallius Rattican
+;					Grabs 4 Spores
+;					Casts Spore on 4 Bats
+;					Removes primary and secondary weapons and ranged pulls named
+;					Moves back to main LockSpot and Equips weapons
+;					Once outbreak has expired outbreaked toon will target self and 
+;					pause bot until booted in the air, then will land in water and
+;					return to main LockSpot
+;			Plane of Disease: The Source
+;				Blighthorn
+;					Moves group behind named
+;					Toon with det will joust
+;				Gryme
+;					Toons will bite his leg
+;				Darwol Adan
+;					Main toon will run to and pick up pus barrels
+;					and drop at his feet then target
+;				Wavadozzik Adan
+;					Group will run around and kill nests
+;				Bhaly Adan
+;					Group will run around and click orbs as needed
+;v5.42 Changes 12-29-17
+;	RI
+;		Modified
+;			Plane of Innovation: Gears in the Machine
+;				Powered Mechanization (RI Pull Mechanization)
+;					Actually Fixed a bug that would sometimes not joust on first joust
 
-
-variable(global) float RI_Var_Float_Version=5.41
+variable(global) float RI_Var_Float_Version=5.42
 
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
@@ -6157,6 +6203,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[The Majestrix's Trust]
 				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Hero's Devotion]
 				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: An Innovative Approach]
+				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Realm of the Plaguebringer]
 				UIElement[QuestsListBox@RI]:AddItem[Pride Pakiat Faction Timeline,0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[The Missing Heart Leaves Another Hole,Repeatable,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem[Green Fruit For Rut Part Deux,Repeatable,FF00b33c]
