@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.42 12-29-17"
-double EXTVER = 5.42;
+#define EXTENSION_VERSION "5.46 1-7-18"
+double EXTVER = 5.46;
 #include "ISXRI.h"
 
 
@@ -174,6 +174,12 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "PlaneofInnovationGearsintheMachine.h"
 #include "PlaneofDiseaseOutbreak.h"
 #include "PlaneofDiseaseTheSource.h"
+#include "BrackishVaults.h"
+#include "SolusekRosTowerMonolithofFire.h"
+#include "SolusekRosTowerTheObsidianCore.h"
+#include "TordenBastionofThunderTowerBreach.h"
+#include "TordenBastionofThunderWindsofChange.h"
+
 //Quest Dat Files
 #include "AnythingforJumjum.h"
 #include "AnEyeintheSky.h"
@@ -795,6 +801,11 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "TheWickisCuriosity.h"
 #include "LegacyofPowerAnInnovativeApproach.h"
 #include "LegacyofPowerRealmofthePlaguebringer.h"
+#include "LegacyofPowerDeepTrouble.h"
+#include "LegacyofPowerDrawntotheFire.h"
+#include "LegacyofPowerGlimpseoftheHereother.h"
+#include "LegacyofPowerThroughStormsandMists.h"
+#include "LegacyofPowerTyrantsThrone.h"
 
 //#include ".h"
 //End Quest Dat Files
@@ -998,6 +1009,11 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("MistmyrManor");
 	pISInterface->RemoveTopLevelObject("RavenscaleRepository");
 	pISInterface->RemoveTopLevelObject("TheRuinsofCabilis");
+	pISInterface->RemoveTopLevelObject("BrackishVaults");
+	pISInterface->RemoveTopLevelObject("SolusekRosTowerMonolithofFire");
+	pISInterface->RemoveTopLevelObject("SolusekRosTowerTheObsidianCore");
+	pISInterface->RemoveTopLevelObject("TordenBastionofThunderTowerBreach");
+	pISInterface->RemoveTopLevelObject("TordenBastionofThunderWindsofChange");
 
 	//pop
 	pISInterface->RemoveTopLevelObject("PlaneofInnovationMasksoftheMarvelous");
@@ -1625,6 +1641,11 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("THEWICKISCURIOSITY");
 	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERANINNOVATIVEAPPROACH");
 	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERREALMOFTHEPLAGUEBRINGER");
+	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERDEEPTROUBLE");
+	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERDRAWNTOTHEFIRE");
+	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERGLIMPSEOFTHEHEREOTHER");
+	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERTHROUGHSTORMSANDMISTS");
+	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERTYRANTSTHRONE");
 
 }
 
@@ -1798,6 +1819,7 @@ void updatefunction()
 	string ISXRGLXMLPath;
 	string ISXRICharListXMLPath;
 	string ISXRIIXMLPath;
+	// string ISXRIConsoleXMLPath;
 	char InnerspacePath[512];
 	char InnerspaceScriptsPath[512];
 	pISInterface->GetInnerSpacePath(InnerspacePath, sizeof(InnerspacePath));
@@ -1827,6 +1849,7 @@ void updatefunction()
 	ISXRGLXMLPath = InnerspaceScriptsPath;
 	ISXRICharListXMLPath = InnerspaceScriptsPath;
 	ISXRIIXMLPath = InnerspaceScriptsPath;
+	//ISXRIConsoleXMLPath = InnerspaceScriptsPath;
 	//strcat_s(ISXRIXMLPath, InnerspacePath);
 	//printf("XML: %s", ISXRIPath);
 	//strcat_s(ISXRIXMLPath, "\\Extensions\\ISXRI.xml");
@@ -1853,6 +1876,7 @@ void updatefunction()
 	ISXRGLXMLPath += "\\RI\\RIGroupLogin.xml";
 	ISXRIIXMLPath += "\\RI\\RIInventory.xml";
 	ISXRICharListXMLPath += "\\RI\\RICharListUI.xml";
+	//ISXRIConsoleXMLPath += "\\RI\\RIConsole.xml";
 	ISXRIFolderPath += "\\RI";
 	ISXRICombatBotFolderPath += "\\RI\\CombatBot";
 	bool CreateISXRIFolder = CreateDirectory(ISXRIFolderPath.c_str(), 0);
@@ -1878,6 +1902,7 @@ void updatefunction()
 	remove(ISXRGLXMLPath.c_str());
 	remove(ISXRICharListXMLPath.c_str());
 	remove(ISXRIIXMLPath.c_str());
+	//remove(ISXRIConsoleXMLPath.c_str());
 	Sleep(1000);
 	//printf("Folder: %s", InnerspacePath);
 	//printf("DLL: %s", ISXRIPath);
@@ -1912,6 +1937,7 @@ void updatefunction()
 	DeleteUrlCacheEntry("http://www.isxri.com/RIGroupLogin.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RICharListUI.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RIInventory.xml");
+	//DeleteUrlCacheEntry("http://www.isxri.com/RIConsole.xml");
 	//download new RI.xml
 	HRESULT hRez1 = URLDownloadToFile(NULL, "http://www.isxri.com/RI.xml", ISXRIXMLPath.c_str(), 0, NULL);
 	//download new RZ.xml
@@ -1954,6 +1980,8 @@ void updatefunction()
 	HRESULT hRez17 = URLDownloadToFile(NULL, "http://www.isxri.com/RICharListUI.xml", ISXRICharListXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez18 = URLDownloadToFile(NULL, "http://www.isxri.com/RIInventory.xml", ISXRIIXMLPath.c_str(), 0, NULL);
+	//download
+	//HRESULT hRez19 = URLDownloadToFile(NULL, "http://www.isxri.com/RIConsole.xml", ISXRIConsoleXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez = URLDownloadToFile(NULL, "http://www.isxri.com/ISXRI.dll", ISX_Orig_Path.c_str(), 0, NULL);
 
@@ -27385,6 +27413,368 @@ bool __cdecl TLO_PlaneofDiseaseTheSource(int argc, char *argv[], LSTYPEVAR &Dest
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_LegacyofPowerDeepTrouble(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(LegacyofPowerDeepTrouble) / sizeof(LegacyofPowerDeepTrouble[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = LegacyofPowerDeepTrouble[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_LegacyofPowerDrawntotheFire(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(LegacyofPowerDrawntotheFire) / sizeof(LegacyofPowerDrawntotheFire[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = LegacyofPowerDrawntotheFire[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_LegacyofPowerGlimpseoftheHereother(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(LegacyofPowerGlimpseoftheHereother) / sizeof(LegacyofPowerGlimpseoftheHereother[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = LegacyofPowerGlimpseoftheHereother[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_LegacyofPowerThroughStormsandMists(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(LegacyofPowerThroughStormsandMists) / sizeof(LegacyofPowerThroughStormsandMists[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = LegacyofPowerThroughStormsandMists[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_LegacyofPowerTyrantsThrone(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(LegacyofPowerTyrantsThrone) / sizeof(LegacyofPowerTyrantsThrone[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = LegacyofPowerTyrantsThrone[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BrackishVaults(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(BrackishVaults) / sizeof(BrackishVaults[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = BrackishVaults[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_SolusekRosTowerMonolithofFire(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(SolusekRosTowerMonolithofFire) / sizeof(SolusekRosTowerMonolithofFire[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = SolusekRosTowerMonolithofFire[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_SolusekRosTowerTheObsidianCore(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(SolusekRosTowerTheObsidianCore) / sizeof(SolusekRosTowerTheObsidianCore[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = SolusekRosTowerTheObsidianCore[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TordenBastionofThunderTowerBreach(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TordenBastionofThunderTowerBreach) / sizeof(TordenBastionofThunderTowerBreach[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TordenBastionofThunderTowerBreach[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TordenBastionofThunderWindsofChange(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TordenBastionofThunderWindsofChange) / sizeof(TordenBastionofThunderWindsofChange[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TordenBastionofThunderWindsofChange[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+
+
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -27502,6 +27892,16 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("PlaneofDiseaseOutbreak", TLO_PlaneofDiseaseOutbreak);
 		if (tlo == "PlaneofDiseaseTheSource")
 			pISInterface->AddTopLevelObject("PlaneofDiseaseTheSource", TLO_PlaneofDiseaseTheSource);
+		if (tlo == "BrackishVaults")
+			pISInterface->AddTopLevelObject("BrackishVaults", TLO_BrackishVaults);
+		if (tlo == "SolusekRosTowerMonolithofFire")
+			pISInterface->AddTopLevelObject("SolusekRosTowerMonolithofFire", TLO_SolusekRosTowerMonolithofFire);
+		if (tlo == "SolusekRosTowerTheObsidianCore")
+			pISInterface->AddTopLevelObject("SolusekRosTowerTheObsidianCore", TLO_SolusekRosTowerTheObsidianCore);
+		if (tlo == "TordenBastionofThunderTowerBreach")
+			pISInterface->AddTopLevelObject("TordenBastionofThunderTowerBreach", TLO_TordenBastionofThunderTowerBreach);
+		if (tlo == "TordenBastionofThunderWindsofChange")
+			pISInterface->AddTopLevelObject("TordenBastionofThunderWindsofChange", TLO_TordenBastionofThunderWindsofChange);
 
 		if (tlo == "ANYTHINGFORJUMJUM")
 			pISInterface->AddTopLevelObject("ANYTHINGFORJUMJUM", TLO_ANYTHINGFORJUMJUM);
@@ -28741,7 +29141,16 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("LEGACYOFPOWERANINNOVATIVEAPPROACH", TLO_LegacyofPowerAnInnovativeApproach);
 		if (tlo == "LEGACYOFPOWERREALMOFTHEPLAGUEBRINGER")
 			pISInterface->AddTopLevelObject("LEGACYOFPOWERREALMOFTHEPLAGUEBRINGER", TLO_LegacyofPowerRealmofthePlaguebringer);
-		
+		if (tlo == "LEGACYOFPOWERDEEPTROUBLE")
+			pISInterface->AddTopLevelObject("LEGACYOFPOWERDEEPTROUBLE", TLO_LegacyofPowerDeepTrouble);
+		if (tlo == "LEGACYOFPOWERDRAWNTOTHEFIRE")
+			pISInterface->AddTopLevelObject("LEGACYOFPOWERDRAWNTOTHEFIRE", TLO_LegacyofPowerDrawntotheFire);
+		if (tlo == "LEGACYOFPOWERGLIMPSEOFTHEHEREOTHER")
+			pISInterface->AddTopLevelObject("LEGACYOFPOWERGLIMPSEOFTHEHEREOTHER", TLO_LegacyofPowerGlimpseoftheHereother);
+		if (tlo == "LEGACYOFPOWERTHROUGHSTORMSANDMISTS")
+			pISInterface->AddTopLevelObject("LEGACYOFPOWERTHROUGHSTORMSANDMISTS", TLO_LegacyofPowerThroughStormsandMists);
+		if (tlo == "LEGACYOFPOWERTYRANTSTHRONE")
+			pISInterface->AddTopLevelObject("LEGACYOFPOWERTYRANTSTHRONE", TLO_LegacyofPowerTyrantsThrone);
 	}
 	return 1;
 }

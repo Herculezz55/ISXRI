@@ -73,14 +73,14 @@ function main()
 				;echo ${ItemIterator.Value.ToItemInfo.Name} : ${ItemIterator.Value.ToItemInfo.EffectString[${count2}].Text}
 				if ${ItemIterator.Value.ToItemInfo.EffectString[${count2}].Text.Find[Applies](exists)} && ${ItemIterator.Value.ToItemInfo.EffectString[${count2}].Text.Find[when Activated](exists)} && !${ItemIterator.Value.ToItemInfo.Name.Find[Call of the](exists)} && ${ItemIterator.Value.ToItemInfo.Name.NotEqual[Mechanized Platinum Repository of Reconstruction]} && ${ItemIterator.Value.ToItemInfo.Name.NotEqual[Guided Ascension]} && !${ItemIterator.Value.ToItemInfo.Name.Find[a crate containing](exists)} && !${ItemIterator.Value.ToItemInfo.Name.Find[summoning charm](exists)} && !${ItemIterator.Value.ToItemInfo.Name.Find[patch kit](exists)} && !${ItemIterator.Value.ToItemInfo.Name.Find[standard of](exists)}
 				{
-					temp:Set[${ItemIterator.Value.ToItemInfo.EffectString[${count2}]}]
-					;echo ${temp}
+					temp:Set["${ItemIterator.Value.ToItemInfo.EffectString[${count2}]}"]
+					;echo "${temp}"
 					;echo ${Math.Calc[-1*(${temp.Find[Applies]}+7)]}
-					temp:Set[${temp.Right[${Math.Calc[-1*(${temp.Find[Applies]}+7)]}]}]
+					temp:Set["${temp.Right[${Math.Calc[-1*(${temp.Find[Applies]}+7)]}]}"]
 					;echo ${temp.Find[when Activated]}
 					;echo ${temp.Length}
-					;echo ${Math.Calc[-1*(${temp.Length}-${temp.Find[when Activated]}+1)]}
-					temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[when Activated]}+1)]}]}]
+					;echo ${Math.Calc[-1*(${temp.Length}-${temp.Find[when Activated]}+2)]}
+					temp:Set["${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[when Activated]}+2)]}]}"]
 					UIElement[ItemsInventoryItemListBox@ItemsFrame@CombatBotUI]:AddItem["${ItemIterator.Value.ToItemInfo.Name}","${temp}"]
 					break
 				}

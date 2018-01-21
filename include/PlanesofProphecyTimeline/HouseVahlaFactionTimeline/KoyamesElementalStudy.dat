@@ -43,7 +43,7 @@ FlyUp 5
 -1195.102051 379.662720 -836.895020
 -1239.543945 365.591644 -843.786255
 Custom
-PathKill 185 75 5 1 1 1 "earth elemental" "earth elemental samples (3/3)" 1 "planar water" "water elemental samples (3/3)" 1 "shadowed air" "air elemental samples (3/3)" 1 "planar fire" "fire elemental samples (3/3)" 1 "*ATADD*" "obtained several distinct"
+PathKill 185 75 5 1 1 1 "earth elemental" "earth elemental samples (3/3)" 1 "planar water" "water elemental samples (3/3)" 1 "air elemental" "air elemental samples (3/3)" 1 "planar fire" "fire elemental samples (3/3)" 1 "*ATADD*" "obtained several distinct"
 -1250.984253 376.017242 -843.480835
 -1234.683228 361.813324 -806.918457
 -1220.803955 327.147736 -773.364319

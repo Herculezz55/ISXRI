@@ -34,7 +34,7 @@ string LegacyofPowerAnInnovativeApproach[] = {"Legacy of Power: An Innovative Ap
 "Instance \"PlaneofInnovationGearsintheMachine\"", 
 "10.451675 -10.212375 158.516068", 
 "Custom", 
-"ZoneDoor \"Return to Coliseum of Valor\"", 
+"ZoneDoor \"zone_to_valor\"", 
 "10.129398 -9.956646 163.399460", 
 "-85.596382 2.938255 149.529861", 
 "-80.576584 2.875972 140.653366", 

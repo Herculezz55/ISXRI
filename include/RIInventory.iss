@@ -368,10 +368,10 @@ objectdef RIInventoryObject
 			variable int i=0
 			for(i:Set[1];${i}<=${UIElement[AddedItemsListbox@RIInventory].Items};i:Inc)
 			{
-				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal[${_ItemName}]}
+				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal["${_ItemName}"]}
 					UIElement[AddedItemsListbox@RIInventory]:RemoveItem[${UIElement[AddedItemsListbox@RIInventory].Item[${i}].ID}]
 			}
-			UIElement[AddedItemsListbox@RIInventory]:AddItem[${_ItemName},${_ItemName},FFcc33ff]
+			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}","${_ItemName}",FFcc33ff]
 			;change color
 			;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[FFcc33ff]
 			UIElement[InventoryListbox@RIInventory]:ClearSelection
@@ -386,10 +386,10 @@ objectdef RIInventoryObject
 			variable int i=0
 			for(i:Set[1];${i}<=${UIElement[AddedItemsListbox@RIInventory].Items};i:Inc)
 			{
-				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal[${_ItemName}]}
+				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal["${_ItemName}"]}
 					UIElement[AddedItemsListbox@RIInventory]:RemoveItem[${UIElement[AddedItemsListbox@RIInventory].Item[${i}].ID}]
 			}
-			UIElement[AddedItemsListbox@RIInventory]:AddItem[${_ItemName},${_ItemName},FF33CC33]
+			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}","${_ItemName}",FF33CC33]
 			;change color
 			;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[FF33CC33]
 			UIElement[InventoryListbox@RIInventory]:ClearSelection
@@ -404,10 +404,10 @@ objectdef RIInventoryObject
 			variable int i=0
 			for(i:Set[1];${i}<=${UIElement[AddedItemsListbox@RIInventory].Items};i:Inc)
 			{
-				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal[${_ItemName}]}
+				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal["${_ItemName}"]}
 					UIElement[AddedItemsListbox@RIInventory]:RemoveItem[${UIElement[AddedItemsListbox@RIInventory].Item[${i}].ID}]
 			}
-			UIElement[AddedItemsListbox@RIInventory]:AddItem[${_ItemName},${_ItemName},FF0099ff]
+			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}"},"${_ItemName}",FF0099ff]
 			;change color
 			;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[FF0099ff]
 			UIElement[InventoryListbox@RIInventory]:ClearSelection
@@ -422,10 +422,10 @@ objectdef RIInventoryObject
 			variable int i=0
 			for(i:Set[1];${i}<=${UIElement[AddedItemsListbox@RIInventory].Items};i:Inc)
 			{
-				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal[${_ItemName}]}
+				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal["${_ItemName}"]}
 					UIElement[AddedItemsListbox@RIInventory]:RemoveItem[${UIElement[AddedItemsListbox@RIInventory].Item[${i}].ID}]
 			}
-			UIElement[AddedItemsListbox@RIInventory]:AddItem[${_ItemName},${_ItemName},FFFF0000]
+			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}","${_ItemName}",FFFF0000]
 			;change color
 			;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[FFFF0000]
 			UIElement[InventoryListbox@RIInventory]:ClearSelection
@@ -525,10 +525,10 @@ objectdef RIInventoryObject
 						_Color:Set[FFFF0000];_Action:Set[Destroy]
 					if ${UIElement[RIInventory](exists)}
 					{
-						UIElement[AddedItemsListbox@RIInventory]:AddItem[${Iterator.Key},${Iterator.Key},${_Color}]
+						UIElement[AddedItemsListbox@RIInventory]:AddItem["${Iterator.Key}","${Iterator.Key}",${_Color}]
 						;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[${_Color}]
 					}
-					Items:Insert[${Iterator.Key}|${_Action}]
+					Items:Insert["${Iterator.Key}|${_Action}"]
 				}
 			}
 			while ${Iterator:Next(exists)}
@@ -601,9 +601,9 @@ objectdef RIInventoryObject
 					_Action:Set[Salvage]
 				elseif ${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].TextColor}==-65536
 					_Action:Set[Destroy]
-				LavishSettings[RIInventorySaveFile].FindSet[${SetName}]:AddSet[${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].Text}]
-				LavishSettings[RIInventorySaveFile].FindSet[${SetName}].FindSet[${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].Text}]:AddSetting[Action,${_Action}]
-				Items:Insert[${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].Text}|${_Action}]
+				LavishSettings[RIInventorySaveFile].FindSet[${SetName}]:AddSet["${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].Text}"]
+				LavishSettings[RIInventorySaveFile].FindSet[${SetName}].FindSet["${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].Text}"]:AddSetting[Action,${_Action}]
+				Items:Insert["${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].Text}"|${_Action}]
 			}
 			LavishSettings[RIInventorySaveFile]:Export["${LavishScript.HomeDirectory}/Scripts/RI/RIInventory/RIInventorySave.xml"]
 			;echo here

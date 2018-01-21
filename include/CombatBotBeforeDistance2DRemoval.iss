@@ -68,7 +68,7 @@
 
 ;v1.31b Changes - Internal Testing Build (Move To CombatBot)
 
-;v2.35 Changes - Fixed a bug in abilities that do not allowraid and heals to other groups
+;v2.35 Changes - Fixed a bug in abilities that do now allowraid and heals to other groups
 ;v1.32b Changes - Drastically Changed Checking Routine
 ;v1.32b Changes - Added Ability to change Profiles (dynamically)
 ;v1.32b Changes - Added Auto Attack Timing
@@ -221,7 +221,11 @@ variable AnnounceObject AnnounceObj
 variable CheckAbilitiesObject CheckAbilitiesObj
 variable int AliasesCount
 variable(global) bool RI_Var_Bool_CastWhileMoving=FALSE
+variable(global) bool RI_Var_Bool_DoNotCastAE=FALSE
+variable(global) bool RI_Var_Bool_DoNotCastEncounter=FALSE
 variable(global) bool RI_Var_Bool_OnEventsEnabled=TRUE
+variable bool SkipAEWasSet=FALSE
+variable bool SkipEncounterWasSet=FALSE
 variable index:string istrProfiles
 variable index:string istrExportList
 variable index:string istrExportListPosition
@@ -403,19 +407,31 @@ objectdef RI_Object_CB
 	}
 	method DoNotCastAE(bool Enabled)
 	{
-		;RI_Var_Bool_DoNotCastAE
 		if ${Enabled}
-			RI_Obj_CB:SetUISetting[SettingsDoNotCastAECheckBox,1]
+		{
+			SkipAEWasSet:Set[${UIElement[SettingsSkipAECheckBox@SettingsFrame@CombatBotUI].Checked}]
+			RI_Obj_CB:SetUISetting[SettingsSkipAECheckBox,FALSE]
+		}
 		else
-			RI_Obj_CB:SetUISetting[SettingsDoNotCastAECheckBox,0]
+		{
+			if ${SkipAEWasSet}
+				RI_Obj_CB:SetUISetting[SettingsSkipAECheckBox,TRUE]
+		}
+		RI_Var_Bool_DoNotCastAE:Set[${Enabled}]
 	}
 	method DoNotCastEncounter(bool Enabled)
 	{
-		;RI_Var_Bool_DoNotCastEncounter
 		if ${Enabled}
-			RI_Obj_CB:SetUISetting[SettingsDoNotCastEncounterCheckBox,1]
+		{
+			SkipEncounterWasSet:Set[${UIElement[SettingsSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked}]
+			RI_Obj_CB:SetUISetting[SettingsSkipEncounterCheckBox,FALSE]
+		}
 		else
-			RI_Obj_CB:SetUISetting[SettingsDoNotCastEncounterCheckBox,0]
+		{
+			if ${SkipEncounterWasSet}
+				RI_Obj_CB:SetUISetting[SettingsSkipEncounterCheckBox,TRUE]
+		}
+		RI_Var_Bool_DoNotCastEncounter:Set[${Enabled}]
 	}
 	;need to have this change the profile in the drop down, also if the profile doesnt exist return
 	method ChangeProfile(string ProfileName)
@@ -688,9 +704,6 @@ objectdef RI_Object_CB
 				
 				;SettingsSendPetsCheckBox
 				LavishSettings[ExportSet].FindSet[Profiles].FindSet[${_istrProfiles.Get[${i}]}].FindSet[Settings]:AddSetting[SettingsSendPetsCheckBox,TRUE]
-				
-				;SettingsRecallPetsCheckBox
-				LavishSettings[ExportSet].FindSet[Profiles].FindSet[${_istrProfiles.Get[${i}]}].FindSet[Settings]:AddSetting[SettingsRecallPetsCheckBox,TRUE]
 				
 				;SettingsCastAbilitiesCheckBox
 				if ${LavishSettings[ImportSet].FindSet[Profiles].FindSet[${_istrProfiles.Get[${i}]}].FindSet[Settings].FindSetting[checkbox_settings_disablecaststack].String.Equal[TRUE]}
@@ -3887,7 +3900,7 @@ objectdef RI_Object_CB
 						;echo this is an ascension ability
 						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[Hostile]
 						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[NamedHostile]
-						if ${istrExport.Get[${ExportPosition}].Equal[Ethereal Conduit]} || ${istrExport.Get[${ExportPosition}].Equal[Recapture]}
+						if ${istrExport.Get[${ExportPosition}].Equal[Ethereal Conduit]}
 							UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[InCombatTargeted]
 					}
 					else
@@ -4625,8 +4638,6 @@ objectdef RI_Object_CB
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsTimeAutoCheckBox,${RI_Obj_CB.GetUISetting[SettingsTimeAutoCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsSkipMobAttackHealthCheckBox,${RI_Obj_CB.GetUISetting[SettingsSkipMobAttackHealthCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsAttackHealthTextEntry,${RI_Obj_CB.GetUISetting[SettingsAttackHealthTextEntry]}]
-		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsMoveDistanceTextEntry,${RI_Obj_CB.GetUISetting[SettingsMoveDistanceTextEntry]}]
-		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsAfterMoveDistanceModTextEntry,${RI_Obj_CB.GetUISetting[SettingsAfterMoveDistanceModTextEntry]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsMoveBehindCheckBox,${RI_Obj_CB.GetUISetting[SettingsMoveBehindCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsMoveInFrontCheckBox,${RI_Obj_CB.GetUISetting[SettingsMoveInFrontCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsMoveInCheckBox,${RI_Obj_CB.GetUISetting[SettingsMoveInCheckBox]}]
@@ -4634,15 +4645,12 @@ objectdef RI_Object_CB
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsMoveHealthTextEntry,${RI_Obj_CB.GetUISetting[SettingsMoveHealthTextEntry]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsSkipEncounterCheckBox,${RI_Obj_CB.GetUISetting[SettingsSkipEncounterCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsEncounter#TextEntry,${RI_Obj_CB.GetUISetting[SettingsEncounter#TextEntry]}]
-		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsDoNotCastEncounterCheckBox,${RI_Obj_CB.GetUISetting[SettingsDoNotCastEncounterCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsSkipAECheckBox,${RI_Obj_CB.GetUISetting[SettingsSkipAECheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsAE#TextEntry,${RI_Obj_CB.GetUISetting[SettingsAE#TextEntry]}]
-		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsDoNotCastAECheckBox,${RI_Obj_CB.GetUISetting[SettingsDoNotCastAECheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsAutoShareMissionsCheckBox,${RI_Obj_CB.GetUISetting[SettingsAutoShareMissionsCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsSummonFamiliarCheckBox,${RI_Obj_CB.GetUISetting[SettingsSummonFamiliarCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsFaceMobCheckBox,${RI_Obj_CB.GetUISetting[SettingsFaceMobCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsSendPetsCheckBox,${RI_Obj_CB.GetUISetting[SettingsSendPetsCheckBox]}]
-		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsRecallPetsCheckBox,${RI_Obj_CB.GetUISetting[SettingsRecallPetsCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsCastAbilitiesCheckBox,${RI_Obj_CB.GetUISetting[SettingsCastAbilitiesCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsCastHostileCheckBox,${RI_Obj_CB.GetUISetting[SettingsCastHostileCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsCastNamedHostileCheckBox,${RI_Obj_CB.GetUISetting[SettingsCastNamedHostileCheckBox]}]
@@ -5545,7 +5553,41 @@ function main()
 			}
 			istrCurses:Collapse
 		}
-		
+		;if istrConfrontFear.Used > 0, iterate through it and check if they still are cursed (if cure curse is up)
+		if ${istrConfrontFear.Used}>0 && ${Me.Ability[id,3601331586].IsReady}
+		{
+			;get my dirge number
+			variable int mydnum
+			mydnum:Set[${DirgeNumObj.MyNum}]
+			;echo MYdnum = ${mydnum}
+			variable int incrementer
+			incrementer:Set[1]
+			;echo ${i}
+			for(i:Set[1];${i}<=${istrConfrontFear.Size};i:Inc)
+			{
+				if !${istrConfrontFear.Get[${i}](exists)}
+					continue
+				if ${i}!=${mydnum} || ${i}!=${Math.Calc[${mydnum}*${incrementer}]}
+					continue
+				;echo checking ${istrConfrontFear.Get[${i}]} for sickness
+				;if ${Me.Raid}>0 
+				;{
+					;if ${Me.Raid[${istrConfrontFear.Get[${i}]}].Arcane}==-1
+					;{
+						;echo Curing ${istrConfrontFear.Get[${i}]}
+						RI_Obj_CB:CastOn[Confront Fear,${istrConfrontFear.Get[${i}]},TRUE]
+						
+					;}
+					;else
+					;{
+					;	echo not sick, Removing from index ${istrConfrontFear.Get[${i}]}
+						istrConfrontFear:Remove[${i}]
+						break
+					;}
+				;}
+				incrementer:Inc
+			}
+		}
 		
 		;echo main while
 		; if ${GetItems}
@@ -5644,44 +5686,6 @@ function main()
 					; }
 					if ${Target(exists)} && !${Target.Name(exists)}
 						eq2ex target_none
-					;if istrConfrontFear.Used > 0, iterate through it and check if they still are cursed (if cure curse is up)
-					if ${istrConfrontFear.Used}>0 && ${Me.Ability[id,3601331586].IsReady}
-					{
-						;get my dirge number
-						variable int mydnum
-						mydnum:Set[${DirgeNumObj.MyNum}]
-						;echo MYdnum = ${mydnum}
-						variable int incrementer
-						incrementer:Set[1]
-						;echo ${i}
-						for(i:Set[1];${i}<=${istrConfrontFear.Size};i:Inc)
-						{
-							if !${istrConfrontFear.Get[${i}](exists)}
-								continue
-							if ${i}!=${mydnum} || ${i}!=${Math.Calc[${mydnum}*${incrementer}]}
-								continue
-							;echo checking ${istrConfrontFear.Get[${i}]} for sickness
-							;if ${Me.Raid}>0 
-							;{
-								;if ${Me.Raid[${istrConfrontFear.Get[${i}]}].Arcane}==-1
-								;{
-									;echo Curing ${istrConfrontFear.Get[${i}]}
-									RI_Obj_CB:CastOn[Confront Fear,${istrConfrontFear.Get[${i}]},TRUE]
-									
-								;}
-								;else
-								;{
-								;	echo not sick, Removing from index ${istrConfrontFear.Get[${i}]}
-									istrConfrontFear:Remove[${i}]
-									break
-								;}
-							;}
-							incrementer:Inc
-						}
-					}
-					if ${Me.Ability[id,2068098422].IsReady}
-						Me.Ability[id,2068098422]:Use
-					
 					if ${RI_Obj_CB.GetUISetting[SettingsSummonFamiliarCheckBox]} && !${Me.Name.Find["Skyshrine "](exists)}
 					{
 						;echo We are set to summon familiar and we assume one is equipped
@@ -5761,7 +5765,7 @@ function main()
 						if !${RI_Var_Bool_MoveCBImmunity}
 						{
 							;move behind
-							if ${UIElement[SettingsMoveBehindCheckBox@SettingsFrame@CombatBotUI].Checked}
+							if ${UIElement[SettingsMoveBehindCheckBox@SettingsFrame@CombatBotUI].Checked} && !${RI_Var_Bool_MoveCBImmunity}
 							{
 								;echo setup move behind for ${KillTargetID}
 								if ${RI_Var_Bool_RIFollowing}
@@ -5769,16 +5773,12 @@ function main()
 									RI_Var_Bool_RIFollowing:Set[FALSE]
 									WasRIFollowing:Set[TRUE]
 								}
-								if ${Int[${UIElement[SettingsAfterMoveDistanceModTextEntry@SettingsFrame@CombatBotUI].Text}]}!=0 && ${Int[${UIElement[SettingsAfterMoveDistanceModTextEntry@SettingsFrame@CombatBotUI].Text}]}!=${RI_Var_Int_MoveDistanceMod}
-								{
-									RI_Var_Int_MoveDistanceMod:Set[${Int[${UIElement[SettingsAfterMoveDistanceModTextEntry@SettingsFrame@CombatBotUI].Text}]}]
-								}
 								if !${RI_Var_Bool_MovingBehind} || ${RI_Var_Int_MoveBehindMobID}!=${KillTargetID} || ( ${RI_Var_Int_MoveBehindHealth}!=${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]} && !${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked} )
 								{
 									if ${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked}
-										RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} ${Int[${UIElement[SettingsMoveDistanceTextEntry@SettingsFrame@CombatBotUI].Text}]} 100
+										RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} 30 100
 									else
-										RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} ${Int[${UIElement[SettingsMoveDistanceTextEntry@SettingsFrame@CombatBotUI].Text}]} ${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]}
+										RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} 30 ${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]}
 									CB_Bool_MoveBehindOn:Set[1]
 								}
 							}
@@ -5792,7 +5792,7 @@ function main()
 									WasRIFollowing:Set[FALSE]
 								}
 							}
-							if ${UIElement[SettingsMoveInFrontCheckBox@SettingsFrame@CombatBotUI].Checked}
+							if ${UIElement[SettingsMoveInFrontCheckBox@SettingsFrame@CombatBotUI].Checked} && !${RI_Var_Bool_MoveCBImmunity}
 							{
 								;echo setup move behind for ${KillTargetID}
 								if ${RI_Var_Bool_RIFollowing}
@@ -5833,17 +5833,14 @@ function main()
 							LastValidTargetTime:Set[${Script.RunningTime}]
 							if ${UIElement[SettingsSendPetsCheckBox@SettingsFrame@CombatBotUI].Checked} && !${Me.FlyingUsingMount} && ${Me.Pet(exists)} && ( !${Me.Pet.InCombatMode} || ${Me.Pet.Target.ID}!=${KillTargetID} ) && ( ${Actor[id,${KillTargetID}].Distance}<15 || !${Actor[id,${KillTargetID}].InCombatMode} || !${Actor[id,${KillTargetID}].Target(exists)} )
 								eq2execute pet attack
-								;eq2execute merc attack
 							if ${Script.RunningTime}>${Math.Calc[${LastValidTargetTime}+5000]} && ${UIElement[SettingsSendPetsCheckBox@SettingsFrame@CombatBotUI].Checked} && ${Me.Pet(exists)} && ( !${Me.Pet.InCombatMode} || ${Me.Pet.Target.ID}!=${KillTargetID} || ${Me.Maintained[${RI_Obj_CB.ConvertAbility[Charm]}](exists)} ) && ( ${Actor[id,${KillTargetID}].Distance}<15 || !${Actor[id,${KillTargetID}].InCombatMode} || !${Actor[id,${KillTargetID}].Target(exists)} )
 								eq2ex pet attack
-								;eq2execute merc attack
 							;if our kill target is in combat and more than 15m away, pull pet back
-							if ${Actor[id,${KillTargetID}].Distance}>15 && ${Actor[id,${KillTargetID}].InCombatMode} && ${Actor[id,${KillTargetID}].Target(exists)} && ${Me.Pet.InCombatMode} && ${UIElement[SettingsRecallPetsCheckBox@SettingsFrame@CombatBotUI].Checked}
+							if ${Actor[id,${KillTargetID}].Distance}>15 && ${Actor[id,${KillTargetID}].InCombatMode} && ${Actor[id,${KillTargetID}].Target(exists)} && ${Me.Pet.InCombatMode}
 								eq2ex pet backoff
-								;eq2ex merc backoff
-							if !${Me.Name.Find["Skyshrine "](exists)} && ( ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + 6]} || !${UIElement[SettingsMeleeAutoCheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsRangedAutoCheckBox@SettingsFrame@CombatBotUI].Checked}
+							if !${Me.Name.Find["Skyshrine "](exists)} && ( ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + 6]} || !${UIElement[SettingsMeleeAutoCheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsRangedAutoCheckBox@SettingsFrame@CombatBotUI].Checked}
 							{
-								;echo Target is ranged: ${Target.Distance}>${Math.Calc[${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale} + 6]}
+								;echo Target is ranged: ${Target.Distance2D}>${Math.Calc[${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale} + 6]}
 								if !${Me.RangedAutoAttackOn}
 								{
 									;echo turning on ranged
@@ -5862,7 +5859,7 @@ function main()
 							}
 							elseif ${UIElement[SettingsMeleeAutoCheckBox@SettingsFrame@CombatBotUI].Checked}
 							{
-								;echo Target is melee: ${Target.Distance}>${Math.Calc[${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale} + 6]}
+								;echo Target is melee: ${Target.Distance2D}>${Math.Calc[${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale} + 6]}
 								if !${Me.AutoAttackOn} || ${Me.RangedAutoAttackOn}
 								{
 									;echo turning on melee
@@ -5891,7 +5888,7 @@ function main()
 							if !${RI_Var_Bool_MoveCBImmunity}
 							{
 								;move behind
-								if ${UIElement[SettingsMoveBehindCheckBox@SettingsFrame@CombatBotUI].Checked}
+								if ${UIElement[SettingsMoveBehindCheckBox@SettingsFrame@CombatBotUI].Checked} && !${RI_Var_Bool_MoveCBImmunity}
 								{
 									;echo setup move behind for ${KillTargetID}
 									if ${RI_Var_Bool_RIFollowing}
@@ -5899,16 +5896,12 @@ function main()
 										RI_Var_Bool_RIFollowing:Set[FALSE]
 										WasRIFollowing:Set[TRUE]
 									}
-									if ${Int[${UIElement[SettingsAfterMoveDistanceModTextEntry@SettingsFrame@CombatBotUI].Text}]}!=0 && ${Int[${UIElement[SettingsAfterMoveDistanceModTextEntry@SettingsFrame@CombatBotUI].Text}]}!=${RI_Var_Int_MoveDistanceMod}
-									{
-										RI_Var_Int_MoveDistanceMod:Set[${Int[${UIElement[SettingsAfterMoveDistanceModTextEntry@SettingsFrame@CombatBotUI].Text}]}]
-									}
 									if !${RI_Var_Bool_MovingBehind} || ${RI_Var_Int_MoveBehindMobID}!=${KillTargetID}|| ( ${RI_Var_Int_MoveBehindHealth}!=${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]} && !${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked} )
 									{
 										if ${UIElement[SettingsSkipMobMoveHealthCheckBox@SettingsFrame@CombatBotUI].Checked}
-											RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} ${Int[${UIElement[SettingsMoveDistanceTextEntry@SettingsFrame@CombatBotUI].Text}]} 100
+											RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} 30 100
 										else
-											RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} ${Int[${UIElement[SettingsMoveDistanceTextEntry@SettingsFrame@CombatBotUI].Text}]} ${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]}
+											RI_Atom_MoveBehind ${Me.Name} ${KillTargetID} 30 ${Int[${UIElement[SettingsMoveHealthTextEntry@SettingsFrame@CombatBotUI].Text}]}
 									}
 								}
 								elseif ${RI_Var_Bool_MovingBehind}
@@ -5962,17 +5955,14 @@ function main()
 								LastValidTargetTime:Set[${Script.RunningTime}]
 								if ${UIElement[SettingsSendPetsCheckBox@SettingsFrame@CombatBotUI].Checked} && ${Me.Pet(exists)} && ( !${Me.Pet.InCombatMode} || ${Me.Pet.Target.ID}!=${KillTargetID} ) && ( ${Actor[id,${KillTargetID}].Distance}<15 || !${Actor[id,${KillTargetID}].InCombatMode} || !${Actor[id,${KillTargetID}].Target(exists)} )
 									eq2execute pet attack
-									;eq2execute merc attack
 								if ${Script.RunningTime}>${Math.Calc[${LastValidTargetTime}+5000]} && ${UIElement[SettingsSendPetsCheckBox@SettingsFrame@CombatBotUI].Checked} && ${Me.Pet(exists)} && ( !${Me.Pet.InCombatMode} || ${Me.Pet.Target.ID}!=${KillTargetID} || ${Me.Maintained[${RI_Obj_CB.ConvertAbility[Charm]}](exists)} ) && ( ${Actor[id,${KillTargetID}].Distance}<15 || !${Actor[id,${KillTargetID}].InCombatMode} || !${Actor[id,${KillTargetID}].Target(exists)} )
 									eq2ex pet attack
-									;eq2execute merc attack
 								;if our kill target is in combat and more than 15m away, pull pet back
-								if ${Actor[id,${KillTargetID}].Distance}>15 && ${Actor[id,${KillTargetID}].InCombatMode} && ${Actor[id,${KillTargetID}].Target(exists)} && ${Me.Pet.InCombatMode} && ${UIElement[SettingsRecallPetsCheckBox@SettingsFrame@CombatBotUI].Checked}
+								if ${Actor[id,${KillTargetID}].Distance}>15 && ${Actor[id,${KillTargetID}].InCombatMode} && ${Actor[id,${KillTargetID}].Target(exists)} && ${Me.Pet.InCombatMode}
 									eq2ex pet backoff
-									;eq2ex merc backoff
-								if ( ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + 6]} || !${UIElement[SettingsMeleeAutoCheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsRangedAutoCheckBox@SettingsFrame@CombatBotUI].Checked}
+								if ( ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + 6]} || !${UIElement[SettingsMeleeAutoCheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsRangedAutoCheckBox@SettingsFrame@CombatBotUI].Checked}
 								{
-									;echo Target is ranged: ${Target.Distance}>${Math.Calc[${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale} + 6]}
+									;echo Target is ranged: ${Target.Distance2D}>${Math.Calc[${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale} + 6]}
 									if !${Me.RangedAutoAttackOn}
 									{
 										;echo turning on ranged
@@ -5991,7 +5981,7 @@ function main()
 								}
 								elseif ${UIElement[SettingsMeleeAutoCheckBox@SettingsFrame@CombatBotUI].Checked}
 								{
-									;echo Target is melee: ${Target.Distance}>${Math.Calc[${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale} + 6]}
+									;echo Target is melee: ${Target.Distance2D}>${Math.Calc[${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale} + 6]}
 									if !${Me.AutoAttackOn} || ${Me.RangedAutoAttackOn}
 									{
 										;echo turning on melee
@@ -6247,12 +6237,11 @@ function main()
 				
 				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}>0
 				{
-					;echo mainCount=${mainCount}
-					;if !${CheckAbilitiesObj.CheckAll[${mainCount},${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
-					;	wait 5;mainCount:Set[1]
+					if !${CheckAbilitiesObj.CheckAll[1,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
+						wait 5
 					;continue
-					while !${CheckAbilitiesObj.CheckAll[${mainCount},${mainCount}]} && ${mainCount}<=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
-					{
+					; while !${CheckAbilitiesObj.CheckAll[${mainCount},${mainCount}]} && ${mainCount}<=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+					; {
 						; if ${CombatBotDebug}
 							; echo CombatBot: CheckAbilities Counter: ${mainCount}
 						; if ${SummonMount} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[The Frillik Tide]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual["Vaedenmoor, Realm of Despair"]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[Ceremony in The Wastes`]}
@@ -6265,13 +6254,13 @@ function main()
 							; }
 							; SummonMount:Set[FALSE]
 						; }
-						noop
-					}
-					if ${mainCount}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
-					{
-						mainCount:Set[1]
-						wait 1
-					}
+						;noop
+					;}
+					; if ${mainCount}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+					; {
+						; mainCount:Set[1]
+						; wait 1
+					; }
 					;echo after that ${Script.RunningTime}
 					;if ${CheckAbilitiesObj.CheckAll[${mainCount},${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
 					;{
@@ -6283,7 +6272,7 @@ function main()
 				;		;CheckAbilitiesTime:Set[${Math.Calc[${Script.RunningTime}+250]}]
 				;		wait 5
 				;		mainCount:Set[1]
-					;}
+				;	}
 				}
 				;elseif !${boolAbilityFound}
 				;;	mainCount:Set[1]
@@ -6785,14 +6774,6 @@ atom LoadProfile(string _Profile=${CombatBotDefaultProfile})
 	RI_Obj_CB:SetUISetting[SettingsCancelAutoCheckBox,${SettingsSet.FindSetting[SettingsCancelAutoCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsTimeAutoCheckBox,${SettingsSet.FindSetting[SettingsTimeAutoCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsSkipMobAttackHealthCheckBox,${SettingsSet.FindSetting[SettingsSkipMobAttackHealthCheckBox]}]
-	if ${SettingsSet.FindSetting[SettingsMoveDistanceTextEntry](exists)}
-		RI_Obj_CB:SetUISetting[SettingsMoveDistanceTextEntry,${SettingsSet.FindSetting[SettingsMoveDistanceTextEntry]}]
-	else
-		RI_Obj_CB:SetUISetting[SettingsMoveDistanceTextEntry,30]
-	if ${SettingsSet.FindSetting[SettingsAfterMoveDistanceModTextEntry](exists)}
-		RI_Obj_CB:SetUISetting[SettingsAfterMoveDistanceModTextEntry,${SettingsSet.FindSetting[SettingsAfterMoveDistanceModTextEntry]}]
-	else
-		RI_Obj_CB:SetUISetting[SettingsAfterMoveDistanceModTextEntry,1]
 	RI_Obj_CB:SetUISetting[SettingsAttackHealthTextEntry,${SettingsSet.FindSetting[SettingsAttackHealthTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsMoveBehindCheckBox,${SettingsSet.FindSetting[SettingsMoveBehindCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsMoveInFrontCheckBox,${SettingsSet.FindSetting[SettingsMoveInFrontCheckBox]}]
@@ -6800,16 +6781,13 @@ atom LoadProfile(string _Profile=${CombatBotDefaultProfile})
 	RI_Obj_CB:SetUISetting[SettingsSkipMobMoveHealthCheckBox,${SettingsSet.FindSetting[SettingsSkipMobMoveHealthCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsMoveHealthTextEntry,${SettingsSet.FindSetting[SettingsMoveHealthTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsSkipEncounterCheckBox,${SettingsSet.FindSetting[SettingsSkipEncounterCheckBox]}]
-	RI_Obj_CB:SetUISetting[SettingsDoNotCastEncounterCheckBox,${SettingsSet.FindSetting[SettingsDoNotCastEncounterCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsEncounter#TextEntry,${SettingsSet.FindSetting[SettingsEncounter#TextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsSkipAECheckBox,${SettingsSet.FindSetting[SettingsAE#TextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsAE#TextEntry,${SettingsSet.FindSetting[SettingsAE#TextEntry]}]
-	RI_Obj_CB:SetUISetting[SettingsDoNotCastAECheckBox,${SettingsSet.FindSetting[SettingsDoNotCastAECheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsAutoShareMissionsCheckBox,${SettingsSet.FindSetting[SettingsAutoShareMissionsCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsSummonFamiliarCheckBox,${SettingsSet.FindSetting[SettingsSummonFamiliarCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsFaceMobCheckBox,${SettingsSet.FindSetting[SettingsFaceMobCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsSendPetsCheckBox,${SettingsSet.FindSetting[SettingsSendPetsCheckBox]}]
-	RI_Obj_CB:SetUISetting[SettingsRecallPetsCheckBox,${SettingsSet.FindSetting[SettingsRecallPetsCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsCastAbilitiesCheckBox,${SettingsSet.FindSetting[SettingsCastAbilitiesCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsCastHostileCheckBox,${SettingsSet.FindSetting[SettingsCastHostileCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsCastNamedHostileCheckBox,${SettingsSet.FindSetting[SettingsCastNamedHostileCheckBox]}]
@@ -7297,48 +7275,7 @@ objectdef CheckAbilitiesObject
 		strCastNameShort:Set[""]
 		strCastID:Set[0]
 		strCastTarget:Set[""]
-		if ${RI_Obj_CB.GetUISetting[SettingsStartHeroicCheckBox]} && ${Me.InCombat} && ${EQ2.ServerName.NotEqual[Battlegrounds]}
-		{
-			switch ${Me.Archetype}
-			{
-				case fighter
-				{
-					if ${Me.Ability[id,438025554].IsReady} && !${EQ2.HOWindowActive}
-					{
-						Cast "Fighting Chance" "Fighting Chance" 438025554
-						return TRUE
-					}
-					break
-				}
-				case mage
-				{
-					if ${Me.Ability[id,1605359312].IsReady} && !${EQ2.HOWindowActive}
-					{
-						Cast "Arcane Augur" "Arcane Augur" 1605359312
-						return TRUE
-					}
-					break
-				}
-				case priest
-				{
-					if ${Me.Ability[id,3972280100].IsReady} && !${EQ2.HOWindowActive}
-					{
-						Cast "Divine Providence" "Divine Providence" 3972280100
-						return TRUE
-					}
-					break
-				}
-				case scout
-				{
-					if ${Me.Ability[id,1793121952].IsReady} && !${EQ2.HOWindowActive}
-					{
-						Cast "Lucky Break" "Lucky Break" 1793121952
-						return TRUE
-					}
-					break
-				}
-			}
-		}
+		
 		;${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}
 		for(mainCount:Set[${start}];${mainCount}<=${end};mainCount:Inc)
 		;mainCount:Set[${start}]
@@ -7376,7 +7313,48 @@ objectdef CheckAbilitiesObject
 				; }
 				; continue
 			; }
-			
+			if ${RI_Obj_CB.GetUISetting[SettingsStartHeroicCheckBox]} && ${Me.InCombat} && ${EQ2.ServerName.NotEqual[Battlegrounds]}
+			{
+				switch ${Me.Archetype}
+				{
+					case fighter
+					{
+						if ${Me.Ability[id,438025554].IsReady} && !${EQ2.HOWindowActive}
+						{
+							Cast "Fighting Chance" "Fighting Chance" 438025554
+							return TRUE
+						}
+						break
+					}
+					case mage
+					{
+						if ${Me.Ability[id,1605359312].IsReady} && !${EQ2.HOWindowActive}
+						{
+							Cast "Arcane Augur" "Arcane Augur" 1605359312
+							return TRUE
+						}
+						break
+					}
+					case priest
+					{
+						if ${Me.Ability[id,3972280100].IsReady} && !${EQ2.HOWindowActive}
+						{
+							Cast "Divine Providence" "Divine Providence" 3972280100
+							return TRUE
+						}
+						break
+					}
+					case scout
+					{
+						if ${Me.Ability[id,1793121952].IsReady} && !${EQ2.HOWindowActive}
+						{
+							Cast "Lucky Break" "Lucky Break" 1793121952
+							return TRUE
+						}
+						break
+					}
+				}
+			}
 			if !${This.AbilityTypeEnabled[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|]}]}
 			{
 				if ${CombatBotDebug}
@@ -7395,7 +7373,7 @@ objectdef CheckAbilitiesObject
 					echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, because we are not in combat
 				continue
 			}
-			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].NotEqual[Adrenaline Boost]} && !${RI_Var_Bool_CastWhileMoving} && ${Me.IsMoving} && ${istrExportSpellBookType.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}!=1 && !${Me.Maintained[Cloak of Divinity](exists)}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].NotEqual[Adrenaline Boost]} && !${RI_Var_Bool_CastWhileMoving} && ${Me.IsMoving} && ${istrExportSpellBookType.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}!=1
 			{
 				if ${Me.SubClass.Equal[channeler]}
 				{
@@ -7453,7 +7431,7 @@ objectdef CheckAbilitiesObject
 			;echo 1
 			;if ${CombatBotDebug2}
 				;echo if \${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].TextColor}!=-10263709 && ( ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].IsReady} && \${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].NotEqual[Item:]} ) || ( \${Me.Equipment["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 || \${Me.Inventory["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 ) || ( \${istrExportReqStealth.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && \${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].TimeUntilReady}==0 )
-			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].TextColor}!=-10263709 && ( ( ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].IsReady} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Cure]} ) && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].NotEqual[Item:]} ) || ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]} && ( ${Me.Equipment["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 || ${Me.Inventory["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 ) ) || ( ${istrExportReqStealth.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].TimeUntilReady}==0 )
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].TextColor}!=-10263709 && ( ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].IsReady} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].NotEqual[Item:]} ) || ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]} && ( ${Me.Equipment["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 || ${Me.Inventory["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 ) ) || ( ${istrExportReqStealth.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].TimeUntilReady}==0 )
 			{
 				;if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
 				;	echo item is ready
@@ -7667,18 +7645,18 @@ objectdef CheckAbilitiesObject
 					{
 						if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 						{
-							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								noop
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								continue
 							}
 						}
 						elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 						{
-							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							{
 								
 								noop
@@ -7686,14 +7664,14 @@ objectdef CheckAbilitiesObject
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								continue
 							}
 						}
 						else
 						{
 							if ${CombatBotDebug}
-								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 						}
 					}
 					;echo end hostile ${count}
@@ -7701,10 +7679,10 @@ objectdef CheckAbilitiesObject
 				;echo after hostile ${count}
 				;check if the ability is an AE, if so check mobs, use 3 for default, -uses ui now
 				; echo AE: ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[9,|].NotEqual[TRUE]} && ${Mobs.CountAE}<3
-				if ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ( ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} || ${istrExportIsSelfAbility.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} ) && ( !${UIElement[SettingsSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || !${UIElement[SettingsInstancedSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || ${UIElement[SettingsDoNotCastAECheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text.NotEqual[FALSE]}
+				if ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ( ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} || ${istrExportIsSelfAbility.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} ) && ( !${UIElement[SettingsSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || !${UIElement[SettingsInstancedSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text.NotEqual[FALSE]}
 				{
 					
-					if ${UIElement[SettingsDoNotCastAECheckBox@SettingsFrame@CombatBotUI].Checked}
+					if ${RI_Var_Bool_DoNotCastAE}
 					{
 						if ${CombatBotDebug}
 							echo Ignoring AE Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, set to not cast AE's
@@ -7723,9 +7701,9 @@ objectdef CheckAbilitiesObject
 				}
 				;check if the ability is an Encounter, if so check mobs, use 3 for default, -uses ui now
 				;echo Encounter: ${istrExportIsAEncounterHostile.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[8,|].NotEqual[TRUE]} && ${Mobs.CountEncounter[${KillTargetID}]}<3
-				if ${istrExportIsAEncounterHostile.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]}  && ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} && ( !${UIElement[SettingsSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} || && !${UIElement[SettingsInstancedSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} || ${UIElement[SettingsDoNotCastEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} )
+				if ${istrExportIsAEncounterHostile.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]}  && ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} && ( !${UIElement[SettingsSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} || && !${UIElement[SettingsInstancedSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} )
 				{
-					if ${UIElement[SettingsDoNotCastEncounterCheckBox@SettingsFrame@CombatBotUI].Checked}
+					if ${RI_Var_Bool_DoNotCastEncounter}
 					{
 						if ${CombatBotDebug}
 							echo Ignoring Encounter Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, set to not cast Encounter's
@@ -8572,7 +8550,7 @@ objectdef CheckAbilitiesObject
 						else
 						{
 							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[7].Name}
-							if ${Actor[id,${Me.Raid[7].ID}].Distance}<${Math.Calc[(${Actor[id,${Me.Raid[7].ID}].CollisionRadius} * ${Actor[id,${Me.Raid[7].ID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${Me.Raid[7].ID}].Distance2D}<${Math.Calc[(${Actor[id,${Me.Raid[7].ID}].CollisionRadius} * ${Actor[id,${Me.Raid[7].ID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[7].ID}
 						}
 						return TRUE
@@ -8614,7 +8592,7 @@ objectdef CheckAbilitiesObject
 							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${CastTarget}
 						else
 						{
-							if ${Actor[id,${CastTarget}].Distance}<${Math.Calc[(${Actor[id,${CastTarget}].CollisionRadius} * ${Actor[id,${CastTarget}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${CastTarget}].Distance2D}<${Math.Calc[(${Actor[id,${CastTarget}].CollisionRadius} * ${Actor[id,${CastTarget}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							{
 								;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
 								
@@ -8623,7 +8601,7 @@ objectdef CheckAbilitiesObject
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${CastTarget}].Distance}<${Math.Calc[(${Actor[id,${CastTarget}].CollisionRadius} * ${Actor[id,${CastTarget}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${CastTarget}].Distance2D}<${Math.Calc[(${Actor[id,${CastTarget}].CollisionRadius} * ${Actor[id,${CastTarget}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							}
 						}
 						return TRUE
@@ -8658,18 +8636,18 @@ objectdef CheckAbilitiesObject
 									{
 										if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 										{
-											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 												Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 										}
 										elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 										{
-											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 												Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 										}
 										else
 										{
 											if ${CombatBotDebug}
-												echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+												echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											continue
 										}
 									}
@@ -8688,18 +8666,18 @@ objectdef CheckAbilitiesObject
 									{
 										if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 										{
-											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 												Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 										}
 										elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 										{
-											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 												Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 										}
 										else
 										{
 											if ${CombatBotDebug}
-												echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+												echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											continue
 										}
 									}
@@ -8728,18 +8706,18 @@ objectdef CheckAbilitiesObject
 							}
 							if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 							{
-								if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+								if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 								else
 								{
 									if ${CombatBotDebug}
-										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 									continue
 								}
 							}
 							elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 							{
-								if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+								if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								{
 									;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
@@ -8748,14 +8726,14 @@ objectdef CheckAbilitiesObject
 								else
 								{
 									if ${CombatBotDebug}
-										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 									continue
 								}
 							}
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							}
 						}
 						return TRUE
@@ -8789,18 +8767,18 @@ objectdef CheckAbilitiesObject
 								{
 									if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 									{
-										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									}
 									elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 									{
-										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									}
 									else
 									{
 										if ${CombatBotDebug}
-											echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 										continue
 									}
 								}
@@ -8819,18 +8797,18 @@ objectdef CheckAbilitiesObject
 								{
 									if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 									{
-										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									}
 									elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 									{
-										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									}
 									else
 									{
 										if ${CombatBotDebug}
-											echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 										continue
 									}
 								}
@@ -8859,21 +8837,21 @@ objectdef CheckAbilitiesObject
 						}
 						if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 						{
-							;echo ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
-							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							;echo ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								continue
 							}
 								
 						}
 						elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 						{
-							;echo ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
-							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							;echo ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							{
 								;echo before cast call return: ${Return}
 								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
@@ -8882,14 +8860,14 @@ objectdef CheckAbilitiesObject
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								continue
 							}
 						}
 						else
 						{
 							if ${CombatBotDebug}
-								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance2D}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							continue
 						}
 					}
@@ -9933,7 +9911,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 						for(sicount:Set[1];${sicount}<=${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].Items};sicount:Inc)
 						{
 							;echo checking ${sicount} : ${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].OrderedItem[${sicount}].Text} as ${istrExport.Get[${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].OrderedItem[${sicount}].Value}]} with ID: ${istrExportID.Get[${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].OrderedItem[${sicount}].Value}]}
-							if ${Me.Ability[id,${istrExportID.Get[${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].OrderedItem[${sicount}].Value}]}].IsReady} && ( ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale})+${istrExportMaxRange.Get[${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].OrderedItem[${sicount}].Value}]}]} )
+							if ${Me.Ability[id,${istrExportID.Get[${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].OrderedItem[${sicount}].Value}]}].IsReady} && ( ${Actor[id,${KillTargetID}].Distance2D}<${Math.Calc[(${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale})+${istrExportMaxRange.Get[${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].OrderedItem[${sicount}].Value}]}]} )
 							{
 							
 								if ${istrExportReqFlanking.Get[${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].OrderedItem[${sicount}].Value}].Equal[TRUE]}
@@ -9965,7 +9943,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 										strCastNameShort:Set[""]
 										strCastID:Set[0]
 										strCastTarget:Set[""]
-										continue
+										return
 									}
 								}
 							
@@ -10018,6 +9996,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 						strCastNameShort:Set[""]
 						strCastID:Set[0]
 						strCastTarget:Set[""]
+						return
 					}
 				;}
 			}
@@ -10125,11 +10104,9 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 					if ${Me.Name.Find["Skyshrine "](exists)}
 						eq2execute usea "${CastName}"
 					elseif ${EQ2.ServerName.Equal[Battlegrounds]}
-						;eq2execute useabilityonplayer ${RI_Obj_CB.ConvertBattleGroundsName[${Actor[id,${CastTarget}].Name}]} "${CastName}"
-						eq2execute useabilityonplayer ${RI_Obj_CB.ConvertBattleGroundsName[${Actor[id,${CastTarget}].Name}]} ${CastID}
+						eq2execute useabilityonplayer ${RI_Obj_CB.ConvertBattleGroundsName[${Actor[id,${CastTarget}].Name}]} "${CastName}"
 					else
-						;eq2execute useabilityonplayer ${Actor[id,${CastTarget}].Name} "${CastName}"
-						eq2execute useabilityonplayer ${Actor[id,${CastTarget}].Name} ${CastID}
+						eq2execute useabilityonplayer ${Actor[id,${CastTarget}].Name} "${CastName}"
 					eq2execute clearabilityqueue
 				}
 				wait 2 ${Me.CastingSpell} || !${Me.Ability[id,${CastID}].IsReady}
@@ -10149,66 +10126,64 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 		{
 			do
 			{
-				; if ${CastName.Equal[Ethereal Conduit]}
-				; {
-					;;wait until we are not casting
-					; wait 50 !${Me.CastingSpell} || ${DoCasting}
-					; wait 3
-					;;set AssistTargeting FALSE
-					; variable bool IWasAssisting=FALSE
-					; if ${CombatBotAssisting}
-					; {
-						; CombatBotAssisting:Set[FALSE]
-						; IWasAssisting:Set[TRUE]
-					; }
-					; variable int tempid=0
-					; if ${Target(exists)}
-						; tempid:Set[${Target.ID}]
-					;;target ${CastTarget}
-					; Actor[${CastTarget}]:DoTarget
-					; wait 2
-					; waitframe
-					; do
-					; {
-						;;echo Casting ${CastNameShort} as ${CastName}
-						; if !${Me.CastingSpell}
-						; {
-							; Me.Ability[id,${CastID}]:Use
-							; eq2execute clearabilityqueue
-						; }
-						; wait 2 ${Me.CastingSpell} || !${Me.Ability[id,${CastID}].IsReady} || ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${CastName}]} )
+				if ${CastName.Equal[Ethereal Conduit]}
+				{
+					;wait until we are not casting
+					wait 50 !${Me.CastingSpell} || ${DoCasting}
+					wait 3
+					;set AssistTargeting FALSE
+					variable bool IWasAssisting=FALSE
+					if ${CombatBotAssisting}
+					{
+						CombatBotAssisting:Set[FALSE]
+						IWasAssisting:Set[TRUE]
+					}
+					variable int tempid=0
+					if ${Target(exists)}
+						tempid:Set[${Target.ID}]
+					;target ${CastTarget}
+					Actor[${CastTarget}]:DoTarget
+					wait 2
+					waitframe
+					do
+					{
+						;echo Casting ${CastNameShort} as ${CastName}
+						if !${Me.CastingSpell}
+						{
+							Me.Ability[id,${CastID}]:Use
+							eq2execute clearabilityqueue
+						}
+						wait 2 ${Me.CastingSpell} || !${Me.Ability[id,${CastID}].IsReady} || ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${CastName}]} )
 
-						; if ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal["${CastName}"]}
-							; break
-						; waitframe
-					; }
-					; while ${Me.Ability[id,${CastID}].IsReady} && !${Me.CastingSpell} && ${GiveUpCnt:Inc}<=5 && !${DoCasting} && ${Me.GetGameData[Spells.Casting].Label.NotEqual[${CastName}]}
+						if ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal["${CastName}"]}
+							break
+						waitframe
+					}
+					while ${Me.Ability[id,${CastID}].IsReady} && !${Me.CastingSpell} && ${GiveUpCnt:Inc}<=5 && !${DoCasting} && ${Me.GetGameData[Spells.Casting].Label.NotEqual[${CastName}]}
 										
-					; wait 2 ${Me.CastingSpell} || ${DoCasting}
-					;;wait 100 !${Me.CastingSpell} || ${DoCasting}
-					; if ${boolBuff}
-						; wait 5
-					; wait 2
-					; eq2execute clearabilityqueue
-					;;&& ${Actor[id,${tempid}].InZone} 
-					; if ${Actor[id,${tempid}](exists)} && ${Actor[id,${tempid}].Health(exists)} && !${Actor[id,${tempid}].IsDead} && ${tempid}!=0
-						; Actor[id,${tempid}]:DoTarget
-					; else
-						; eq2execute target_none
-					; wait 1
-					; if ${IWasAssisting}
-						; CombatBotAssisting:Set[TRUE]
-				; }
+					wait 2 ${Me.CastingSpell} || ${DoCasting}
+					;wait 100 !${Me.CastingSpell} || ${DoCasting}
+					if ${boolBuff}
+						wait 5
+					wait 2
+					eq2execute clearabilityqueue
+					;&& ${Actor[id,${tempid}].InZone} 
+					if ${Actor[id,${tempid}](exists)} && ${Actor[id,${tempid}].Health(exists)} && !${Actor[id,${tempid}].IsDead} && ${tempid}!=0
+						Actor[id,${tempid}]:DoTarget
+					else
+						eq2execute target_none
+					wait 1
+					if ${IWasAssisting}
+						CombatBotAssisting:Set[TRUE]
+				}
 				if !${Me.CastingSpell}
 				{
 					if ${Me.Name.Find["Skyshrine "](exists)}
 						eq2execute usea "${CastName}"
 					elseif ${EQ2.ServerName.Equal[Battlegrounds]}
-						;eq2execute useabilityonplayer ${RI_Obj_CB.ConvertBattleGroundsName[${Actor[id,${CastTarget}].Name}]} "${CastName}"
-						eq2execute useabilityonplayer ${RI_Obj_CB.ConvertBattleGroundsName[${Actor[id,${CastTarget}].Name}]} ${CastID}
+						eq2execute useabilityonplayer ${RI_Obj_CB.ConvertBattleGroundsName[${Actor[id,${CastTarget}].Name}]} "${CastName}"
 					else
-						;eq2execute useabilityonplayer ${Actor[id,${CastTarget}].Name} "${CastName}"
-						eq2execute useabilityonplayer ${Actor[id,${CastTarget}].Name} ${CastID}
+						eq2execute useabilityonplayer ${Actor[id,${CastTarget}].Name} "${CastName}"
 					eq2execute clearabilityqueue
 				}
 				wait 2 ${Me.CastingSpell} || !${Me.Ability[id,${CastID}].IsReady} || ${Me.Ability[id,${CastID}].TimeUntilReady}>0 || ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${CastName}]} )
@@ -10242,7 +10217,6 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 	{
 		wait 5 !${Me.Ability[id,${CastID}].IsReady}
 	}
-	mainCount:Set[1]
 }
 function CastItem(string ItemName, bool RIE, string fiCastTarget=FALSE)
 {
