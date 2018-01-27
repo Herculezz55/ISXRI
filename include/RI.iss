@@ -2369,13 +2369,14 @@
 ;					Now targets adds only when within 15 prioritizing ones not targeting MainToon
 ;					Only moves behind Blighthorn himself
 
-;v5.46 Changes 1-7-18
+;v5.46 Changes 1-26-18
 ;	Version bump
 
-;v5.46 Changes 1-7-18  ;;; when release change to 5.47  /// things to do before release. fix wazadozik not moving in, fix balrezu with ActorDespawnEvent and LockAndWait, and test Sol Ro Monolith (in solo if you must) and Code Avatar and solusek to move behind
+;v5.47 Changes 1-26-18
+;	Added Command:
+;		RI_Auth
+;			Reopens Authentication window to set or change password
 ;	RI
-;		On chest looting, RI will now switch to leader only, open chest and check against an index of
-;		items if found will wait 40mins with chest open for user to determine who gets item
 ;		Increased shiny scan distance default from 20 to 50
 ;		Added auto collect shiny when shiny window open (Requires Open on Loot in game to be enabled)
 ;		 (to disable turn off Open on Loot in game)
@@ -2410,13 +2411,16 @@
 ;					Jousts in/out as needed while targeting self to try to prevent 2 at once
 ;					Turns off Hostile and NamedHostile (Solo only)
 ;			Torden, Bastion of Thunder: Winds of Change
+;				Elif Whitewind (RI Pull Elif)
+;					Moves group behind named
+;					Mage will cast absorb magic
 ;				Yveti Stormbrood (RI Pull Yveti)
-;					Waits until Yveti is near a platform them runs up and pulls him
+;					Waits until Yveti is near a platform then runs up and pulls him
 ;					Moves to golem
 ;				Laef Windfall (RI Pull Laef)
 ;					Moves behind as needed
 ;				Torstien Stoneskin && Hreidar Lynhillig (RI Pull Torstien)
-;					Auto target only, I found the closer i had them and my group the less it hit
+;					Auto target and move behind only, I found the closer i had them and my group the less it hit
 ;					if you wanna joust it or it becomes an issue i will look more into it.
 ;			Solusek Ro's Tower: The Obsidian Core
 ;				Cindrax (RI Pull Cindrax)
@@ -2426,6 +2430,7 @@
 ;					Jousts
 ;					Handles rocks
 ;				Balrezu (RI Pull Balrezu)
+;					Turns off AE's and Encounter Abilities and Turns on Singular Focus/Focused Offensive
 ;					Auto targets adds
 ;					Auto clicks braziers
 ;				Verlixa (RI Pull Verlixa)
@@ -2435,20 +2440,21 @@
 ;					Drops shard in lava to lower his DMG reduction
 ;			Solusek Ro's Tower: Monolith of Fire
 ;				Jiva (RI Pull Jiva)
-;					Auto jumps group up to the Main (last) Gargoyle spot (Solo)
-;						or a Toon to each spot (Heroic)
-;					Turns off Hostile and NamedHostile when mob is immune
+;					Auto jumps group/main up to the Main (last) Gargoyle spot
+;						and Toon's to other Spots (Heroic)
+;					Turns off Hostile and NamedHostile when mob is immune (Solo)
 ;				Estryxia (RI Pull Estryxia)
-;					Moves to opposite pillar on each iteration of her death stopping in the
-;					middle for 10s for heals
+;					Moves to opposite side of room on each iteration of her death
 ;				So'Valiz (RI Pull So'Valiz)
 ;					Fully automates clicking of needed claws, pull it and watch with no interaction needed
 ;				Xuzl (RI Pull Xuzl)
 ;					Moves to correct vent to get to top, DPS's down the Shards
 ;					Drops back down after shards and clicks Swords as needed
+;					Auto target's Adds throughout
 ;				Solusek Ro and Avatar of Sun (RI Pull Solusek)
 ;					Auto jumps across to the middle platform (from the nearest platform when you port in)
-;					if you are not on middle platform already
+;					if you are not on middle platform already, LockSpots in middle of platform
+;					Moves behind for Nova on Avatar
 ;			Brackish Vaults (Not optimized for Duo YET)
 ;				Pathing and Clicking portal only for solo
 ;	RQ
@@ -2466,7 +2472,6 @@
 ;		Fixed a bug in Items with , in the name
 ;		Fixed a bug with invis abilities and flanking/behind
 ;		Will now automatically cast Fount of Power when needed
-;		Added sending mercs like pets (uses same setting)
 ;		Added setting: 
 ;			Do not cast AE
 ;				Turns on and off CombatBot's Internal do not cast ae flag
@@ -2490,9 +2495,16 @@
 ;		Added RIMUIObj Method's, Member's and *Button's
 ;			*method ReplyDialog(string ForWho, int _Option)
 ;				Chooses option from a reply dialog window
+;		Modified RIMUIObj Method's, Member's and *Button's
+;			*method UseItem(... args)
+;				now accepts an unlimited amount of args in sets of 2
+;					string _ForWho, string _ItemName
 
 
-
+;WIP
+;		On chest looting, RI will now switch to leader only, open chest and check against an index of
+;		items if found will wait 40mins with chest open for user to determine who gets item
+;		Added sending mercs like pets (uses same setting)
 ;		Added RIConsole UI and Object to allow "Special Messages" to appear more predominately
 ;			method LoadUI()
 ;				Loads UI (this is done on startup automatically)
@@ -2503,7 +2515,7 @@
 ;			method Echo(string _Message, bool _ShowConsole=TRUE, int _FlashConsoleTimeInSeconds=0, bool _PlayAlarm=FALSE)
 ;				Echo's to the console, optionally Showing the Console or Flashing for Attention and 
 ;				playing alarm sound
-variable(global) float RI_Var_Float_Version=5.46
+variable(global) float RI_Var_Float_Version=5.47
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -3817,7 +3829,7 @@ variable string FactionsPass=NONE
 variable string CurrentZoneName="${Zone.Name}"
 variable index:string GroupNames
 ;end variables for RIMUI
-variable(global) bool RI_Var_Bool_CheckLoot=TRUE
+variable(global) bool RI_Var_Bool_CheckLoot=FALSE
 variable index:string LootItemsToNotAutoLoot
 
 function main()
@@ -4288,7 +4300,7 @@ function main()
 			;if a chest exists within 8m radius and looting is on
 			if ${RI_Var_Bool_Loot} || ( ${UIElement[SettingsLootingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLootChestsCheckBox@SettingsFrame@CombatBotUI].Checked} )
 			{
-				if ${Script[Buffer:RunInstances](exists)} && !${RI_Var_Bool_Loot}
+				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${RI_Var_Bool_Loot}
 				{
 					noop
 				}
@@ -4311,9 +4323,16 @@ function main()
 		{
 			if ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 			{
-				LootWindow:RequestAll
-				_RI_LootImmunity_:Set[TRUE]
-				TimedCommand 5 _RI_LootImmunity_:Set[FALSE]
+				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${RI_Var_Bool_AcceptLoot}
+				{
+					noop
+				}
+				else
+				{
+					LootWindow:RequestAll
+					_RI_LootImmunity_:Set[TRUE]
+					TimedCommand 5 _RI_LootImmunity_:Set[FALSE]
+				}
 			}
 		}
 		;wait 1 ${MT} || ${JU} || ${QueuedCommands} || ${FactionsInit} || ${CommandQ} || ${TradePending} || ${RaidGroupHudLoaded} || ${NearesetNPCHudLoaded} || ${NearesetPlayerHudLoaded} || ${CurrentZoneName.NotEqual["${Zone.Name}"]}
@@ -4379,14 +4398,21 @@ atom EQ2_FinishedZoning(string TimeInSeconds)
 ;atom triggered when a loot window is detected
 atom EQ2_onLootWindowAppeared(string LootWindowID)
 {
-	if ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} && !${_RI_LootImmunity_}
+	if ( ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} ) && !${_RI_LootImmunity_}
 	;&& ${CurrentLootWindowID.NotEqual[${LootWindowID}]}
 	{
-		_RI_LootImmunity_:Set[TRUE]
-		TimedCommand 5 _RI_LootImmunity_:Set[FALSE]
-		;CurrentLootWindowID:Set[${LootWindowID}]
-		;LootWindow[${LootWindowID}]:LootAll
-		LootWindow[${LootWindowID}]:RequestAll
+		if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${RI_Var_Bool_AcceptLoot}
+		{
+			noop
+		}
+		else
+		{
+			_RI_LootImmunity_:Set[TRUE]
+			TimedCommand 5 _RI_LootImmunity_:Set[FALSE]
+			;CurrentLootWindowID:Set[${LootWindowID}]
+			;LootWindow[${LootWindowID}]:LootAll
+			LootWindow[${LootWindowID}]:RequestAll
+		}
 	}
 }
 ;atom triggered when incommingtext is detected
@@ -4711,9 +4737,7 @@ objectdef RIMovementObject
 					;for some odd reason in some instances there will be a chest up but the game will not let us summon it, 
 					;this makes this wait cause a stutter in our movement, until i can find out why im removing the wait
 					;but we need this or it will not summon as we are moving
-					wait 5 ${Actor[id,${ChestID}].Distance}<7
-					Actor[id,${ChestID}]:DoubleClick
-					wait 5 ${LootWindow(exists)}
+					wait 10
 					if ${RI_Var_Bool_BadChestTrigger}
 					{
 						RI_Var_IndexInt_InvalidChest:Insert[${ChestID}]
@@ -4721,19 +4745,27 @@ objectdef RIMovementObject
 						relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 						return
 					}
-					if ${This.LootItemsToNotAutoLootExists[${LootItemsToNotAutoLoot}]} && ${RI_Var_Bool_CheckLoot}
+					if ${RI_Var_Bool_CheckLoot}
 					{
-						while ${Actor[${ChestID}](exists)} && ${LONLCnt:Inc}<2400
+						wait 5 ${Actor[id,${ChestID}].Distance}<7
+						Actor[id,${ChestID}]:DoubleClick
+						wait 5 ${LootWindow(exists)}
+						if ${This.LootItemsToNotAutoLootExists[${LootItemsToNotAutoLoot}]}
 						{
+							while ${Actor[${ChestID}](exists)} && ${LONLCnt:Inc}<2400
+							{
+								wait 10
+							}
+						}
+						else
+						{
+							relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 							wait 10
+							LootWindow:RequestAll
 						}
 					}
 					else
-					{
-						relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 						wait 10
-						LootWindow:RequestAll
-					}
 				}
 				
 				;if the chest is not within 7m, move to it
@@ -4754,22 +4786,28 @@ objectdef RIMovementObject
 					;fly down
 					if ${Me.FlyingUsingMount}
 						call This.FlyDown
+					
 					wait 5 ${Actor[id,${ChestID}].Distance}<11
 					Actor[id,${ChestID}]:DoubleClick
-					wait 5 ${LootWindow(exists)}		
-					if ${This.LootItemsToNotAutoLootExists[${LootItemsToNotAutoLoot}]} && ${RI_Var_Bool_CheckLoot}
+					wait 5 ${LootWindow(exists)}	
+					if ${RI_Var_Bool_CheckLoot}
 					{
-						while ${Actor[${ChestID}](exists)} && ${LONLCnt:Inc}<2400
+						if ${This.LootItemsToNotAutoLootExists[${LootItemsToNotAutoLoot}]}
 						{
+							while ${Actor[${ChestID}](exists)} && ${LONLCnt:Inc}<2400
+							{
+								wait 10
+							}
+						}
+						else
+						{
+							relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 							wait 10
+							LootWindow:RequestAll
 						}
 					}
 					else
-					{
-						relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 						wait 10
-						LootWindow:RequestAll
-					}
 					;move back to original loc
 					call This.Move ${TempX} ${TempY} ${TempZ} ${Precision} 10 TRUE TRUE FALSE FALSE TRUE
 				}
@@ -4780,7 +4818,8 @@ objectdef RIMovementObject
 					wait 1
 			}
 		}
-		relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
+		if ${RI_Var_Bool_CheckLoot}
+			relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 		;wait 10
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Ending LootChest
@@ -7512,12 +7551,17 @@ objectdef RIMUIObject
 				TimedCommand 1 Actor[${TargetWho}]:DoTarget
 		}
 	}
-	method UseItem(string ForWho, string ItemName)
+	method UseItem(... args)
 	{
-		if ${This.ForWhoCheck[${ForWho}]} && ${Me.Inventory[Query,Location=="Inventory" && Name=-"${ItemName}"](exists)}
-			Me.Inventory[Query,Location=="Inventory" && Name=-"${ItemName}"]:Use
-		if ${This.ForWhoCheck[${ForWho}]} && ${Me.Equipment["${ItemName}"](exists)}
-			Me.Equipment["${ItemName}"]:Use
+		variable int _count=0
+		for(_count:Set[1];${_count}<=${args.Size};_count:Inc)
+		{
+			if ${This.ForWhoCheck[${args[${_count}]}]} && ${Me.Inventory[Query,Location=="Inventory" && Name=-"${args[${Math.Calc[${_count}+1]}]}"](exists)}
+				Me.Inventory[Query,Location=="Inventory" && Name=-"${args[${Math.Calc[${_count}+1]}]}"]:Use
+			if ${This.ForWhoCheck[${args[${_count}]}]} && ${Me.Equipment["${args[${Math.Calc[${_count}+1]}]}"](exists)}
+				Me.Equipment["${args[${Math.Calc[${_count}+1]}]}"]:Use
+			_count:Inc
+		}
 	}
 	method UnloadISXRI(string ForWho)
 	{
@@ -9547,7 +9591,7 @@ atom UpdateDistanceHud()
 				floatRIHUD1:Set[0.00]
 				strRIHUD1F:Set[0.00]
 				if ${Me.Target(exists)}
-					strRIHUD1:Set[":${Me.Name} => ${Me.Target}"]
+					strRIHUD1:Set[":${Me.Name} => ${Me.Target} => ${Me.Distance2D[${Me.Target.X},${Me.Target.Z}].Precision[2]}"]
 				else 
 					strRIHUD1:Set[":${Me.Name}"]
 				HUDSet LD1P1 -c FF888888

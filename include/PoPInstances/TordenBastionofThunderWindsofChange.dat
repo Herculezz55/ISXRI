@@ -42,10 +42,7 @@ DontStopForCombat
 -2.971139 10.332181 431.779602
 Named
 Elif
-StandardNamed
-SameLock
-DontKillAdd
-MoveBehind
+CustomNamed
 -1.541107 10.332182 441.497772
 StopForCombat
 -1.256255 10.332181 451.602661

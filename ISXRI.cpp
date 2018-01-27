@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.46 1-7-18"
-double EXTVER = 5.46;
+#define EXTENSION_VERSION "5.47 1-26-18"
+double EXTVER = 5.47;
 #include "ISXRI.h"
 
 
@@ -1652,6 +1652,7 @@ void ISXRIUnRegisterTLOs()
 void ISXRIUnRegisterCommands()
 {
 	pISInterface->RemoveCommand("RI_AggroControl");
+	pISInterface->RemoveCommand("RI_Auth");
 	pISInterface->RemoveCommand("RI_CMD_ExecuteCommand");
 	pISInterface->RemoveCommand("RI_CoT");
 	pISInterface->RemoveCommand("RI");
@@ -30305,6 +30306,16 @@ int __cdecl CMD_Transmute(int argc, char *argv[])
 	pISInterface->RunScriptFromBuffer("RITransmute", c, sizeof(Transmute), 1, k);
 	return 1;
 }
+int __cdecl CMD_Auth(int argc, char *argv[])
+{
+	char *k[] = { "3rtZdjv7" };
+	const unsigned char * p = Auth;
+	const char * c = (const char *)p;
+
+	pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, k);
+	return 1;
+}
+
 int __cdecl CMD_Salvage(int argc, char *argv[])
 {
 	char *k[] = { "3rtZdjv7" };
@@ -31379,6 +31390,8 @@ void RegisterCommandsAfterAuth()
 	pISInterface->AddCommand("RI_AbilityCheck", CMD_AbilityCheck, true, false);
 	pISInterface->AddCommand("RI_GroupLogin", CMD_RGL, true, false);
 	pISInterface->AddCommand("RGL", CMD_RGL, true, false);
+	pISInterface->AddCommand("RI_Auth", CMD_Auth, true, false);
+	
 
 	if (devel || raid)
 	{

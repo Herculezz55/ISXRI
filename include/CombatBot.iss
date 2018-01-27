@@ -10018,6 +10018,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 						strCastNameShort:Set[""]
 						strCastID:Set[0]
 						strCastTarget:Set[""]
+						return
 					}
 				;}
 			}
@@ -10111,7 +10112,20 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 			; if ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal["${CastName}"]}
 				; break
 		; }
-
+		;check collision
+		if ${Actor[id,${CastTarget}].CheckCollision}
+		{
+			if ${CombatBotDebug}
+				echo Ignoring Ability: ${CastNameShort}, TargetID: ${CastTarget}, TargetName: ${Actor[id,${CastTarget}].Name} CheckCollision: ${Actor[id,${CastTarget}].CheckCollision}
+			mainCount:Set[${Math.Calc[${mainCount}+1]}]
+			boolAbilityCast:Set[FALSE]
+			boolItemCast:Set[FALSE]
+			strCastName:Set[""]
+			strCastNameShort:Set[""]
+			strCastID:Set[0]
+			strCastTarget:Set[""]
+			return
+		}
 		if ${DoCasting}
 		{
 			DoCasting:Set[FALSE]

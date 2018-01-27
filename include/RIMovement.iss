@@ -165,47 +165,70 @@ function main()
 }
 ;RI_Atom_SetLockSpot ${Me.Name} ${Me.X} ${Me.Y} ${Me.Z} 1 100
 ;need to turn aX into a string and typecast it to float if it isnt OFF
-atom(global) RI_Atom_SetLockSpot(string aWho, string aX=${Me.X}, float aY=${Me.Y}, float aZ=${Me.Z}, int aPrecision=1, int aMax=100)
+atom(global) RI_Atom_SetLockSpot(string aWho, string aX=${Me.X}, float aY=${Me.Y}, float aZ=${Me.Z}, int aPrecision=1, int aMax=500)
 {
 	if ${RI_Var_Bool_Debug}
 		echo ${aWho}  - ${aX} ${aY} ${aZ} - ${aPrecision}  -  ${aMax}
-	if ${aWho.Upper.Equal[OFF]}
+	if ${aWho.Upper.Equal[OFF]} || ${aX.Upper.Equal[OFF]}
 	{
 		if ${Script[Buffer:CombatBot](exists)}
 			UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI]:UnsetChecked
 		RI_Var_Bool_LockSpotting:Set[FALSE]
 	}
-	elseif ${aWho.Equal[""]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif ${aWho.Upper.Equal[ALL]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-	elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
-		call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
-
+	; elseif ${aWho.Equal[""]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif ${aWho.Upper.Equal[ALL]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	; elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
+		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
+	elseif ${RIMUIObj.ForWhoCheck["${aWho}"]}
+	{
+		if ${aX.Upper.Equal[OFF]}
+		{
+			if ${Script[Buffer:CombatBot](exists)}
+				UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI]:UnsetChecked
+			RI_Var_Bool_LockSpotting:Set[FALSE]
+			return
+		}
+		if ${RI_Var_Bool_Debug}
+			echo RI_Var_String_LockSpotZoneName:Set[${Me.GetGameData[Self.ZoneName].Label}]
+		
+		RI_Var_String_LockSpotZoneName:Set["${Me.GetGameData[Self.ZoneName].Label}"]
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Setting LockSpot for ${Me.Name} at ${aX} ${aY} ${aZ} with Precision - ${aPrecision} and Max - ${aMax} in - ${RI_Var_String_LockSpotZoneName}
+		RI_Var_Float_LockSpotX:Set[${Float[${aX}]}]
+		RI_Var_Float_LockSpotY:Set[${aY}]
+		RI_Var_Float_LockSpotZ:Set[${aZ}]
+		RI_Var_Int_LockSpotMax:Set[${aMax}]
+		RI_Var_Int_LockSpotPrecision:Set[${aPrecision}]
+		RI_Var_Bool_LockSpotting:Set[TRUE]
+		if ${Script[Buffer:CombatBot](exists)}
+			UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI]:SetChecked
+	}
 }
 atom(global) RI_Atom_MoveBehind(string aWho, string aRI_Var_Int_MoveBehindMobID, int aDistance, int aHealth, string aFallBackPCName)
 {
@@ -349,36 +372,36 @@ function SetMoveInFront(string fRI_Var_Int_MoveInFrontMobID, int fDistance, int 
 ;need to add whos to this atom
 atom(global) RI_Atom_ChangeLockSpot(string aWho, float aX, float aY, float aZ)
 {
-	variable bool GoodToGo=FALSE
-	if ${aWho.Upper.Equal[ALL]}
-		GoodToGo:Set[TRUE]
-	elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
-		GoodToGo:Set[TRUE]
-	elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
-		GoodToGo:Set[TRUE]
-	if ${RI_Var_Bool_LockSpotting} && ${GoodToGo}
+	; variable bool GoodToGo=FALSE
+	; if ${aWho.Upper.Equal[ALL]}
+		; GoodToGo:Set[TRUE]
+	; elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
+		; GoodToGo:Set[TRUE]
+	; elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
+		; GoodToGo:Set[TRUE]
+	if ${RI_Var_Bool_LockSpotting} && ${RIMUIObj.ForWhoCheck["${aWho}"]}
 	{
 		if ${RI_Var_Bool_Debug}
 			echo ${Time}: Changing LockSpot to: ${aX} ${aY} ${aZ}
@@ -393,36 +416,36 @@ atom(global) RI_Atom_ChangeLockSpot(string aWho, float aX, float aY, float aZ)
 ;neeed to add whoos
 atom(global) RI_Atom_ChangeLockSpotByChg(string aWho, int aXChg, intaYChg, int aZChg)
 {
-	variable bool GoodToGo=FALSE
-	if ${aWho.Upper.Equal[ALL]}
-		GoodToGo:Set[TRUE]
-	elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
-		GoodToGo:Set[TRUE]
-	elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
-		GoodToGo:Set[TRUE]
-	elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
-		GoodToGo:Set[TRUE]
-	if ${RI_Var_Bool_LockSpotting} && ${GoodToGo}
+	; variable bool GoodToGo=FALSE
+	; if ${aWho.Upper.Equal[ALL]}
+		; GoodToGo:Set[TRUE]
+	; elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
+		; GoodToGo:Set[TRUE]
+	; elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
+		; GoodToGo:Set[TRUE]
+	; elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
+		; GoodToGo:Set[TRUE]
+	if ${RI_Var_Bool_LockSpotting} && ${RIMUIObj.ForWhoCheck["${aWho}"]}
 	{
 		if ${RI_Var_Bool_Debug}
 			echo ${Time}: Changing LockSpot by: ${aXChg} ${aYChg} ${aZChg}
@@ -438,67 +461,77 @@ atom(global) RI_Atom_SetRIFollow(string aWho, string aWhoFollowID=0, int aMin=1,
 {
 	if ${aWho.Upper.Equal[OFF]}
 		RI_Var_Bool_RIFollowing:Set[FALSE]
-	elseif ${aWhoFollowID.Upper.Equal[OFF]} || ${aWhoFollowID.Equal[0]}
-	{
-		if ${aWho.Upper.Equal[ALL]}
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-		elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
-			RI_Var_Bool_RIFollowing:Set[FALSE]
-	}
+	elseif ( ${aWhoFollowID.Upper.Equal[OFF]} || ${aWhoFollowID.Equal[0]} ) && ${RIMUIObj.ForWhoCheck["${aWho}"]}
+		RI_Var_Bool_RIFollowing:Set[FALSE]
+	; {
+		; if ${aWho.Upper.Equal[ALL]}
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
+			; RI_Var_Bool_RIFollowing:Set[FALSE]
+	; }
 	elseif ${aWhoFollowID}==${Me.ID}
 		RI_Var_Bool_RIFollowing:Set[FALSE]
-	elseif ${aWho.Upper.Equal[ALL]}
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
-	elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
-		call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif ${aWho.Upper.Equal[ALL]}
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	; elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
+		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}
+	elseif ${RIMUIObj.ForWhoCheck[${aWho}]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Setting RIFollow for ${Me.Name} to ${Actor[id,${aWhoFollowID}].Name} at a Min Distance: ${aMin} and Max Distance: ${aMax}
+		RI_Var_Int_RIFollowTargetID:Set[${aWhoFollowID}]
+		RI_Var_Int_RIFollowMinDistance:Set[${aMin}]
+		RI_Var_Int_RIFollowMaxDistance:Set[${aMax}]
+		RI_Var_Bool_RIFollowing:Set[TRUE]
+	}
 }
 function CheckSwimming()
 {
@@ -518,46 +551,46 @@ function CheckSwimming()
 		CheckedSwimmingTime:Set[${Script.RunningTime}]
 	}
 }
-function SetLockSpot(int fPrecision, int fMax, string fX, float fY, float fZ)
-{
-	if ${RI_Var_Bool_Debug}
-		echo RI_Var_String_LockSpotZoneName:Set[${Me.GetGameData[Self.ZoneName].Label}]
+; function SetLockSpot(int fPrecision, int fMax, string fX, float fY, float fZ)
+; {
+	; if ${RI_Var_Bool_Debug}
+		; echo RI_Var_String_LockSpotZoneName:Set[${Me.GetGameData[Self.ZoneName].Label}]
 	
-	if ${fX.Upper.Equal[OFF]}
-	{
-		if ${Script[Buffer:CombatBot](exists)}
-			UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI]:UnsetChecked
-		RI_Var_Bool_LockSpotting:Set[FALSE]
-		return
-	}
-	RI_Var_String_LockSpotZoneName:Set["${Me.GetGameData[Self.ZoneName].Label}"]
-	if ${RI_Var_Bool_Debug}
-		echo ${Time}: Setting LockSpot for ${Me.Name} at ${fX} ${fY} ${fZ} with Precision - ${fPrecision} and Max - ${fMax} in - ${RI_Var_String_LockSpotZoneName}
-	RI_Var_Float_LockSpotX:Set[${fX}]
-	RI_Var_Float_LockSpotY:Set[${fY}]
-	RI_Var_Float_LockSpotZ:Set[${fZ}]
-	RI_Var_Int_LockSpotMax:Set[${fMax}]
-	RI_Var_Int_LockSpotPrecision:Set[${fPrecision}]
-	RI_Var_Bool_LockSpotting:Set[TRUE]
-	if ${Script[Buffer:CombatBot](exists)}
-		UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI]:SetChecked
-}
-function SetRIFollow(string fWhoFollowID, int fMin, int fMax)
-{
-	if ${fWhoFollowID.Upper.Equal[OFF]}
-	{
-		RI_Var_Bool_RIFollowing:Set[FALSE]
-		return
-	}
-	if ${fWhoFollowID}==${Me.ID}
-		return
-	if ${RI_Var_Bool_Debug}
-			echo ${Time}: Setting RIFollow for ${Me.Name} to ${Actor[id,${fWhoFollowID}].Name} at a Min Distance: ${fMin} and Max Distance: ${fMax}
-	RI_Var_Int_RIFollowTargetID:Set[${fWhoFollowID}]
-	RI_Var_Int_RIFollowMinDistance:Set[${fMin}]
-	RI_Var_Int_RIFollowMaxDistance:Set[${fMax}]
-	RI_Var_Bool_RIFollowing:Set[TRUE]
-}
+	; if ${fX.Upper.Equal[OFF]}
+	; {
+		; if ${Script[Buffer:CombatBot](exists)}
+			; UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI]:UnsetChecked
+		; RI_Var_Bool_LockSpotting:Set[FALSE]
+		; return
+	; }
+	; RI_Var_String_LockSpotZoneName:Set["${Me.GetGameData[Self.ZoneName].Label}"]
+	; if ${RI_Var_Bool_Debug}
+		; echo ${Time}: Setting LockSpot for ${Me.Name} at ${fX} ${fY} ${fZ} with Precision - ${fPrecision} and Max - ${fMax} in - ${RI_Var_String_LockSpotZoneName}
+	; RI_Var_Float_LockSpotX:Set[${fX}]
+	; RI_Var_Float_LockSpotY:Set[${fY}]
+	; RI_Var_Float_LockSpotZ:Set[${fZ}]
+	; RI_Var_Int_LockSpotMax:Set[${fMax}]
+	; RI_Var_Int_LockSpotPrecision:Set[${fPrecision}]
+	; RI_Var_Bool_LockSpotting:Set[TRUE]
+	; if ${Script[Buffer:CombatBot](exists)}
+		; UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI]:SetChecked
+; }
+; function SetRIFollow(string fWhoFollowID, int fMin, int fMax)
+; {
+	; if ${fWhoFollowID.Upper.Equal[OFF]}
+	; {
+		; RI_Var_Bool_RIFollowing:Set[FALSE]
+		; return
+	; }
+	; if ${fWhoFollowID}==${Me.ID}
+		; return
+	; if ${RI_Var_Bool_Debug}
+			; echo ${Time}: Setting RIFollow for ${Me.Name} to ${Actor[id,${fWhoFollowID}].Name} at a Min Distance: ${fMin} and Max Distance: ${fMax}
+	; RI_Var_Int_RIFollowTargetID:Set[${fWhoFollowID}]
+	; RI_Var_Int_RIFollowMinDistance:Set[${fMin}]
+	; RI_Var_Int_RIFollowMaxDistance:Set[${fMax}]
+	; RI_Var_Bool_RIFollowing:Set[TRUE]
+; }
 function RILockSpot()
 {
 	if ${RI_Var_Bool_LockSpotting} && !${RI_Var_Bool_Paused} && !${EQ2.Zoning} && ${RI_Var_Float_LockSpotX} != 0 && ${Math.Distance[${Me.X},${Me.Z},${RI_Var_Float_LockSpotX},${RI_Var_Float_LockSpotZ}]} < ${RI_Var_Int_LockSpotMax} && ${Math.Distance[${Me.X},${Me.Z},${RI_Var_Float_LockSpotX},${RI_Var_Float_LockSpotZ}]} > ${RI_Var_Int_LockSpotPrecision} && ( !${Script[Buffer:CombatBot](exists)} || ( ${UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} ) ) 
