@@ -195,7 +195,7 @@ objectdef RIInventoryObject
 			if ${Items.Get[${counter}].Token[2,|].Equal[Transmute]} || ${Items.Get[${counter}].Token[2,|].Equal[Sell]} || ${Items.Get[${counter}].Token[2,|].Equal[Destroy]} || ${Items.Get[${counter}].Token[2,|].Equal[Salvage]}
 			{
 				;while loop while the item exists after building the inventory query
-				while ${Me.Inventory[Query,Location=="Inventory"&&Name=-"${Items.Get[${counter}].Token[1,|]}"&&${BagQuery}](exists)} && !${_SkipThisItem}
+				while ${Me.Inventory[Query,Location=="Inventory"&&Name=="${Items.Get[${counter}].Token[1,|]}"&&${BagQuery}](exists)} && !${_SkipThisItem}
 				{
 					while ${Me.InCombat}
 						wait 1
@@ -205,7 +205,7 @@ objectdef RIInventoryObject
 						echo ISXRI: Skipping ${Items.Get[${counter}].Token[1,|]} we do not have salvage ability;_SkipThisItem:Set[1]
 					if ${Items.Get[${counter}].Token[2,|].Equal[Transmute]} && !${Me.Ability[id,2266640201](exists)}
 						echo ISXRI: Skipping ${Items.Get[${counter}].Token[1,|]} we do not have transmute ability;_SkipThisItem:Set[1]
-					call This.${Items.Get[${counter}].Token[2,|]} ${Me.Inventory[Query,Location=="Inventory"&&Name=-"${Items.Get[${counter}].Token[1,|]}"&&${BagQuery}].ID}
+					call This.${Items.Get[${counter}].Token[2,|]} ${Me.Inventory[Query,Location=="Inventory"&&Name=="${Items.Get[${counter}].Token[1,|]}"&&${BagQuery}].ID}
 				}
 			}
 		}
@@ -219,22 +219,22 @@ objectdef RIInventoryObject
 		RI_CMD_Assist 1
 		if ${DepositToDepot}
 		{
-			if ${Actor[Query, Name=-"Lore & Legend Depot" && Distance<12](exists)}
+			if ${Actor[Query, Name=="Lore & Legend Depot" && Distance<12](exists)}
 			{
 				eq2ex container deposit_all ${Actor["Lore & Legend Depot"].ID} 0
 				wait 5
 			}
-			if ${Actor[Query, Name=-"Scroll Depot" && Distance<12](exists)}
+			if ${Actor[Query, Name=="Scroll Depot" && Distance<12](exists)}
 			{
 				eq2ex container deposit_all ${Actor["Scroll Depot"].ID} 0
 				wait 5
 			}
-			if ${Actor[Query, Name=-"Harvesting Supply Depot" && Distance<12](exists)}
+			if ${Actor[Query, Name=="Harvesting Supply Depot" && Distance<12](exists)}
 			{
 				eq2ex container deposit_all ${Actor["Harvesting Supply Depot"].ID} 0
 				wait 5
 			}
-			if ${Actor[Query, Name=-"Collectible Depot" && Distance<12](exists)}
+			if ${Actor[Query, Name=="Collectible Depot" && Distance<12](exists)}
 			{
 				eq2ex container deposit_all ${Actor["Collectible Depot"].ID} 0
 				wait 5
@@ -286,7 +286,7 @@ objectdef RIInventoryObject
 			wait 2
 			echo ISXRI: Selling "${Me.Inventory[id,${_ItemID}]}"
 			;return
-			Me.Merchandise["${Me.Inventory[id,${_ItemID}]}"]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=-"${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
+			Me.Merchandise["${Me.Inventory[id,${_ItemID}]}"]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=="${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
 		}
 		wait 8
 	}
@@ -508,9 +508,15 @@ objectdef RIInventoryObject
 				elseif ${Iterator.Key.Equal[DepositToDepot]}
 				{
 					if ${Iterator.Value.FindSetting[Checked].String.Equal[TRUE]}
-						UIElement[DepositToDepotCheckBox@RIInventory]:SetChecked;DepositToDepot:Set[1]
+					{
+						UIElement[DepositToDepotCheckBox@RIInventory]:SetChecked
+						DepositToDepot:Set[1]
+					}
 					else
-						UIElement[DepositToDepotCheckBox@RIInventory]:UnsetChecked;DepositToDepot:Set[0]
+					{
+						UIElement[DepositToDepotCheckBox@RIInventory]:UnsetChecked
+						DepositToDepot:Set[0]
+					}
 				}
 				else
 				{

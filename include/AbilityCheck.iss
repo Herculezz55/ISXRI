@@ -1,11 +1,52 @@
 ;AbilityCheck v1 by Herculezz
 
-function main()
+function main(... args)
 {	
 	;disable debugging
 	Script:DisableDebugging
 
 	echo ISXRI: Starting AbilityCheck v1
+	
+	variable index:string AbilityName
+	variable index:int Level
+	variable int LevelGreaterThan=0
+	variable int LevelLessThan=110
+	variable index:string Tier
+	
+	variable int _acnt=0
+	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
+	{
+		;echo args ${_acnt} : ${args[${_acnt}]}
+		switch ${args[${_acnt}]}
+		{
+			case -AbilityName
+			{
+				AbilityName:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -Level
+			{
+				Level:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -LevelGreaterThan
+			{
+				LevelGT:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -LevelLessThan
+			{
+				LevelLT:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -Tier
+			{
+				Tier:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+		}
+	}
+	
 	
 	variable int NumAbil=${Me.NumAbilities}
 	variable string CurrentAbilityID
@@ -24,7 +65,7 @@ function main()
 		Me.Maintained[Negative Void]:Cancel
 		wait 10
 	}
-	echo ISXRI: ${Time}: AbilityCheck Checking ${NumAbil} Abilities, Do Not Zone Until Finished
+	echo ISXRI: ${Time}: AbilityCheck Checking ${NumAbil} Abilities
 	
 	
 	variable index:ability Abilities
@@ -43,7 +84,8 @@ function main()
     ;echo "Abilities (Total ${Me.NumAbilities}):"
     Me:QueryAbilities[Abilities]
     Abilities:GetIterator[AbilitiesIterator]
- 
+	variable bool _FoundAbility
+	variable int _cnt
     if ${AbilitiesIterator:First(exists)}
     {
         do
@@ -76,6 +118,61 @@ function main()
 			CurrentAbilityID:Set[${AbilitiesIterator.Value.ID}]
 			CurrentAbilityName:Set[${AbilitiesIterator.Value.ToAbilityInfo.Name}]
 			
+			if ${AbilityName.Used}>0
+			{
+				;echo test
+				_FoundAbility:Set[FALSE]
+				for(_cnt:Set[0];${_cnt}<=${AbilityName.Used};_cnt:Inc)
+				{
+					if ${CurrentAbilityName.Find["${AbilityName.Get[${_cnt}]}"]}
+						_FoundAbility:Set[1]
+				}
+				if !${_FoundAbility}
+				{
+					echo ISXRI: ${Time}: Skipping Not Passed In Ability ${AbilityCounter} of ${Me.NumAbilities}: ${CurrentAbilityName} ID #: ${CurrentAbilityID} Tier: ${AbilitiesIterator.Value.ToAbilityInfo.Tier}
+					continue
+				}
+			}
+			if ${Tier.Used}>0
+			{
+				;echo test
+				_FoundAbility:Set[FALSE]
+				for(_cnt:Set[0];${_cnt}<=${Tier.Used};_cnt:Inc)
+				{
+					if ${AbilitiesIterator.Value.ToAbilityInfo.Tier.Find["${Tier.Get[${_cnt}]}"]}
+						_FoundAbility:Set[1]
+				}
+				if !${_FoundAbility}
+				{
+					echo ISXRI: ${Time}: Skipping Incorrect Tier Ability ${AbilityCounter} of ${Me.NumAbilities}: ${CurrentAbilityName} ID #: ${CurrentAbilityID} Tier: ${AbilitiesIterator.Value.ToAbilityInfo.Tier}
+					continue
+				}
+			}
+			if ${Level.Used}>0
+			{
+				;echo test
+				_FoundAbility:Set[FALSE]
+				for(_cnt:Set[0];${_cnt}<=${Level.Used};_cnt:Inc)
+				{
+					if ${Int[${AbilitiesIterator.Value.ToAbilityInfo.Class[${Me.SubClass}].Level}]}==${Level.Get[${_cnt}]}
+						_FoundAbility:Set[1]
+				}
+				if !${_FoundAbility}
+				{
+					echo ISXRI: ${Time}: Skipping Incorrect Level Ability ${AbilityCounter} of ${Me.NumAbilities}: ${CurrentAbilityName} ID #: ${CurrentAbilityID} Tier: ${AbilitiesIterator.Value.ToAbilityInfo.Tier}
+					continue
+				}
+			}
+			if ${Int[${AbilitiesIterator.Value.ToAbilityInfo.Class[${Me.SubClass}].Level}]}<${LevelGreaterThan}
+			{
+				echo ISXRI: ${Time}: Skipping Incorrect Level Ability ${AbilityCounter} of ${Me.NumAbilities}: ${CurrentAbilityName} ID #: ${CurrentAbilityID} Tier: ${AbilitiesIterator.Value.ToAbilityInfo.Tier}
+				continue
+			}
+			if ${Int[${AbilitiesIterator.Value.ToAbilityInfo.Class[${Me.SubClass}].Level}]}>${LevelLessThan}
+			{
+				echo ISXRI: ${Time}: Skipping Incorrect Level Ability ${AbilityCounter} of ${Me.NumAbilities}: ${CurrentAbilityName} ID #: ${CurrentAbilityID} Tier: ${AbilitiesIterator.Value.ToAbilityInfo.Tier}
+				continue
+			}
 			;SpellBookType 0=Spells,1=CombatArts,2=AbilitiesTab,3=Tradeskills,4=Passive,6=Ascension
 			;skip AbilitiesTab abilities, except Summon:*
 			if ${AbilitiesIterator.Value.ToAbilityInfo.SpellBookType}==2 && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Summon](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Illusion](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Pathfinding](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Singular Focus](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Ascension Form:](exists)}
@@ -96,7 +193,7 @@ function main()
 				continue
 			}
 			
-			echo ISXRI: ${Time}: Adding Ability ${AbilityCounter} of ${Me.NumAbilities}: ${CurrentAbilityName} ID #: ${CurrentAbilityID}
+			echo ISXRI: ${Time}: Adding Ability ${AbilityCounter} of ${Me.NumAbilities}: ${CurrentAbilityName} ID #: ${CurrentAbilityID} Tier: ${AbilitiesIterator.Value.ToAbilityInfo.Tier}
 			;${CurrentAbilityName}=${AbilitiesIterator.Value.ToAbilityInfo.Name} ID #: ${CurrentAbilityID} = ${AbilitiesIterator.Value.ID}  === ${Me.Ability[id,${AbilitiesIterator.Value.ID}].ToAbilityInfo.Name}  ===  ${Me.Ability[${CurrentAbilityName}]}
 			
 			

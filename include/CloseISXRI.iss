@@ -5,7 +5,7 @@ function main()
 
 	;unload extension
 	if ${Extension[ISXRI.dll]}
-		relay all -noredirect ext -unload ISXRI
+		relay "all local" -noredirect ext -unload ISXRI
 	if ${Extension[RI.dll]}
-		relay all -noredirect ext -unload RI
+		relay "all local" -noredirect ext -unload RI
 }

@@ -169,7 +169,7 @@ atom(global) RI_Atom_SetLockSpot(string aWho, string aX=${Me.X}, float aY=${Me.Y
 {
 	if ${RI_Var_Bool_Debug}
 		echo ${aWho}  - ${aX} ${aY} ${aZ} - ${aPrecision}  -  ${aMax}
-	if ${aWho.Upper.Equal[OFF]} || ${aX.Upper.Equal[OFF]}
+	if ${aWho.Upper.Equal[OFF]} || ( ${aX.Upper.Equal[OFF]} && ${RIMUIObj.ForWhoCheck["${aWho}"]} )
 	{
 		if ${Script[Buffer:CombatBot](exists)}
 			UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI]:UnsetChecked
@@ -207,13 +207,6 @@ atom(global) RI_Atom_SetLockSpot(string aWho, string aX=${Me.X}, float aY=${Me.Y
 		; call SetLockSpot ${aPrecision} ${aMax} ${aX} ${aY} ${aZ}
 	elseif ${RIMUIObj.ForWhoCheck["${aWho}"]}
 	{
-		if ${aX.Upper.Equal[OFF]}
-		{
-			if ${Script[Buffer:CombatBot](exists)}
-				UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI]:UnsetChecked
-			RI_Var_Bool_LockSpotting:Set[FALSE]
-			return
-		}
 		if ${RI_Var_Bool_Debug}
 			echo RI_Var_String_LockSpotZoneName:Set[${Me.GetGameData[Self.ZoneName].Label}]
 		
@@ -235,140 +228,172 @@ atom(global) RI_Atom_MoveBehind(string aWho, string aRI_Var_Int_MoveBehindMobID,
 
 	if ${aWho.Upper.Equal[OFF]}
 		RI_Var_Bool_MovingBehind:Set[FALSE]
-	elseif ${aWho.Equal[""]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif ${aWho.Upper.Equal[ALL]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
-		call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif ${aWho.Equal[""]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif ${aWho.Upper.Equal[ALL]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
+		; call SetMoveBehind ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	elseif ${RIMUIObj.ForWhoCheck["${aWho}"]}
+	{
+		if ${aRI_Var_Int_MoveBehindMobID.Upper.Equal[OFF]}
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: Turning off Movebehind
+			RI_Var_Bool_MovingBehind:Set[FALSE]
+			return
+		}
+		if ${aRI_Var_Int_MoveBehindMobID.Equal[0]}
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: Actor does not exist
+			return
+		}
+		if ${Actor[id,${aRI_Var_Int_MoveBehindMobID}](exists)}
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: Turning on Movebehind for ${Actor[id,${aRI_Var_Int_MoveBehindMobID}].Name}
+			RI_Atom_MoveInFront ALL OFF
+			RI_Var_Bool_MovingBehind:Set[TRUE]	
+			RI_Var_Int_MoveBehindMobID:Set[${aRI_Var_Int_MoveBehindMobID}]
+			RI_Var_Int_MoveBehindDistance:Set[${aDistance}]
+			RI_Var_Int_MoveBehindHealth:Set[${aHealth}]
+			if ${Int[${aFallBackPCName}]}>0
+				RI_Var_String_MoveBehindFallBackPCName:Set[${Int[${aFallBackPCName}]}]
+			elseif ${Int[${aFallBackPCName}]}==0 && ${Int[${Actor[${aFallBackPCName}].ID}]}>0
+				RI_Var_String_MoveBehindFallBackPCName:Set[${Int[${Actor[${aFallBackPCName}].ID}]}]
+		}
+		else
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: Actor does not exist
+		}
+	}
 }
-function SetMoveBehind(string fRI_Var_Int_MoveBehindMobID, int fDistance, int fHealth, string fFallBackPCName)
-{
-	if ${fRI_Var_Int_MoveBehindMobID.Upper.Equal[OFF]}
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Turning off Movebehind
-		RI_Var_Bool_MovingBehind:Set[FALSE]
-		return
-	}
-	if ${fRI_Var_Int_MoveBehindMobID.Equal[0]}
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Actor does not exist
-		return
-	}
-	if ${Actor[id,${fRI_Var_Int_MoveBehindMobID}](exists)}
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Turning on Movebehind for ${Actor[id,${fRI_Var_Int_MoveBehindMobID}].Name}
-		RI_Atom_MoveInFront ALL OFF
-		RI_Var_Bool_MovingBehind:Set[TRUE]	
-		RI_Var_Int_MoveBehindMobID:Set[${fRI_Var_Int_MoveBehindMobID}]
-		RI_Var_Int_MoveBehindDistance:Set[${fDistance}]
-		RI_Var_Int_MoveBehindHealth:Set[${fHealth}]
-		if ${Int[${fFallBackPCName}]}>0
-			RI_Var_String_MoveBehindFallBackPCName:Set[${Int[${fFallBackPCName}]}]
-		elseif ${Int[${fFallBackPCName}]}==0 && ${Int[${Actor[${fFallBackPCName}].ID}]}>0
-			RI_Var_String_MoveBehindFallBackPCName:Set[${Int[${Actor[${fFallBackPCName}].ID}]}]
-	}
-	else
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Actor does not exist
-	}
-}
+
 atom(global) RI_Atom_MoveInFront(string aWho, string aRI_Var_Int_MoveInFrontMobID=0, int aDistance, int aHealth, string aFallBackPCName)
 {
 	if ${aWho.Upper.Equal[OFF]}
 		RI_Var_Bool_MovingInFront:Set[FALSE]
-	elseif ${aWho.Equal[""]}
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif ${aWho.Upper.Equal[ALL]}
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
-		call SetMoveInFront ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
-		call SetMoveInFront ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-	elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
-		call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
-
+	; elseif ${aWho.Equal[""]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif ${aWho.Upper.Equal[ALL]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif ${aWho.Upper.Equal[${Me.Name.Upper}]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[NONFIGHTER]} || ${aWho.Upper.Equal[NONFIGHTERS]}) && ${Me.Archetype.NotEqual[fighter]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[FIGHTER]} || ${aWho.Upper.Equal[FIGHTERS]}) && ${Me.Archetype.Equal[fighter]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[SCOUT]} || ${aWho.Upper.Equal[SCOUTS]}) && ${Me.Archetype.Equal[scout]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[MAGE]} ||${aWho.Upper.Equal[MAGES]}) && ${Me.Archetype.Equal[mage]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[PRIEST]} || ${aWho.Upper.Equal[PRIESTS]} || ${aWho.Upper.Equal[HEALER]} || ${aWho.Upper.Equal[HEALERS]}) && ${Me.Archetype.Equal[priest]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[BARD]} || ${aWho.Upper.Equal[BARDS]}) && ${Me.Class.Equal[bard]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[ENCHANTER]} || ${aWho.Upper.Equal[ENCHANTERS]}) && ${Me.Class.Equal[enchanter]}
+		; call SetMoveInFront ${aRI_Var_Int_MoveBehindMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif ${aWho.Upper.Equal[DPS]} && ((${Me.Archetype.Equal[mage]} && !${Me.Class.Equal[enchanter]}) || (${Me.Archetype.Equal[scout]} && !${Me.Class.Equal[bard]}))
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[G1]} || ${aWho.Upper.Equal[GROUP1]}) && ${Me.RaidGroupNum}==1
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[G2]} || ${aWho.Upper.Equal[GROUP2]}) && ${Me.RaidGroupNum}==2
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[G3]} || ${aWho.Upper.Equal[GROUP3]}) && ${Me.RaidGroupNum}==3
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	; elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
+		; call SetMoveInFront ${aRI_Var_Int_MoveInFrontMobID} ${aDistance} ${aHealth} ${aFallBackPCName}
+	elseif ${RIMUIObj.ForWhoCheck["${aWho}"]}
+	{
+		if ${aRI_Var_Int_MoveInFrontMobID.Upper.Equal[OFF]}
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: Turning off MoveInFront
+			RI_Var_Bool_MovingInFront:Set[FALSE]
+			return
+		}
+		if ${aRI_Var_Int_MoveInFrontMobID}==0
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: Actor does not exist
+			return
+		}
+		if ${Actor[id,${aRI_Var_Int_MoveBehindMobID}](exists)}
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: Turning on MoveInFront for ${Actor[id,${aRI_Var_Int_MoveInFrontMobID}].Name}
+			RI_Atom_MoveBehind ALL OFF
+			RI_Var_Bool_MovingInFront:Set[TRUE]	
+			RI_Var_Int_MoveInFrontMobID:Set[${aRI_Var_Int_MoveInFrontMobID}]
+			RI_Var_Int_MoveInFrontDistance:Set[${aDistance}]
+			RI_Var_Int_MoveInFrontHealth:Set[${aHealth}]
+			RI_Var_String_MoveInFrontFallBackPCName:Set[${aFallBackPCName}]
+		}
+		else
+		{
+			if ${RI_Var_Bool_Debug}
+				echo ${Time}: Actor does not exist
+		}
+	}
 }
-function SetMoveInFront(string fRI_Var_Int_MoveInFrontMobID, int fDistance, int fHealth, int fFallBackPCName)
-{
-	if ${fRI_Var_Int_MoveInFrontMobID.Upper.Equal[OFF]}
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Turning off MoveInFront
-		RI_Var_Bool_MovingInFront:Set[FALSE]
-		return
-	}
-	if ${fRI_Var_Int_MoveInFrontMobID}==0
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Actor does not exist
-		return
-	}
-	if ${Actor[id,${fRI_Var_Int_MoveBehindMobID}](exists)}
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Turning on MoveInFront for ${Actor[id,${fRI_Var_Int_MoveInFrontMobID}].Name}
-		RI_Atom_MoveBehind ALL OFF
-		RI_Var_Bool_MovingInFront:Set[TRUE]	
-		RI_Var_Int_MoveInFrontMobID:Set[${fRI_Var_Int_MoveInFrontMobID}]
-		RI_Var_Int_MoveInFrontDistance:Set[${fDistance}]
-		RI_Var_Int_MoveInFrontHealth:Set[${fHealth}]
-		RI_Var_String_MoveInFrontFallBackPCName:Set[${fFallBackPCName}]
-	}
-	else
-	{
-		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Actor does not exist
-	}
-}
+; function SetMoveInFront(string fRI_Var_Int_MoveInFrontMobID, int fDistance, int fHealth, int fFallBackPCName)
+; {
+	; if ${fRI_Var_Int_MoveInFrontMobID.Upper.Equal[OFF]}
+	; {
+		; if ${RI_Var_Bool_Debug}
+			; echo ${Time}: Turning off MoveInFront
+		; RI_Var_Bool_MovingInFront:Set[FALSE]
+		; return
+	; }
+	; if ${fRI_Var_Int_MoveInFrontMobID}==0
+	; {
+		; if ${RI_Var_Bool_Debug}
+			; echo ${Time}: Actor does not exist
+		; return
+	; }
+	; if ${Actor[id,${fRI_Var_Int_MoveBehindMobID}](exists)}
+	; {
+		; if ${RI_Var_Bool_Debug}
+			; echo ${Time}: Turning on MoveInFront for ${Actor[id,${fRI_Var_Int_MoveInFrontMobID}].Name}
+		; RI_Atom_MoveBehind ALL OFF
+		; RI_Var_Bool_MovingInFront:Set[TRUE]	
+		; RI_Var_Int_MoveInFrontMobID:Set[${fRI_Var_Int_MoveInFrontMobID}]
+		; RI_Var_Int_MoveInFrontDistance:Set[${fDistance}]
+		; RI_Var_Int_MoveInFrontHealth:Set[${fHealth}]
+		; RI_Var_String_MoveInFrontFallBackPCName:Set[${fFallBackPCName}]
+	; }
+	; else
+	; {
+		; if ${RI_Var_Bool_Debug}
+			; echo ${Time}: Actor does not exist
+	; }
+; }
 ;need to add whos to this atom
 atom(global) RI_Atom_ChangeLockSpot(string aWho, float aX, float aY, float aZ)
 {
@@ -493,7 +518,7 @@ atom(global) RI_Atom_SetRIFollow(string aWho, string aWhoFollowID=0, int aMin=1,
 		; elseif (${aWho.Upper.Equal[G4]} || ${aWho.Upper.Equal[GROUP4]}) && ${Me.RaidGroupNum}==4
 			; RI_Var_Bool_RIFollowing:Set[FALSE]
 	; }
-	elseif ${aWhoFollowID}==${Me.ID}
+	elseif ${aWhoFollowID.Equal[${Me.ID}]}
 		RI_Var_Bool_RIFollowing:Set[FALSE]
 	; elseif ${aWho.Upper.Equal[ALL]}
 		; call SetRIFollow ${aWhoFollowID} ${aMin} ${aMax}

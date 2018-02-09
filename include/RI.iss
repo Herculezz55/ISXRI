@@ -2276,13 +2276,13 @@
 ;					Cure curses in correct order
 ;				The Carrion Larva and The Malarian Larva (RI Pull Larva)
 ;					Move group behind named
-;				The Flesh Eater
+;				The Flesh Eater (RI Pull Flesh)
 ;					Cast absorb magic for mages
 ;					Cancels cut scene
-;				High Dragoon V'Aliar
+;				High Dragoon V'Aliar (RI Pull V'Aliar)
 ;					Move group behind named
 ;					Jousts
-;				Rallius Rattican
+;				Rallius Rattican (RI Pull Rallius)
 ;					Grabs 4 Spores
 ;					Casts Spore on 4 Bats
 ;					Removes primary and secondary weapons and ranged pulls named
@@ -2501,11 +2501,78 @@
 ;					string _ForWho, string _ItemName
 
 
+;v5.48 Changes 1-27-18
+;	Modified Updater to only load/unload on local PC when uplinked
+;	RI
+;		Disabled CoT in Teleporter function
+;		Modified
+;			Solusek Ro's Tower: Monolith of Fire
+;				Disabled CoT during SolRoMonolithEast and West functions
+;				Jiva
+;					Disabled Assisting and Auto Target named directly
+;			Torden, Bastion of Thunder: Winds of Change
+;				Torstien 
+;					Fixed a bug with targeting and solo
+;	RIMovement
+;		Fixed a crash bug
+;		Fixed a bug with turning off LockSpots
+
+;v5.49 Changes 2-8-18
+;	CombatBot
+;		Fixed a bug that was ignoring Recall pets when too far setting
+;	RI
+;		Fixed a bug in Looting
+;		Fixed a bug in Target function and NoKillNPC's
+;		Modified
+;			Plane of Disease: The Source
+;				Bhaly Adan
+;					Now will target Manifestation after 2 orbs are down
+;					Mages will target and cast Asborb magic on Any primordials under 26 health
+;			Solusek Ro's Tower: The Obsidian Core
+;				Molten Behemoth
+;					Fixed a bug with placing rocks in solo
+;				Balrezu
+;					Fixed a bug that would rarely (heroic) and most times (solo) not click brazier
+;			Solusek Ro's Tower: Monolith of Fire
+;				Modified Pathing
+;				Jiva
+;					Fixed a crash bug in solo
+;				So'Valiz
+;					fixed a bug that would very rarely not detect which claws to click
+;					now AutoTargets emberscale hunters if they add to the fight
+;					Added 2s pause before moving to main lockspot
+;				Solusek Ro and Avatar of Sun
+;					now waits until solusek is within 7 of the middle of the platform before jumping over
+;					if solusek is within 7 of middle it will now move behind on his nova
+;					otherwise moves lockspot to within 5 of solusek giving more room for LS to combat nova			
+;	RQ
+;		Modified
+;			Reflection of Recollection
+;				Fixed wait
+;			Legacy of Power Timeline
+;				Fixed a bug that would sometimes zone into the wrong instances
+;				Fixed a bug that would sometimes detect the wrong instance to run
+;			Legacy of Power: An Innovative Approach
+;				Fixed a bug on zoning out of gears
+
+;v5.50 Changes 2-8-18
+;	RI
+;		Fixed a bug in Looting and movement
+
+;v5.51 Changes 2-8-18
+;	RI
+;		Modified
+;			Solusek's Tower: The Obsidian Core
+;				Balrezu
+;					Fixed a bug in detecting correct last mob
+;	RQ
+;		Fixed a bug with quests and repeatables
+
 ;WIP
 ;		On chest looting, RI will now switch to leader only, open chest and check against an index of
 ;		items if found will wait 40mins with chest open for user to determine who gets item
 ;		Added sending mercs like pets (uses same setting)
-;		Added RIConsole UI and Object to allow "Special Messages" to appear more predominately
+;		Added RIConsole UI and Object to allow "Special Messages" to appear more predominately and from other toons to main toon
 ;			method LoadUI()
 ;				Loads UI (this is done on startup automatically)
 ;			method Hide()
@@ -2515,7 +2582,7 @@
 ;			method Echo(string _Message, bool _ShowConsole=TRUE, int _FlashConsoleTimeInSeconds=0, bool _PlayAlarm=FALSE)
 ;				Echo's to the console, optionally Showing the Console or Flashing for Attention and 
 ;				playing alarm sound
-variable(global) float RI_Var_Float_Version=5.47
+variable(global) float RI_Var_Float_Version=5.51
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -4319,7 +4386,7 @@ function main()
 				}
 			}
 		}
-		elseif ${LootWindow(exists)} && !${_RI_LootImmunity_}
+		elseif ${LootWindow(exists)} && !${_RI_LootImmunity_} && !${RI_Var_Bool_SkipLoot}
 		{
 			if ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 			{
@@ -4398,7 +4465,7 @@ atom EQ2_FinishedZoning(string TimeInSeconds)
 ;atom triggered when a loot window is detected
 atom EQ2_onLootWindowAppeared(string LootWindowID)
 {
-	if ( ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} ) && !${_RI_LootImmunity_}
+	if ( ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} ) && !${_RI_LootImmunity_} && !${RI_Var_Bool_SkipLoot}
 	;&& ${CurrentLootWindowID.NotEqual[${LootWindowID}]}
 	{
 		if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${RI_Var_Bool_AcceptLoot}
@@ -4705,6 +4772,15 @@ objectdef RIMovementObject
 		if ${RI_Var_Bool_Debug}
 			echo ${Time}: Checking For Chests within 100 Radius
 		;if we find a chest and can run to it, do so and loot
+		
+		if ${Actor["Auliffe Chaoswind's Treasure",radius,100].Name.EqualCS["Auliffe Chaoswind's Treasure"]} && ${Math.Distance[${Actor["Auliffe Chaoswind's Treasure",radius,100].Loc},${Me.Loc}]}>5
+			return
+		if ${Actor["Gaukr Sandstorm's Treasure",radius,100].Name.EqualCS["Gaukr Sandstorm's Treasure"]} && ${Math.Distance[${Actor["Gaukr Sandstorm's Treasure",radius,100].Loc},${Me.Loc}]}>5
+			return
+		if ${Actor["Hreidar Lynhillig's Treasure",radius,100].Name.EqualCS["Hreidar Lynhillig's Treasure"]} && ${Math.Distance[${Actor["Hreidar Lynhillig's Treasure",radius,100].Loc},${Me.Loc}]}>5
+			return
+		if ${Actor["Yveti Stormbrood's Treasure",radius,100].Name.EqualCS["Yveti Stormbrood's Treasure"]} && ${Math.Distance[${Actor["Yveti Stormbrood's Treasure",radius,100].Loc},${Me.Loc}]}>5
+			return
 		if ${Actor["Treasure Chest",radius,100].Name.EqualCS["Treasure Chest"]} && ${Math.Distance[${Actor["Treasure Chest",radius,100].Loc},${Me.Loc}]}>5
 			return
 		if ${Actor["Gooey Hoard",radius,100].Name.EqualCS["Gooey Hoard"]} && ${Math.Distance[${Actor["Gooey Hoard Chest",radius,100].Loc},${Me.Loc}]}>5
@@ -4712,15 +4788,16 @@ objectdef RIMovementObject
 		if ${Actor[Chest,radius,100](exists)} && !${Me.IsSwimming} && !${Me.FlyingUsingMount}
 		;&& !${Me.CheckCollision[${Actor[Chest].X},${Actor[Chest].Z}]}
 		{
+			;if ChestID is 0 leave function
+			if ${ChestID}==0 || ${RIMUIObj.InvalidChestCheck[${ChestID}]}
+				return
+				
 			;stop moving
 			press -release ${RI_Var_String_ForwardKey}
 
 			;chest's id
 			variable int ChestID=${Actor[Chest,radius,100].ID}
 			
-			;if ChestID is 0 leave function
-			if ${ChestID}==0 || ${RIMUIObj.InvalidChestCheck[${ChestID}]}
-				return
 			if ${RI_Var_Bool_CheckLoot}
 			{
 				RIMUIObj:LootOptions[ALL,LO]

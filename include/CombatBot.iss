@@ -6088,7 +6088,7 @@ function main()
 						}
 					}
 					;if our kill target is in combat and more than 15m away, pull pet back
-					if ${Actor[id,${KillTargetID}].Distance}>15 && ${Actor[id,${KillTargetID}].InCombatMode} && ${Actor[id,${KillTargetID}].Target(exists)} && ${Me.Pet.InCombatMode}
+					if ${Actor[id,${KillTargetID}].Distance}>15 && ${Actor[id,${KillTargetID}].InCombatMode} && ${Actor[id,${KillTargetID}].Target(exists)} && ${Me.Pet.InCombatMode} && ${UIElement[SettingsRecallPetsCheckBox@SettingsFrame@CombatBotUI].Checked}
 						eq2ex pet backoff
 				}
 			}
@@ -7286,6 +7286,8 @@ objectdef CheckAbilitiesObject
 			return TRUE
 		return FALSE
 	}
+	variable int AEcount=0
+	variable int ENCcount=0
 	member:bool CheckAll(int start, int end)
 	{
 		;echo ${Script.RunningTime}
@@ -7297,6 +7299,10 @@ objectdef CheckAbilitiesObject
 		strCastNameShort:Set[""]
 		strCastID:Set[0]
 		strCastTarget:Set[""]
+		
+		;AE
+		AEcount:Set[${Mobs.CountAE}]
+		ENCcount:Set[${Mobs.CountEncounter[${KillTargetID}]}]
 		if ${RI_Obj_CB.GetUISetting[SettingsStartHeroicCheckBox]} && ${Me.InCombat} && ${EQ2.ServerName.NotEqual[Battlegrounds]}
 		{
 			switch ${Me.Archetype}
@@ -7713,7 +7719,7 @@ objectdef CheckAbilitiesObject
 					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[9,|].NotEqual[TRUE]} 
 					{
 						;echo ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[9,|].NotEqual[TRUE]} && ( ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} || ${istrExportIsSelfAbility.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} ) && ( !${UIElement[SettingsSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || !${UIElement[SettingsInstancedSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text.NotEqual[FALSE]}
-						if ${Mobs.CountAE}<${Int[${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text}]}
+						if ${AEcount}<${Int[${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text}]}
 						{
 							if ${CombatBotDebug}
 								echo Ignoring AE Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, not enough mobs
@@ -7737,7 +7743,7 @@ objectdef CheckAbilitiesObject
 						{
 							;echo ${KillTargetID}: ${Actor[${KillTargetID}]}
 							;echo ${Mobs.CountEncounter[${KillTargetID}]}==1
-							if ${Mobs.CountEncounter[${KillTargetID}]}<2
+							if ${ENCcount}<2
 							{
 								if ${Me.Maintained["Negative Void"](exists)}
 								{
@@ -7756,7 +7762,7 @@ objectdef CheckAbilitiesObject
 									Me.Maintained["Negative Void"]:Cancel
 							}
 						}
-						if ${Mobs.CountEncounter[${KillTargetID}]}<${Int[${UIElement[SettingsEncounter#TextEntry@SettingsFrame@CombatBotUI].Text}]}
+						if ${ENCcount}<${Int[${UIElement[SettingsEncounter#TextEntry@SettingsFrame@CombatBotUI].Text}]}
 						{
 							if ${CombatBotDebug}
 								echo Ignoring Encounter Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, not enough mobs in encounter
@@ -10113,10 +10119,10 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 				; break
 		; }
 		;check collision
-		if ${Actor[id,${CastTarget}].CheckCollision}
+		if ${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[id,${CastTarget}].X},${Math.Calc[${Actor[id,${CastTarget}].Y}+1]},${Actor[id,${CastTarget}].Z}]}
 		{
 			if ${CombatBotDebug}
-				echo Ignoring Ability: ${CastNameShort}, TargetID: ${CastTarget}, TargetName: ${Actor[id,${CastTarget}].Name} CheckCollision: ${Actor[id,${CastTarget}].CheckCollision}
+				echo Ignoring Ability: ${CastNameShort}, TargetID: ${CastTarget}, TargetName: ${Actor[id,${CastTarget}].Name} CheckCollision: ${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[id,${CastTarget}].X},${Math.Calc[${Actor[id,${CastTarget}].Y}+1]},${Actor[id,${CastTarget}].Z}]}
 			mainCount:Set[${Math.Calc[${mainCount}+1]}]
 			boolAbilityCast:Set[FALSE]
 			boolItemCast:Set[FALSE]

@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.47 1-26-18"
-double EXTVER = 5.47;
+#define EXTENSION_VERSION "5.51 2-8-18"
+double EXTVER = 5.51;
 #include "ISXRI.h"
 
 
@@ -1996,7 +1996,7 @@ void updatefunction()
 	{
 		printf("ISXRI: Done Updating ISXRI.dll - Reloading");
 		
-		char relayecho[512] = "relay \"all other\" -noredirect execute \\${If[\\${Extension[";
+		char relayecho[512] = "relay \"all other local\" -noredirect execute \\${If[\\${Extension[";
 		char relayecho2[512] = "](exists)},echo ISXRI: Done Updating ISXRI.dll - Reloading]}";
 		strcat_s(relayecho, filename);
 		strcat_s(relayecho, relayecho2);
@@ -2004,7 +2004,7 @@ void updatefunction()
 		//pISInterface->Relay("ALL", "echo ISXRI: Done Updating ISXRI.dll, Reloading");
 		boolUpdating = false;
 		//run isx script to unload and reload the extension and delete RIold.dll
-		char relayecho3[512] = "relay \"all other\" -noredirect execute \\${If[\\${Extension[";
+		char relayecho3[512] = "relay \"all other local\" -noredirect execute \\${If[\\${Extension[";
 		char relayecho4[512] = "](exists)},RI_CloseISXRI]}";
 		strcat_s(relayecho3, filename);
 		strcat_s(relayecho3, relayecho4);
@@ -2027,7 +2027,7 @@ void updatefunction()
 		//printf("CharRemove: %s",charremove);
 		pISInterface->ExecuteTimedCommand(2500, charremove);
 
-		char charreload[512] = "relay all -noredirect ext ";
+		char charreload[512] = "relay \"all local\" -noredirect ext ";
 	
 		strcat_s(charreload, filename);
 		pISInterface->ExecuteTimedCommand(5000, charreload);
@@ -2459,7 +2459,7 @@ void getlp(bool Failed){
 				pISInterface->ClearSet(ident);
 				pISInterface->UnloadSet(ident);
 				Sleep(5);
-				pISInterface->ExecuteCommand("relay \"all other\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},ext -unload ISXRI]}");
+				pISInterface->ExecuteCommand("relay \"all other local\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},ext -unload ISXRI]}");
 				gettinglp = false;
 				//unload ri on all
 				//${If[${Extension[ISXRI.dll](exists)},ext -unload ISXRI,echo ISXRI: Extension not running on this session]}
@@ -2524,7 +2524,7 @@ void getlp(bool Failed){
 			pISInterface->ClearSet(ident);
 			pISInterface->UnloadSet(ident);
 			Sleep(5);
-			pISInterface->ExecuteCommand("relay \"all other\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},ext -unload ISXRI]}");
+			pISInterface->ExecuteCommand("relay \"all other local\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},ext -unload ISXRI]}");
 			gettinglp = false;
 			return;
 		}
@@ -31655,7 +31655,7 @@ void ISXRIPulseAuth()
 			if (!boolAnnouncedUpdate)
 			{
 				printf("ISXRI: Updating ISXRI.dll");
-				pISInterface->ExecuteCommand("relay \"all other\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},echo ISXRI: Updating ISXRI.dll]}");
+				pISInterface->ExecuteCommand("relay \"all other local\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},echo ISXRI: Updating ISXRI.dll]}");
 				//pISInterface->ExecuteCommand("relay \"all other\" echo ISXRI: Updating ISXRI.dll");
 				boolAnnouncedUpdate = true;
 			}

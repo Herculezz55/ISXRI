@@ -99,13 +99,13 @@ Custom
 HailActor "Khat-ra Pakiat" 3
 -783.227844 171.462677 -720.268494
 Wait
-20
+50
 0 0 0
 Custom
 ClickActor "Kalisonu's Beacon Loction" 1
 -969.129578 72.532814 -49.942509
 Wait
-100
+900
 -969.129578 72.532814 -49.942509
 Wait
 50

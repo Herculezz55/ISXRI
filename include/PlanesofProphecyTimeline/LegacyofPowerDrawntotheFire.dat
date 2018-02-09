@@ -16,19 +16,19 @@ HailActorGetQuest -Actor "Druzzil Ro"
 80.468269 2.860245 -139.941238
 85.698776 2.938255 -148.885864
 Custom
-ZoneDoor zone_to_ro_tower 2
+ZoneDoor zone_to_ro_tower "Solusek Ro's Tower: The Obsidian Core [Solo]"
 93.157623 2.938255 -161.514206
 Custom
-Instance
+Instance SolusekRosTowerTheObsidianCore
 0 0 0
 Custom
 ZoneDoor zone_to_valor
 -0.431473 -177.816589 -110.827003
 Custom
-ZoneDoor zone_to_ro_tower 2
+ZoneDoor zone_to_ro_tower "Solusek Ro's Tower: Monolith of Fire [Solo]"
 91.241272 2.938255 -159.248352
 Custom
-Instance
+Instance SolusekRosTowerMonolithofFire
 0 0 0
 Custom
 ZoneDoor "zone_to_valor" 0
