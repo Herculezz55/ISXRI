@@ -76,7 +76,10 @@ objectdef RICharListObject
 		Set2:Set[${LavishSettings[RICharList].GUID}]
 		;echo Set: ${This.Count[${Set2}]}==0
 		numSets:Set[${This.Count[${Set2}]}]
+		if ${strSets(exists)}
+			deletevariable strSets
 		declare strSets[${numSets}] string script
+		numSets:Set[${This.Count[${Set2}]}]
 		;if ${This.Count[${Set2}]}==0
 		;{
 		;	MessageBox -skin eq2 "We were unable to read your RICharList.xml file"

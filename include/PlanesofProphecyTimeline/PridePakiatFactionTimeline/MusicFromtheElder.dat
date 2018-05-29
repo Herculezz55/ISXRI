@@ -45,7 +45,7 @@ Custom
 ClickActor "Stack of Books"
 -614.088745 -49.416218 201.612946
 Custom
-ReplyDialog 8
+ReplyDialog 1 1 1 1 1 1 1 1
 -614.088745 -49.416218 201.612946
 Custom
 UseItem "Pakiat Divining Device"
@@ -80,7 +80,7 @@ Custom
 ClickActor "Stack of Books"
 -896.772681 296.054718 977.250500
 Custom
-ReplyDialog 8
+ReplyDialog 1 1 1 1 1 1 1 1
 -897.372681 296.054718 977.950500
 Custom
 UseItem "Pakiat Divining Device"
@@ -123,5 +123,5 @@ Custom
 HailActor "Elder Zet" 12
 -857.416748 82.164467 -453.032867
 Custom
-HailActorMultiOption "Elder Zet" 1 1 1 1 3 2 1 1 1 1
+HailActorMultiOption "Elder Zet" 1 1 1 1 2 3 1 1 1 1
 -857.416748 82.164467 -453.032867

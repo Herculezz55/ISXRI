@@ -44,10 +44,10 @@ function main()
 		
 		RIMobHudObj:UpdateUI
 		
-		if !${Me.InCombat} && !${Me.IsHated}
+		;if !${Me.InCombat} && !${Me.IsHated}
 			wait 5
-		else
-			wait 1
+		;else
+			;wait 1
 	}
 }
 objectdef Spaces

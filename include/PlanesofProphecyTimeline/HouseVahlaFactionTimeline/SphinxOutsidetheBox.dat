@@ -1,6 +1,6 @@
 Sphinx Outside the Box
 Custom
-MessageBox "Open your character sheet and goto options and make sure Hide my illusion form is NOT checked"
+ExecuteCommand "eq2ex hide_illusions 0"
 -199.466110 573.565002 -552.762207
 Custom
 HailActorGetQuest -Actor "Pannaxxun"

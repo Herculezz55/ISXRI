@@ -1,5 +1,8 @@
 string TheSymbolintheFlesh[] = {"The Symbol in the Flesh", 
 "Custom", 
+"MessageBox \"Resume after getting the quest and in front of Tavish Dracinov\"", 
+"0 0 0", 
+"Custom", 
 "HailActor \"Tavish Dracinov\" 5", 
 "-393.665894 12.197507 -51.375980", 
 "-385.709595 12.197507 -44.824993", 

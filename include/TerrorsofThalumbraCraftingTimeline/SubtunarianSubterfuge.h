@@ -1,6 +1,6 @@
 string SubtunarianSubterfuge[] = {"Subtunarian Subterfuge", 
 "Custom", 
-"QuestStarter 1101.616943 -295.125275 3384.984375 25 \"Roekillik Den\" \"Sundered Frontier\" 20 2", 
+"QuestStarter 1101.616943 -295.125275 3384.984375 25 \"Roekillik Den\" \"Sundered Frontier\" 40 2", 
 "0 0 0", 
 "2199.003906 -208.446564 2470.271484", 
 "2165.893799 -174.748215 2486.956787", 

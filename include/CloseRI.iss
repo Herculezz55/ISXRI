@@ -94,4 +94,6 @@ function main()
 		Script[Buffer:RPG]:End
 	if ${Script[Buffer:RICharList](exists)}
 		Script[Buffer:RICharList]:End
+	if ${Script[Buffer:RIBalance](exists)}
+		Script[Buffer:RIBalance]:End
 }

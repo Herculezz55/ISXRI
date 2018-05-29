@@ -1,6 +1,6 @@
 string TearsofVeeshanTheEternalBroodlands[] = {"Tears of Veeshan: The Eternal Broodlands", 
 "Custom", 
-"CheckActiveQuest \"Tears of Veeshan: The Eternal Broodlands\" 37", 
+"CheckQuest -Active \"Tears of Veeshan: The Eternal Broodlands\" 37 -Active \"Sent for Savtek\" 37 -Completed \"Sent for Savtek\" 37", 
 "0 0 0", 
 "Custom", 
 "MessageBox \"Get the quest and resume when at the obol plains druid ring\"", 

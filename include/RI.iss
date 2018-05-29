@@ -2568,30 +2568,253 @@
 ;	RQ
 ;		Fixed a bug with quests and repeatables
 
-;WIP
-;		On chest looting, RI will now switch to leader only, open chest and check against an index of
-;		items if found will wait 40mins with chest open for user to determine who gets item
-;		Added sending mercs like pets (uses same setting)
-;		Added RIConsole UI and Object to allow "Special Messages" to appear more predominately and from other toons to main toon
+;v5.52 Changes 2-19-18
+;	Added:
+;		RI_Extract
+;			Opens UI to Extract weapons for planar essences
+;	RZo
+;		Fixed a bug that was not reading the zonesets correctly
+;	RI	
+;		Fixed a bug in ZoneDoor Function
+;		Added RIConsole UI and Object
 ;			method LoadUI()
 ;				Loads UI (this is done on startup automatically)
 ;			method Hide()
 ;				Hide's the UI (this is also done on startup)
 ;			method Show()
 ;				Shows the UI
-;			method Echo(string _Message, bool _ShowConsole=TRUE, int _FlashConsoleTimeInSeconds=0, bool _PlayAlarm=FALSE)
+;			method Clear()
+;				Clear's the console
+;			method Echo(string _Message, bool _ShowConsole=FALSE, int _FlashConsoleTimeInSeconds=0, bool _PlayAlarm=FALSE)
 ;				Echo's to the console, optionally Showing the Console or Flashing for Attention and 
-;				playing alarm sound
-variable(global) float RI_Var_Float_Version=5.51
+;				playing alarm sound (Super annoying and loud, use only when absolutely needed)
+;			method Execute(string _Command)
+;				Execute's command
+;		Added Global Booleans
+;			RI_Var_Bool_WaitForLastNamedChest
+;				If True RI will wait 30 mins after each Last Named or until their chest no longer exists
+;				you can toggle this on or off by the command RI WaitForLastNamedChest or RI WFLNC  (case does not matter)
+;				alternatively RI WaitForLastNamedChest ON or 1 or RI WFLNC ON or 1
+;				alternatively RI WaitForLastNamedChest OFF or 0 or RI WFLNC OFF or 0
+;				** You can add these commands to CombatBot OnLoad events (on Your MainToon) so you never have to type them
+;			RI_Var_Bool_TordenShort
+;				If True RI will only run the right side of the Torden Zones
+;				you can toggle this on or off by the command RI TordenShort or RI TS  (case does not matter)
+;				alternatively RI TordenShort ON or 1 or RI TS ON or 1
+;				alternatively RI TordenShort OFF or 0 or RI TS OFF or 0
+;				** You can add these commands to CombatBot OnLoad events (on Your MainToon) so you never have to type them
+;		Modified
+;			Torden, Bastion of Thunder: Tower Breach
+;				Auliffe
+;					Now disables hostiles/named hostiles/pets on all but main toon in heroic as well
+;				Fixed a pathing bug on cyclone bridge
+;			Plane of Disease: Outbreak
+;				Rallius Rattican
+;					MainToon will now continously click the orbs so as to not run into them
+;					MainToon will do 3 .5s successive jumps at pull spot to make sure we are in line of sight for ranged attack
+;			Solusek Ro: Monolith of Fire
+;				Estryxia
+;					Will now cast Cloak of Divinity before the Joust to allow priests to cast while moving
+;					Will no longer joust after failing her script
+;				Sovaliz
+;					Healers will cast ST and Group heals before moving back to Main LockSpot
+;					Healers will cast Cloak of Divinity while moving to Claws
+;		Added RAID Coding
+;			Tin Overseer Omega
+;				Jousts his AE on all but fighters
+;			Tin Overseer Alpha
+;				Jousts his AE on all but fighters
+;			Rankle
+;				Jousts his Rampage
+;	CombatBot
+;		Umbral Barrier will now cast while moving
+;		Mystics will now Cast while moving if Enhanced Concentration is active
+;		Added Auto Ascension Combo's
+;			When the bot detects an Ascension starter it will auto cast the corresponding Combo
+;			All the setup thats needed is to check Auto Ascension Combo's on the Ascension tab
+;			And add the starters too CB Cast stack for the toons you want to start the combos
+;			And remove the Ascensions from the toons you want to finish the combos
+;			Currently will finish all Combo's with the exception of 2 Starters Ethermancy (Still a WIP)
+;		Added Setting:
+;			Show RIConsole on Load
+;				Shows RIConsole when the bot loads
+;		CombatBot will now echo to RIConsole when someone's Ascensions Surge
+;		Fixed a bug with stealth abilities
+;		CombatBot Revamp Stage 1: Efficiency Changes
+;			Made alot of internal changes to CombatBot and how it reads the cast stack
+;			and all associated data, this should in turn make things much faster and elimnate
+;			alot of the small delays in between spells. of course with any changes this big
+;			can sometimes come bugs, please if you notice anything out of the ordinary please
+;			report it.
+;	RIMovement
+;		Global Move function
+;			Made a ton of efficiency changes to the move function and the way it reads data
+;			this should make things faster and movement smoother.
+
+;v5.53 Changes 2-21-18
+;	RI
+;		Modified
+;			Plane of Disease: Outbreak
+;				Rallius
+;					fixed a typo bug
+;	RIInventory
+;		Fixed a bug when adding items to Sell
+;		Made script more efficient and sped this up a bit
+
+;v5.54 Changes 2-24-18
+;	RIMovement
+;		Tweaked MoveBehind and MoveInFront
+;	CombatBot
+;		Fixed a bug with Instant Cast Buffs
+;	WriteLocs
+;		Fixed a bug with atexit and unloading of the ui
+
+;v5.55 Changes 2-28-18
+;	RIMUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			method AutoLoot(string ForWho=_ALL, int _Options=0)
+;				changes your personal auto loot options
+;	RI
+;		Modified 
+;			Torden, Bastion of Thunder: Winds of Change
+;				Laef
+;					MainToon will no longer move behind but instead cancel Caught in the Storm
+
+;v5.56 Changes 3-10-18
+;	RQ
+;		General
+;			Fixed a bug with a ton of quests using ReplyDialog and not progressing
+;	The White Dragonscale Cloak
+;		Added CheckPreReqs to beginning
+;	A Source of Malediction
+;		Added CheckPreReqs to beginning
+
+;v5.57 Changes 4-4-18
+;	RI
+;		Added RIConsole:Echo to MessageBox Function to also show what needs to be done in the RIConsole
+;	RQ
+;		General
+;			Fixed numerous bugs in various quests
+;		Added 
+;			A Stitch in Time, Part I: Security Measures
+;			A Stitch in Time, Part II: Lightning Strikes
+;				Both of these are still WIP, please report any bugs you encounter
+
+;v5.58 Changes 4-8-18
+;	RQ
+;		Case of the Missing Headpiece
+;			Fixed a bug
+;		Can't Step in the Same River Twice
+;			Fixed a typo
+;		The River Job
+;			Fixed a typo
+;		Light Studies
+;			Added code to recast Jessinal's Tablet whenever it is not on the mob
+;		Lighter Studies
+;			Added code to recast Jessinal's Tablet whenever it is not on the mob
+
+;v5.59 Changes 4-26-18
+;	RQ
+;		Music From the Elder
+;			Fixed a bug
+;		Sphinx Outside the Box
+;			Removed Message box and pause and now turns off illusion for you
+;				you must turn it back on if you want it
+;		Reflection of Recollection
+;			Increased wait
+;		Precariously Placed Package
+;			Now follows the barrels to ensure they keep moving, Will add more barrels at a later date
+;	RI
+;		Solusek Ro's Tower: The Obsidian Core
+;			Verlixa
+;				Fixed a bug in missing detections
+;		Solusek Ro's Tower: Monolith of Fire
+;			Estryxia
+;				Script no longer jousts in Heroic
+
+;v5.60 Changes 4-26-18
+;	RICharList && RIGroupLogin
+;		fixed a bug
+
+;v5.61 Changes 4-29-18
+;RQ
+;	A Source of Malediction
+;		Fixed multiple targeting bugs
+;	Added:
+;		Taking a little trip... (Repeatable)
+;		Defending Ning Yun Retreat (Repeatable)
+;		Precariously Placed Package (Repeatable)
+;RI
+;	Fixed a bug with invoking group follow after Custom Named Encounters
+;		Solusek Ro's Tower: The Obsidian Core
+;			The Molten Behemoth
+;				Fixed a bug in Solo when using 2 Player Characters
+;		Solusek Ro's Tower: Monolith of Fire
+;			Modified Pathing for killing Estryxia's Obsidian, more efficient pathing from Estryxia to Sovaliz and for the room before sol ro
+;			Solusek Ro
+;				Fixed a bug with the sig line
+
+;v5.62 Changes 5-5-18
+;	RQ
+;		Ning Yun Retreat Timeline
+;			Fixed a bug
+
+;v5.63 Changes 5-24-18
+;	RI
+;		Added support for PoP Expert Zones 
+;			(This only opens up the pathing and coding for nameds)
+;			(Tweaking will still need to be done over time)
+;			(Please report any and all bugs to Discord or The Forge)
+;	RQ
+;		The Bone Bladed Claymore
+;			Fixed a bug
+
+;v5.64 Changes 5-26-18
+;	RI
+;		Fixed a bug in Mission Sharing Object
+;		A Stich in Time, Part I: Security Measures
+;			Now ignores nodes within 10 of an innovative guard
+;			Fixed various bugs
+;		Added Plane of Innovation: Security Measures [Tradeskill]
+;			now can be run independently of the Quest via RI at zone in.
+;		Added Torden, Baston of Thunder: Lightning Strikes [Tradeskill]
+;			now can be run independently of the Quest via RI at zone in.
+;		Plane of Innovation: Masks of the Marvelous
+;			Added ShinyHunt for last shiny
+;		Plane of Disease: The Source
+;			Fixed spawning of blighthorn and rancine
+;		Torden, Bastion of Thunder: Tower Breach
+;			Fixed change for dropped chests for Auliffe and Gaukr		
+;		Torden, Bastion of Thunder: Winds of Change
+;			Fixed change for dropped chests for Yvetti and Torstien
+
+;v5.65 Changes 5-28-18
+;	RI
+;		Fixed TordenShort
+;			Torden, Bastion of Thunder: Tower Breach
+;				Fixed a bug after teleporting to auliffe
+;			Solusek Ro: Monolith of Fire
+;				Estryxia
+;					Updated for Expert
+;			Plane of Innovation: Gears in the Machine
+;				The Manaetic Behemoth
+;					Removed 2s wait before MainToon Move
+
+;WIP
+;		On chest looting, RI will now switch to leader only, open chest and check against an index of
+;		items if found will wait 40mins with chest open for user to determine who gets item
+;		Added sending mercs like pets (uses same setting)
+
+variable(global) float RI_Var_Float_Version=5.65
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
 
 variable(global) RIMUIObject RIMUIObj
-;variable(global) RIConsoleObject RIConsole
+variable(global) RIConsoleObject RIConsole
 variable(global) RIMovementObject RIMObj
 variable string MySubClass=${Me.SubClass}
-;variable(global) string RI_Var_Int_RIConsoleID
+variable(global) string RI_Var_Int_RIConsoleID
 variable(global) string RI_Var_String_FlyUpKey=Home
 variable(global) string RI_Var_String_FlyDownKey=End
 variable(global) string RI_Var_String_StrafeLeftKey=q
@@ -2638,8 +2861,11 @@ variable bool IStartedTrade=FALSE
 ;
 ;for GuildStrategist use 10m distance2d
 ;
+variable(global) bool RI_Var_Bool_WaitForLastNamedChest=0
+variable(global) bool RI_Var_Bool_TordenShort=0
 variable(global) bool RI_Var_Bool_BadChestTrigger=0
 variable(global) int RI_Var_Int_MoveMaxDistance=500
+
 variable(global) index:int RI_Var_IndexInt_InvalidChest
 variable bool LoadRIMUI=FALSE
 variable bool RIMUILoaded=FALSE
@@ -3889,6 +4115,7 @@ variable bool NearesetNPCHudLoaded=FALSE
 variable bool NearesetPlayerHudLoaded=FALSE
 variable bool RaidGroupHudLoaded=FALSE
 variable string Size=Small
+variable string RIConsoleSize=Small
 variable settingsetref Set
 variable bool boolNameOnlyButton=FALSE
 variable bool FactionsInit=FALSE
@@ -4059,13 +4286,13 @@ function main()
 		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml" http://www.isxri.com/RIMUIEdit.xml
 		wait 50
 	}
-	; if !${FP.FileExists[RIConsole.xml]}
-	; {
-		; if ${RI_Var_Bool_Debug}
-			; echo ${Time}: Getting RIConsole.xml
-		; http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIConsole.xml" http://www.isxri.com/RIConsole.xml
-		; wait 50
-	; }
+	if !${FP.FileExists[RIConsole.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIConsole.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIConsole.xml" http://www.isxri.com/RIConsole.xml
+		wait 50
+	}
 	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/"]
 	if !${FP.PathExists}
 	{
@@ -4096,6 +4323,8 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ApplyVerb - execute's eq2's Apply Verb command\n\nArgument 1: For Who\nArgument 2: Actor Name or ID\nArgument 3: Verb]
 	RI_Index_String_AvailableRIMUICommands:Insert[Assist]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Assist - Turns on/off assisting dynamically and sets assist name\n\nArgument 1: For Who\nArgument 2: 1=On 0=Off\nArgument 3: Assist Name (Optional)]
+	RI_Index_String_AvailableRIMUICommands:Insert[AutoLoot]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[LootOptions - Change auto loot options\n\nArgument 1: For Who\nArgument 2: Option\n0=None\n1=Greed or Accept\n2=Decline]
 	RI_Index_String_AvailableRIMUICommands:Insert[AutoRun]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Auto Run - Presses auto run key\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[BalanceTrash]
@@ -4308,10 +4537,22 @@ function main()
 	Event[EQ2_onQuestOffered]:AttachAtom[EQ2_onQuestOffered]
 	Event[EQ2_FinishedZoning]:AttachAtom[EQ2_FinishedZoning]
 	Event[EQ2_onLootWindowAppeared]:AttachAtom[EQ2_onLootWindowAppeared]
-	
-	; RIConsole:LoadUI
-	; RIConsole:Hide
-	
+	call LoadRIMUI 0
+	RIConsole:LoadUI
+	RIConsole:Hide
+	wait 1
+	if ${RIConsoleSize.Equal[Small]}
+	{
+		RIConsole:UISmall[0]
+	}
+	if ${RIConsoleSize.Equal[Medium]}
+	{
+		RIConsole:UIMedium[0]
+	}
+	if ${RIConsoleSize.Equal[Large]}
+	{
+		RIConsole:UILarge[0]
+	}
 	while 1
 	{
 		if ${QueuedCommands}
@@ -5174,7 +5415,7 @@ objectdef RIMovementObject
 		}
 		return ${_AllHere}
 	}
-	function Move(float X1, float Y1, float Z1, int MPrecision=2, int PauseLength=0, bool ClearTarget=FALSE, bool StopForCombat=FALSE, bool SkipCheck=TRUE, bool KeepMoving=FALSE, bool UseRI_Var_String_ForwardKey=TRUE, bool SkipCollisionCheck=FALSE)
+	function Move(float X1, float Y1, float Z1, int MPrecision=2, int PauseLength=0, bool ClearTarget=FALSE, bool StopForCombat=FALSE, bool SkipCheck=TRUE, bool KeepMoving=FALSE, bool UseRI_Var_String_ForwardKey=TRUE, bool SkipCollisionCheck=TRUE)
 	{
 		if ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]}>${RI_Var_Int_MoveMaxDistance}
 		{
@@ -5186,6 +5427,7 @@ objectdef RIMovementObject
 		variable string _Zone=${Zone.Name}
 		variable int _Precision=${MPrecision}
 		variable int _LastFaceTime=0
+		variable int _LastChecksTime=0
 		RIMUIObj:SetLockSpot[OFF]
 		if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 			MPrecision:Set[${Math.Calc[${_Precision}+2]}]
@@ -5214,7 +5456,12 @@ objectdef RIMovementObject
 			echo \${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]}=${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]}<${RI_Var_Int_MoveMaxDistance} && ( Collision=${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]}!${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${X1},${Math.Calc[${Y1}+2]},${Z1}]} || ${SkipCollisionCheck} || ${RI_Var_Bool_QuestMode} )
 		if ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]}<${RI_Var_Int_MoveMaxDistance} && ( !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${X1},${Math.Calc[${Y1}+2]},${Z1}]} || ${SkipCollisionCheck} || ${RI_Var_Bool_QuestMode} )
 		{
+			if ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}>${MPrecision}
+				Face ${X1} ${Z1}
 			_LastFaceTime:Set[0]
+			_LastChecksTime:Set[0]
+			if !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && !${RI_Var_Bool_SkipLoot}
+				call This.LootChest
 			if ${RI_Var_Bool_Debug}
 				echo In If Statement
 			;pause a bit before each move
@@ -5237,6 +5484,8 @@ objectdef RIMovementObject
 				echo ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}>${MPrecision} && ${RI_Var_Bool_Start} && !${RI_Var_Bool_CancelMovement} && "${_Zone}" "${Zone.Name}" // ${_Zone.Equal["${Zone.Name}"]}
 			while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]}<${RI_Var_Int_MoveMaxDistance} && ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}>${MPrecision} && ( ${RI_Var_Bool_Start} || !${Script[${RI_Var_String_RunInstancesScriptName}](exists)} ) && !${RI_Var_Bool_CancelMovement} && ${_Zone.Equal["${Zone.Name}"]}
 			{
+				if ${RI_Var_Bool_Debug}
+					echo ${Time}: We are at ${Me.X} ${Me.Y} ${Me.Z} which is ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]} away from ${X1},${Y1},${Z1} and the precision is set to ${MPrecision}
 				if ${EQ2.Zoning}!=0
 				{
 					press -release ${RI_Var_String_FlyUpKey}
@@ -5249,58 +5498,61 @@ objectdef RIMovementObject
 					MPrecision:Set[${Math.Calc[${_Precision}+1]}]
 				else
 					MPrecision:Set[${_Precision}]
-				;echo ${Time}: move while
-				if ${Zone.Name.Equal[The Frillik Tide]}
-					call This.FrillikCheck
-				;check toons
-				if !${SkipCheck}
-					call This.checktoons
-				;check if we are paused
-				call This.CheckPause
-				if ${RI_Var_Bool_Debug}
-					echo ${Time}: We are at ${Me.X} ${Me.Y} ${Me.Z} which is ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]} away from ${X1},${Y1},${Z1} and the precision is set to ${MPrecision}
-				;check if in combat
-				if ${StopForCombat}
-					call This.CheckCombat
-				;clear target while moving
-				if ${Target(exists)} && ${ClearTarget} && !${RI_Var_Bool_GlobalOthers}
-					eq2execute target_none
-				;Follow
-				if ${RI_Var_Bool_Follow} && !${RI_Var_Bool_GlobalOthers} && !(${Me.InCombat} || ${Me.IsHated})
-					call This.follow
-				;check for a Shiny if set
-				if ${RI_Var_Bool_GrabShinys} && !${RI_Var_Bool_QuestMode} && ${StopForCombat} && !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && ${Actor[?,radius,${ShinyScanDistance}](exists)}
+				if ${Script.RunningTime}>${_LastChecksTime}
 				{
-					if ( !${Actor[NamedNPC,radius,50](exists)} || ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}>10 ) && ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Me.Y}]}<3
+					_LastChecksTime:Set[${Math.Calc[${Script.RunningTime}+500]}]
+					;echo ${Time}: move while
+					if ${Zone.Name.Equal[The Frillik Tide]}
+						call This.FrillikCheck
+					;check toons
+					if !${SkipCheck}
+						call This.checktoons
+					;check if we are paused
+					call This.CheckPause
+
+					;check if in combat
+					if ${StopForCombat}
+						call This.CheckCombat
+					;clear target while moving
+					if ${Target(exists)} && ${ClearTarget} && !${RI_Var_Bool_GlobalOthers}
+						eq2execute target_none
+					;Follow
+					if ${RI_Var_Bool_Follow} && !${RI_Var_Bool_GlobalOthers} && !(${Me.InCombat} || ${Me.IsHated})
+						call This.follow
+					;check for a Shiny if set
+					if ${RI_Var_Bool_GrabShinys} && !${RI_Var_Bool_QuestMode} && ${StopForCombat} && !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && ${Actor[?,radius,${ShinyScanDistance}](exists)}
 					{
-						ShinyID:Set[${Actor[?,radius,${ShinyScanDistance}].ID}]
-						if ${RI_Var_Bool_Debug}
-							echo ${Time}: Closest Shiny ID: ${ShinyID} @ ${Actor[${ShinyID}].X} ${Actor[${ShinyID}].Y} ${Actor[${ShinyID}].Z} Which is ${Actor[${ShinyID}].Distance} Away
-						;press -release ${RI_Var_String_ForwardKey}
-						call This.CheckShiny
+						if ( !${Actor[NamedNPC,radius,50](exists)} || ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}>10 ) && ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Me.Y}]}<3
+						{
+							ShinyID:Set[${Actor[?,radius,${ShinyScanDistance}].ID}]
+							if ${RI_Var_Bool_Debug}
+								echo ${Time}: Closest Shiny ID: ${ShinyID} @ ${Actor[${ShinyID}].X} ${Actor[${ShinyID}].Y} ${Actor[${ShinyID}].Z} Which is ${Actor[${ShinyID}].Distance} Away
+							;press -release ${RI_Var_String_ForwardKey}
+							call This.CheckShiny
+						}
 					}
+					if !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && !${RI_Var_Bool_SkipLoot}
+						call This.LootChest
 				}
-				if !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && !${RI_Var_Bool_SkipLoot}
-					call This.LootChest
 				;first check our height if farther than ${Precision} away press and hold space as long as we are flying
 				;we need to get to the correct height for current position we are ${Math.Distance[${Me.Y},${YHeight}]} away
 				;check if we are even flying at all, if not start flight
-				;echo if !${Me.FlyingUsingMount} && ${Math.Distance[${Me.Y},${Y1}]}>20 && !${Me.InCombat} && !${Input.Button[${PauseMovementKey}].Pressed} && !${RI_Var_Bool_PauseMovement}
-				if !${Me.FlyingUsingMount} && ${Me.Y}<${Y1} && ${Math.Distance[${Me.Y},${Y1}]}>20 && !${Me.InCombat} && !${Input.Button[${PauseMovementKey}].Pressed} && !${RI_Var_Bool_PauseMovement}
+				;echo if !${Me.FlyingUsingMount} && ${Math.Distance[${Me.Y},${Y1}]}>20 && !${Me.InCombat} && !${RI_Var_Bool_PauseMovement}
+				if !${Me.FlyingUsingMount} && ${Me.Y}<${Y1} && ${Math.Distance[${Me.Y},${Y1}]}>20 && !${Me.InCombat} && !${RI_Var_Bool_PauseMovement}
 				{
 					press -hold ${RI_Var_String_FlyUpKey}
 					wait 1
 					press -release ${RI_Var_String_FlyUpKey}
 				}
 				;now check if we are above or below desired height
-				if ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${Input.Button[${PauseMovementKey}].Pressed} && !${RI_Var_Bool_PauseMovement}
+				if ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -hold ${RI_Var_String_FlyDownKey}
 					;wait 1
 				}
 				;above move up
-				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${Input.Button[${PauseMovementKey}].Pressed} && !${RI_Var_Bool_PauseMovement}
+				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyDownKey}
 					press -hold ${RI_Var_String_FlyUpKey}
@@ -5314,31 +5566,31 @@ objectdef RIMovementObject
 					;wait 1
 				}
 				;face x,y,z position and press autorun key if my heading is more than 1degree off of what its supposed to be  ${Math.Calc[${Me.Heading}-1]}<${Me.HeadingTo[${X1},${Me.Y},${Z1}]}<${Math.Calc[${Me.Heading}+1]}
-				; if !${Input.Button[${PauseMovementKey}].Pressed} && ${Script.RunningTime}>${Math.Calc[${_LastFaceTime}+500]}
-				; {
-					; _LastFaceTime:Set[${Script.RunningTime}]
-					; Face ${X1} ${Z1}
-				; }
+				if ( ${Script.RunningTime}>${_LastFaceTime} || ${Math.Distance[${Me.Heading},${Me.HeadingTo[${X1},${Me.Y},${Z1}]}]}>25 )
+				{
+					_LastFaceTime:Set[${Math.Calc[${Script.RunningTime}+250]}]
+					Face ${X1} ${Z1}
+				}
 				;if !${Input.Button[${PauseMovementKey}].Pressed} && ${Math.Distance[${Me.Heading},${Me.HeadingTo[${X1},${Me.Y},${Z1}]}]}>1
 				;{
 					;echo ${Time.SecondsSinceMidnight}: my heading is off facing
-					Face ${X1} ${Z1}
+					;Face ${X1} ${Z1}
 				;}
 				;{
 				;	_LastFaceTime:Set[${Script.RunningTime}]
 				;	Face ${X1} ${Z1}
 				;}
-				if !${Me.IsMoving} && !${Input.Button[${PauseMovementKey}].Pressed} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
+				if !${Me.IsMoving} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 				{
 					;echo pressing autorun
 					press ${RI_Var_String_AutoRunKey}
 					wait 2
 				}
-				if ${Me.IsMoving} && ${Input.Button[${PauseMovementKey}].Pressed} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
-					call This.StopAutoRun
-				if ${UseRI_Var_String_ForwardKey} && !${Input.Button[${PauseMovementKey}].Pressed} && !${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && !${Me.IsSwimming}
+				; if ${Me.IsMoving} && ${Input.Button[${PauseMovementKey}].Pressed} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
+					; call This.StopAutoRun
+				if ${UseRI_Var_String_ForwardKey} && !${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && !${Me.IsSwimming}
 					press -hold ${RI_Var_String_ForwardKey}
-				if ${UseRI_Var_String_ForwardKey} && ( ${Input.Button[${PauseMovementKey}].Pressed} || ${RI_Var_Bool_PauseMovement} ) && !${Me.FlyingUsingMount} && !${Me.IsSwimming}
+				if ${UseRI_Var_String_ForwardKey} && ${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && !${Me.IsSwimming}
 					press -release ${RI_Var_String_ForwardKey}
 				if ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 					press -release ${RI_Var_String_ForwardKey}
@@ -5368,7 +5620,7 @@ objectdef RIMovementObject
 			if ${RI_Var_Bool_Debug}
 				echo ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ${Me.IsSwimming} && ${Me.Y}>${Y1} ) || ( ${Me.IsSwimming} && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
 				
-			if !${Me.FlyingUsingMount} && ${Me.Y}<${Y1} && ${Math.Distance[${Me.Y},${Y1}]}>25 && !${Me.InCombat} && !${Input.Button[${PauseMovementKey}].Pressed} && !${RI_Var_Bool_PauseMovement}
+			if !${Me.FlyingUsingMount} && ${Me.Y}<${Y1} && ${Math.Distance[${Me.Y},${Y1}]}>25 && !${Me.InCombat} && !${RI_Var_Bool_PauseMovement}
 			{
 				press -hold ${RI_Var_String_FlyUpKey}
 				wait 1
@@ -5394,21 +5646,21 @@ objectdef RIMovementObject
 				;first check our height if farther than ${Precision} away press and hold space as long as we are flying
 				;we need to get to the correct height for current position we are ${Math.Distance[${Me.Y},${YHeight}]} away
 				;check if we are even flying at all, if not start flight
-				if !${Me.FlyingUsingMount} && ${Me.Y}<${Y1} && ${Math.Distance[${Me.Y},${Y1}]}>25 && !${Me.InCombat} && !${Input.Button[${PauseMovementKey}].Pressed} && !${RI_Var_Bool_PauseMovement}
+				if !${Me.FlyingUsingMount} && ${Me.Y}<${Y1} && ${Math.Distance[${Me.Y},${Y1}]}>25 && !${Me.InCombat} && !${RI_Var_Bool_PauseMovement}
 				{
 					press -hold ${RI_Var_String_FlyUpKey}
 					wait 1
 					press -release ${RI_Var_String_FlyUpKey}
 				}
 				;now check if we are above or below desired height
-				if  ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${Input.Button[${PauseMovementKey}].Pressed} && !${RI_Var_Bool_PauseMovement}
+				if  ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -hold ${RI_Var_String_FlyDownKey}
 					;wait 1
 				}
 				;above move up
-				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ( ${Me.IsSwimming} && ${Me.WaterDepth}<1 ) ) && !${Input.Button[${PauseMovementKey}].Pressed} && !${RI_Var_Bool_PauseMovement}
+				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ( ${Me.IsSwimming} && ${Me.WaterDepth}<1 ) ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyDownKey}
 					press -hold ${RI_Var_String_FlyUpKey}
@@ -5676,49 +5928,102 @@ objectdef RIMovementObject
 			echo ISXRI: ${Time}: Ending CallToGuildHall
 	}
 }
-; objectdef RIConsoleObject
-; {	
-	; method LoadUI()
-	; {
-		; ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-		; ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIConsole.xml"
-	; }
-	; method Hide()
-	; {
-		; if ${UIElement[RIConsole](exists)}
-			; UIElement[RIConsole]:Hide
-	; }
-	; method Show()
-	; {
-		; if ${UIElement[RIConsole](exists)}
-			; UIElement[RIConsole]:Show
-	; }
-	; method Echo(string _Message, bool _ShowConsole=TRUE, int _FlashConsoleTimeInSeconds=0, bool _PlayAlarm=FALSE)
-	; {
-		; if ${_ShowConsole}
-			; This:Show
-		; if ${_FlashConsoleTimeInSeconds}>0
-		; {
-			; variable int _cnt
-			; variable bool _HidLast=1
-			; for(_cnt:Set[0];${_cnt}<=${Math.Calc[${_FlashConsoleTimeInSeconds}*10]};_cnt:Set[${Math.Calc[${_cnt}+5]}])
-			; {
-				; if ${_HidLast}
-				; {
-					; TimedCommand ${_cnt} RIConsole:Show
-					; _HidLast:Set[0]
-				; }
-				; else
-				; {
-					; TimedCommand ${_cnt} RIConsole:Hide
-					; _HidLast:Set[1]
-				; }
-			; }
-		; }
-		; if ${UIElement[RIConsole](exists)}
-			; UIElement[RIConsole@RIConsole]:Echo["${_Message}"]
-	; }
-; }
+objectdef RIConsoleObject
+{	
+	method UISmall(int _Save=1)
+	{
+		UIElement[RIConsole]:SetHeight[165]
+		UIElement[RIConsole]:SetWidth[335]
+		if ${_Save}>0
+		{
+			if ${Set.FindSet[RIConsolSize](exists)}
+				Set.FindSet[RIConsolSize]:Remove
+			Set:AddSet[RIConsolSize]
+			Set.FindSet[RIConsolSize]:AddSetting[Size,Small]
+			LavishSettings[RIMUI]:Export["${LavishScript.HomeDirectory}/scripts/RI/RIMUICustom.xml"]
+		}
+	}
+	method UIMedium(int _Save=1)
+	{
+		UIElement[RIConsole]:SetHeight[185]
+		UIElement[RIConsole]:SetWidth[400]
+		if ${_Save}>0
+		{
+			if ${Set.FindSet[RIConsolSize](exists)}
+				Set.FindSet[RIConsolSize]:Remove
+			Set:AddSet[RIConsolSize]
+			Set.FindSet[RIConsolSize]:AddSetting[Size,Medium]
+			LavishSettings[RIMUI]:Export["${LavishScript.HomeDirectory}/scripts/RI/RIMUICustom.xml"]
+		}
+	}
+	method UILarge(int _Save=1)
+	{
+		UIElement[RIConsole]:SetHeight[225]
+		UIElement[RIConsole]:SetWidth[465]
+		;UIElement[RIConsole@RIConsole]:SetHeight[190]
+		if ${_Save}>0
+		{
+			if ${Set.FindSet[RIConsolSize](exists)}
+				Set.FindSet[RIConsolSize]:Remove
+			Set:AddSet[RIConsolSize]
+			Set.FindSet[RIConsolSize]:AddSetting[Size,Large]
+			LavishSettings[RIMUI]:Export["${LavishScript.HomeDirectory}/scripts/RI/RIMUICustom.xml"]
+		}
+	}
+	method LoadUI()
+	{
+		ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
+		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIConsole.xml"
+	}
+	method Hide()
+	{
+		if ${UIElement[RIConsole](exists)}
+			UIElement[RIConsole]:Hide
+	}
+	method Show()
+	{
+		if ${UIElement[RIConsole](exists)}
+			UIElement[RIConsole]:Show
+	}
+	method Echo(string _Message, bool _ShowConsole=FALSE, int _FlashConsoleTimeInSeconds=0, bool _PlayAlarm=FALSE)
+	{
+		if ${_ShowConsole}
+			This:Show
+		if ${_PlayAlarm}
+		{
+			playsound "${LavishScript.HomeDirectory}/Scripts/RI/RIConsoleAlarm.wav"
+		}
+		if ${_FlashConsoleTimeInSeconds}>0
+		{
+			variable int _cnt
+			variable bool _HidLast=1
+			for(_cnt:Set[0];${_cnt}<=${Math.Calc[${_FlashConsoleTimeInSeconds}*10]};_cnt:Set[${Math.Calc[${_cnt}+5]}])
+			{
+				if ${_HidLast}
+				{
+					TimedCommand ${_cnt} RIConsole:Show
+					_HidLast:Set[0]
+				}
+				else
+				{
+					TimedCommand ${_cnt} RIConsole:Hide
+					_HidLast:Set[1]
+				}
+			}
+		}
+		if ${UIElement[RIConsole](exists)}
+			UIElement[RIConsole@RIConsole]:Echo["${_Message}"]
+	}
+	method Execute(string _Command)
+	{
+		UIElement[RIConsole@RIConsole]:Echo["${_Command}"]
+		noop ${Execute["${_Command.EscapeQuotes}"]}
+	}
+	method Clear()
+	{
+		UIElement[RIConsole@RIConsole]:Clear
+	}
+}
 objectdef RIMUIObject
 {
 	method DisablePets(string _ForWho)
@@ -5932,9 +6237,9 @@ objectdef RIMUIObject
 					E1C:Set[1]
 				
 				echo ISXRI: Artisan Level: ${Me.TSLevel}
-				echo ISXRI: Epic 1.0 Complete: ${E1C}
+				;echo ISXRI: Epic 1.0 Complete: ${E1C}
 				echo ISXRI: Kunark Ascending Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Kunark Ascending: A Nightmare Realized](exists)}]}
-				echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
+				;echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
 				echo ISXRI: Shattered Seas Timeline Complete: ${SS}
 				echo ISXRI: Othmir Cobalt Scar Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[High Tide](exists)}]}
 				echo ISXRI: Othmir Great Divide Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The End of an Era](exists)}]}
@@ -5956,9 +6261,10 @@ objectdef RIMUIObject
 					E1C:Set[1]
 					
 				echo ISXRI: Artisan Level: ${Me.TSLevel}
-				echo ISXRI: Epic 1.0 Complete: ${E1C}
+				;echo ISXRI: Epic 1.0 Complete: ${E1C}
 				echo ISXRI: Kunark Ascending Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Kunark Ascending: A Nightmare Realized](exists)}]}
-				echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
+				;echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
+				echo ISXRI: Thulian Language Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Fearful Words](exists)}]}
 				echo ISXRI: Ning Yung Retreat Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Shaping a Clearer Mind](exists)}]}
 				echo ISXRI: Othmir Cobalt Scar Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[High Tide](exists)}]}
 				echo ISXRI: Othmir Great Divide Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The End of an Era](exists)}]}
@@ -5978,10 +6284,10 @@ objectdef RIMUIObject
 					E1C:Set[1]
 					
 				echo ISXRI: Artisan Level: ${Me.TSLevel}
-				echo ISXRI: Epic 1.0 Complete: ${E1C}
+				;echo ISXRI: Epic 1.0 Complete: ${E1C}
 				if ${Bool[${QuestJournalWindow.CompletedQuest[Shattered Seas: Epilogue in Dethknell Citadel](exists)}]}||${Bool[${QuestJournalWindow.CompletedQuest[Shattered Seas: Epilogue in Qeynos Castle](exists)}]}
 					SS:Set[1]
-				echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
+				;echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
 				echo ISXRI: Kunark Ascending Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Kunark Ascending: A Nightmare Realized](exists)}]}
 				echo ISXRI: Shattered Seas Timeline Complete: ${SS}
 				echo ISXRI: Othmir Cobalt Scar Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[High Tide](exists)}]}
@@ -6007,15 +6313,15 @@ objectdef RIMUIObject
 					E1C:Set[1]
 					
 				echo ISXRI: Artisan Level: ${Me.TSLevel}
-				echo ISXRI: Epic 1.0 Complete: ${E1C}
+				;echo ISXRI: Epic 1.0 Complete: ${E1C}
 				echo ISXRI: Kunark Ascending Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Kunark Ascending: A Nightmare Realized](exists)}]}
-				echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
+				;echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
 				echo ISXRI: Tik-Tok Language Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The Mysteries of Tik-Tok](exists)}]}
 				echo ISXRI: Pygmy Language Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Handle With Care](exists)}]}
 				echo ISXRI: The Symbol in the Flesh Heritage Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The Symbol in the Flesh](exists)}]}
 				echo ISXRI: The Bone Bladed Claymore Heritage Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The Bone Bladed Claymore](exists)}]}
-				echo ISXRI: ToT Sigline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Underdepths Saga: Chaos and Malice](exists)}]}
 				echo ISXRI: ToT Crafting Sig Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Containing the Stone](exists)}]}
+				echo ISXRI: ToT Sigline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Underdepths Saga: Chaos and Malice](exists)}]}
 				echo ISXRI: Jarsath Wastes Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[I'd Hammer in the Morning](exists)}]}
 				echo ISXRI: ToV and Ragefire Timeline Complete: ${RF}
 				echo ISXRI: Ry'Gorr Keep Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest["Rise of Thrael'Gorr"](exists)}]}
@@ -6097,8 +6403,8 @@ objectdef RIMUIObject
 			{
 				if ${QuestsIterator.Value.Category.Equal[Mission]} || ${QuestsIterator.Value.Category.Equal[Mission: Weekly]}
 				{
-					;echo ${QuestsIterator.Value.CurrentZone} // ${QuestsIterator.Value.CurrentZone.Equal["${_ZoneName}"]} // ${QuestsIterator.Value.Name} // ${QuestsIterator.Value.Name.Find[${_Tier}](exists)}
-					if ( ${QuestsIterator.Value.CurrentZone.Equal[${_FormattedZoneName}]} && ${QuestsIterator.Value.Name.Find[${_Tier}](exists)} ) || ${QuestsIterator.Value.CurrentZone.Equal["${_ZoneName}"]}
+					;echo _FormattedZoneName: ${_FormattedZoneName} // QuestsIterator.Value.CurrentZone: ${QuestsIterator.Value.CurrentZone} // ${QuestsIterator.Value.CurrentZone.Equal["${_FormattedZoneName}"]} // ${QuestsIterator.Value.Name} // _ZoneTier: ${_ZoneTier} // ${QuestsIterator.Value.Name.Find[${_ZoneTier}](exists)}
+					if ( ${QuestsIterator.Value.CurrentZone.Equal[${_FormattedZoneName}]} && ${QuestsIterator.Value.Name.Find[${_ZoneTier}](exists)} ) || ${QuestsIterator.Value.CurrentZone.Equal["${_ZoneName}"]} || ${QuestsIterator.Value.CurrentZone.Equal["Multiple Locations"]}
 					{
 						echo ISXRI: Sharing: "${QuestsIterator.Value.Name}"
 						QuestsIterator.Value:Share
@@ -6599,8 +6905,9 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[Koada'dal Magi's Craft]
 				UIElement[QuestsListBox@RI]:AddItem[Kurns Tower Access Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Kurns Tower Access Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Ning Yung Retreat Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Ning Yung Retreat Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Ning Yun Retreat Timeline]
+				UIElement[QuestsListBox@RI].ItemByText[Ning Yun Retreat Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Defending Ning Yun Retreat,Repeatable,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem[Order of Rime Faction Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Order of Rime Faction Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Othmir Cobalt Scar Timeline]
@@ -6609,6 +6916,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI].ItemByText[Othmir Great Divide Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Othmir EW Faction Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Othmir EW Faction Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Precariously Placed Package,Repeatable,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem[Ry'Gorr Keep Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Ry'Gorr Keep Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Shades of Drinal Timeline]
@@ -6632,7 +6940,8 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["A Source of Malediction"]
 				UIElement[QuestsListBox@RI]:AddItem[The White Dragonscale Cloak]
 				UIElement[QuestsListBox@RI]:AddItem[Dark Mail Guantlets HQ Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Dark Mail Guantlets HQ Timelin]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI].ItemByText[Dark Mail Guantlets HQ Timeline]:SetTextColor[FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Taking a little trip...,Repeatable,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem[An Eye for Power]
 				UIElement[QuestsListBox@RI]:AddItem[A Strange Black Rock]
 				UIElement[QuestsListBox@RI]:AddItem[Gogas Afadin]
@@ -6642,6 +6951,8 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Planes of Prophecy]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part I: Security Measures"]
+				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part II: Lightning Strikes"]
 				UIElement[QuestsListBox@RI]:AddItem[Planes of Prophecy Timeline,0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Secrets in an Arcane Land]
 				UIElement[QuestsListBox@RI]:AddItem[House Yrzu Faction Timeline,0,FFE8E200]
@@ -7133,6 +7444,16 @@ objectdef RIMUIObject
 			}
 			TimedCommand 1 echo ISXRI: Should take ${Int[${Math.Calc[${Waiter}/10]}]}s please do not move until done
 			TimedCommand ${Waiter} echo ISXRI: Done With GuildBuffs
+		}
+	}
+	method AutoLoot(string ForWho=_ALL, int _Options=0)
+	{
+		if ${This.ForWhoCheck[${ForWho}]} && ${Me.IsGroupLeader}
+		{
+			;open group options window
+			eq2ex groupoptions
+			TimedCommand 10 EQ2UIPage[popup,groupoptions].Child[DropDownBox,GroupOptions.PersonalPage.AutoLootCombo]:Set[${_Options}]
+			TimedCommand 15 EQ2UIPage[popup,groupoptions].Child[Button,GroupOptions.ApplyButton]:LeftClick
 		}
 	}
 	;script to change loot options
@@ -9900,9 +10221,10 @@ atom aLoadRIMUI()
 	LoadRIMUI:Set[TRUE]
 }
 ;LoadRIMUI function
-function LoadRIMUI()
+function LoadRIMUI(bool _LoadUI=TRUE)
 {
-	RIMUILoaded:Set[TRUE]
+	if ${_LoadUI}
+		RIMUILoaded:Set[TRUE]
 	;IterateSet
 	;return
 	;load xmlfile
@@ -9932,9 +10254,9 @@ function LoadRIMUI()
 	wait 5
 	
 	;relay all -noredirect execute \${If[\${Script[Buffer:RIMovement](exists)},noop,RIMovement]}
-	wait 5
-	
-	LoadUI
+	;wait 5
+	if ${_LoadUI}
+		LoadUI
 }
 ;RIFollowPop function
 function RIFollowPop()
@@ -10373,6 +10695,19 @@ atom IterateSet(settingsetref Set)
 		}
 		while ${SettingIterators:Next(exists)}
 	}
+	Set4:Set[${Set.FindSet[RIConsoleSize].GUID}]
+	Set4:GetSettingIterator[SettingIterators]
+	
+	if ${SettingIterators:First(exists)}
+	{
+		do
+		{
+			;echo "${SettingIterators.Key}=${SettingIterators.Value}"
+			RIConsoleSize:Set[${SettingIterators.Value}]
+			;/* iterator.Key is the name of the setting, and iterator.Value is the setting object, which reduces to the value of the setting */
+		}
+		while ${SettingIterators:Next(exists)}
+	}
 	for(icCount:Set[1];${icCount}<=2;icCount:Inc)
 	{
 		for(jcCount:Set[1];${jcCount}<=10;jcCount:Inc)
@@ -10487,7 +10822,7 @@ function atexit()
 	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml"
 	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml"
 	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
-	;ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIConsole.xml"
+	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIConsole.xml"
 	squelch Hud -remove NN1P1
 	squelch Hud -remove NN1P2
 	squelch Hud -remove NP1P1
@@ -10551,6 +10886,63 @@ atom(global) ri(... args)
 		{
 			switch ${args[1]}
 			{
+				case SKIPLOOT
+				case SL
+				{
+					if ${args.Size}==2
+					{
+						if ${args[2].Equal[ON]} || ${Int[${args[2]}]}==1
+							RI_Var_Bool_SkipLoot:Set[1];echo ISXRI: Turning ON SkipLoot
+						elseif ${args[2].Equal[OFF]} || ${Int[${args[2]}]}==0
+							RI_Var_Bool_SkipLoot:Set[0];echo ISXRI: Turning OFF SkipLoot
+					}
+					else
+					{
+						if ${RI_Var_Bool_WaitForLastNamedChest}
+							RI_Var_Bool_SkipLoot:Set[0];echo ISXRI: Turning OFF SkipLoot
+						else
+							RI_Var_Bool_SkipLoot:Set[1];echo ISXRI: Turning ON SkipLoot
+					}
+					break
+				}
+				case WAITFORLASTNAMEDCHEST
+				case WFLNC
+				{
+					if ${args.Size}==2
+					{
+						if ${args[2].Equal[ON]} || ${Int[${args[2]}]}==1
+							RI_Var_Bool_WaitForLastNamedChest:Set[1];echo ISXRI: Turning ON WaitForLastNamedChest
+						elseif ${args[2].Equal[OFF]} || ${Int[${args[2]}]}==0
+							RI_Var_Bool_WaitForLastNamedChest:Set[0];echo ISXRI: Turning OFF WaitForLastNamedChest
+					}
+					else
+					{
+						if ${RI_Var_Bool_WaitForLastNamedChest}
+							RI_Var_Bool_WaitForLastNamedChest:Set[0];echo ISXRI: Turning OFF WaitForLastNamedChest
+						else
+							RI_Var_Bool_WaitForLastNamedChest:Set[1];echo ISXRI: Turning ON WaitForLastNamedChest
+					}
+					break
+				}
+				case TORDENSHORT
+				case TS
+				{
+					if ${args.Size}==2
+					{
+						if ${args[2].Equal[ON]} || ${Int[${args[2]}]}==1
+							RI_Var_Bool_TordenShort:Set[1];echo ISXRI: Turning ON TordenShort
+						elseif ${args[2].Equal[OFF]} || ${Int[${args[2]}]}==0
+							RI_Var_Bool_TordenShort:Set[0];echo ISXRI: Turning OFF TordenShort
+					}
+					else
+					{
+						if ${RI_Var_Bool_TordenShort}
+							RI_Var_Bool_TordenShort:Set[0];echo ISXRI: Turning OFF TordenShort
+						else
+							RI_Var_Bool_TordenShort:Set[1];echo ISXRI: Turning ON TordenShort
+					}
+					break
+				}
 				case GI
 				case GC
 				{
@@ -11225,8 +11617,11 @@ atom(global) combatbot(... args)
 		}
 	}
 }
-; atom(global) riconsole()
-; {
-	; RIConsole:Show
-; }
-	
+atom(global) riconsole(string _what)
+{
+	if ${_what.Upper.EqualCS[HIDE]}
+		RIConsole:Hide
+	else
+		RIConsole:Show
+}
+			

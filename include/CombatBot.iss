@@ -255,8 +255,10 @@ variable index:string istrExportIsGroupAbility
 variable index:string istrExportIsRaidAbility
 variable index:string istrExportIsSelfAbility
 variable index:string istrExportMaxAOETargets
-variable index:string istrExportFeral
-variable index:string istrExportSpiritual
+variable index:bool iboolExportFeral
+variable index:bool iboolExportSpiritual
+variable index:bool iboolExportAdvantage
+variable index:bool iboolExportPrimal
 
 variable index:string istrCurses
 variable(global) index:string istrConfrontFear
@@ -271,6 +273,7 @@ variable settingsetref setExport
 variable string CastTarget
 variable bool FoundTarget=FALSE
 variable int KillTargetID=0
+variable int KillTargetHealth=-1
 variable int mainCount=1
 variable int count2
 variable bool ItemRIE=FALSE
@@ -287,6 +290,11 @@ variable bool boolFoundMaintained=FALSE
 variable float Angle
 variable float Heading
 variable float HeadingTo
+variable float RangeCalc
+variable float MinDist
+variable float MaxDist
+variable int AEcount=0
+variable int ENCcount=0
 variable bool QuestOffered=FALSE
 variable int AssistID=0
 variable string ScriptFileName=${Script.Filename}
@@ -364,6 +372,44 @@ variable int CritBonusCount=0
 variable int StaminaCount=0
 variable(global) bool _CB_LootImmunity_=FALSE
 variable bool CB_Bool_MoveBehindOn=0
+variable index:int TargetIDs
+variable index:string TargetNames
+variable bool SetTargets=TRUE
+variable int PCTarget=0
+variable int intMyAscension
+variable int intMySubClass=0
+;;;;Ascension Combos
+;Thaumaturgist
+variable(global) bool ThauCastSepticStrike=0
+variable(global) bool ThauCastVirulentOutbreak=0
+variable(global) bool ThauCastRevocationofLife=0
+variable(global) bool ThauCastBloodContract=0
+variable(global) bool ThauCastTaintedMutation=0
+variable(global) bool ThauCastWithering=0
+variable(global) bool ThauCastDessication=0
+variable(global) bool ThauCastAntiLife=0
+;Geomancer
+variable(global) bool GeoCastGraniteProtector=0
+variable(global) bool GeoCastTerrestrialCoffin=0
+variable(global) bool GeoCastStoneHammer=0
+variable(global) bool GeoCastTelluricRending=0
+variable(global) bool GeoCastErosion=0
+variable(global) bool GeoCastMudslide=0
+variable(global) bool GeoCastDomainofEarth=0
+;Elementalist
+variable(global) bool EleCastGlacialFreeze=0
+variable(global) bool EleCastWildfire=0
+variable(global) bool EleCastElementalAmalgamation=0
+variable(global) bool EleCastFrozenHeavens=0
+variable(global) bool EleCastScorchedEarth=0
+;Etherealist
+variable(global) bool EthCastLevinbolt=0
+variable(global) bool EthCastEtherflash=0
+variable(global) bool EthCastCascadingForce=0
+variable(global) bool EthCastEthermancy=0
+variable(global) bool EthCastEthershadowAssassin=0
+variable(global) bool EthCastImplosion=0
+
 
 atom(global) RI_Atom_CB_SetUISetting(string _SettingName, string Value)
 {	
@@ -1581,21 +1627,25 @@ objectdef RI_Object_CB
 	}
 	member:string GetUISetting(string _SettingName)
 	{
-		if ${_SettingName.Left[8].Upper.Equal[SETTINGS]} && ${_SettingName.Find[CheckBox](exists)}
+		if ${_SettingName.Left[8].Upper.EqualCS[SETTINGS]} && ${_SettingName.Find[CheckBox](exists)}
 		{
 			return ${UIElement[${_SettingName}@SettingsFrame@CombatBotUI].Checked}
 		}
-		elseif ${_SettingName.Left[8].Upper.Equal[SETTINGS]} && ${_SettingName.Find[TextEntry](exists)}
+		elseif ${_SettingName.Left[8].Upper.EqualCS[SETTINGS]} && ${_SettingName.Find[TextEntry](exists)}
 		{
 			return ${UIElement[${_SettingName}@SettingsFrame@CombatBotUI].Text}
 		}
-		elseif ${_SettingName.Left[4].Upper.Equal[HUDS]} && ${_SettingName.Find[CheckBox](exists)}
+		elseif ${_SettingName.Left[4].Upper.EqualCS[HUDS]} && ${_SettingName.Find[CheckBox](exists)}
 		{
 			return ${UIElement[${_SettingName}@HudsFrame@CombatBotUI].Checked}
 		}
-		elseif ${_SettingName.Left[4].Upper.Equal[HUDS]} && ${_SettingName.Find[TextEntry](exists)}
+		elseif ${_SettingName.Left[4].Upper.EqualCS[HUDS]} && ${_SettingName.Find[TextEntry](exists)}
 		{
 			return ${UIElement[${_SettingName}@HudsFrame@CombatBotUI].Text}
+		}
+		elseif ${_SettingName.Left[9].Upper.EqualCS[ASCENSION]} && ${_SettingName.Find[CheckBox](exists)}
+		{
+			return ${UIElement[${_SettingName}@AscensionFrame@CombatBotUI].Checked}
 		}
 	}
 	method SetUISetting(string _SettingName, string Value)
@@ -1630,6 +1680,13 @@ objectdef RI_Object_CB
 		{
 			if ${Value.NotEqual[""]} && ${Int[${Value}]}>=0 && ${Int[${Value}]}<=9999
 				UIElement[${_SettingName}@HudsFrame@CombatBotUI]:SetText[${Int[${Value}]}]
+		}
+		elseif ${_SettingName.Left[9].Upper.EqualCS[ASCENSION]} && ${_SettingName.Find[CheckBox](exists)}
+		{
+			if ${Value.Equal[1]} || ${Value.Equal[TRUE]} && !${UIElement[${_SettingName}@AscensionFrame@CombatBotUI].Checked}
+				UIElement[${_SettingName}@AscensionFrame@CombatBotUI]:LeftClick
+			elseif ${Value.Equal[0]} || ${Value.Equal[FALSE]} && ${UIElement[${_SettingName}@AscensionFrame@CombatBotUI].Checked}
+				UIElement[${_SettingName}@AscensionFrame@CombatBotUI]:LeftClick
 		}
 		;${UIElement[SettingsAssistingCheckBox@SettingsFrame@CombatBotUI].Name.Left[8]}
 	}
@@ -1913,10 +1970,10 @@ objectdef RI_Object_CB
 					}
 				}
 			}
-			
 			;else
 			;	echo CombatBot: Incorrect Paramaters, On=1 Off=0
 		}
+		SetTargets:Set[1]
 	}
 	method CancelAllMaintained()
 	{
@@ -2266,6 +2323,8 @@ objectdef RI_Object_CB
 		
 		if ${Int[${_ListBoxItem}]}>0
 		{
+			if ${_ListBoxName.Find[CastStackAbiltiesListBox]} || ${_ListBoxName.Find[AliasesAliasListBox]}
+				SetTargets:Set[1]
 			if ${_EnableDisableToggle}==-1
 			{
 				if ${UIElement[${_ListBoxName}@CombatBotUI].OrderedItem[${Int[${_ListBoxItem}]}].TextColor}==-10263709
@@ -2363,6 +2422,7 @@ objectdef RI_Object_CB
 	{
 		if ${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].SelectedItem(exists)}
 		{
+			SetTargets:Set[1]
 			if ${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].SelectedItem.TextColor}==-10263709
 				UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].SelectedItem:SetTextColor[FFF9F099]
 			else
@@ -2467,6 +2527,7 @@ objectdef RI_Object_CB
 	{
 		if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem(exists)}
 		{
+			SetTargets:Set[1]
 			; if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Left[12].Equal[Summon Mount]}
 			; {	
 				; UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:Hide
@@ -2800,6 +2861,7 @@ objectdef RI_Object_CB
 			;UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]:SetTextColor[FF636363]
 			;echo ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Item[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}].TextColor}
 		;}
+		SetTargets:Set[1]
 	}
 	method CastStackAddAbility()
 	{
@@ -3320,6 +3382,7 @@ objectdef RI_Object_CB
 			UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem:SetTextColor[FF636363]
 			;echo ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Item[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}].TextColor}
 		}
+		SetTargets:Set[1]
 	}
 	method LoadExport()
 	{	
@@ -3347,6 +3410,7 @@ objectdef RI_Object_CB
 			{
 				UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].Items}]:SetTextColor[FF636363]
 			}
+			SetTargets:Set[1]
 		}
 	}
 	method AliasListClick()
@@ -3384,7 +3448,10 @@ objectdef RI_Object_CB
 	method RemoveAlias()
 	{
 		if ${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].SelectedItem(exists)}
+		{
 			UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI]:RemoveItem[${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].SelectedItem.ID}]
+			SetTargets:Set[1]
+		}
 	}
 	method AliasesLoadRaidGroupList()
 	{
@@ -4684,6 +4751,12 @@ objectdef RI_Object_CB
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsFlyDownKeyTextEntry,${RI_Obj_CB.GetUISetting[SettingsFlyDownKeyTextEntry]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsCallConfrontFearCheckBox,${RI_Obj_CB.GetUISetting[SettingsCallConfrontFearCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsConfrontFearCallTextEntry,${RI_Obj_CB.GetUISetting[SettingsConfrontFearCallTextEntry]}]
+		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsShowRIConsoleCheckBox,${RI_Obj_CB.GetUISetting[SettingsShowRIConsoleCheckBox]}]
+		
+		;Ascension
+		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Ascension]:Clear
+		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[Ascension]
+		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Ascension]:AddSetting[AscensionAutoComboAscensionsCheckBox,${RI_Obj_CB.GetUISetting[AscensionAutoComboAscensionsCheckBox]}]
 		
 		;CastStack
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack]:Clear
@@ -4941,7 +5014,7 @@ function main()
 		while ${EQ2.ServerName.Equal[Battlegrounds]} && !${Me.Name.Find[.](exists)}
 			wait 10
 	}
-	;Turbo 250
+	;Turbo 2000
 	;disable debugging
 	Script:DisableDebugging
 	
@@ -4987,6 +5060,8 @@ function main()
 	Event[EQ2_onChoiceWindowAppeared]:AttachAtom[EQ2_onChoiceWindowAppeared]
 	Event[EQ2_onIncomingText]:AttachAtom[EQ2_onIncomingText]
 	Event[EQ2_FinishedZoning]:AttachAtom[EQ2_FinishedZoning]
+	Event[EQ2_onGroupMembershipChange]:AttachAtom[EQ2_onGroupMembershipChange]
+	Event[EQ2_onRaidMembershipChange]:AttachAtom[EQ2_onRaidMembershipChange]
 	declare FP filepath "${LavishScript.HomeDirectory}/"
 	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
 	if !${FP.PathExists}
@@ -5066,18 +5141,22 @@ function main()
 	if ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Thaumaturgist"](exists)}
 	{
 		UIElement[AscensionButton@CombatBotUI]:SetText[Thaumaturgist]
+		intMyAscension:Set[1]
 	}
 	if ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Elementalist"](exists)}
 	{
 		UIElement[AscensionButton@CombatBotUI]:SetText[Elementalist]
+		intMyAscension:Set[2]
 	}
 	if ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Geomancer"](exists)}
 	{
 		UIElement[AscensionButton@CombatBotUI]:SetText[Geomancer]
+		intMyAscension:Set[3]
 	}
 	if ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Etherealist"](exists)}
 	{
 		UIElement[AscensionButton@CombatBotUI]:SetText[Etherealist]
+		intMyAscension:Set[4]
 	}
 	if ${RI_Var_String_MySubClass.Equal[warlock]}
 	{
@@ -5141,6 +5220,7 @@ function main()
 	}
 	if ${RI_Var_String_MySubClass.Equal[beastlord]}
 	{
+		intMySubClass:Set[22]
 		UIElement[SubClassText@SubClassFrame@CombatBotUI]:Hide
 		UIElement[SubClassBeastlordPrimalDelayCheckBox@SubClassFrame@CombatBotUI]:Show
 		UIElement[SubClassBeastlordPrimalDelayCheckBox@SubClassFrame@CombatBotUI]:SetChecked
@@ -5441,7 +5521,8 @@ function main()
 	;start RI_AutoDeity - This is now part of CB
 	;RI_AutoDeity
 	;TimedCommand 20 RIAutoDeity_ChangeMode 1
-	
+	if ${RI_Obj_CB.GetUISetting[SettingsShowRIConsoleCheckBox]}
+		RIConsole:Show
 	variable int i
 	for(i:Set[1];${i}<=${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].Items};i:Inc)
 	{
@@ -5597,6 +5678,7 @@ function main()
 				{	
 					;echo checks
 					intTimeChecks:Set[${Script.RunningTime}]
+					
 					; if !${RI_Var_Bool_AutoDeityDisabled} && ${Me.GetGameData["Achievement.AvailableDeityPoints"].Label}>${Int[${UIElement[SettingsDeitySpendTextEntry@SettingsFrame@CombatBotUI].Text}]}
 					; {	
 						; if ${UIElement[SettingsDeityComboBox@SettingsFrame@CombatBotUI].SelectedItem.Value}==0
@@ -5644,6 +5726,12 @@ function main()
 					; }
 					if ${Target(exists)} && !${Target.Name(exists)}
 						eq2ex target_none
+					if ${Target.Type.Equal[PC]}
+						PCTarget:Set[${Target.ID}]
+					elseif ${Target.Target.Type.Equal[PC]}
+						PCTarget:Set[${Target.Target.ID}]
+					else
+						PCTarget:Set[0]
 					;if istrConfrontFear.Used > 0, iterate through it and check if they still are cursed (if cure curse is up)
 					if ${istrConfrontFear.Used}>0 && ${Me.Ability[id,3601331586].IsReady}
 					{
@@ -6090,6 +6178,94 @@ function main()
 					;if our kill target is in combat and more than 15m away, pull pet back
 					if ${Actor[id,${KillTargetID}].Distance}>15 && ${Actor[id,${KillTargetID}].InCombatMode} && ${Actor[id,${KillTargetID}].Target(exists)} && ${Me.Pet.InCombatMode} && ${UIElement[SettingsRecallPetsCheckBox@SettingsFrame@CombatBotUI].Checked}
 						eq2ex pet backoff
+					
+					if ( ${intMyAscension}==2 || ( ${intMyAscension}==1 && ${Me.Ability[id,1421995892].TimeUntilReady}==0 ) ) && ${RI_Obj_CB.GetUISetting[AscensionAutoComboAscensionsCheckBox]}
+					{
+						;Thau;Withering
+						if ${Me.Ability[id,3834694463].TimeUntilReady}==0
+						{
+							;echo checking for withering ${RIMUIObj.MainIconIDExists[${KillTargetID},1080]}
+							if ${RIMUIObj.MainIconIDExists[${KillTargetID},1080]}
+							{
+								if ${CombatBotCastingDebug}
+									echo ISXRI: Detected Withering: Casting Frozen Heavens
+								EleCastFrozenHeavens:Set[1]
+								TimedCommand 100 EleCastFrozenHeavens:Set[0]
+								;ThauCastAntiLife:Set[1]
+							}
+						}
+						;Ele;Frozen Heavens
+							
+						;Eth;Ethermancy -- Doesnt Work
+						; if ${Me.Ability[id,3091112971].TimeUntilReady}==0
+						; {
+							; ;echo checking for ethermancy ${RIMUIObj.MainIconIDExists[${Me.ID},1065,0]}
+							; if ${RIMUIObj.MainIconIDExists[${Me.ID},1065,0]}
+							; {
+								; if ${CombatBotCastingDebug}
+									; echo ISXRI: Detected Ethermancy: Casting Scorched Earth
+								; EleCastScorchedEarth:Set[1]
+								; ThauCastAntiLife:Set[1]
+							; }
+						; }
+						;Ele;Scorched Earth
+					}
+					if ( ${intMyAscension}==4 || ( ${intMyAscension}==1 && ${Me.Ability[id,1421995892].TimeUntilReady}==0 ) ) && ${RI_Obj_CB.GetUISetting[AscensionAutoComboAscensionsCheckBox]}
+					{
+						;Ele;Brittle Armor
+						if ${Me.Ability[id,2783695687].TimeUntilReady}==0
+						{
+							;echo checking for Brittle Armor ${RIMUIObj.MainIconIDExists[${KillTargetID},1050]}
+							if ${RIMUIObj.MainIconIDExists[${KillTargetID},1050]}
+							{
+								if ${CombatBotCastingDebug}
+									echo ISXRI: Detected Brittle Armor: Casting Ethershadow Assassin
+								EthCastEthershadowAssassin:Set[1]
+								ThauCastAntiLife:Set[1]
+								TimedCommand 100 EthCastEthershadowAssassin:Set[0]
+								TimedCommand 100 ThauCastAntiLife:Set[0]
+							}
+						}
+						;Eth:Ethershadow Assassin
+					}
+					if ( ${intMyAscension}==4 || ( ${intMyAscension}==1 && ${Me.Ability[id,1421995892].TimeUntilReady}==0 ) ) && ${RI_Obj_CB.GetUISetting[AscensionAutoComboAscensionsCheckBox]}
+					{
+						;Ele;Brittle Armor
+						if ${Me.Ability[id,2783695687].TimeUntilReady}==0
+						{
+							;echo checking for Brittle Armor ${RIMUIObj.MainIconIDExists[${KillTargetID},1050]}
+							if ${RIMUIObj.MainIconIDExists[${KillTargetID},1050]}
+							{
+								if ${CombatBotCastingDebug}
+									echo ISXRI: Detected Brittle Armor: Casting Ethershadow Assassin
+								EthCastEthershadowAssassin:Set[1]
+								ThauCastAntiLife:Set[1]
+								TimedCommand 100 EthCastEthershadowAssassin:Set[0]
+								TimedCommand 100 ThauCastAntiLife:Set[0]
+							}
+						}
+						;Eth:Ethershadow Assassin
+					}
+					if ( ${intMyAscension}==3 || ( ${intMyAscension}==1 && ${Me.Ability[id,1421995892].TimeUntilReady}==0 ) ) && ${RI_Obj_CB.GetUISetting[AscensionAutoComboAscensionsCheckBox]}
+					{
+						;Thau;Tainted Mutation 1085
+						if ${Me.Ability[id,379302144].TimeUntilReady}==0
+						{
+							;echo checking for Brittle Armor ${RIMUIObj.MainIconIDExists[${KillTargetID},1050]}
+							if ${RIMUIObj.MainIconIDExists[${KillTargetID},1085]}
+							{
+								if ${CombatBotCastingDebug}
+									echo ISXRI: Detected Tainted Mutation: Casting Telluric Rending
+								GeoCastTelluricRending:Set[1]
+								ThauCastAntiLife:Set[1]
+								TimedCommand 100 GeoCastTelluricRending:Set[0]
+								TimedCommand 100 ThauCastAntiLife:Set[0]
+							}
+						}
+						;Geo;Telluric Rending
+					}
+					
+					
 				}
 			}
 			;echo after melee turn on
@@ -6133,6 +6309,194 @@ function main()
 				waitframe
 				continue
 			}
+			;AscensionCombos
+			;Thaumaturgist
+			if ${ThauCastSepticStrike}
+			{
+				if ${Me.Ability[id,3207814480](exists)} && ${Me.Ability[id,3207814480].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Thaumaturgist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Septic Strike" "Septic Strike" 3207814480 FALSE
+				elseif ${Me.Ability[id,3207814480].TimeUntilReady}>0
+					ThauCastSepticStrike:Set[0]
+			}
+			if ${ThauCastVirulentOutbreak}
+			{
+				if ${Me.Ability[id,682380409](exists)} && ${Me.Ability[id,682380409].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Thaumaturgist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Virulent Outbreak" "Virulent Outbreak" 682380409 FALSE
+				elseif ${Me.Ability[id,682380409].TimeUntilReady}>0
+					ThauCastVirulentOutbreak:Set[0]
+			}
+			if ${ThauCastRevocationofLife}
+			{
+				if ${Me.Ability[id,1594560388](exists)} && ${Me.Ability[id,1594560388].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Thaumaturgist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=40 && ${KillTargetID}!=0
+					call CastAb "Revocation of Life" "Revocation of Life" 1594560388 FALSE
+				elseif ${Me.Ability[id,1594560388].TimeUntilReady}>0
+					ThauCastRevocationofLife:Set[0]
+			}
+			if ${ThauCastBloodContract}
+			{
+				if ${Me.Ability[id,1946297165](exists)} && ${Me.Ability[id,1946297165].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Thaumaturgist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Blood Contract" "Blood Contract" 1946297165 FALSE
+				elseif ${Me.Ability[id,1946297165].TimeUntilReady}>0
+					ThauCastBloodContract:Set[0]
+			}
+			if ${ThauCastTaintedMutation}
+			{
+				if ${Me.Ability[id,1266448707](exists)} && ${Me.Ability[id,1266448707].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Thaumaturgist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Tainted Mutation" "Tainted Mutation" 1266448707 FALSE
+				elseif ${Me.Ability[id,1266448707].TimeUntilReady}>0
+					ThauCastTaintedMutation:Set[0]
+			}
+			if ${ThauCastWithering}
+			{
+				if ${Me.Ability[id,399644279](exists)} && ${Me.Ability[id,399644279].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Thaumaturgist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=10 && ${KillTargetID}!=0
+					call CastAb "Withering" "Withering" 399644279 FALSE
+				elseif ${Me.Ability[id,399644279].TimeUntilReady}>0
+					ThauCastWithering:Set[0]
+			}
+			if ${ThauCastDessication}
+			{
+				if ${Me.Ability[id,615193595](exists)} && ${Me.Ability[id,615193595].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Thaumaturgist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Dessication" "Dessication" 615193595 FALSE
+				elseif ${Me.Ability[id,615193595].TimeUntilReady}>0
+					ThauCastDessication:Set[0]
+			}
+			if ${ThauCastAntiLife}
+			{
+				if ${Me.Ability[id,1421995892](exists)} && ${Me.Ability[id,1421995892].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Thaumaturgist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Anti-Life" "Anti-Life" 1421995892 FALSE
+				elseif ${Me.Ability[id,1421995892].TimeUntilReady}>0
+					ThauCastAntiLife:Set[0]
+			}
+			;Geomancer
+			if ${GeoCastGraniteProtector}
+			{
+				if ${Me.Ability[id,1294479369](exists)} && ${Me.Ability[id,1294479369].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Geomancer"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=40 && ${KillTargetID}!=0
+					call CastAb "Granite Protector" "Granite Protector" 1294479369 FALSE
+				elseif ${Me.Ability[id,1294479369].TimeUntilReady}>0
+					GeoCastGraniteProtector:Set[0]
+			}
+			if ${GeoCastTerrestrialCoffin}
+			{
+				if ${Me.Ability[id,1967883322](exists)} && ${Me.Ability[id,1967883322].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Geomancer"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Terrestrial Coffin" "Terrestrial Coffin" 1967883322 FALSE
+				elseif ${Me.Ability[id,1967883322].TimeUntilReady}>0
+					GeoCastTerrestrialCoffin:Set[0]
+			}
+			if ${GeoCastStoneHammer}
+			{
+				if ${Me.Ability[id,3718958877](exists)} && ${Me.Ability[id,3718958877].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Geomancer"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=15 && ${KillTargetID}!=0
+					call CastAb "Stone Hammer" "Stone Hammer" 3718958877 FALSE
+				elseif ${Me.Ability[id,3718958877].TimeUntilReady}>0
+					GeoCastStoneHammer:Set[0]
+			}
+			if ${GeoCastTelluricRending}
+			{
+				if ${Me.Ability[id,379302144](exists)} && ${Me.Ability[id,379302144].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Geomancer"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Telluric Rending" "Telluric Rending" 379302144 FALSE
+				elseif ${Me.Ability[id,379302144].TimeUntilReady}>0
+					GeoCastTelluricRending:Set[0]
+			}
+			if ${GeoCastErosion}
+			{
+				if ${Me.Ability[id,702933774](exists)} && ${Me.Ability[id,702933774].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Geomancer"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Erosion" "Erosion" 702933774 FALSE
+				elseif ${Me.Ability[id,702933774].TimeUntilReady}>0
+					GeoCastErosion:Set[0]
+			}
+			if ${GeoCastMudslide}
+			{
+				if ${Me.Ability[id,1245044276](exists)} && ${Me.Ability[id,1245044276].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Geomancer"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Mudslide" "Mudslide" 1245044276 FALSE
+				elseif ${Me.Ability[id,1245044276].TimeUntilReady}>0
+					GeoCastMudslide:Set[0]
+			}
+			if ${GeoCastDomainofEarth}
+			{
+				if ${Me.Ability[id,2066131306](exists)} && ${Me.Ability[id,2066131306].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Geomancer"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=8 && ${KillTargetID}!=0
+					call CastAb "Domain of Earth" "Domain of Earth" 2066131306 FALSE
+				elseif ${Me.Ability[id,2066131306].TimeUntilReady}>0
+					GeoCastDomainofEarth:Set[0]
+			}
+			;Elementalist
+			if ${EleCastGlacialFreeze}
+			{
+				if ${Me.Ability[id,3689845041](exists)} && ${Me.Ability[id,3689845041].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Elementalist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Glacial Freeze" "Glacial Freeze" 3689845041 FALSE
+				elseif ${Me.Ability[id,3689845041].TimeUntilReady}>0
+					EleCastGlacialFreeze:Set[0]
+			}
+			if ${EleCastWildfire}
+			{
+				if ${Me.Ability[id,283111212](exists)} && ${Me.Ability[id,283111212].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Elementalist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Wildfire" "Wildfire" 283111212 FALSE
+				elseif ${Me.Ability[id,283111212].TimeUntilReady}>0
+					EleCastWildfire:Set[0]
+			}
+			if ${EleCastElementalAmalgamation}
+			{
+				if ${Me.Ability[id,1563758009](exists)} && ${Me.Ability[id,1563758009].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Elementalist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=40 && ${KillTargetID}!=0
+					call CastAb "Elemental Amalgamation" "Elemental Amalgamation" 1563758009 FALSE
+				elseif ${Me.Ability[id,1563758009].TimeUntilReady}>0
+					EleCastElementalAmalgamation:Set[0]
+			}
+			if ${EleCastFrozenHeavens}
+			{
+				if ${Me.Ability[id,3834694463](exists)} && ${Me.Ability[id,3834694463].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Elementalist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=15 && ${KillTargetID}!=0
+					call CastAb "Frozen Heavens" "Frozen Heavens" 3834694463 FALSE
+				elseif ${Me.Ability[id,3834694463].TimeUntilReady}>0
+					EleCastFrozenHeavens:Set[0]
+			}
+			if ${EleCastScorchedEarth}
+			{
+				if ${Me.Ability[id,3091112971](exists)} && ${Me.Ability[id,3091112971].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Elementalist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Scorched Earth" "Scorched Earth" 3091112971 FALSE
+				elseif ${Me.Ability[id,3091112971].TimeUntilReady}>0
+					EleCastScorchedEarth:Set[0]
+			}
+			;Etherealist
+			if ${EthCastLevinbolt}
+			{
+				if ${Me.Ability[id,846512750](exists)} && ${Me.Ability[id,846512750].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Etherealist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Levinbolt" "Levinbolt" 846512750 FALSE
+				elseif ${Me.Ability[id,846512750].TimeUntilReady}>0
+					EthCastLevinbolt:Set[0]
+			}
+			if ${EthCastEtherflash}
+			{
+				if ${Me.Ability[id,60610803](exists)} && ${Me.Ability[id,60610803].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Etherealist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=10 && ${KillTargetID}!=0
+					call CastAb "Etherflash" "Etherflash" 60610803 FALSE
+				elseif ${Me.Ability[id,60610803].TimeUntilReady}>0
+					EthCastEtherflash:Set[0]
+			}
+			if ${EthCastCascadingForce}
+			{
+				if ${Me.Ability[id,3325814397](exists)} && ${Me.Ability[id,3325814397].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Etherealist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Cascading Force" "Cascading Force" 3325814397 FALSE
+				elseif ${Me.Ability[id,3325814397].TimeUntilReady}>0
+					EthCastCascadingForce:Set[0]
+			}
+			if ${EthCastEthermancy}
+			{
+				if ${Me.Ability[id,1606518226](exists)} && ${Me.Ability[id,1606518226].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Etherealist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=40 && ${KillTargetID}!=0
+					call CastAb "Ethermancy" "Ethermancy" 1606518226 FALSE
+				elseif ${Me.Ability[id,1606518226].TimeUntilReady}>0
+					EthCastEthermancy:Set[0]
+			}
+			if ${EthCastEthershadowAssassin}
+			{
+				if ${Me.Ability[id,2783695687](exists)} && ${Me.Ability[id,2783695687].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Etherealist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Ethershadow Assassin" "Ethershadow Assassin" 2783695687 FALSE
+				elseif ${Me.Ability[id,2783695687].TimeUntilReady}>0
+					EthCastEthershadowAssassin:Set[0]
+			}
+			if ${EthCastImplosion}
+			{
+				if ${Me.Ability[id,4182097011](exists)} && ${Me.Ability[id,4182097011].TimeUntilReady}==0 && ${Me.GetGameData[Self.AscensionLevelClass].Label.Find["Etherealist"](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Implosion" "Implosion" 4182097011 FALSE
+				elseif ${Me.Ability[id,4182097011].TimeUntilReady}>0
+					EthCastImplosion:Set[0]
+			}
+			
 			;echo before do casting
 			if ${DoCasting}
 			{
@@ -6245,33 +6609,113 @@ function main()
 				;{
 					;echo InBetween - Last
 				
+				Heading:Set[${Actor[${KillTargetID}].Heading}]
+				HeadingTo:Set[${Actor[${KillTargetID}].HeadingTo}]
+				Angle:Set[${Math.Calc[${Math.Cos[${Heading}]} * ${Math.Cos[${HeadingTo}]} + ${Math.Sin[${Heading}]} * ${Math.Sin[${HeadingTo}]}]}]
+				if ${Angle} < -1 
+					Angle:Set[-1]
+				if ${Angle} > 1
+					Angle:Set[1]
+				Angle:Set[${Math.Acos[${Angle}]}]
+				AEcount:Set[${Mobs.CountAE}]
+				ENCcount:Set[${Mobs.CountEncounter[${KillTargetID}]}]
+				RangeCalc:Set[${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale})]}]
+				MinDist:Set[${Math.Calc[${Actor[id,${KillTargetID}].Distance}+${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale})-.5]}]}]
+				MaxDist:Set[${Math.Calc[${Actor[id,${KillTargetID}].Distance}-${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale})-.5]}]}]
+				
+				if ${Actor[Query, ID=${KillTargetID} && IsDead=FALSE](exists)}
+					KillTargetHealth:Set[${Actor[Query, ID=${KillTargetID} && IsDead=FALSE](exists)}]
+				else
+					KillTargetHealth:Set[-1]
+				
 				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}>0
 				{
 					;echo mainCount=${mainCount}
 					;if !${CheckAbilitiesObj.CheckAll[${mainCount},${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
-					;	wait 5;mainCount:Set[1]
-					;continue
-					while !${CheckAbilitiesObj.CheckAll[${mainCount},${mainCount}]} && ${mainCount}<=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+					if ${RI_Obj_CB.GetUISetting[SettingsStartHeroicCheckBox]} && ${Me.InCombat} && ${EQ2.ServerName.NotEqual[Battlegrounds]}
 					{
-						; if ${CombatBotDebug}
-							; echo CombatBot: CheckAbilities Counter: ${mainCount}
-						; if ${SummonMount} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[The Frillik Tide]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual["Vaedenmoor, Realm of Despair"]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[Ceremony in The Wastes`]}
-						; {
-							; wait 5
-							; if !${Me.OnHorse} && !${Me.OnFlyingMount} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[The Frillik Tide]}
-							; {
-								; eq2ex summon_mount
-								; wait 5
-							; }
-							; SummonMount:Set[FALSE]
-						; }
-						noop
+						switch ${Me.Archetype}
+						{
+							case fighter
+							{
+								if ${Me.Ability[id,438025554].IsReady} && !${EQ2.HOWindowActive}
+								{
+									Cast "Fighting Chance" "Fighting Chance" 438025554
+									continue
+								}
+								break
+							}
+							case mage
+							{
+								if ${Me.Ability[id,1605359312].IsReady} && !${EQ2.HOWindowActive}
+								{
+									Cast "Arcane Augur" "Arcane Augur" 1605359312
+									continue
+								}
+								break
+							}
+							case priest
+							{
+								if ${Me.Ability[id,3972280100].IsReady} && !${EQ2.HOWindowActive}
+								{
+									Cast "Divine Providence" "Divine Providence" 3972280100
+									continue
+								}
+								break
+							}
+							case scout
+							{
+								if ${Me.Ability[id,1793121952].IsReady} && !${EQ2.HOWindowActive}
+								{
+									Cast "Lucky Break" "Lucky Break" 1793121952
+									continue
+								}
+								break
+							}
+						}
 					}
-					if ${mainCount}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+		
+					if ${SetTargets}
 					{
+						wait 2
+						CheckAbilitiesObj:SetTargets
+					}
+						
+					;echo CS: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items} TID: ${TargetIDs.Used} TN: ${TargetNames.Used}
+						
+					;noop !${CheckAbilitiesObj.CheckAll[${mainCount},${Math.Calc[${mainCount}+50]}]}
+					noop ${CheckAbilitiesObj.CheckAll[${mainCount},${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
+					; {
+						; wait 5
+						; mainCount:Set[1]
+					; }
+					if ${mainCount}>=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+					{
+						wait 3
 						mainCount:Set[1]
-						wait 1
 					}
+					;continue
+					; while !${CheckAbilitiesObj.CheckAll[${mainCount},${mainCount}]} && ${mainCount}<=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+					; {
+						; ; if ${CombatBotDebug}
+							; ; echo CombatBot: CheckAbilities Counter: ${mainCount}
+						; ; if ${SummonMount} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[The Frillik Tide]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual["Vaedenmoor, Realm of Despair"]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[Ceremony in The Wastes`]}
+						; ; {
+							; ; wait 5
+							; ; if !${Me.OnHorse} && !${Me.OnFlyingMount} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[The Frillik Tide]}
+							; ; {
+								; ; eq2ex summon_mount
+								; ; wait 5
+							; ; }
+							; ; SummonMount:Set[FALSE]
+						; ; }
+						; noop
+					; }
+					; if ${mainCount}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+					; {
+						; mainCount:Set[1]
+						; wait 1
+					; }
 					;echo after that ${Script.RunningTime}
 					;if ${CheckAbilitiesObj.CheckAll[${mainCount},${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
 					;{
@@ -6298,7 +6742,7 @@ function main()
 				;}
 			;}
 			;echo ${Return}
-			;if ${CombatBotDebug}
+			if ${CombatBotCastingDebug}
 			;	wait 1
 			;waitframe
 			;CombatBotDebug:Set[TRUE]
@@ -6774,6 +7218,13 @@ atom LoadProfile(string _Profile=${CombatBotDefaultProfile})
 	IterateOnEvents ${OnEventsSet} ${OnEventsCount}
 	;echo ${OnEventsCount}
 	
+	;import AscensionSet
+	variable settingsetref AscensionSet=${Set.FindSet[${_Profile}].FindSet[Ascension].GUID}
+	
+	AscensionSet:Set[${Set.FindSet[${_Profile}].FindSet[Ascension].GUID}]
+	
+	RI_Obj_CB:SetUISetting[AscensionAutoComboAscensionsCheckBox,${AscensionSet.FindSetting[AscensionAutoComboAscensionsCheckBox]}]
+	
 	;import SettingsSet
 	variable settingsetref SettingsSet=${Set.FindSet[${_Profile}].FindSet[Settings].GUID}
 	
@@ -6840,7 +7291,7 @@ atom LoadProfile(string _Profile=${CombatBotDefaultProfile})
 	RI_Obj_CB:SetUISetting[SettingsAutoTargetMobsCheckBox,${SettingsSet.FindSetting[SettingsAutoTargetMobsCheckBox]}]
 	RI_Obj_CB:SetUISetting[SettingsAutoRunKeyTextEntry,${SettingsSet.FindSetting[SettingsAutoRunKeyTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsCallConfrontFearCheckBox,${SettingsSet.FindSetting[SettingsCallConfrontFearCheckBox]}]
-	
+	RI_Obj_CB:SetUISetting[SettingsShowRIConsoleCheckBox,${SettingsSet.FindSetting[SettingsShowRIConsoleCheckBox]}]
 	RI_Var_Bool_CB_CallForConfrontFear:Set[${SettingsSet.FindSetting[SettingsCallConfrontFearCheckBox]}]
 	if ${SettingsSet.FindSetting[SettingsConfrontFearCallTextEntry](exists)}
 		RI_Obj_CB:SetUISetting[SettingsConfrontFearCallTextEntry,${SettingsSet.FindSetting[SettingsConfrontFearCallTextEntry]}]
@@ -6948,8 +7399,17 @@ atom LoadProfile(string _Profile=${CombatBotDefaultProfile})
 			; TimedCommand 50 g need a confront fear
 	; }
 ; }
+atom EQ2_onGroupMembershipChange(int PreviousGroupCount, int NewGroupCount)
+{
+   SetTargets:Set[1]
+}
+atom EQ2_onGroupMembershipChange(int PreviousGroupCount, int NewGroupCount)
+{
+   SetTargets:Set[1]
+}
 atom EQ2_FinishedZoning(string TimeInSeconds)
 {
+	SetTargets:Set[1]
 	;echo Finished Zoning
 	;check for OnEvent
 	variable int i
@@ -7008,12 +7468,338 @@ atom EQ2_onAnnouncement(string Text, string SoundType, float Timer)
 ;atom triggered when incommingtext is detected
 atom EQ2_onIncomingText(string Text)
 {
+;my combos
+;Dirgod- VO, Coercif, Etherflash, Defidus VO, Swashiro Etherflash
+;Dirgod- Revocation, Coercif, Cascading, Defidus Revocation, Swashiro Cascading
+;Hudo - Terrestrial Coercif - Implosion
+;Coercif - Levinbolt - Hudo - Granite Swashiro - Levinbolt
+;Dirgod - Blood Contract - Hudo - Stone Hammer - Defidus- Blood Contract
+;Dirgod - Dessication - Hudo - Domain of Earth - Defidus - Dessication
+;Dirgod Tainted - Hudo - Telluric Rending - Defidus = Tainted
+
+;Dirgod - Septic Strike - Astaoza - Glacial Freeze - Defidus Septic Strike
+;Ast - Wildfire - Hudo -Erosion
+;Ast - Brittle Armor
+;Dirgod Withering Ast - Frozen Heavens -  Defidus Withering
+;Coercig Ethermancy - Ast - Scorched Earth - Swashiro Ethermancy
+	;Ascension Combos
+	;"hits" "for a" "of" "damage"
+	
+	;;Thau;Septic Strike
+	;;Ele;Glacial Freeze
+	
+	;;Geo;Granite Protector
+	;;Eth;Levinbolt
+	
+	;;Geo;Terrestrial Coffin
+	;;Eth;Implosion
+	
+	;;Thau;Virulent Outbreak
+	;;Eth;Etherflash
+	
+	;;Thau;Revocation of Life
+	;;Eth;Cascading Force
+	
+	;;Thau;Blood Contract
+	;;Geo;Stone Hammer
+	
+	;Geo;Telluric Rending
+	;Thau;Tainted Mutation
+	
+	;;Geo;Erosion
+	;;Ele;Wildfire
+	
+	;;Ele;Elemental Amalgamation
+	;;Geo;Mudslide
+	
+	;;Ele;Brittle Armor ${RIMUIObj.MainIconIDExists[${KillTargetID},1050]}
+	;;Eth;Ethershadow Assasin (Not a starter)
+	
+	;;Thau;Withering ${RIMUIObj.MainIconIDExists[${KillTargetID},1080]}
+	;;Ele;Frozen Heavens
+	
+	;;Eth;Ethermancy ${RIMUIObj.MainIconIDExists[${Me.ID},1065,0]}
+	;;Ele;Scorched Earth
+	
+	;Thau;Dessication
+	;Geo;Domain of Earth
+	
+	if ${RI_Obj_CB.GetUISetting[AscensionAutoComboAscensionsCheckBox]}
+	{
+		;1-Thaumaturgist 2-Elementalist 3-Geomancer 4-Etherealist
+		if ${intMyAscension}==1
+		{
+			if ${Text.Find["Glacial Freeze"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Glacial Freeze: Casting Septic Strike
+					ThauCastSepticStrike:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 ThauCastSepticStrike:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Etherflash"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Etherflash: Casting Virulent Outbreak
+					ThauCastVirulentOutbreak:Set[1]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Cascading Force"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Cascading Force: Casting Revocation of Life
+					ThauCastRevocationofLife:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 ThauCastRevocationofLife:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Stone Hammer"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Stone Hammer: Casting Blood Contract
+					ThauCastBloodContract:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 ThauCastBloodContract:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Telluric Rending"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Telluric Rending: Casting Tainted Mutation
+					ThauCastTaintedMutation:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 ThauCastTaintedMutation:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Frozen Heavens"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Frozen Heavens: Casting Withering
+					ThauCastWithering:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 ThauCastWithering:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Domain of Earth"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Domain of Earth: Casting Dessication
+					ThauCastDessication:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 ThauCastDessication:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+		}
+		if ${intMyAscension}==2 || ( ${intMyAscension}==1 && ${Me.Ability[id,1421995892].TimeUntilReady}==0 )
+		{
+			if ${Text.Find["Septic Strike"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Septic Strike: Casting Glacial Freeze
+					EleCastGlacialFreeze:Set[1]
+					TimedCommand 100 EleCastGlacialFreeze:Set[0]
+					if !${Text.Find[Your](exists)}
+						ThauCastAntiLife:Set[1]
+				}
+			}
+			if ${Text.Find["Erosion"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Erosion: Casting Wildfire
+					EleCastWildfire:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 EleCastWildfire:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Mudslide"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Mudslide: Casting Elemental Amalgamation
+					EleCastElementalAmalgamation:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 EleCastElementalAmalgamation:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+		}
+		if ${intMyAscension}==3 || ( ${intMyAscension}==1 && ${Me.Ability[id,1421995892].TimeUntilReady}==0 )
+		{
+			if ${Text.Find["Levinbolt"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Levinbolt: Casting Granite Protector
+					GeoCastGraniteProtector:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 GeoCastGraniteProtector:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Implosion"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Implosion: Casting Terrestrial Coffin
+					GeoCastTerrestrialCoffin:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 GeoCastTerrestrialCoffin:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Blood Contract"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Blood Contract: Casting Stone Hammer
+					GeoCastStoneHammer:Set[1]
+					TimedCommand 100 GeoCastStoneHammer:Set[0]
+					if !${Text.Find[Your](exists)}
+						ThauCastAntiLife:Set[1]
+				}
+			}
+			if ${Text.Find["Wildfire"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Wildfire: Casting Erosion
+					GeoCastErosion:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 GeoCastErosion:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Elemental Amalgamation"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Elemental Amalgamation: Casting Mudslide
+					GeoCastMudslide:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 GeoCastMudslide:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Dessication"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Dessication: Casting Domain of Earth
+					GeoCastDomainofEarth:Set[1]
+					TimedCommand 100 GeoCastDomainofEarth:Set[0]
+					if !${Text.Find[Your](exists)}
+						ThauCastAntiLife:Set[1]
+				}
+			}
+		}
+		if ${intMyAscension}==4 || ( ${intMyAscension}==1 && ${Me.Ability[id,1421995892].TimeUntilReady}==0 )
+		{
+			if ${Text.Find["Granite Protector"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Granite Protector: Casting Levinbolt
+					EthCastLevinbolt:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 EthCastLevinbolt:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Virulent Outbreak"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Virulent Outbreak: Casting Etherflash
+					EthCastEtherflash:Set[1]
+					TimedCommand 100 EthCastEtherflash:Set[0]
+					if !${Text.Find[Your](exists)}
+						ThauCastAntiLife:Set[1]
+				}
+			}
+			if ${Text.Find["Revocation of Life"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Revocation of Life: Casting Cascading Force
+					EthCastCascadingForce:Set[1]
+					TimedCommand 100 EthCastCascadingForce:Set[0]
+					if !${Text.Find[Your](exists)}
+						ThauCastAntiLife:Set[1]
+				}
+			}
+			if ${Text.Find["Scorched Earth"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Scorched Earth: Casting Ethermancy
+					EthCastEthermancy:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 EthCastEthermancy:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+			if ${Text.Find["Terrestrial Coffin"]}
+			{
+				if ${Text.Find["hits"]} && ${Text.Find["for a"]} && ${Text.Find["of"]} && ${Text.Find["damage"]}
+				{
+					if ${CombatBotCastingDebug}
+						echo ISXRI: Detected Terrestrial Coffin: Casting Implosion
+					EthCastImplosion:Set[1]
+					ThauCastAntiLife:Set[1]
+					TimedCommand 100 EthCastImplosion:Set[0]
+					TimedCommand 100 ThauCastAntiLife:Set[0]
+				}
+			}
+		}
+	}
 	;check we have ToT
 	; if ${Text.Find[You must have expansion 12 to use this feature](exists)}
 	; {
 		; echo ISXRI: You do not have Terrors of Thalumbra Expansion
 		; RI_Var_Bool_AutoDeityDisabled:Set[1]
 	; }
+	if ${Text.Find["surges with power"](exists)} && !${Text.Find["say"](exists)}
+	{
+		relay all "RIConsole:Echo[${Time} ${Me.Name}'s ${Text.Right[-5].Left[-12]}]"
+	}
 	;check for OnEvent
 	;echo OnInc
 	variable int i
@@ -7220,58 +8006,159 @@ atom CheckAssist()
 			; Mobs:TargetNearestAggroMob
 	; }
 ;}
-
+atom(global) displaytindex()
+{
+	variable int _cnt
+	for(_cnt:Set[1];${_cnt}<=${TargetIDs.Used};_cnt:Inc)
+	{
+		echo ID: ${TargetIDs.Get[${_cnt}]} Name: ${TargetNames.Get[${_cnt}]}
+	}
+}
 objectdef CheckAbilitiesObject
 {
+	;-1=NoTarget, -2=@Group, -3=@Raid, -4=@PCTarget, -5=@NotSelfGroup
+	method SetTargets()
+	{
+		SetTargets:Set[0]
+		variable int _cnt
+		variable int _tempid
+		TargetIDs:Clear
+		TargetNames:Clear
+		for(_cnt:Set[1];${_cnt}<=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items};_cnt:Inc)
+		{
+			switch ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${_cnt}].Value.Token[4,|]}
+			{
+				case FALSE
+				{
+					TargetIDs:Insert[-1]
+					TargetNames:Insert[-1]
+					break
+				}
+				case @Group
+				{
+					TargetIDs:Insert[-2]
+					TargetNames:Insert[-2]
+					break
+				}
+				case @Raid
+				{
+					TargetIDs:Insert[-3]
+					TargetNames:Insert[-3]
+					break
+				}
+				case @PCTarget
+				{
+					TargetIDs:Insert[-4]
+					TargetNames:Insert[-4]
+					break
+				}
+				case @NotSelfGroup
+				{
+					TargetIDs:Insert[-5]
+					TargetNames:Insert[-5]
+					break
+				}
+				case @Me
+				{
+					TargetIDs:Insert[${Me.ID}]
+					TargetNames:Insert[${Me.Name}]
+					break
+				}
+				default
+				{
+					_tempid:Set[${This.ConvertAliases[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${_cnt}].Value.Token[4,|]}]}]
+					TargetIDs:Insert[${_tempid}]
+					TargetNames:Insert[${Actor[id,${_tempid}].Name}]
+					;waitframe
+				}
+			}
+		}
+	}
+	member:string SetCastTarget(string _target)
+	{
+		;echo member:string SetCastTarget(string _target=${_target})
+		switch ${_target}
+		{
+			case FALSE
+			{
+				return FALSE
+				break
+			}
+			case @Me
+			{
+				return ${Me.ID}
+				break
+			}
+			case @PCTarget
+			{
+				if ${Target.Type.Equal[PC]}
+					return ${Target.ID}
+				elseif ${Target.Target.Type.Equal[PC]}
+					return ${Target.Target.ID}
+				else
+					return 0
+				break
+			}
+			case @Group
+			{
+				return @Group
+				break
+			}
+			case @Raid
+			{
+				return @Raid
+				break
+			}
+			case @NotSelfGroup
+			{
+				return @NotSelfGroup
+				break
+			}
+			default
+			{
+				return ${This.ConvertAliases[${_target}]}
+			}
+		}
+	}
 	member:int ConvertAliases(string aliasName)
 	{
+		;echo ${aliasName}
 		variable int caCount=0
-		;FoundTarget:Set[FALSE]
-		;echo checking aliases
+		variable int tempid
 		for(caCount:Set[1];${caCount}<=${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].Items};caCount:Inc)
 		{
 			if ${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Text.Left[${Math.Calc[${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Text.Find[" For"]}-1]}].Equal[${aliasName}]} && ${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].TextColor}!=-10263709
 			{
-				;echo checking ${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Text.Left[${Math.Calc[${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Text.Find[" For"]}-1]}]} if it matches ${aliasName}
-				;echo found an alias ${aliasName}, searching for its alias
-				; if ${Me.Raid}>0 && ${Actor[PC,${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Value}].InMyGroup}
-				; {
-					; CastTarget:Set[${Actor[PC,${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Value}].ID}]
-					; echo found Alias ${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Text.Left[${Math.Calc[${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Text.Find[" For"]}-1]}]} as ${Me.Raid[id,${Actor[PC,${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Value}].ID}].Name}
-					; return TRUE
-				; }
 				if ${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Value.Equal[${Me.Name}]}
 					return ${Me.ID}
-				if ${Actor[PC,${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Value}].InMyGroup}
-				{
-					;CastTarget:Set[${Actor[PC,${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Value}].ID}]
-					;echo found Alias ${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Text.Left[${Math.Calc[${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Text.Find[" For"]}-1]}]} as ${Actor[PC,${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Value}].Name}
-					return ${Actor[PC,${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Value}].ID}
-				}
+
+				tempid:Set[${This.RaidGroupMember[${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${caCount}].Value}]}]
+				if ${tempid}!=0
+					return ${tempid}
 			}
 		}
-		; if ${Me.Raid}>0
-		; {
-			; ;do raid checks
-			; variable int caRaidCount2
-			; for(caRaidCount2:Set[1];${caRaidCount2}<=${Me.Raid};caRaidCount2:Inc)
-			; {
-				; if ${Me.Raid[${caRaidCount2}].Name.Equal[${aliasName}]}
-				; {
-					; CastTarget:Set[${Me.Raid[${caRaidCount2}].ID}]
-					; return TRUE
-				; }
-			; }
-		; }
-		; else
 		if ${aliasName.Equal[${Me.Name}]}
 			return ${Me.ID}
-		if ${Actor[PC,${aliasName}].InMyGroup}
+		tempid:Set[${This.RaidGroupMember[${aliasName}]}]
+		if ${tempid}!=0
+			return ${tempid}
+		return 0
+	}
+	member:int RaidGroupMember(string _member)
+	{
+		variable int tempid
+		if ${Me.Raid}>0
 		{
-			;CastTarget:Set[${Actor[PC,${aliasName}].ID}]
-			return ${Actor[PC,${aliasName}].ID}
+			tempid:Set[${Me.Raid[${_member}].ID}]
+			if ${tempid}>0
+				return ${tempid}
 		}
-		;echo found none
+		else
+		{
+			tempid:Set[${Me.Group[${_member}].ID}]
+			if ${tempid}>0
+				return ${tempid}
+		}
 		return 0
 	}
 	member:bool AbilityTypeEnabled(string strType)
@@ -7286,9 +8173,1745 @@ objectdef CheckAbilitiesObject
 			return TRUE
 		return FALSE
 	}
-	variable int AEcount=0
-	variable int ENCcount=0
+	
+	
+	;;;;;;;;; Need to have it in the main function before calling this have it run through (if its not crazy slow) the entire TargetIDs index and add Distances for Valid Targets then have CastTarget check that instead of computations. or think about checking the target exists and distance after checking the maintained cause dont need to do it for spells that are already maintained
 	member:bool CheckAll(int start, int end)
+	{
+		;variable int first
+		;variable int second
+		;first:Set[${Script.RunningTime}]
+		variable int count=0		
+		boolAbilityCast:Set[FALSE]
+		boolItemCast:Set[FALSE]
+		strCastName:Set[""]
+		strCastNameShort:Set[""]
+		strCastID:Set[0]
+		strCastTarget:Set[""]
+		CastTarget:Set[FALSE]
+		for(mainCount:Set[${start}];${mainCount}<=${end};mainCount:Inc)
+		{
+			if ${mainCount}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+				return
+			;echo for #${mainCount}
+			
+			count:Set[${mainCount}]
+			if ${CombatBotDebug}
+				echo Checking #${count} of ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]} with ID ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+			if !${UIElement[SettingsCastAbilitiesCheckBox@SettingsFrame@CombatBotUI].Checked}
+			{
+				if ${CombatBotDebug}
+					echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, because Abilities are disabled
+				continue
+			}
+			;echo after dis
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].TextColor}==-10263709
+			{
+				if ${CombatBotDebug}
+					echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, it is disabled
+				continue
+			}
+			if !${This.AbilityTypeEnabled[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|]}]}
+			{
+				if ${CombatBotDebug}
+					echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, because ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|]}'s are disabled
+				continue
+			}
+			if ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[Hostile]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[NamedHostile]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[InCombatTargeted]} ) && ( !${Me.InCombat} && !${Me.IsHated} )
+			{
+				if ${CombatBotDebug}
+					echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, because we are not in combat
+				continue
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].NotEqual[Adrenaline Boost]} && !${RI_Var_Bool_CastWhileMoving} && ${Me.IsMoving} && ${istrExportSpellBookType.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}!=1 && !${Me.Maintained[Cloak of Divinity](exists)} && !${Me.Maintained[Enhanced Concentration](exists)} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].NotEqual[Umbral Barrier]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].NotEqual[Cloak of Divinity]}
+			{
+				if ${Me.SubClass.Equal[channeler]}
+				{
+					if ${Me.Maintained[Combat Awareness](exists)}
+						noop
+					else
+					{
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are moving
+						continue
+					}
+				}
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are moving
+					continue
+				}
+			}
+			if ${Me.FlyingUsingMount} 
+			{
+				if ${CombatBotDebug}
+					echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are flying
+				continue
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[NamedHostile]}
+			{
+				;echo is NamedHostile
+				if ${Target.Type.Equal[NamedNPC]} || ${Target.Target.Type.Equal[NamedNPC]} || ${Target.Name.Equal["training dummy"]} || ${Target.Target.Name.Equal["training dummy"]} || ${UIElement[SettingsAlwaysCastNamedHostileCheckBox@SettingsFrame@CombatBotUI].Checked}
+				{
+					noop
+				}
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, it is a NamedHostile and our KillTarget is not a named
+					continue
+				}
+			}
+			;if ${Me.SubClass.Equal[beastlord]} 
+			if ${intMySubClass}==22
+			{
+				if ${Me.Maintained[Spiritual Stance](exists)} && ${iboolExportFeral.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}]}
+				;&& ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Silent Talon]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Feral Pounce]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Shadow Leap]} )
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Feral Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are in Spiritual
+					continue
+				}
+				if ${Me.Maintained[Feral Stance](exists)} && ${iboolExportSpiritual.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}]}
+				;&& ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Silent Talon]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Feral Pounce]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Shadow Leap]} )
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Spiritual Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are in Feral
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+			{
+				if ${Me.Equipment["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 || ${Me.Inventory["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, it is not ready
+						continue
+				}
+			}
+			elseif ${istrExportReqStealth.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}](exists)}
+			{
+				if ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].TimeUntilReady}==0
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, it is not ready
+						continue
+				}
+			}
+			elseif ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].IsReady} || ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==2945678992
+; CANT DO BECAUSE IT TRIES TO CAST EVEN WHEN NOT CLAW MODE, NEED TO SEE IF WE CAN READ THAT			|| ( ${intMySubClass}==22 && ${iboolExportAdvantage.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ) 
+			;${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Cure]}
+				noop
+			else
+			{
+				if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, it is not ready
+					continue
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].NotEqual[FALSE]}
+			{
+				;CastTarget:Set[${This.SetCastTarget[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|]}]}]
+				;echo ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|]} ${CastTarget}
+				;-1=FALSE, -2=@Group, -3=@Raid, -4=@PCTarget, -5=@NotSelfGroup
+				switch ${TargetIDs.Get[${count}]}
+				{
+					;case @Group
+					case -2
+					{
+						;this needs to be modified so i will cast group abilities on my self solo
+						if ${Me.Group}>1
+							CastTarget:Set[@Group]
+						else
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Group Target Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are not in a group
+							continue
+						}
+						break
+					}
+					;case @Raid
+					case -3
+					{
+						if ${Me.Raid}>0
+						{
+							if ${istrExportAllowRaid.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]}
+								CastTarget:Set[@Raid]
+							else
+							{
+								if ${CombatBotDebug}
+									echo Ignoring Raid Target Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, does not allow raid
+								continue
+							}
+						}
+						else
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Raid Target Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are not in a raid
+							continue
+						}
+						break
+					}
+					;case @PCTarget
+					case -4
+					{
+						CastTarget:Set[@PCTarget]
+						break
+					}
+					;case @NotSelfGroup
+					case -5
+					{
+						if ${Me.Raid}>0
+							CastTarget:Set[@NotSelfGroup]
+						else
+						{
+							if ${CombatBotDebug}
+								echo Ignoring NotSelfGroup Target Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, there are no other groups
+							continue
+						}
+						break
+					}
+					default
+					{
+						CastTarget:Set[${TargetIDs.Get[${count}]}]
+						if ${CastTarget}==0
+						{
+							if ${CombatBotDebug}
+								echo Skipping Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we didnt find target ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|]}
+							continue
+						}
+						else
+						{	
+							;first see if cast target is me
+							if ${CastTarget.Equal[${Me.ID}]}
+								noop
+							;see if we are in raid
+							elseif ${Me.Raid}>0
+							{
+								;now see if the CastTarget exists and is in same zone //OLD WAY - ${Me.Raid[id,${CastTarget}](exists)} //
+								if ${Me.Raid[id,${CastTarget}].InZone}
+								{
+									;now check if they are out of MaxRange
+									if ${Me.Raid[id,${CastTarget}].Distance}>${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+									{
+										if ${CombatBotDebug}
+											echo Skipping Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, ${Me.Raid[id,${CastTarget}]} is not within range
+										boolAbilityCast:Set[FALSE]
+										boolItemCast:Set[FALSE]
+										continue
+									}
+								}
+								else
+								{
+									if ${CombatBotDebug}
+										echo Skipping Ability: $${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we didnt find target ${Actor[id,${CastTarget}].Name}
+									boolAbilityCast:Set[FALSE]
+									boolItemCast:Set[FALSE]
+									continue
+								}
+							}
+							else
+							{
+								;now see if the CastTarget exists and is in same zone
+								if ${Me.Group[id,${CastTarget}].InZone}
+								{
+									;now check if they are out of MaxRange
+									if ${Me.Group[id,${CastTarget}].Distance}>${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+									{
+										if ${CombatBotDebug}
+											echo Skipping Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, ${Me.Group[id,${CastTarget}]} is not within range
+										boolAbilityCast:Set[FALSE]
+										boolItemCast:Set[FALSE]
+										continue
+									}
+								}
+								else
+								{
+									if ${CombatBotDebug}
+										echo Skipping Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we didnt find target ${Actor[${CastTarget}].Name} in our group and the ability does not allow raid
+									boolAbilityCast:Set[FALSE]
+									boolItemCast:Set[FALSE]
+									continue
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+				CastTarget:Set[FALSE]
+			;continue
+			;echo ${CastTarget} // ${KillTargetID}
+			;echo Duration: ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} -- IsBeneficial: ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} -- IgnoreDuration: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[7,|]}
+			;echo before duration check
+			;first check if isitem
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+			{
+				if ${EQ2.ServerName.Equal[Battlegrounds]}
+					continue
+				variable int itemMaintainedCount=0
+				variable bool boolFoundItemInItemList=FALSE
+				boolFoundItemInItemList:Set[FALSE]
+				variable bool boolFoundItemInMaintained=FALSE
+				boolFoundItemInMaintained:Set[FALSE]
+				for(itemMaintainedCount:Set[1];${itemMaintainedCount}<=${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Items};itemMaintainedCount:Inc)
+				{
+					;echo im getting here
+					if ${boolFoundItemInMaintained}
+						continue
+					;echo forloop1
+					if ${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Text.Equal["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"]}
+					{
+						;echo found item in our ItemList, ${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Text} : ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}, checking EffectName ${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}
+						variable int cmID1=${KillTargetID}
+						variable int iepCMCount
+						if ${Me.Maintained["${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}"](exists)} && ( !${Me.Maintained["${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}"].Target(exists)} || ${Me.Maintained["${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}"].Target.ID}==${cmID1} )
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on ${If[${Actor[id,${cmID1}](exists)},${Actor[id,${cmID1}].Name},No Target]}
+							boolItemCast:Set[FALSE]
+							boolAbilityCast:Set[FALSE]
+							boolFoundAbilityInMaintained:Set[TRUE]
+							boolFoundItemInItemList:Set[TRUE]
+						}
+						else
+						{
+							for(iepCMCount:Set[1];${iepCMCount}<=${Me.CountMaintained};iepCMCount:Inc)
+							{
+							;echo forloop2
+								;echo if ${Me.Maintained[${iepCMCount}].Name.Equal["${istrItemEffectPairsEffectName.Get[${itemMaintainedCount}]}"]} 
+								if ${Me.Maintained[${iepCMCount}].Name.Equal["${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}"]} 
+								{
+									;echo found spell in maintained, checking if it has a target and if its the correct target
+									boolFoundItemInItemList:Set[TRUE]
+									if ${Me.Maintained[${iepCMCount}].Target(exists)}
+									{
+										;echo has a target
+										if ${Me.Maintained[${iepCMCount}].Target.ID}==${cmID1} && (${Me.Maintained[${iepCMCount}].Duration}>0 || ${Me.Maintained[${iepCMCount}].Duration}==-1)
+										{
+											if ${CombatBotDebug}
+												echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on ${Actor[${KillTargetID}].Name}
+											boolItemCast:Set[FALSE]
+											boolAbilityCast:Set[FALSE]
+											boolFoundItemInMaintained:Set[TRUE]
+											break
+										}
+										if ${Me.Maintained[${iepCMCount}].Target.ID}==${Me.ID} && (${Me.Maintained[${iepCMCount}].Duration}>0 || ${Me.Maintained[${iepCMCount}].Duration}==-1)
+										{
+											if ${CombatBotDebug}
+												echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on Me
+											boolItemCast:Set[FALSE]
+											boolAbilityCast:Set[FALSE]
+											boolFoundItemInMaintained:Set[TRUE]
+											break
+										}
+									}
+									else
+									{
+										;echo doesnt have a target, continueing
+										if ${Me.Maintained[${iepCMCount}].Duration}>0 || ${Me.Maintained[${iepCMCount}].Duration}==-1
+										{
+											if ${CombatBotDebug}
+												echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained
+											boolItemCast:Set[FALSE]
+											boolAbilityCast:Set[FALSE]
+											boolFoundItemInMaintained:Set[TRUE]
+											break
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				if ${boolFoundItemInMaintained}
+					continue
+				;echo im getting here
+				if !${boolFoundItemInItemList}
+				{
+					;echo didnt found item in our ItemEffectPairs, checking ItemName
+					variable int cmID2=${KillTargetID}
+					variable int iepCMCount2
+					;variable bool boolFoundItemInMaintained=FALSE
+					if ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"](exists)} && ( !${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Target(exists)} || ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Target.ID}==${cmID2} )
+					{
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on ${If[${Actor[id,${cmID2}](exists)},${Actor[id,${cmID2}].Name},No Target]}
+						boolItemCast:Set[FALSE]
+						boolAbilityCast:Set[FALSE]
+						boolFoundAbilityInMaintained:Set[TRUE]
+						boolFoundItemInItemList:Set[TRUE]
+					}
+					else
+					{
+						for(iepCMCount2:Set[1];${iepCMCount2}<=${Me.CountMaintained};iepCMCount2:Inc)
+						{
+							if ${Me.Maintained[${iepCMCount2}].Name.Equal["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"]} 
+							{
+								;echo found spell in maintained, checking if it has a target and if its the correct target
+								if ${Me.Maintained[${iepCMCount2}].Target(exists)}
+								{
+									;echo has a target
+									if ${Me.Maintained[${iepCMCount2}].Target.ID}==${cmID2} && (${Me.Maintained[${iepCMCount2}].Duration}>0 || ${Me.Maintained[${iepCMCount2}].Duration}==-1)
+									{
+										if ${CombatBotDebug}
+											echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on ${Actor[${KillTargetID}].Name}
+										boolItemCast:Set[FALSE]
+										boolAbilityCast:Set[FALSE]
+										boolFoundItemInMaintained:Set[TRUE]
+										break
+									}
+									if ${Me.Maintained[${iepCMCount2}].Target.ID}==${Me.ID} && (${Me.Maintained[${iepCMCount2}].Duration}>0 || ${Me.Maintained[${iepCMCount2}].Duration}==-1)
+									{
+										if ${CombatBotDebug}
+											echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on Me
+										boolItemCast:Set[FALSE]
+										boolAbilityCast:Set[FALSE]
+										boolFoundItemInMaintained:Set[TRUE]
+										break
+									}
+								}
+								else
+								{
+									;echo doesnt have a target, continueing
+									if ${Me.Maintained[${iepCMCount2}].Duration}>0 || ${Me.Maintained[${iepCMCount2}].Duration}==-1
+									{
+										if ${CombatBotDebug}
+											echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained
+										boolItemCast:Set[FALSE]
+										boolAbilityCast:Set[FALSE]
+										boolFoundItemInMaintained:Set[TRUE]
+										break
+									}
+								}
+							}
+						}
+					}
+					; echo im getting here
+					if ${boolFoundItemInMaintained}
+						continue
+				}
+			}
+			;then check if MaxDuration is >0 and ignore duration is set to false
+			elseif ( ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0 || ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==-1 ) && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[7,|].NotEqual[TRUE]}
+			{
+				;echo Maintained Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}]}
+				;echo checking maintained because duration is either >0 or -1
+				;echo ( ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0 || ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==-1 ) && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[7,|]}
+				variable int cmID
+				if ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${CastTarget.NotEqual[FALSE]}
+					cmID:Set[${Actor[${CastTarget}].ID}]
+				elseif ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${CastTarget.Equal[FALSE]}
+					cmID:Set[${Me.ID}]
+				else
+					cmID:Set[${KillTargetID}]
+					
+				variable int cmCount=1
+				variable bool boolFoundAbilityInMaintained=FALSE
+				boolFoundAbilityInMaintained:Set[FALSE]
+				
+				if ${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"](exists)} && ( !${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"].Target(exists)} || ${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"].Target.ID}==${cmID} )
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on ${If[${Actor[id,${cmID}](exists)},${Actor[id,${cmID}].Name},No Target]}
+					boolItemCast:Set[FALSE]
+					boolAbilityCast:Set[FALSE]
+					boolFoundAbilityInMaintained:Set[TRUE]
+				}
+				else
+				{
+					for(cmCount:Set[1];${cmCount}<=${Me.CountMaintained};cmCount:Inc)
+					{
+						;echo Checking #${cmCount}: ${Me.Maintained[${cmCount}].Name} against "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"
+						if ${Me.Maintained[${cmCount}].Name.Equal["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"]} 
+						{
+							;echo found spell in maintained, checking if it has a target and if its the correct target
+							if ${Me.Maintained[${cmCount}].Target(exists)}
+							{
+								;echo has a target, checking ${Me.Maintained[${cmCount}].Target.Name} : ${Me.Maintained[${cmCount}].Target.ID} against ${Actor[${cmID}].Name} : ${cmID}
+								if ${Me.Maintained[${cmCount}].Target.ID}==${cmID} && (${Me.Maintained[${cmCount}].Duration}>0 || ${Me.Maintained[${cmCount}].Duration}==-1)
+								{
+									if ${CombatBotDebug}
+										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on ${Actor[${cmID}].Name}
+									boolItemCast:Set[FALSE]
+									boolAbilityCast:Set[FALSE]
+									boolFoundAbilityInMaintained:Set[TRUE]
+									;break
+								}
+							}
+							else
+							{
+								;echo doesnt have a target, continueing
+								if ${Me.Maintained[${cmCount}].Duration}>0 || ${Me.Maintained[${cmCount}].Duration}==-1
+								{
+									if ${CombatBotDebug}
+										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained
+									boolItemCast:Set[FALSE]
+									boolAbilityCast:Set[FALSE]
+									boolFoundAbilityInMaintained:Set[TRUE]
+									;break
+								}
+							}
+						}
+					}
+				}
+				;echo here1 ${boolFoundAbilityInMaintained}
+				if ${boolFoundAbilityInMaintained}
+					continue
+				;echo here2
+			}
+			;echo after maintained check
+			;echo after maintained checking ${count}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[12,|]}>0 && ${RI_Var_String_MySubClass.Equal[beastlord]}
+			{
+				;echo ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]} is saying savagery
+				if ${Me.GetGameData[Self.SavageryLevel].Label}>=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[12,|]}
+				{
+					if ${Script.RunningTime}<${Math.Calc[${LastSavageryCastTime}+1000]} && !${Me.Maintained[Savagery Freeze](exists)} && ${UIElement[SubClassBeastlordPrimalDelayCheckBox@SubClassFrame@CombatBotUI].Checked}
+					{
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we casted a savagery ability less than 1s ago :: ${Script.RunningTime}<${Math.Calc[${LastSavageryCastTime}+1000]}
+						continue
+					}
+					noop
+				}
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, requires ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[12,|]} and we only have ${Me.GetGameData[Self.SavageryLevel].Label}
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[14,|]}>0 && ${RI_Var_String_MySubClass.Equal[channeler]}
+			{
+				if ${Me.Dissonance}>=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[14,|]}
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, requires greater than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[14,|]} disonance and we have ${Me.Dissonance}
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[13,|]}>0 && ${RI_Var_String_MySubClass.Equal[channeler]}
+			{
+				if ${Me.Dissonance}<=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[13,|]}
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, requires less than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[13,|]} disonance and we only have ${Me.Dissonance}
+					continue
+				}
+			}
+			if ${RI_Var_String_MySubClass.Equal[assassin]} || ${RI_Var_String_MySubClass.Equal[ranger]}
+			{
+				if ${Me.Ability[id,3363812126].IsReady} && ${CombatBotCastExploitWeakness}
+				{
+					if ${Me.Maintained[Weakness Detected](exists)}
+					{
+						Cast "Exploit Weakness" "Exploit Weakness" 3363812126
+						return TRUE
+					}
+				}
+			}
+			; if ${istrExportCastingTime.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
+				; boolInstantCast:Set[TRUE]
+			; else 
+				; boolInstantCast:Set[FALSE]
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[Buff]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[OutOfCombatBuff]}
+				boolBuff:Set[TRUE]
+			else 
+				boolBuff:Set[FALSE]
+			switch ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|]}
+			{
+				case Res
+				{
+					;echo is a Res
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[6,|]}>0
+					{
+						variable bool boolGotFirstDeadTarget=FALSE
+						variable int intFirstDeadTarget
+						variable int resGroupCount
+						variable int isDead=0
+						if ${Me.Raid}>0
+						{
+							for(resGroupCount:Set[1];${resGroupCount}<${Me.Raid};resGroupCount:Inc)
+							{
+								if ${Me.Raid[${resGroupCount}].IsDead} && ${Me.Raid[${resGroupCount}](exists)} && ${Me.Raid[${resGroupCount}].InZone} && ${Me.Raid[${resGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								{
+									if !${boolGotFirstDeadTarget}
+									{
+										intFirstDeadTarget:Set[${Me.Raid[${resGroupCount}].ID}]
+										boolGotFirstDeadTarget:Set[TRUE]
+									}
+									isDead:Inc
+								}
+							}
+						}
+						else
+						{
+							for(resGroupCount:Set[1];${resGroupCount}<${Me.Group};resGroupCount:Inc)
+							{
+								if ${Me.Group[${resGroupCount}].IsDead} && ${Me.Group[${resGroupCount}](exists)} && ${Me.Group[${resGroupCount}].InZone} && ${Me.Group[${resGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								{
+									if !${boolGotFirstDeadTarget}
+									{
+										intFirstDeadTarget:Set[${Me.Group[${resGroupCount}].ID}]
+										boolGotFirstDeadTarget:Set[TRUE]
+									}
+									isDead:Inc
+								}
+							}
+						}
+						if ${isDead}>=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[6,|]}
+						{
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${intFirstDeadTarget}
+							return TRUE
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, not enough to groupres
+					}
+					;check if the target is NotSelfGroup
+					elseif ${CastTarget.Equal[@NotSelfGroup]}
+					{
+						;echo check NotSelfGroup for dead
+						variable int resNotSelfGroupCount=0
+						for(resNotSelfGroupCount:Set[7];${resNotSelfGroupCount}<=${Me.Raid};resNotSelfGroupCount:Inc)
+						{
+							if ${Me.Raid[${resNotSelfGroupCount}](exists)} && ${Me.Raid[${resNotSelfGroupCount}].InZone} && ${Me.Raid[${resNotSelfGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Raid[${resNotSelfGroupCount}].IsDead}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Raid[${resNotSelfGroupCount}].ID}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${resNotSelfGroupCount}].ID}
+									return TRUE
+								}
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to res
+					}
+					;check if the target is raid
+					elseif ${CastTarget.Equal[@Raid]}
+					{
+						;echo check Raid for dead
+						variable int resRaidCount=0
+						for(resRaidCount:Set[1];${resRaidCount}<=${Me.Raid};resRaidCount:Inc)
+						{
+							if ${Me.Raid[${resRaidCount}](exists)} && ${Me.Raid[${resRaidCount}].InZone} && ${Me.Raid[${resRaidCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Raid[${resRaidCount}].IsDead}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Raid[${resRaidCount}].ID}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${resRaidCount}].ID}
+									return TRUE
+								}
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to res
+					}
+					;check if the target is group
+					elseif ${CastTarget.Equal[@Group]}
+					{
+						;echo check group for dead
+						variable int resGroupCount2
+						for(resGroupCount2:Set[1];${resGroupCount2}<${Me.Group};resGroupCount2:Inc)
+						{
+							;echo checking ${resGroupCount2}: ${Me.Group[${resGroupCount2}].Name}
+							if ${Me.Group[${resGroupCount2}](exists)} && ${Me.Group[${resGroupCount2}].InZone} && ${Me.Group[${resGroupCount2}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Group[${resGroupCount2}].IsDead}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Group[${resGroupCount2}].ID}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Group[${resGroupCount2}].ID}
+									return TRUE
+								}
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to res
+					}
+					else
+					{
+						;check if our target is dead
+						if ${Me.Group[id,${CastTarget}].IsDead}
+						{
+							if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+								call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${CastTarget}
+							else
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+							return TRUE
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to res
+						continue
+					}
+					break
+				}
+				case Cure
+				{
+					;echo is a Cure
+					;first check if the cure has a # of people attached to it (AKA a group cure) then check the entire group for nox,ele,tra,arc, and add them up and cast if that number or higher
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[6,|]}>0
+					{
+						
+						variable int gcure=0
+						variable int cureCount=0
+						if ${Me.Noxious}>0 || ${Me.Trauma}>0 || ${Me.Arcane}>0 || ${Me.Elemental}>0
+							gcure:Inc
+						
+						for(cureCount:Set[1];${cureCount}<${Me.Group};cureCount:Inc)
+						{
+							if ${Me.Group[${cureCount}](exists)} && ${Me.Group[${cureCount}].Health}>0 && ${Me.Group[${cureCount}].InZone} && ${Me.Group[${cureCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Group[${cureCount}].Noxious}>0 || ${Me.Group[${cureCount}].Trauma}>0 || ${Me.Group[${cureCount}].Arcane}>0 || ${Me.Group[${cureCount}].Elemental}>0
+									gcure:Inc
+							}
+						}
+						if ${gcure}>=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[6,|]}
+						{
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							return TRUE
+						}
+						else
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, not enough cures
+						}
+							
+					}
+					;check if the cure is cure
+					elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Cure]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Cure Magic]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Shed Skin]}
+					{
+						;echo we made it
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].Equal[@NotSelfGroup]}
+						{
+							;check NotSelfGroup for cureable afflictions
+							variable int cureNotSelfGroupCount=0
+							for(cureNotSelfGroupCount:Set[7];${cureNotSelfGroupCount}<=${Me.Raid};cureNotSelfGroupCount:Inc)
+							{
+								if ${Me.Raid[${cureNotSelfGroupCount}](exists)} && ${Me.Raid[${cureNotSelfGroupCount}].Health}>0 && ${Me.Raid[${cureNotSelfGroupCount}].InZone} && ${Me.Raid[${cureNotSelfGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								{
+									if ${Me.Raid[${cureNotSelfGroupCount}].Noxious}>0 || ${Me.Raid[${cureNotSelfGroupCount}].Trauma}>0 || ${Me.Raid[${cureNotSelfGroupCount}].Arcane}>0 || ${Me.Raid[${cureNotSelfGroupCount}].Elemental}>0
+									{
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${cureNotSelfGroupCount}].ID}
+										return TRUE
+									}
+								}
+							}
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to cure
+						}
+						elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].Equal[@Raid]}
+						{
+							;check Raid for cureable afflictions
+							variable int cureRaidCount=0
+							for(cureRaidCount:Set[1];${cureRaidCount}<=${Me.Raid};cureRaidCount:Inc)
+							{
+								if ${Me.Raid[${cureRaidCount}](exists)} && ${Me.Raid[${cureRaidCount}].Health}>0 && ${Me.Raid[${cureRaidCount}].InZone} && ${Me.Raid[${cureRaidCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								{
+									if ${Me.Raid[${cureRaidCount}].Noxious}>0 || ${Me.Raid[${cureRaidCount}].Trauma}>0 || ${Me.Raid[${cureRaidCount}].Arcane}>0 || ${Me.Raid[${cureRaidCount}].Elemental}>0
+									{
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${cureRaidCount}].ID}
+										return TRUE
+									}
+								}
+							}
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to cure
+						}
+						elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].Equal[@Group]}
+						{
+							;check group for cureable afflictions
+							variable int cureGroupCount
+							if ${Me.Noxious}>0 || ${Me.Trauma}>0 || ${Me.Arcane}>0 || ${Me.Elemental}>0
+							{
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+								return TRUE
+							}
+							for(cureGroupCount:Set[1];${cureGroupCount}<${Me.Group};cureGroupCount:Inc)
+							{
+								if ${Me.Group[${cureGroupCount}](exists)} && ${Me.Group[${cureGroupCount}].Health}>0 && ${Me.Group[${cureGroupCount}].InZone} && ${Me.Group[${cureGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								{
+									if ${Me.Group[${cureGroupCount}].Noxious}>0 || ${Me.Group[${cureGroupCount}].Trauma}>0 || ${Me.Group[${cureGroupCount}].Arcane}>0 || ${Me.Group[${cureGroupCount}].Elemental}>0
+									{
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Group[${cureGroupCount}].ID}
+										return TRUE
+									}
+								}
+							}
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to cure
+						}
+						else
+						{
+							if ${CastTarget.Equal[${Me.ID}]} || ${CastTarget.Equal[FALSE]}
+							{
+								if ${Me.Noxious}>0 || ${Me.Trauma}>0 || ${Me.Arcane}>0 || ${Me.Elemental}>0
+								{
+									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+									return TRUE
+								}
+							}
+							;if our target has any affliction cast cure on them
+							elseif (${Me.Group[id,${CastTarget}].Noxious}>0 || ${Me.Group[id,${CastTarget}].Trauma}>0 || ${Me.Group[id,${CastTarget}].Arcane}>0 || ${Me.Group[id,${CastTarget}].Elemental}>0 || ${Me.Raid[id,${CastTarget}].Noxious}>0 || ${Me.Raid[id,${CastTarget}].Trauma}>0 || ${Me.Raid[id,${CastTarget}].Arcane}>0 || ${Me.Raid[id,${CastTarget}].Elemental}>0) && (${Me.Group[${cureGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} || ${Me.Raid[${cureGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]})
+							{
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+								return TRUE
+							}
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to cure
+						}
+					}
+					elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Cure Curse]}
+					{
+						if ${CastTarget.Equal[@NotSelfGroup]}
+						{
+							;check NotSelfGroup for curse
+							variable int curseNotSelfGroupCount
+							for(curseNotSelfGroupCount:Set[7];${curseNotSelfGroupCount}<=${Me.Raid};curseNotSelfGroupCount:Inc)
+							{
+								if ${Me.Raid[${curseNotSelfGroupCount}](exists)} && ${Me.Raid[${curseNotSelfGroupCount}].Health}>0 && ${Me.Raid[${curseNotSelfGroupCount}].InZone} && ${Me.Raid[${curseNotSelfGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								{
+									if ${Me.Raid[${curseNotSelfGroupCount}].Cursed}>0
+									{
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${curseNotSelfGroupCount}].ID}
+										return TRUE
+									}
+								}
+							}
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to cure
+						}
+						elseif ${CastTarget.Equal[@Raid]}
+						{
+							;check Raid for curse
+							variable int curseRaidCount
+							for(curseRaidCount:Set[1];${curseRaidCount}<=${Me.Raid};curseRaidCount:Inc)
+							{
+								if ${Me.Raid[${curseRaidCount}](exists)} && ${Me.Raid[${curseRaidCount}].Health}>0 && ${Me.Raid[${curseRaidCount}].InZone} && ${Me.Raid[${curseRaidCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								{
+									if ${Me.Raid[${curseRaidCount}].Cursed}>0
+									{
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${curseRaidCount}].ID}
+										return TRUE
+									}
+								}
+							}
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to cure
+						}
+						elseif ${CastTarget.Equal[@Group]}
+						{
+							;check group for curse
+							variable int curseGroupCount
+							if ${Me.Cursed}>0
+							{
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+								return TRUE
+							}
+							for(curseGroupCount:Set[1];${curseGroupCount}<${Me.Group};curseGroupCount:Inc)
+							{
+								if ${Me.Group[${curseGroupCount}](exists)} && ${Me.Group[${curseGroupCount}].Health}>0 && ${Me.Group[${curseGroupCount}].InZone} && ${Me.Group[${curseGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								{
+									if ${Me.Group[${curseGroupCount}].Cursed}>0
+									{
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Group[${curseGroupCount}].ID}
+										return TRUE
+									}
+								}
+							}
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to cure
+						}
+						else
+						{
+							;if our target has any affliction cast cure on them
+							if ( ${CastTarget.Equal[${Me.ID}]} || ${CastTarget.Equal[FALSE]} ) && ${Me.Cursed}>0
+							{
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+								return TRUE
+							}
+							elseif (${Me.Group[id,${CastTarget}].Cursed}>0 || ${Me.Raid[id,${CastTarget}].Cursed}>0) && (${Me.Group[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} || ${Me.Raid[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]})
+							{
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+								return TRUE
+							}
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to cure
+						}
+					}
+					break
+				}
+				case Heal
+				{
+					;echo is a heal
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[6,|]}>0
+					{
+						variable int groupCount1
+						variable int lowhealth=0
+						if ${Me.Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+							lowhealth:Inc
+						for(groupCount1:Set[1];${groupCount1}<${Me.Group};groupCount1:Inc)
+						{
+							if ${Me.Group[${groupCount1}].Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && ${Me.Group[${groupCount1}](exists)} && ${Me.Group[${groupCount1}].Health}>0 && ${Me.Group[${groupCount1}].InZone} && !${Me.Group[${groupCount1}].IsDead} && ${Me.Group[${groupCount1}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								lowhealth:Inc
+						}
+						if ${lowhealth}>=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[6,|]}
+						{
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							return TRUE
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, not enough to heal
+					}
+					;check if the target is NotSelfGroup
+					elseif ${CastTarget.Equal[@NotSelfGroup]}
+					{
+						;echo check NotSelfGroup for health
+						variable int NotSelfGroupCount=0
+						for(NotSelfGroupCount:Set[7];${NotSelfGroupCount}<=${Me.Raid};NotSelfGroupCount:Inc)
+						{
+							if ${Me.Raid[${NotSelfGroupCount}](exists)} && ${Me.Raid[${NotSelfGroupCount}].Health}>0 && ${Me.Raid[${NotSelfGroupCount}].InZone} && ${Me.Raid[${NotSelfGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Raid[${NotSelfGroupCount}].Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Raid[${NotSelfGroupCount}].IsDead}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Raid[${NotSelfGroupCount}].ID}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${NotSelfGroupCount}].ID}
+									return TRUE
+								}
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to heal
+					}
+					;check if the target is raid
+					elseif ${CastTarget.Equal[@Raid]}
+					{
+						;echo check Raid for health
+						variable int raidCount=0
+						for(raidCount:Set[1];${raidCount}<=${Me.Raid};raidCount:Inc)
+						{
+							if ${Me.Raid[${raidCount}](exists)} && ${Me.Raid[${raidCount}].Health}>0 && ${Me.Raid[${raidCount}].InZone} && ${Me.Raid[${raidCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Raid[${raidCount}].Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Raid[${raidCount}].IsDead}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Raid[${raidCount}].ID}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${raidCount}].ID}
+									return TRUE
+								}
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to heal
+					}
+					elseif ${CastTarget.Equal[@Group]}
+					{
+						;echo check group health
+						variable int groupCount
+						if ${Me.Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+						{
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+							return TRUE
+						}
+						for(groupCount:Set[1];${groupCount}<${Me.Group};groupCount:Inc)
+						{
+							;echo checking ${groupCount}: ${Me.Group[${groupCount}].Name}
+							if ${Me.Group[${groupCount}](exists)} && ${Me.Group[${groupCount}].Health}>0 && ${Me.Group[${groupCount}].InZone} && ${Me.Group[${groupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Group[${groupCount}].Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Group[${groupCount}].IsDead}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Group[${groupCount}].ID}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Group[${groupCount}].ID}
+									return TRUE
+								}
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to heal
+					}
+					else
+					{
+						;if our target is me
+						if ${CastTarget.Equal[${Me.ID}]} || ${CastTarget.Equal[FALSE]}
+						{
+							;echo Our Heal Target is ${Me}, Checking health ${Me.Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+							if ${Me.Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+							{
+								if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+								{
+									if ${CastTarget.Equal[FALSE]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]}
+									else
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.ID}
+								}
+								else
+									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+								return TRUE
+							}
+						}
+						;check our target health
+						else
+						{
+							;echo Our Heal Target is ${CastTarget}, Checking health ${Me.Group[id,${CastTarget}].Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+							if ${Me.Raid}>0
+							{
+								if ${Me.Raid[id,${CastTarget}].Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Raid[id,${CastTarget}].IsDead} && ${Me.Raid[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${CastTarget}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+									return TRUE
+								}
+							}
+							elseif ${Me.Group[id,${CastTarget}].Health}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Group[id,${CastTarget}].IsDead} && ${Me.Group[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+									call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${CastTarget}
+								else
+									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+								return TRUE
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to heal
+					}
+					break
+				}
+				case Power
+				{
+					;echo is a Power
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[6,|]}>0
+					{
+						variable int phGroupCount1
+						variable int lowPower=0
+						if ${Me.Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+							lowPower:Inc
+						for(phGroupCount1:Set[1];${phGroupCount1}<${Me.Group};phGroupCount1:Inc)
+						{
+							if ${Me.Group[${phGroupCount1}].Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Group[${phGroupCount1}].IsDead} && ${Me.Group[${phGroupCount1}](exists)} && ${Me.Group[${phGroupCount1}].Health}>0 && ${Me.Group[${phGroupCount1}].InZone} && ${Me.Group[${phGroupCount1}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								lowPower:Inc
+						}
+						if ${lowPower}>=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[6,|]}
+						{
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							return TRUE
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, not enough to Power
+					}
+					;check if the target is notselfgroup
+					elseif ${CastTarget.Equal[@NotSelfGroup]}
+					{
+						if ${Me.Raid}==0
+							continue
+						;echo check NotSelfGroup for Power
+						variable int phNotSelfGroupCount=0
+						for(phNotSelfGroupCount:Set[7];${phNotSelfGroupCount}<=${Me.Raid};phNotSelfGroupCount:Inc)
+						{
+							if ${Me.Raid[${phNotSelfGroupCount}](exists)} && ${Me.Raid[${phNotSelfGroupCount}].Health}>0 && ${Me.Raid[${phNotSelfGroupCount}].InZone} && ${Me.Raid[${phNotSelfGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Raid[${phNotSelfGroupCount}].Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Raid[${phNotSelfGroupCount}].IsDead}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Raid[${phNotSelfGroupCount}].ID}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${phNotSelfGroupCount}].ID}
+									return TRUE
+								}
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to Power
+					}
+					;check if the target is raid
+					elseif ${CastTarget.Equal[@Raid]}
+					{
+						if ${Me.Raid}==0
+							continue
+						;echo check Raid for Power
+						variable int phRaidCount=0
+						for(phRaidCount:Set[1];${phRaidCount}<=${Me.Raid};phRaidCount:Inc)
+						{
+							if ${Me.Raid[${phRaidCount}](exists)} && ${Me.Raid[${phRaidCount}].Health}>0 && ${Me.Raid[${phRaidCount}].InZone} && ${Me.Raid[${phRaidCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Raid[${phRaidCount}].Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Raid[${phRaidCount}].IsDead}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Raid[${phRaidCount}].ID}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[${phRaidCount}].ID}
+									return TRUE
+								}
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to Power
+					}
+					elseif ${CastTarget.Equal[@Group]}
+					{
+						;echo check group Power
+						variable int phGroupCount
+						if ${Me.Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+						{
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+							return TRUE
+						}
+						for(phGroupCount:Set[1];${phGroupCount}<${Me.Group};phGroupCount:Inc)
+						{
+							;echo checking ${phGroupCount}: ${Me.Group[${phGroupCount}].Name}
+							if ${Me.Group[${phGroupCount}](exists)} && ${Me.Group[${phGroupCount}].Health}>0 && ${Me.Group[${phGroupCount}].InZone} && ${Me.Group[${phGroupCount}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								if ${Me.Group[${phGroupCount}].Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Group[${phGroupCount}].IsDead}
+								{
+									if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Group[${phGroupCount}].ID}
+									else
+										Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Group[${phGroupCount}].ID}
+									return TRUE
+								}
+							}
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to Power
+					}
+					else
+					{
+						;if our target is me
+						if ${CastTarget.Equal[${Me.ID}]} || ${CastTarget.Equal[FALSE]}
+						{
+							;echo Our Power Target is ${Me}, Checking Power ${Me.Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+							if ${Me.Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+							{
+								;echo ${Me.Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]}
+								if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+								{
+									if ${CastTarget.Equal[FALSE]}
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]}
+									else
+										call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.ID}
+								}
+								else
+									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+								return TRUE
+							}
+							elseif ${CombatBotDebug}
+								echo Skipping Power Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]} 
+						}
+						;check our target Power
+						elseif ${Me.Raid}>0 && ${Me.Raid[id,${CastTarget}].Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Raid[id,${CastTarget}].IsDead} && ${Me.Raid[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+						{
+							if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+								call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${CastTarget}
+							else
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+							return TRUE
+						}
+						elseif ${Me.Group[id,${CastTarget}].Power}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[5,|]} && !${Me.Group[id,${CastTarget}].IsDead} && ${Me.Group[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+						{
+							if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+								call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${CastTarget}
+							else
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+							return TRUE
+						}
+						if ${CombatBotDebug}
+							echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, no one to Power
+					}
+					break
+				}
+				case InCombatTargeted
+				{	
+					;echo is incombattargeted
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal["Barrier of the Spirits"]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[11,|].Equal[TRUE]}
+					{
+						if ${Me.Maintained["Ferocity of Spirits"].CurrentIncrements}<3
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are at ${Me.Maintained["Ferocity of Spirits"].CurrentIncrements}
+							continue
+						}
+					}
+					if ${CastTarget.Equal[@Me]} || ${CastTarget.Equal[${Me.ID}]} || ${CastTarget.Equal[FALSE]}
+					{
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+						{
+							if ${CastTarget.Equal[FALSE]}
+								call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]}
+							else
+								call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.ID}
+						}
+						else
+						{
+							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Name}
+							
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+						}
+						return TRUE
+					}
+					elseif ${CastTarget.Equal[@NotSelfGroup]}
+					{
+						if ${Me.Raid[7].IsDead}
+							continue
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.Raid[7].ID}
+						else
+						{
+							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[7].Name}
+							if ${Actor[id,${Me.Raid[7].ID}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[7].ID}
+						}
+						return TRUE
+					}
+					elseif ${CastTarget.Equal[@Raid]}
+					{
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.ID}
+						else
+						{
+							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Name}
+							
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+						}
+						return TRUE
+					}
+					elseif ${CastTarget.Equal[@Group]}
+					{
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.ID}
+						else
+						{
+							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Name}
+							
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+						}
+						return TRUE
+					}
+					else
+					{
+						if ${Me.Raid[id,${CastTarget}].IsDead} || ${Me.Group[id,${CastTarget}].IsDead}
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, ${Actor[id,${CastTarget}].Name} is dead
+							continue
+						}
+						 
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${CastTarget}
+						else
+						{
+							if ${Actor[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+								
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+							}
+							else
+							{
+								if ${CombatBotDebug}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							}
+						}
+						return TRUE
+					}
+					break
+				}
+				case NamedHostile
+				case Hostile
+				{
+					;continue
+					if ${KillTargetHealth}!=-1 && ( ${KillTargetHealth}<=${Int[${UIElement[SettingsAttackHealthTextEntry@SettingsFrame@CombatBotUI].Text}]} || ${UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI].Checked} )
+						noop
+					else
+					{
+						if ${CombatBotDebug}
+							echo Ignoring Hostile/NamedHostile Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we have no valid target or the target's health is too high
+						continue
+					}
+					;continue
+					;echo ${MaxDist}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} && ${MinDist}>${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].NotEqual[Item:]}
+					{
+						if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
+						{
+							if ${MaxDist}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} && ${MinDist}>${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								noop
+							else
+							{
+								if ${CombatBotDebug}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: ${MaxDist}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} && ${MinDist}>${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								continue
+							}
+						}
+						elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
+						{
+							if ${MaxDist}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							{
+								
+								noop
+							}
+							else
+							{
+								if ${CombatBotDebug}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: ${MaxDist}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} && ${MinDist}>${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								continue
+							}
+						}
+						else
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: ${MaxDist}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} && ${MinDist}>${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+						}
+					}
+					elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+					{
+						if ${MaxDist}>50
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: 50
+							continue
+						}
+					}
+					;continue
+					;now
+					;check if the ability is an AE, if so check mobs, use 3 for default, -uses ui now
+					; echo AE: ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[9,|].NotEqual[TRUE]} && ${Mobs.CountAE}<3
+					if ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ( ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} || ${istrExportIsSelfAbility.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} ) && ( !${UIElement[SettingsSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || !${UIElement[SettingsInstancedSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || ${UIElement[SettingsDoNotCastAECheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text.NotEqual[FALSE]}
+					{
+						
+						if ${UIElement[SettingsDoNotCastAECheckBox@SettingsFrame@CombatBotUI].Checked}
+						{
+							if ${CombatBotDebug}
+								echo Ignoring AE Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, set to not cast AE's
+							continue
+						}
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[9,|].NotEqual[TRUE]} 
+						{
+							;echo ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[9,|].NotEqual[TRUE]} && ( ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} || ${istrExportIsSelfAbility.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} ) && ( !${UIElement[SettingsSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || !${UIElement[SettingsInstancedSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text.NotEqual[FALSE]}
+							if ${AEcount}<${Int[${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text}]}
+							{
+								if ${CombatBotDebug}
+									echo Ignoring AE Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, not enough mobs
+								continue
+							}
+						}
+					}
+					;check if the ability is an Encounter, if so check mobs, use 3 for default, -uses ui now
+					;echo Encounter: ${istrExportIsAEncounterHostile.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[8,|].NotEqual[TRUE]} && ${Mobs.CountEncounter[${KillTargetID}]}<3
+					if ${istrExportIsAEncounterHostile.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]}  && ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].NotEqual[TRUE]} && ( !${UIElement[SettingsSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} || && !${UIElement[SettingsInstancedSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} || ${UIElement[SettingsDoNotCastEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} )
+					{
+						if ${UIElement[SettingsDoNotCastEncounterCheckBox@SettingsFrame@CombatBotUI].Checked}
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Encounter Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, set to not cast Encounter's
+							continue
+						}
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[8,|].NotEqual[TRUE]}
+						{
+							if ${RI_Var_String_MySubClass.Equal[Warlock]} && ${Actor[${KillTargetID}](exists)}
+							{
+								;echo ${KillTargetID}: ${Actor[${KillTargetID}]}
+								;echo ${Mobs.CountEncounter[${KillTargetID}]}==1
+								if ${ENCcount}<2
+								{
+									if ${Me.Maintained["Negative Void"](exists)}
+									{
+										noop
+									}
+									elseif ${Me.Ability[id,3398339435].IsReady}
+									{
+										RI_Obj_CB:Cast["Negative Void",TRUE]
+										return TRUE
+									}
+								}
+								else
+								{
+									;echo Encounter: 
+									if ${Me.Maintained["Negative Void"](exists)}
+										Me.Maintained["Negative Void"]:Cancel
+								}
+							}
+							if ${ENCcount}<${Int[${UIElement[SettingsEncounter#TextEntry@SettingsFrame@CombatBotUI].Text}]}
+							{
+								if ${CombatBotDebug}
+									echo Ignoring Encounter Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, not enough mobs in encounter
+								continue
+							}
+						}
+					}
+					;check if ability requires flanking   --- NO LONGER NEEDED AS OF 1-5-17 PATCH BY EQ2 MADE ABILITIES GREY OUT WHEN NOT BEHIND/FLANKING
+					if ${CombatBotDoBackFlankCalcs} && !${Me.Maintained[Unfetter](exists)}
+					{
+						if ${istrExportReqFlanking.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]}
+						{
+							if ${Angle}<120
+							{
+								;echo We are behind/flanking
+								noop
+							}
+							else
+							{
+								if ${CombatBotDebug}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, requires behind/flanking
+								continue
+							}
+						}
+						elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Gouge]}
+						{
+							;echo Gouge brigand spell called, checking flanking or infront
+							if ${Angle}>60
+							{
+								;echo We are infront/flanking
+								noop
+							}
+							else
+							{
+								if ${CombatBotDebug}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, requires in front/flanking
+								continue
+							}
+						}
+					}
+
+					;echo is a Hostile
+					;echo Casting ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]} as ${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} with ID ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+					{
+						if ${Actor[id,${KillTargetID}].Distance}>50
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: 50
+							continue
+						}
+						else
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]}
+					}
+					else
+					{
+						;check if max is set and then check for incs
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[11,|].Equal[TRUE]}
+						{
+							;Setting Max Increment Logic for Skull Foci @ 3
+							if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal["Skull Foci"]}
+							{
+								;still need to code the AE portion but for now will keep the ability up
+								if ${Me.Maintained["Skull Foci"].CurrentIncrements}<3
+								{
+									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								}
+								else
+								{
+									if ${CombatBotDebug}
+										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are at ${Me.Maintained["Skull Foci"].CurrentIncrements}
+									continue
+								}
+							}
+							;Setting Max Increment Logic for World Ablaze @ 3
+							elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal["World Ablaze"]}
+							{
+								;still need to code the AE portion but for now will keep the ability up
+								if ${Me.Maintained["World Ablaze"].CurrentIncrements}<3
+								{
+									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+								}
+								else
+								{
+									if ${CombatBotDebug}
+										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are at ${Me.Maintained["World Ablaze"].CurrentIncrements}
+									continue
+								}
+							}
+							if ${Me.Maintained["${strMaxIncrementAbility}"](exists)}
+							{
+								if ${Me.Maintained["${strMaxIncrementAbility}"].CurrentIncrements}<${intMaxIncrements}
+								{
+									if ${CombatBotDebug}
+										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Max Increments of ${intMaxIncrements} for "${strMaxIncrementAbility}" has not been reached we are at ${Me.Maintained["${strMaxIncrementAbility}"].CurrentIncrements}
+									continue
+								}
+							}
+							else 
+							{
+								if ${CombatBotDebug}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Max Increments Ability: ""${strMaxIncrementAbility}" not found in Maintained
+								continue
+							}
+						}
+						Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+					}
+					return TRUE
+					break
+				}
+				case Buff
+				case OutOfCombatBuff
+				{
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[OutOfCombatBuff]}
+					{
+						if ( ${Me.InCombat} || ${Me.IsHated} )
+						{
+							if ${CombatBotDebug}
+								echo Ignoring OutOfCombatBuff Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, we are in combat
+							continue
+						}
+					}
+					;echo is a Buff
+					if ${CastTarget.Equal[@Me]} || ${CastTarget.Equal[${Me.ID}]} || ${CastTarget.Equal[FALSE]}
+					{
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+						{
+							if ${CastTarget.Equal[FALSE]}
+								call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]}
+							else
+								call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.ID}
+						}
+						else
+						{
+							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Name}
+							if ${CastTarget.Equal[FALSE]}
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+							else
+								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+						}
+						return TRUE
+					}
+					elseif ${CastTarget.Equal[@Raid]}
+					{
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.ID}
+						else
+						{
+							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Name}
+							
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+						}
+						return TRUE
+					}
+					elseif ${CastTarget.Equal[@Group]}
+					{
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${Me.ID}
+						else
+						{
+							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Name}
+							
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.ID}
+						}
+						return TRUE
+					}
+					else
+					{
+						if ${Me.Raid[id,${CastTarget}].IsDead} || ${Me.Group[id,${CastTarget}].IsDead}
+						{
+							if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, ${Actor[id,${CastTarget}].Name} is dead
+							continue
+						}
+						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${CastTarget}
+						elseif ${Me.Group[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+						{
+							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+							
+							Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
+						}
+						return TRUE
+					}
+					break
+				}
+			}
+		}
+		;second:Set[${Script.RunningTime}]
+		;echo Time Taken: ${Math.Calc[${second}-${first}]}
+	}
+	; ;echo Duration: ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} -- IsBeneficial: ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} -- IgnoreDuration: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[7,|]}
+			; ;echo before duration check
+			; ;first check if isitem
+			; if ${CastTarget.NotEqual[@Group]} && ${CastTarget.NotEqual[@Raid]} && ${CastTarget.NotEqual[@NotSelfGroup]}
+			; {
+				; if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
+				; {
+					; if ${EQ2.ServerName.Equal[Battlegrounds]}
+						; continue
+					; variable int itemMaintainedCount=0
+					; variable bool boolFoundItemInItemList=FALSE
+					; boolFoundItemInItemList:Set[FALSE]
+					; variable bool boolFoundItemInMaintained=FALSE
+					; boolFoundItemInMaintained:Set[FALSE]
+					; for(itemMaintainedCount:Set[1];${itemMaintainedCount}<=${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Items};itemMaintainedCount:Inc)
+					; {
+						; ;echo forloop1
+						; if ${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Text.Equal["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"]}
+						; {
+							; ;echo found item in our ItemList, ${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Text} : ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}, checking EffectName ${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}
+							; variable int cmID1=${KillTargetID}
+							; variable int iepCMCount
+							; ;for(iepCMCount:Set[1];${iepCMCount}<=${Me.CountMaintained};iepCMCount:Inc)
+							; ;{
+							; ;echo forloop2
+								; ;echo if ${Me.Maintained[${iepCMCount}].Name.Equal["${istrItemEffectPairsEffectName.Get[${itemMaintainedCount}]}"]} 
+								; if ${Me.Maintained["${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}"](exists)} 
+								; {
+									; ;echo found spell in maintained, checking if it has a target and if its the correct target
+									; boolFoundItemInItemList:Set[TRUE]
+									; if ${Me.Maintained["${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}"].Target(exists)}
+									; {
+										; ;echo has a target
+										; if ${Me.Maintained["${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}"].Target.ID}==${cmID1} && (${Me.Maintained["${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}"].Duration}>0 || ${Me.Maintained["${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].Item[${itemMaintainedCount}].Value}"].Duration}==-1)
+										; {
+											; if ${CombatBotDebug}
+												; echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on ${Actor[${KillTargetID}].Name}
+											; boolItemCast:Set[FALSE]
+											; boolAbilityCast:Set[FALSE]
+											; boolFoundItemInMaintained:Set[TRUE]
+											; break
+										; }
+										; if ${Me.Maintained[${iepCMCount}].Target.ID}==${Me.ID} && (${Me.Maintained[${iepCMCount}].Duration}>0 || ${Me.Maintained[${iepCMCount}].Duration}==-1)
+										; {
+											; if ${CombatBotDebug}
+												; echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on Me
+											; boolItemCast:Set[FALSE]
+											; boolAbilityCast:Set[FALSE]
+											; boolFoundItemInMaintained:Set[TRUE]
+											; break
+										; }
+									; }
+									; else
+									; {
+										; ;echo doesnt have a target, continueing
+										; if ${Me.Maintained[${iepCMCount}].Duration}>0 || ${Me.Maintained[${iepCMCount}].Duration}==-1
+										; {
+											; if ${CombatBotDebug}
+												; echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained
+											; boolItemCast:Set[FALSE]
+											; boolAbilityCast:Set[FALSE]
+											; boolFoundItemInMaintained:Set[TRUE]
+											; break
+										; }
+									; }
+								; }
+							; ;}
+						; }
+						; ;echo im getting here
+						; if ${boolFoundItemInMaintained}
+							; continue
+					; }
+					; if ${boolFoundItemInMaintained}
+						; continue
+					; ;echo im getting here
+					; if !${boolFoundItemInItemList}
+					; {
+						; ;echo didnt found item in our ItemEffectPairs, checking ItemName
+						; variable int cmID2=${KillTargetID}
+						; variable int iepCMCount2
+						; ;variable bool boolFoundItemInMaintained=FALSE
+						; ;for(iepCMCount2:Set[1];${iepCMCount2}<=${Me.CountMaintained};iepCMCount2:Inc)
+						; ;{
+							; if ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"](exists)} 
+							; {
+								; ;echo found spell in maintained, checking if it has a target and if its the correct target
+								; if ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Target(exists)}
+								; {
+									; ;echo has a target
+									; if ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Target.ID}==${cmID2} && (${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Duration}>0 || ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Duration}==-1)
+									; {
+										; if ${CombatBotDebug}
+											; echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on ${Actor[${KillTargetID}].Name}
+										; boolItemCast:Set[FALSE]
+										; boolAbilityCast:Set[FALSE]
+										; boolFoundItemInMaintained:Set[TRUE]
+										; break
+									; }
+									; if ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Target.ID}==${Me.ID} && (${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"}].Duration}>0 || ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Duration}==-1)
+									; {
+										; if ${CombatBotDebug}
+											; echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on Me
+										; boolItemCast:Set[FALSE]
+										; boolAbilityCast:Set[FALSE]
+										; boolFoundItemInMaintained:Set[TRUE]
+										; break
+									; }
+								; }
+								; else
+								; {
+									; ;echo doesnt have a target, continueing
+									; if ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Duration}>0 || ${Me.Maintained["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].Duration}==-1
+									; {
+										; if ${CombatBotDebug}
+											; echo Ignoring ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained
+										; boolItemCast:Set[FALSE]
+										; boolAbilityCast:Set[FALSE]
+										; boolFoundItemInMaintained:Set[TRUE]
+										; break
+									; }
+								; }
+							; }
+						; ;}
+						; ; echo im getting here
+						; if ${boolFoundItemInMaintained}
+							; continue
+					; }
+				; }
+				; ;then check if MaxDuration is >0 and ignore duration is set to false
+				; elseif ( ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0 || ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==-1 ) && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[7,|].NotEqual[TRUE]}
+				; {
+					; ;echo Maintained Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}]}
+					; ;echo checking maintained because duration is either >0 or -1
+					; ;echo ( ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0 || ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==-1 ) && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[7,|]}
+					; variable int cmID
+					; if ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${CastTarget.NotEqual[FALSE]}
+						; cmID:Set[${CastTarget}]
+					; elseif ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]} && ${CastTarget.Equal[FALSE]}
+						; cmID:Set[${Me.ID}]
+					; else
+						; cmID:Set[${KillTargetID}]
+						
+					; if ${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"](exists)}
+					; {
+						; if ${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"].Target(exists)}
+						; {
+							; if ${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"].Target.ID}==${cmID} && (${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"].Duration}>0 || ${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"].Duration}==-1)
+							; {
+								; if ${CombatBotDebug}
+									; echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained on ${Actor[${cmID}].Name}
+								; boolItemCast:Set[FALSE]
+								; boolAbilityCast:Set[FALSE]
+								; continue
+							; }
+						; }
+						; else
+						; {
+							; if ${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"].Duration}>0 || ${Me.Maintained["${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}"].Duration}==-1
+							; {
+								; if ${CombatBotDebug}
+									; echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, already maintained
+								; boolItemCast:Set[FALSE]
+								; boolAbilityCast:Set[FALSE]
+								; continue							
+							; }
+						; }
+					; }
+				; }
+			; }
+	member:bool CheckAllOld(int start, int end)
 	{
 		;echo ${Script.RunningTime}
 		;echo Checking from ${start} to ${end}
@@ -7299,10 +9922,23 @@ objectdef CheckAbilitiesObject
 		strCastNameShort:Set[""]
 		strCastID:Set[0]
 		strCastTarget:Set[""]
-		
+		;echo ability requires flanking
+		;check if we are behind or flanking
+		;echo ${KillTargetID} : ${Actor[${KillTargetID}].Name}
+		Heading:Set[${Actor[${KillTargetID}].Heading}]
+		HeadingTo:Set[${Actor[${KillTargetID}].HeadingTo}]
+		Angle:Set[${Math.Calc[${Math.Cos[${Heading}]} * ${Math.Cos[${HeadingTo}]} + ${Math.Sin[${Heading}]} * ${Math.Sin[${HeadingTo}]}]}]
+		if ${Angle} < -1 
+			Angle:Set[-1]
+		if ${Angle} > 1
+			Angle:Set[1]	
+		Angle:Set[${Math.Acos[${Angle}]}]
 		;AE
 		AEcount:Set[${Mobs.CountAE}]
 		ENCcount:Set[${Mobs.CountEncounter[${KillTargetID}]}]
+		RangeCalc:Set[${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale})]}]
+		MinDist:Set[${Math.Calc[${Actor[id,${KillTargetID}].Distance}+${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale})]}]}]
+		MaxDist:Set[${Math.Calc[${Actor[id,${KillTargetID}].Distance}-${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale})]}]}]
 		if ${RI_Obj_CB.GetUISetting[SettingsStartHeroicCheckBox]} && ${Me.InCombat} && ${EQ2.ServerName.NotEqual[Battlegrounds]}
 		{
 			switch ${Me.Archetype}
@@ -7447,7 +10083,7 @@ objectdef CheckAbilitiesObject
 					continue
 				}
 			}
-			if ${Me.SubClass.Equal[beastlord]} 
+			if ${intMySubClass}==22
 			{
 				if ${Me.Maintained[Spiritual Stance](exists)} && ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Silent Talon]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Feral Pounce]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Shadow Leap]} )
 				{
@@ -7456,15 +10092,19 @@ objectdef CheckAbilitiesObject
 					continue
 				}
 			}
+			
 			;echo 1
 			;if ${CombatBotDebug2}
 				;echo if \${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].TextColor}!=-10263709 && ( ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].IsReady} && \${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].NotEqual[Item:]} ) || ( \${Me.Equipment["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 || \${Me.Inventory["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 ) || ( \${istrExportReqStealth.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && \${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].TimeUntilReady}==0 )
-			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].TextColor}!=-10263709 && ( ( ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].IsReady} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Cure]} ) && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].NotEqual[Item:]} ) || ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]} && ( ${Me.Equipment["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 || ${Me.Inventory["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 ) ) || ( ${istrExportReqStealth.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].TimeUntilReady}==0 )
+			if ( ( ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].IsReady} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Cure]} )
+;			&& ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].NotEqual[Item:]} ) || ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]} && ( ${Me.Equipment["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 || ${Me.Inventory["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}"].TimeUntilReady}<0 ) ) || ( ${istrExportReqStealth.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ${Me.Ability[id,${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}].TimeUntilReady}==0 )
 			{
+				; continue
 				;if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
 				;	echo item is ready
 				;else
 				;	echo ability is ready
+				
 				if ${istrExportCastingTime.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 					boolInstantCast:Set[TRUE]
 				else 
@@ -7475,6 +10115,7 @@ objectdef CheckAbilitiesObject
 					boolBuff:Set[FALSE]
 				;if my spell has a target, lets check aliases and convert
 				;echo before target checks
+
 				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].NotEqual[FALSE]}
 				{
 					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].NotEqual[@Group]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].NotEqual[@Raid]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].NotEqual[@Me]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].NotEqual[@NotSelfGroup]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].NotEqual[@PCTarget]}
@@ -7673,33 +10314,32 @@ objectdef CheckAbilitiesObject
 					{
 						if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 						{
-							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								noop
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								continue
 							}
 						}
 						elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 						{
-							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							{
-								
 								noop
 							}
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								continue
 							}
 						}
 						else
 						{
 							if ${CombatBotDebug}
-								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 						}
 					}
 					;echo end hostile ${count}
@@ -7959,17 +10599,6 @@ objectdef CheckAbilitiesObject
 				{
 					if ${istrExportReqFlanking.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]}
 					{
-						;echo ability requires flanking
-						;check if we are behind or flanking
-						;echo ${KillTargetID} : ${Actor[${KillTargetID}].Name}
-						Heading:Set[${Actor[${KillTargetID}].Heading}]
-						HeadingTo:Set[${Actor[${KillTargetID}].HeadingTo}]
-						Angle:Set[${Math.Calc[${Math.Cos[${Heading}]} * ${Math.Cos[${HeadingTo}]} + ${Math.Sin[${Heading}]} * ${Math.Sin[${HeadingTo}]}]}]
-						if ${Angle} < -1 
-							Angle:Set[-1]
-						if ${Angle} > 1
-							Angle:Set[1]	
-						Angle:Set[${Math.Acos[${Angle}]}]
 						if ${Angle}<120
 						{
 							;echo We are behind/flanking
@@ -7985,14 +10614,6 @@ objectdef CheckAbilitiesObject
 					elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Gouge]}
 					{
 						;echo Gouge brigand spell called, checking flanking or infront
-						Heading:Set[${Actor[${KillTargetID}].Heading}]
-						HeadingTo:Set[${Actor[${KillTargetID}].HeadingTo}]
-						Angle:Set[${Math.Calc[${Math.Cos[${Heading}]} * ${Math.Cos[${HeadingTo}]} + ${Math.Sin[${Heading}]} * ${Math.Sin[${HeadingTo}]}]}]
-						if ${Angle} < -1 
-							Angle:Set[-1]
-						if ${Angle} > 1
-							Angle:Set[1]
-						Angle:Set[${Math.Acos[${Angle}]}]
 						if ${Angle}>60
 						{
 							;echo We are infront/flanking
@@ -8542,6 +11163,7 @@ objectdef CheckAbilitiesObject
 				}
 				elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[InCombatTargeted]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].TextColor}!=-10263709
 				{
+					;echo is incombattargeted
 					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal["Barrier of the Spirits"]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[11,|].Equal[TRUE]}
 					{
 						if ${Me.Maintained["Ferocity of Spirits"].CurrentIncrements}<3
@@ -8551,7 +11173,6 @@ objectdef CheckAbilitiesObject
 							continue
 						}
 					}
-					;echo is combat
 					if ${CastTarget.Equal[@Me]} || ${CastTarget.Equal[${Me.ID}]} || ${CastTarget.Equal[FALSE]}
 					{
 						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
@@ -8578,7 +11199,7 @@ objectdef CheckAbilitiesObject
 						else
 						{
 							;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[7].Name}
-							if ${Actor[id,${Me.Raid[7].ID}].Distance}<${Math.Calc[(${Actor[id,${Me.Raid[7].ID}].CollisionRadius} * ${Actor[id,${Me.Raid[7].ID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${Me.Raid[7].ID}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${Me.Raid[7].ID}
 						}
 						return TRUE
@@ -8620,7 +11241,7 @@ objectdef CheckAbilitiesObject
 							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[10,|]} ${CastTarget}
 						else
 						{
-							if ${Actor[id,${CastTarget}].Distance}<${Math.Calc[(${Actor[id,${CastTarget}].CollisionRadius} * ${Actor[id,${CastTarget}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 							{
 								;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} ${CastTarget}
 								
@@ -8629,7 +11250,7 @@ objectdef CheckAbilitiesObject
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${CastTarget}].Distance}<${Math.Calc[(${Actor[id,${CastTarget}].CollisionRadius} * ${Actor[id,${CastTarget}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${CastTarget}].Distance}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 							}
 						}
 						return TRUE
@@ -8664,18 +11285,18 @@ objectdef CheckAbilitiesObject
 									{
 										if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 										{
-											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 												Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 										}
 										elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 										{
-											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 												Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 										}
 										else
 										{
 											if ${CombatBotDebug}
-												echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+												echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											continue
 										}
 									}
@@ -8694,18 +11315,18 @@ objectdef CheckAbilitiesObject
 									{
 										if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 										{
-											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 												Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 										}
 										elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 										{
-											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 												Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 										}
 										else
 										{
 											if ${CombatBotDebug}
-												echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+												echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											continue
 										}
 									}
@@ -8734,18 +11355,18 @@ objectdef CheckAbilitiesObject
 							}
 							if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 							{
-								if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+								if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 								else
 								{
 									if ${CombatBotDebug}
-										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 									continue
 								}
 							}
 							elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 							{
-								if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+								if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								{
 									;echo Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
@@ -8754,14 +11375,14 @@ objectdef CheckAbilitiesObject
 								else
 								{
 									if ${CombatBotDebug}
-										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 									continue
 								}
 							}
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							}
 						}
 						return TRUE
@@ -8769,7 +11390,7 @@ objectdef CheckAbilitiesObject
 				}
 				elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[Hostile]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].TextColor}!=-10263709
 				{
-					;echo is a CA
+					;echo is a Hostile
 					;echo Casting ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]} as ${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} with ID ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Left[5].Equal[Item:]}
 					{
@@ -8795,18 +11416,18 @@ objectdef CheckAbilitiesObject
 								{
 									if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 									{
-										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									}
 									elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 									{
-										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									}
 									else
 									{
 										if ${CombatBotDebug}
-											echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 										continue
 									}
 								}
@@ -8825,18 +11446,18 @@ objectdef CheckAbilitiesObject
 								{
 									if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 									{
-										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									}
 									elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 									{
-										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+										if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 											Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 									}
 									else
 									{
 										if ${CombatBotDebug}
-											echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+											echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 										continue
 									}
 								}
@@ -8865,21 +11486,21 @@ objectdef CheckAbilitiesObject
 						}
 						if ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0
 						{
-							;echo ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
-							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							;echo ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} && ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								continue
 							}
 								
 						}
 						elseif ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==0
 						{
-							;echo ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
-							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							;echo ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+							if ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							{
 								;echo before cast call return: ${Return}
 								Cast "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}" "${istrExport.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}" ${istrExportID.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
@@ -8888,14 +11509,14 @@ objectdef CheckAbilitiesObject
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 								continue
 							}
 						}
 						else
 						{
 							if ${CombatBotDebug}
-								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale}) + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: Max: ${Actor[id,${KillTargetID}].Distance}<${Math.Calc[${RangeCalc} + ${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]} Min: ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[${RangeCalc} + ${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}]}
 							continue
 						}
 					}
@@ -9947,14 +12568,6 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 									;echo ability requires flanking
 									;check if we are behind or flanking
 									;echo ${KillTargetID} : ${Actor[${KillTargetID}].Name}
-									Heading:Set[${Actor[${KillTargetID}].Heading}]
-									HeadingTo:Set[${Actor[${KillTargetID}].HeadingTo}]
-									Angle:Set[${Math.Calc[${Math.Cos[${Heading}]} * ${Math.Cos[${HeadingTo}]} + ${Math.Sin[${Heading}]} * ${Math.Sin[${HeadingTo}]}]}]
-									if ${Angle} < -1 
-										Angle:Set[-1]
-									if ${Angle} > 1
-										Angle:Set[1]	
-									Angle:Set[${Math.Acos[${Angle}]}]
 									if ${Angle}<120
 									{
 										;echo We are behind/flanking
@@ -10032,6 +12645,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 	}
 	if ${CombatBotCastingDebug}
 		echo Casting Ability ${CastNameShort} as ${CastName} ID: ${CastID} Target: ${Actor[id,${CastTarget}].Name}
+
 	if ${CastTarget.Equal[FALSE]}
 	{	
 		;wait until we are not casting
@@ -10234,7 +12848,10 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 				wait 2 ${Me.CastingSpell} || !${Me.Ability[id,${CastID}].IsReady} || ${Me.Ability[id,${CastID}].TimeUntilReady}>0 || ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${CastName}]} )
 				;${boolInstantCast} || 
 				if ${boolBuff}
+				{
+					;echo buff
 					wait 5
+				}
 				if ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal["${CastName}"]}
 					break
 				waitframe
@@ -10255,6 +12872,8 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 		;wait 1
 		;eq2execute clearabilityqueue
 	}
+	if !${Me.Ability[id,${istrExportID.Get[${istrInvisAbilitiesAbilityExportPosition}]}].IsReady} && ${Me.Ability[id,${istrExportID.Get[${istrInvisAbilitiesAbilityExportPosition}]}].TimeUntilReady}>0 && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[12,|]}>0 && ${RI_Var_String_MySubClass.Equal[beastlord]}
+		LastSavageryCastTime:Set[${Script.RunningTime}]
 	if !${Me.Ability[id,${istrExportID.Get[${istrInvisAbilitiesAbilityExportPosition}]}].IsReady}
 		mainCount:Set[1]
 	boolAbilityCast:Set[FALSE]
@@ -11092,6 +13711,7 @@ atom IterateExport(settingsetref Set, int ExportCount)
 	Set:GetSettingIterator[Iterator]
 	variable string strTmpIsAE=FALSE
 	variable int exportCount=0
+	variable string strTemp
 	exportCount:Set[0]
 	if !${Iterator:First(exists)}
 		return
@@ -11134,6 +13754,26 @@ atom IterateExport(settingsetref Set, int ExportCount)
 			;echo This Export: ${Iterator.Value} MaxRange is 0
 		istrExportMinRange:Insert[${Set.FindSetting[${Iterator.Value}].FindAttribute[MinRange]}]
 		istrExportSavageryCost:Insert[${Set.FindSetting[${Iterator.Value}].FindAttribute[SavageryCost]}]
+		strTemp:Set[${Set.FindSetting[${Iterator.Value}].FindAttribute[Feral]}]
+		if ${strTemp.Equal[TRUE]}
+			iboolExportFeral:Insert[1]
+		else
+			iboolExportFeral:Insert[0]
+		strTemp:Set[${Set.FindSetting[${Iterator.Value}].FindAttribute[Spiritual]}]
+		if ${strTemp.Equal[TRUE]}
+			iboolExportSpiritual:Insert[1]
+		else
+			iboolExportSpiritual:Insert[0]
+		strTemp:Set[${Set.FindSetting[${Iterator.Value}].FindAttribute[Advantage]}]
+		if ${strTemp.Equal[TRUE]}
+			iboolExportAdvantage:Insert[1]
+		else
+			iboolExportAdvantage:Insert[0]
+		strTemp:Set[${Set.FindSetting[${Iterator.Value}].FindAttribute[Primal]}]
+		if ${strTemp.Equal[TRUE]}
+			iboolExportPrimal:Insert[1]
+		else
+			iboolExportPrimal:Insert[0]
 		istrExportMaxDuration:Insert[${Set.FindSetting[${Iterator.Value}].FindAttribute[MaxDuration]}]
 		istrExportIsBeneficial:Insert[${Set.FindSetting[${Iterator.Value}].FindAttribute[IsBeneficial]}]
 		istrExportReqFlanking:Insert[${Set.FindSetting[${Iterator.Value}].FindAttribute[IsFlankingRequired]}]

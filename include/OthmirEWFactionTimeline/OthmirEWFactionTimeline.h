@@ -1,6 +1,6 @@
 string OthmirEWFactionTimeline[] = {"Othmir EW Faction Timeline", 
 "Custom", 
-"Quest \"Pup Defender\"", 
+"Quest \"Pup Defender\" 17", 
 "0 0 0", 
 "-1258.400269 -537.173096 3519.022705", 
 "-1253.165649 -537.509949 3510.190674", 

@@ -135,16 +135,17 @@ function LoadAccountList()
 	;echo Set: ${CountSets2.Count[${Set2}]}==0
 	numSets:Set[${CountSets2.Count[${Set2}]}]
 	declare strSets[${numSets}] string script
-	if ${CountSets2.Count[${Set2}]}==0
-	{
-		MessageBox -skin eq2 "We were unable to read your RICharList.xml file"
-		Script:End
-	}
-	if ${strSets[1].Equal[AccountLogin]}
-	{
-		MessageBox -skin eq2 "You must edit your RICharList.xml file and add your accounts and toons"
-		Script:End
-	}
+	numSets:Set[${CountSets2.Count[${Set2}]}]
+	; if ${CountSets2.Count[${Set2}]}==0
+	; {
+		; MessageBox -skin eq2 "We were unable to read your RICharList.xml file"
+		; Script:End
+	; }
+	; if ${strSets[1].Equal[AccountLogin]}
+	; {
+		; MessageBox -skin eq2 "You must edit your RICharList.xml file and add your accounts and toons"
+		; Script:End
+	; }
 	CountSets2:PopulateAccounts[${Set2}]
 }
 function DumpSubsets(settingsetref Set)

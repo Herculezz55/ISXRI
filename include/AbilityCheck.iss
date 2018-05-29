@@ -323,9 +323,22 @@ function main(... args)
 			else
 				AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[IsAoE,${IsAoE}]
 			if ${AbilitiesIterator.Value.ToAbilityInfo.Description.Find["Feral"](exists)}
+			{
 				AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[Feral,TRUE]
+				if ${AbilitiesIterator.Value.ToAbilityInfo.Description.Find["Primal"](exists)}
+					AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[Primal,TRUE]
+				if ${AbilitiesIterator.Value.ToAbilityInfo.Description.Find["Advantage"](exists)}
+					AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[Advantage,TRUE]
+			}
 			elseif ${AbilitiesIterator.Value.ToAbilityInfo.Description.Find["Spiritual"](exists)}
+			{
 				AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[Spiritual,TRUE]
+				if ${AbilitiesIterator.Value.ToAbilityInfo.Description.Find["Primal"](exists)}
+					AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[Primal,TRUE]
+				if ${AbilitiesIterator.Value.ToAbilityInfo.Description.Find["Advantage"](exists)}
+					AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[Advantage,TRUE]
+			}
+				
 			; else
 			; {
 				; AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[Feral,FALSE]

@@ -1,4 +1,4 @@
-string NingYungRetreatTimeline[] = {"Ning Yung Retreat Timeline", 
+string NingYunRetreatTimeline[] = {"Ning Yun Retreat Timeline", 
 "Custom", 
 "Quest \"Repelling the Gruengach\"", 
 "0 0 0", 

@@ -18,7 +18,7 @@ HailActorGetQuest -Actor "Izle Tot"
 -441.782562 79.934891 284.797150
 -373.709839 75.601402 389.741302
 Custom
-PathKill 20 75 15 1 0 0 "fishing stonestalker" "I have a bunch of kindey stones" 1
+PathKill 20 75 15 1 0 0 "fishing stonestalker" "I have a bunch of kidney stones" 1
 -316.065369 66.156921 465.378265
 -238.550598 73.290154 515.466797
 -211.313705 73.892441 474.039246

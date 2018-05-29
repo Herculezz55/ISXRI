@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.51 2-8-18"
-double EXTVER = 5.51;
+#define EXTENSION_VERSION "5.65 5-28-18"
+double EXTVER = 5.65;
 #include "ISXRI.h"
 
 
@@ -106,6 +106,7 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "Flag.h"
 #include "RIMobHud.h"
 #include "Transmute.h"
+#include "Extract.h"
 #include "Salvage.h"
 #include "RI.h"
 #include "AutoTarget.h"
@@ -179,6 +180,8 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "SolusekRosTowerTheObsidianCore.h"
 #include "TordenBastionofThunderTowerBreach.h"
 #include "TordenBastionofThunderWindsofChange.h"
+#include "PlaneofInnovationSecurityMeasuresTradeskill.h"
+#include "TordenBastionofThunderLightningStrikesTradeskill.h"
 
 //Quest Dat Files
 #include "AnythingforJumjum.h"
@@ -571,7 +574,7 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "TheRift.h"
 #include "TheStolenTome.h"
 #include "ToweroftheFourWindsTimeline.h"
-#include "NingYungRetreatTimeline.h"
+#include "NingYunRetreatTimeline.h"
 #include "OrderofRimeFactionTimeline.h"
 #include "TearsofVeeshanTimeline.h"
 #include "AGnollishPlanAfoot.h"
@@ -806,6 +809,8 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "LegacyofPowerGlimpseoftheHereother.h"
 #include "LegacyofPowerThroughStormsandMists.h"
 #include "LegacyofPowerTyrantsThrone.h"
+#include "AStitchinTimePartIILightningStrikes.h"
+#include "AStitchinTimePartISecurityMeasures.h"
 
 //#include ".h"
 //End Quest Dat Files
@@ -1009,17 +1014,20 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("MistmyrManor");
 	pISInterface->RemoveTopLevelObject("RavenscaleRepository");
 	pISInterface->RemoveTopLevelObject("TheRuinsofCabilis");
-	pISInterface->RemoveTopLevelObject("BrackishVaults");
-	pISInterface->RemoveTopLevelObject("SolusekRosTowerMonolithofFire");
-	pISInterface->RemoveTopLevelObject("SolusekRosTowerTheObsidianCore");
-	pISInterface->RemoveTopLevelObject("TordenBastionofThunderTowerBreach");
-	pISInterface->RemoveTopLevelObject("TordenBastionofThunderWindsofChange");
+	
 
 	//pop
 	pISInterface->RemoveTopLevelObject("PlaneofInnovationMasksoftheMarvelous");
 	pISInterface->RemoveTopLevelObject("PlaneofInnovationGearsintheMachine");
 	pISInterface->RemoveTopLevelObject("PlaneofDiseaseOutbreak");
 	pISInterface->RemoveTopLevelObject("PlaneofDiseaseTheSource");
+	pISInterface->RemoveTopLevelObject("BrackishVaults");
+	pISInterface->RemoveTopLevelObject("SolusekRosTowerMonolithofFire");
+	pISInterface->RemoveTopLevelObject("SolusekRosTowerTheObsidianCore");
+	pISInterface->RemoveTopLevelObject("TordenBastionofThunderTowerBreach");
+	pISInterface->RemoveTopLevelObject("TordenBastionofThunderWindsofChange");
+	pISInterface->RemoveTopLevelObject("PlaneofInnovationSecurityMeasuresTradeskill");
+	pISInterface->RemoveTopLevelObject("TordenBastionofThunderLightningStrikesTradeskill");
 	//Quest TLO's
 	pISInterface->RemoveTopLevelObject("ANYTHINGFORJUMJUM");
 	pISInterface->RemoveTopLevelObject("ANEYEINTHESKY");
@@ -1411,7 +1419,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("THERIFT");
 	pISInterface->RemoveTopLevelObject("THESTOLENTOME");
 	pISInterface->RemoveTopLevelObject("TOWEROFTHEFOURWINDSTIMELINE");
-	pISInterface->RemoveTopLevelObject("NINGYUNGRETREATTIMELINE");
+	pISInterface->RemoveTopLevelObject("NINGYUNRETREATTIMELINE");
 	pISInterface->RemoveTopLevelObject("ORDEROFRIMEFACTIONTIMELINE");
 	pISInterface->RemoveTopLevelObject("TEARSOFVEESHANTIMELINE");
 	pISInterface->RemoveTopLevelObject("AGNOLLISHPLANAFOOT");
@@ -1646,7 +1654,8 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERGLIMPSEOFTHEHEREOTHER");
 	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERTHROUGHSTORMSANDMISTS");
 	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERTYRANTSTHRONE");
-
+	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTIILIGHTNINGSTRIKES");
+	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTISECURITYMEASURES");
 }
 
 void ISXRIUnRegisterCommands()
@@ -1741,6 +1750,7 @@ void ISXRIUnRegisterCommands()
 	pISInterface->RemoveCommand("RI_HideEffects");
 	pISInterface->RemoveCommand("RI_Collection");
 	pISInterface->RemoveCommand("RI_Transmute");
+	pISInterface->RemoveCommand("RI_Extract");
 	pISInterface->RemoveCommand("RI_Salvage");
 	pISInterface->RemoveCommand("RI_Ascension");
 	pISInterface->RemoveCommand("RQ");
@@ -1816,11 +1826,12 @@ void updatefunction()
 	string ISXRIBalanceXMLPath;
 	string ISXRITransmuteXMLPath;
 	string ISXRISalvageXMLPath;
+	string ISXRIExtractXMLPath;
 	string ISXRPGXMLPath;
 	string ISXRGLXMLPath;
 	string ISXRICharListXMLPath;
 	string ISXRIIXMLPath;
-	// string ISXRIConsoleXMLPath;
+	string ISXRIConsoleXMLPath;
 	char InnerspacePath[512];
 	char InnerspaceScriptsPath[512];
 	pISInterface->GetInnerSpacePath(InnerspacePath, sizeof(InnerspacePath));
@@ -1846,11 +1857,12 @@ void updatefunction()
 	ISXRIBalanceXMLPath = InnerspaceScriptsPath;
 	ISXRITransmuteXMLPath = InnerspaceScriptsPath;
 	ISXRISalvageXMLPath = InnerspaceScriptsPath;
+	ISXRIExtractXMLPath = InnerspaceScriptsPath;
 	ISXRPGXMLPath = InnerspaceScriptsPath;
 	ISXRGLXMLPath = InnerspaceScriptsPath;
 	ISXRICharListXMLPath = InnerspaceScriptsPath;
 	ISXRIIXMLPath = InnerspaceScriptsPath;
-	//ISXRIConsoleXMLPath = InnerspaceScriptsPath;
+	ISXRIConsoleXMLPath = InnerspaceScriptsPath;
 	//strcat_s(ISXRIXMLPath, InnerspacePath);
 	//printf("XML: %s", ISXRIPath);
 	//strcat_s(ISXRIXMLPath, "\\Extensions\\ISXRI.xml");
@@ -1873,11 +1885,12 @@ void updatefunction()
 	ISXRIBalanceXMLPath += "\\RI\\RIBalance.xml";
 	ISXRITransmuteXMLPath += "\\RI\\RITransmute.xml";
 	ISXRISalvageXMLPath += "\\RI\\RISalvage.xml";
+	ISXRIExtractXMLPath += "\\RI\\RIExtract.xml";
 	ISXRPGXMLPath += "\\RI\\RPG.xml";
 	ISXRGLXMLPath += "\\RI\\RIGroupLogin.xml";
 	ISXRIIXMLPath += "\\RI\\RIInventory.xml";
 	ISXRICharListXMLPath += "\\RI\\RICharListUI.xml";
-	//ISXRIConsoleXMLPath += "\\RI\\RIConsole.xml";
+	ISXRIConsoleXMLPath += "\\RI\\RIConsole.xml";
 	ISXRIFolderPath += "\\RI";
 	ISXRICombatBotFolderPath += "\\RI\\CombatBot";
 	bool CreateISXRIFolder = CreateDirectory(ISXRIFolderPath.c_str(), 0);
@@ -1899,11 +1912,12 @@ void updatefunction()
 	remove(ISXRIBalanceXMLPath.c_str());
 	remove(ISXRITransmuteXMLPath.c_str());
 	remove(ISXRISalvageXMLPath.c_str());
+	remove(ISXRIExtractXMLPath.c_str());
 	remove(ISXRPGXMLPath.c_str());
 	remove(ISXRGLXMLPath.c_str());
 	remove(ISXRICharListXMLPath.c_str());
 	remove(ISXRIIXMLPath.c_str());
-	//remove(ISXRIConsoleXMLPath.c_str());
+	remove(ISXRIConsoleXMLPath.c_str());
 	Sleep(1000);
 	//printf("Folder: %s", InnerspacePath);
 	//printf("DLL: %s", ISXRIPath);
@@ -1934,11 +1948,12 @@ void updatefunction()
 	DeleteUrlCacheEntry("http://www.isxri.com/RIBalance.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RITransmute.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RISalvage.xml");
+	DeleteUrlCacheEntry("http://www.isxri.com/RIExtract.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RPG.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RIGroupLogin.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RICharListUI.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RIInventory.xml");
-	//DeleteUrlCacheEntry("http://www.isxri.com/RIConsole.xml");
+	DeleteUrlCacheEntry("http://www.isxri.com/RIConsole.xml");
 	//download new RI.xml
 	HRESULT hRez1 = URLDownloadToFile(NULL, "http://www.isxri.com/RI.xml", ISXRIXMLPath.c_str(), 0, NULL);
 	//download new RZ.xml
@@ -1974,6 +1989,8 @@ void updatefunction()
 	//download
 	HRESULT hRez14 = URLDownloadToFile(NULL, "http://www.isxri.com/RISalvage.xml", ISXRISalvageXMLPath.c_str(), 0, NULL);
 	//download
+	HRESULT hRez14a = URLDownloadToFile(NULL, "http://www.isxri.com/RIExtract.xml", ISXRIExtractXMLPath.c_str(), 0, NULL);
+	//download
 	HRESULT hRez15 = URLDownloadToFile(NULL, "http://www.isxri.com/RPG.xml", ISXRPGXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez16 = URLDownloadToFile(NULL, "http://www.isxri.com/RIGroupLogin.xml", ISXRGLXMLPath.c_str(), 0, NULL);
@@ -1982,7 +1999,7 @@ void updatefunction()
 	//download
 	HRESULT hRez18 = URLDownloadToFile(NULL, "http://www.isxri.com/RIInventory.xml", ISXRIIXMLPath.c_str(), 0, NULL);
 	//download
-	//HRESULT hRez19 = URLDownloadToFile(NULL, "http://www.isxri.com/RIConsole.xml", ISXRIConsoleXMLPath.c_str(), 0, NULL);
+	HRESULT hRez19 = URLDownloadToFile(NULL, "http://www.isxri.com/RIConsole.xml", ISXRIConsoleXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez = URLDownloadToFile(NULL, "http://www.isxri.com/ISXRI.dll", ISX_Orig_Path.c_str(), 0, NULL);
 
@@ -18911,9 +18928,9 @@ bool __cdecl TLO_ToweroftheFourWindsTimeline(int argc, char *argv[], LSTYPEVAR &
 	return false;
 }
 //TLO to return string arrays
-bool __cdecl TLO_NingYungRetreatTimeline(int argc, char *argv[], LSTYPEVAR &Dest)
+bool __cdecl TLO_NingYunRetreatTimeline(int argc, char *argv[], LSTYPEVAR &Dest)
 {
-	int numberofelements = sizeof(NingYungRetreatTimeline) / sizeof(NingYungRetreatTimeline[0]);
+	int numberofelements = sizeof(NingYunRetreatTimeline) / sizeof(NingYunRetreatTimeline[0]);
 
 	if (argc > 1)
 	{
@@ -18930,7 +18947,7 @@ bool __cdecl TLO_NingYungRetreatTimeline(int argc, char *argv[], LSTYPEVAR &Dest
 		}
 		else if (num<numberofelements)
 		{
-			Dest.ConstCharPtr = NingYungRetreatTimeline[num].c_str();
+			Dest.ConstCharPtr = NingYunRetreatTimeline[num].c_str();
 			Dest.Type = pStringType;
 			return true;
 		}
@@ -27775,6 +27792,150 @@ bool __cdecl TLO_TordenBastionofThunderWindsofChange(int argc, char *argv[], LST
 	return false;
 }
 
+//TLO to return string arrays
+bool __cdecl TLO_PlaneofInnovationSecurityMeasuresTradeskill(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(PlaneofInnovationSecurityMeasuresTradeskill) / sizeof(PlaneofInnovationSecurityMeasuresTradeskill[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = PlaneofInnovationSecurityMeasuresTradeskill[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TordenBastionofThunderLightningStrikesTradeskill(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TordenBastionofThunderLightningStrikesTradeskill) / sizeof(TordenBastionofThunderLightningStrikesTradeskill[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TordenBastionofThunderLightningStrikesTradeskill[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AStitchinTimePartIILightningStrikes(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(AStitchinTimePartIILightningStrikes) / sizeof(AStitchinTimePartIILightningStrikes[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = AStitchinTimePartIILightningStrikes[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AStitchinTimePartISecurityMeasures(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(AStitchinTimePartISecurityMeasures) / sizeof(AStitchinTimePartISecurityMeasures[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = AStitchinTimePartISecurityMeasures[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
@@ -27903,6 +28064,10 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("TordenBastionofThunderTowerBreach", TLO_TordenBastionofThunderTowerBreach);
 		if (tlo == "TordenBastionofThunderWindsofChange")
 			pISInterface->AddTopLevelObject("TordenBastionofThunderWindsofChange", TLO_TordenBastionofThunderWindsofChange);
+		if (tlo == "PlaneofInnovationSecurityMeasuresTradeskill")
+			pISInterface->AddTopLevelObject("PlaneofInnovationSecurityMeasuresTradeskill", TLO_PlaneofInnovationSecurityMeasuresTradeskill);
+		if (tlo == "TordenBastionofThunderLightningStrikesTradeskill")
+			pISInterface->AddTopLevelObject("TordenBastionofThunderLightningStrikesTradeskill", TLO_TordenBastionofThunderLightningStrikesTradeskill);
 
 		if (tlo == "ANYTHINGFORJUMJUM")
 			pISInterface->AddTopLevelObject("ANYTHINGFORJUMJUM", TLO_ANYTHINGFORJUMJUM);
@@ -28684,8 +28849,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("THESTOLENTOME", TLO_TheStolenTome);
 		if (tlo == "TOWEROFTHEFOURWINDSTIMELINE")
 			pISInterface->AddTopLevelObject("TOWEROFTHEFOURWINDSTIMELINE", TLO_ToweroftheFourWindsTimeline);
-		if (tlo == "NINGYUNGRETREATTIMELINE")
-			pISInterface->AddTopLevelObject("NINGYUNGRETREATTIMELINE", TLO_NingYungRetreatTimeline);
+		if (tlo == "NINGYUNRETREATTIMELINE")
+			pISInterface->AddTopLevelObject("NINGYUNRETREATTIMELINE", TLO_NingYunRetreatTimeline);
 		if (tlo == "ORDEROFRIMEFACTIONTIMELINE")
 			pISInterface->AddTopLevelObject("ORDEROFRIMEFACTIONTIMELINE", TLO_OrderofRimeFactionTimeline);
 		if (tlo == "TEARSOFVEESHANTIMELINE")
@@ -29152,6 +29317,11 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("LEGACYOFPOWERTHROUGHSTORMSANDMISTS", TLO_LegacyofPowerThroughStormsandMists);
 		if (tlo == "LEGACYOFPOWERTYRANTSTHRONE")
 			pISInterface->AddTopLevelObject("LEGACYOFPOWERTYRANTSTHRONE", TLO_LegacyofPowerTyrantsThrone);
+
+		if (tlo == "ASTITCHINTIMEPARTIILIGHTNINGSTRIKES")
+			pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTIILIGHTNINGSTRIKES", TLO_AStitchinTimePartIILightningStrikes);
+		if (tlo == "ASTITCHINTIMEPARTISECURITYMEASURES")
+			pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTISECURITYMEASURES", TLO_AStitchinTimePartISecurityMeasures);
 	}
 	return 1;
 }
@@ -30306,6 +30476,15 @@ int __cdecl CMD_Transmute(int argc, char *argv[])
 	pISInterface->RunScriptFromBuffer("RITransmute", c, sizeof(Transmute), 1, k);
 	return 1;
 }
+int __cdecl CMD_Extract(int argc, char *argv[])
+{
+	char *k[] = { "3rtZdjv7" };
+	const unsigned char * p = Extract;
+	const char * c = (const char *)p;
+
+	pISInterface->RunScriptFromBuffer("RIExtract", c, sizeof(Extract), 1, k);
+	return 1;
+}
 int __cdecl CMD_Auth(int argc, char *argv[])
 {
 	char *k[] = { "3rtZdjv7" };
@@ -31382,6 +31561,7 @@ void RegisterCommandsAfterAuth()
 	pISInterface->AddCommand("RI_HideEffects", CMD_HideEffects, true, false);
 	pISInterface->AddCommand("RI_Collection", CMD_Collection, true, false);
 	pISInterface->AddCommand("RI_Transmute", CMD_Transmute, true, false);
+	pISInterface->AddCommand("RI_Extract", CMD_Extract, true, false);
 	pISInterface->AddCommand("RI_Salvage", CMD_Salvage, true, false);
 	pISInterface->AddCommand("RI_Ascension", CMD_Ascension, true, false);
 	pISInterface->AddCommand("RICharList", CMD_RICharList, true, false);

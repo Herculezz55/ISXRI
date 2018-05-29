@@ -162,6 +162,7 @@ objectdef RIInventoryObject
 	function ExecuteActions()
 	{
 		echo ISXRI: Executing Actions
+		RIInventoryObj:Load[0]
 		if ${DepositToDepot}
 		{
 			if ${Actor[Query, Name=-"Lore & Legend Depot" && Distance<12](exists)}
@@ -374,6 +375,7 @@ objectdef RIInventoryObject
 			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}","${_ItemName}",FFcc33ff]
 			;change color
 			;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[FFcc33ff]
+			UIElement[InventoryListbox@RIInventory]:RemoveItem[${UIElement[InventoryListbox@RIInventory].SelectedItem.ID}]
 			UIElement[InventoryListbox@RIInventory]:ClearSelection
 			This:Save
 		}
@@ -392,6 +394,7 @@ objectdef RIInventoryObject
 			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}","${_ItemName}",FF33CC33]
 			;change color
 			;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[FF33CC33]
+			UIElement[InventoryListbox@RIInventory]:RemoveItem[${UIElement[InventoryListbox@RIInventory].SelectedItem.ID}]
 			UIElement[InventoryListbox@RIInventory]:ClearSelection
 			This:Save
 		}
@@ -407,9 +410,10 @@ objectdef RIInventoryObject
 				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal["${_ItemName}"]}
 					UIElement[AddedItemsListbox@RIInventory]:RemoveItem[${UIElement[AddedItemsListbox@RIInventory].Item[${i}].ID}]
 			}
-			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}"},"${_ItemName}",FF0099ff]
+			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}","${_ItemName}",FF0099ff]
 			;change color
 			;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[FF0099ff]
+			UIElement[InventoryListbox@RIInventory]:RemoveItem[${UIElement[InventoryListbox@RIInventory].SelectedItem.ID}]
 			UIElement[InventoryListbox@RIInventory]:ClearSelection
 			This:Save
 		}
@@ -428,11 +432,12 @@ objectdef RIInventoryObject
 			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}","${_ItemName}",FFFF0000]
 			;change color
 			;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[FFFF0000]
+			UIElement[InventoryListbox@RIInventory]:RemoveItem[${UIElement[InventoryListbox@RIInventory].SelectedItem.ID}]
 			UIElement[InventoryListbox@RIInventory]:ClearSelection
 			This:Save
 		}
 	}
-	method Load()
+	method Load(bool _PopulateListBox=TRUE)
 	{
 		Items:Clear
 		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RIInventory/"]
@@ -529,7 +534,7 @@ objectdef RIInventoryObject
 						_Color:Set[FF33CC33];_Action:Set[Salvage]
 					elseif ${Iterator.Value.FindSetting[Action].String.Find[Destroy](exists)}
 						_Color:Set[FFFF0000];_Action:Set[Destroy]
-					if ${UIElement[RIInventory](exists)}
+					if ${UIElement[RIInventory](exists)} && ${_PopulateListBox}
 					{
 						UIElement[AddedItemsListbox@RIInventory]:AddItem["${Iterator.Key}","${Iterator.Key}",${_Color}]
 						;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[${_Color}]
@@ -613,7 +618,7 @@ objectdef RIInventoryObject
 			}
 			LavishSettings[RIInventorySaveFile]:Export["${LavishScript.HomeDirectory}/Scripts/RI/RIInventory/RIInventorySave.xml"]
 			;echo here
-			This:LoadInventoryList
+			;This:LoadInventoryList
 		;}
 	}
 }

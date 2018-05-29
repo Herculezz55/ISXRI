@@ -691,5 +691,5 @@ function atexit()
 			press -release ${RI_Var_String_FlyDownKey}
 			press -release ${RI_Var_String_ForwardKey}
 	Filename:Close
-	ui -unload "${LavishScript.HomeDirectory}/Scripts/WriteLocs.xml"
+	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/WriteLocs.xml"
 }

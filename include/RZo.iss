@@ -217,7 +217,7 @@ function StartR(string _r)
 {
 	relay all -noredirect RG
 	wait 20
-	relay "other ${RI_Var_String_RelayGroup}" rz -${_r} -others
+	relay "other ${RI_Var_String_RelayGroup}" rzo -${_r} -others
 }
 function RunK()
 {
@@ -545,10 +545,10 @@ function main(... args)
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZo.xml"
 	
 	;set zones checked
-	UIElement[RunZ1@RZ]:SetChecked
-	UIElement[RunZ2@RZ]:SetChecked
-	UIElement[RunZ3@RZ]:SetChecked
-	UIElement[RZ]:SetHeight[160]
+	UIElement[RunZ1@RZo]:SetChecked
+	UIElement[RunZ2@RZo]:SetChecked
+	UIElement[RunZ3@RZo]:SetChecked
+	UIElement[RZo]:SetHeight[160]
 	
 	;start RIMovement if it is not running
 	relay all -noredirect ${If[!${Script[Buffer:RIMovement](exists)},RIMovement,noop]}
@@ -576,7 +576,7 @@ function main(... args)
 	
 	
 	;zone set
-	switch ${UIElement[ZoneSets@RZ].Selection}
+	switch ${UIElement[ZoneSets@RZo].Selection}
 	{
 		case 10
 		{
