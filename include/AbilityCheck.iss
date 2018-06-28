@@ -175,7 +175,7 @@ function main(... args)
 			}
 			;SpellBookType 0=Spells,1=CombatArts,2=AbilitiesTab,3=Tradeskills,4=Passive,6=Ascension
 			;skip AbilitiesTab abilities, except Summon:*
-			if ${AbilitiesIterator.Value.ToAbilityInfo.SpellBookType}==2 && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Summon](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Illusion](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Pathfinding](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Singular Focus](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Ascension Form:](exists)}
+			if ${AbilitiesIterator.Value.ToAbilityInfo.SpellBookType}==2 && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Balanced Synergy](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Summon](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Illusion](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Pathfinding](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Singular Focus](exists)} && !${AbilitiesIterator.Value.ToAbilityInfo.Name.Find[Ascension Form:](exists)}
 			{
 				echo ISXRI: ${Time}: Skipping AbilitiesTab Ability ${AbilityCounter} of ${Me.NumAbilities}: ${CurrentAbilityName} ID #: ${CurrentAbilityID}
 				continue

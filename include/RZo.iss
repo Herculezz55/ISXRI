@@ -576,7 +576,7 @@ function main(... args)
 	
 	
 	;zone set
-	switch ${UIElement[ZoneSets@RZo].Selection}
+	switch ${UIElement[ZoneSets@RZo].SelectedItem.Value}
 	{
 		case 10
 		{
@@ -963,7 +963,6 @@ function main(... args)
 				echo ${Time}: You must be in Zone Obulus Frontier and within 35 distance of 520.677246,250.506332,1353.012451 to run this script for Kaesora Expert Zone.
 				Script:End
 			}
-			RZ_Var_String_ZoneSet:Set[K]
 			RZ_Var_String_ZoneSet:Set[AS]
 			Zone1:Set["Arcanna'se Spire: Forgotten Sanctum [Expert]"]
 			Zone1Exit:Set["invis_wal"]
@@ -992,6 +991,216 @@ function main(... args)
 			;6HourZones:Set[TRUE]
 			break
 		}
+		case 15
+		{
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Kunzar Jungle"](exists)} || ${Math.Distance[${Me.Loc},520.677246,250.506332,1353.012451]}>35
+			{
+				echo ${Time}: You must be in Zone Kunzar Jungle and within 35 distance of -258.103027,150.091827,-1155.984497 to run this script for Torsis Zones.
+				Script:End
+			}
+			RZ_Var_String_ZoneSet:Set[LC]
+			Zone1:Set["Lost City of Torsis: Reaver's Remnants [Heroic]"]
+			Zone1Exit:Set["door 5"]
+			Zone1PopupSelection:Set[3]
+			Zone1MoveToExit:Set[FALSE]
+			Zone1MoveToExitLocX:Set[0]
+			Zone1MoveToExitLocZ:Set[0]
+			Zone2:Set["Lost City of Torsis: The Spectral Market [Heroic]"]
+			Zone2Exit:Set["Exit"]
+			Zone2PopupSelection:Set[7]
+			Zone2MoveToExit:Set[TRUE]
+			Zone2MoveToExitLocX:Set[1]
+			Zone2MoveToExitLocZ:Set[148]
+			Zone3:Set["Lost City of Torsis: The Shrouded Temple [Event Heroic]"]
+			Zone3Exit:Set["Exit"]
+			Zone3PopupSelection:Set[6]
+			Zone3MoveToExit:Set[TRUE]
+			Zone3MoveToExitLocX:Set[-130]
+			Zone3MoveToExitLocZ:Set[-221]
+			ZoneEntrance:Set["City of Mist Entrance Door"]
+			ZoneEntranceMoveToZone:Set[TRUE]
+			ZoneEntranceMoveToZoneLocX:Set[-258]
+			ZoneEntranceMoveToZoneLocZ:Set[-1156]
+			Experts:Set[FALSE]
+			ExpertsSummonOption:Set[""]
+			;6HourZones:Set[TRUE]
+			break
+		}
+		case 16
+		{
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Kunzar Jungle"](exists)} || ${Math.Distance[${Me.Loc},520.677246,250.506332,1353.012451]}>35
+			{
+				echo ${Time}: You must be in Zone Kunzar Jungle and within 35 distance of -258.103027,150.091827,-1155.984497 to run this script for Torsis Zones.
+				Script:End
+			}
+			RZ_Var_String_ZoneSet:Set[LC]
+			Zone1:Set["Lost City of Torsis: Reaver's Remnants [Solo]"]
+			Zone1Exit:Set["door 5"]
+			Zone1PopupSelection:Set[3]
+			Zone1MoveToExit:Set[FALSE]
+			Zone1MoveToExitLocX:Set[0]
+			Zone1MoveToExitLocZ:Set[0]
+			Zone2:Set["Lost City of Torsis: The Spectral Market [Solo]"]
+			Zone2Exit:Set["Exit"]
+			Zone2PopupSelection:Set[7]
+			Zone2MoveToExit:Set[TRUE]
+			Zone2MoveToExitLocX:Set[1]
+			Zone2MoveToExitLocZ:Set[148]
+			Zone3:Set["Lost City of Torsis: The Shrouded Temple [Advanced Solo]"]
+			Zone3Exit:Set["Exit"]
+			Zone3PopupSelection:Set[6]
+			Zone3MoveToExit:Set[TRUE]
+			Zone3MoveToExitLocX:Set[-130]
+			Zone3MoveToExitLocZ:Set[-221]
+			ZoneEntrance:Set["City of Mist Entrance Door"]
+			ZoneEntranceMoveToZone:Set[TRUE]
+			ZoneEntranceMoveToZoneLocX:Set[-258]
+			ZoneEntranceMoveToZoneLocZ:Set[-1156]
+			Experts:Set[FALSE]
+			ExpertsSummonOption:Set[""]
+			;6HourZones:Set[TRUE]
+			break
+		}
+		case 17
+		{
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Kunzar Jungle"](exists)} || ${Math.Distance[${Me.Loc},520.677246,250.506332,1353.012451]}>35
+			{
+				echo ${Time}: You must be in Zone Kunzar Jungle and within 35 distance of -258.103027,150.091827,-1155.984497 to run this script for Torsis Zones.
+				Script:End
+			}
+			RZ_Var_String_ZoneSet:Set[LC]
+			Zone1:Set["Lost City of Torsis: Reaver's Remnants [Expert]"]
+			Zone1Exit:Set["door 5"]
+			Zone1PopupSelection:Set[3]
+			Zone1MoveToExit:Set[FALSE]
+			Zone1MoveToExitLocX:Set[0]
+			Zone1MoveToExitLocZ:Set[0]
+			Zone2:Set["Lost City of Torsis: The Spectral Market [Expert]"]
+			Zone2Exit:Set["Exit"]
+			Zone2PopupSelection:Set[7]
+			Zone2MoveToExit:Set[TRUE]
+			Zone2MoveToExitLocX:Set[1]
+			Zone2MoveToExitLocZ:Set[148]
+			Zone3:Set["Lost City of Torsis: The Shrouded Temple [Expert Event]"]
+			Zone3Exit:Set["Exit"]
+			Zone3PopupSelection:Set[6]
+			Zone3MoveToExit:Set[TRUE]
+			Zone3MoveToExitLocX:Set[-130]
+			Zone3MoveToExitLocZ:Set[-221]
+			ZoneEntrance:Set["Teleporter to Expert Lost"]
+			ZoneEntranceMoveToZone:Set[TRUE]
+			ZoneEntranceMoveToZoneLocX:Set[-258]
+			ZoneEntranceMoveToZoneLocZ:Set[-1156]
+			Experts:Set[TRUE]
+			ExpertsSummonOption:Set["Lost City of Torsis [Expert]"]
+			;6HourZones:Set[TRUE]
+			break
+		}
+		case 21
+		{
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Obulus Frontier"](exists)} || ${Math.Distance[${Me.Loc},790.735962,-129.386322,-583.942261]}>35
+			{
+				echo ${Time}: You must be in Zone Obulus Frontier and within 35 distance of 790.735962,-129.386322,-583.942261 to run this script for Torsis Zones.
+				Script:End
+			}
+			RZ_Var_String_ZoneSet:Set[CD]
+			Zone1:Set["Crypt of Dalnir: Baron's Workshop [Heroic]"]
+			Zone1Exit:Set["Exit Ladder"]
+			Zone1PopupSelection:Set[1]
+			Zone1MoveToExit:Set[FALSE]
+			Zone1MoveToExitLocX:Set[0]
+			Zone1MoveToExitLocZ:Set[0]
+			Zone2:Set["Crypt of Dalnir: Ritual Chamber [Heroic]"]
+			Zone2Exit:Set["Exit Ladder"]
+			Zone2PopupSelection:Set[3]
+			Zone2MoveToExit:Set[FALSE]
+			Zone2MoveToExitLocX:Set[0]
+			Zone2MoveToExitLocZ:Set[0]
+			Zone3:Set["Crypt of Dalnir: Wizard's Den [Event Heroic]"]
+			Zone3Exit:Set["Exit Ladder"]
+			Zone3PopupSelection:Set[7]
+			Zone3MoveToExit:Set[FALSE]
+			Zone3MoveToExitLocX:Set[0]
+			Zone3MoveToExitLocZ:Set[0]
+			ZoneEntrance:Set["Entrance to Dalnir"]
+			ZoneEntranceMoveToZone:Set[FALSE]
+			ZoneEntranceMoveToZoneLocX:Set[0]
+			ZoneEntranceMoveToZoneLocZ:Set[0]
+			Experts:Set[FALSE]
+			ExpertsSummonOption:Set[""]
+			;6HourZones:Set[TRUE]
+			break
+		}
+		case 20
+		{
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Obulus Frontier"](exists)} || ${Math.Distance[${Me.Loc},790.735962,-129.386322,-583.942261]}>35
+			{
+				echo ${Time}: You must be in Zone Obulus Frontier and within 35 distance of 790.735962,-129.386322,-583.942261 to run this script for Torsis Zones.
+				Script:End
+			}
+			RZ_Var_String_ZoneSet:Set[CD]
+			Zone1:Set["Crypt of Dalnir: Baron's Workshop [Solo]"]
+			Zone1Exit:Set["Exit Ladder"]
+			Zone1PopupSelection:Set[2]
+			Zone1MoveToExit:Set[FALSE]
+			Zone1MoveToExitLocX:Set[0]
+			Zone1MoveToExitLocZ:Set[0]
+			Zone2:Set["Crypt of Dalnir: Ritual Chamber [Solo]"]
+			Zone2Exit:Set["Exit Ladder"]
+			Zone2PopupSelection:Set[4]
+			Zone2MoveToExit:Set[FALSE]
+			Zone2MoveToExitLocX:Set[0]
+			Zone2MoveToExitLocZ:Set[0]
+			Zone3:Set["Crypt of Dalnir: Wizard's Den [Advanced Solo]"]
+			Zone3Exit:Set["Exit Ladder"]
+			Zone3PopupSelection:Set[6]
+			Zone3MoveToExit:Set[FALSE]
+			Zone3MoveToExitLocX:Set[0]
+			Zone3MoveToExitLocZ:Set[0]
+			ZoneEntrance:Set["Entrance to Dalnir"]
+			ZoneEntranceMoveToZone:Set[FALSE]
+			ZoneEntranceMoveToZoneLocX:Set[0]
+			ZoneEntranceMoveToZoneLocZ:Set[0]
+			Experts:Set[FALSE]
+			ExpertsSummonOption:Set[""]
+			;6HourZones:Set[TRUE]
+			break
+		}
+		case 22
+		{
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Obulus Frontier"](exists)} || ${Math.Distance[${Me.Loc},790.735962,-129.386322,-583.942261]}>35
+			{
+				echo ${Time}: You must be in Zone Obulus Frontier and within 35 distance of 790.735962,-129.386322,-583.942261 to run this script for Torsis Zones.
+				Script:End
+			}
+			RZ_Var_String_ZoneSet:Set[CD]
+			Zone1:Set["Crypt of Dalnir: Baron's Workshop [Expert]"]
+			Zone1Exit:Set["Exit Ladder"]
+			Zone1PopupSelection:Set[1]
+			Zone1MoveToExit:Set[FALSE]
+			Zone1MoveToExitLocX:Set[0]
+			Zone1MoveToExitLocZ:Set[0]
+			Zone2:Set["Crypt of Dalnir: Ritual Chamber [Expert]"]
+			Zone2Exit:Set["Exit Ladder"]
+			Zone2PopupSelection:Set[3]
+			Zone2MoveToExit:Set[FALSE]
+			Zone2MoveToExitLocX:Set[0]
+			Zone2MoveToExitLocZ:Set[0]
+			Zone3:Set["Crypt of Dalnir: Wizard's Den [Expert Event]"]
+			Zone3Exit:Set["Exit Ladder"]
+			Zone3PopupSelection:Set[7]
+			Zone3MoveToExit:Set[FALSE]
+			Zone3MoveToExitLocX:Set[0]
+			Zone3MoveToExitLocZ:Set[0]
+			ZoneEntrance:Set["Teleporter to Expert Dalnir"]
+			ZoneEntranceMoveToZone:Set[FALSE]
+			ZoneEntranceMoveToZoneLocX:Set[0]
+			ZoneEntranceMoveToZoneLocZ:Set[0]
+			Experts:Set[TRUE]
+			ExpertsSummonOption:Set["Crypt of Dalnir [Expert]"]
+			;6HourZones:Set[TRUE]
+			break
+		}
 		case 1
 		{
 			if !${Me.GetGameData[Self.ZoneName].Label.Find["Thalumbra, the Ever Deep"](exists)} || ${Math.Distance[${Me.Loc},-61.980949,15.927130,160.867096]}>35
@@ -1013,6 +1222,39 @@ function main(... args)
 			Zone2MoveToExitLocX:Set[0]
 			Zone2MoveToExitLocZ:Set[0]
 			Zone3:Set["Arcanna'se Spire: Vessel of the Sorceress [Event Heroic]"]
+			Zone3Exit:Set["Exit Door Left"]
+			Zone3PopupSelection:Set[8]
+			Zone3MoveToExit:Set[TRUE]
+			Zone3MoveToExitLocX:Set[-470]
+			Zone3MoveToExitLocZ:Set[-107]
+			ZoneEntrance:Set["Arcanna'se Spire Portal"]
+			ZoneEntranceMoveToZone:Set[FALSE]
+			ZoneEntranceMoveToZoneLocX:Set[0]
+			ZoneEntranceMoveToZoneLocZ:Set[0]
+			;6HourZones:Set[TRUE]
+			break
+		}
+		case 14
+		{
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Thalumbra, the Ever Deep"](exists)} || ${Math.Distance[${Me.Loc},-61.980949,15.927130,160.867096]}>35
+			{
+				echo ${Time}: You must be in Zone Thalumbra, the Ever Deep and within 35 distance of -61.980949,15.927130,160.867096 to run this script for Arcanna'se Spire Zones.
+				Script:End
+			}
+			RZ_Var_String_ZoneSet:Set[AS]
+			Zone1:Set["Arcanna'se Spire: Forgotten Sanctum [Solo]"]
+			Zone1Exit:Set["invis_wal"]
+			Zone1PopupSelection:Set[1]
+			Zone1MoveToExit:Set[FALSE]
+			Zone1MoveToExitLocX:Set[0]
+			Zone1MoveToExitLocZ:Set[0]
+			Zone2:Set["Arcanna'se Spire: Repository of Secrets [Solo]"]
+			Zone2Exit:Set["Exit"]
+			Zone2PopupSelection:Set[4]
+			Zone2MoveToExit:Set[FALSE]
+			Zone2MoveToExitLocX:Set[0]
+			Zone2MoveToExitLocZ:Set[0]
+			Zone3:Set["Arcanna'se Spire: Vessel of the Sorceress [Advanced Solo]"]
 			Zone3Exit:Set["Exit Door Left"]
 			Zone3PopupSelection:Set[8]
 			Zone3MoveToExit:Set[TRUE]
@@ -1299,7 +1541,8 @@ function Zone1()
 	wait 6000 !${EQ2.Zoning}
 	
 	;wait until all the group is in the zone
-	wait 6000 (${Me.Group[1].Health(exists)} && ${Me.Group[2].Health(exists)} && ${Me.Group[3].Health(exists)} && ${Me.Group[4].Health(exists)} && ${Me.Group[5].Health(exists)})
+	call CheckZone.CheckAllHere
+	
 	
 	;wait 5s
 	wait 50
@@ -1386,7 +1629,7 @@ function ZoneOut(string ZoneExit, string ZoneName)
 	;wait until we are not zoning
 	wait 6000 !${EQ2.Zoning}
 	;wait until all the group is in the zone
-	wait 6000 (${Me.Group[1].Health(exists)} && ${Me.Group[2].Health(exists)} && ${Me.Group[3].Health(exists)} && ${Me.Group[4].Health(exists)} && ${Me.Group[5].Health(exists)})
+	call CheckZone.CheckAllHere
 }
 
 ;Zone2 function
@@ -1453,7 +1696,7 @@ function Zone2()
 	wait 6000 !${EQ2.Zoning}
 	
 	;wait until all the group is in the zone
-	wait 6000 (${Me.Group[1].Health(exists)} && ${Me.Group[2].Health(exists)} && ${Me.Group[3].Health(exists)} && ${Me.Group[4].Health(exists)} && ${Me.Group[5].Health(exists)})
+	call CheckZone.CheckAllHere
 	
 	;wait 5s
 	wait 50
@@ -1575,7 +1818,7 @@ function Zone3()
 	wait 6000 !${EQ2.Zoning}
 	
 	;wait until all the group is in the zone
-	wait 6000 (${Me.Group[1].Health(exists)} && ${Me.Group[2].Health(exists)} && ${Me.Group[3].Health(exists)} && ${Me.Group[4].Health(exists)} && ${Me.Group[5].Health(exists)})
+	call CheckZone.CheckAllHere
 	
 	;wait 5s
 	wait 50
@@ -1683,6 +1926,26 @@ objectdef CheckZoneObject
 		relay ${RI_Var_String_RelayGroup} Me:ResetZoneTimer["${ZoneName}"]
 		wait 50 ${ResetConfirmation}
 		ResetConfirmation:Set[FALSE]
+	}
+	member:bool _CheckAllHere()
+	{
+		variable bool _AllHere
+		
+		variable int _count
+		_AllHere:Set[TRUE]
+		for(_count:Set[1];${_count}<${RI_Var_Int_RelayGroupSize};_count:Inc)
+		{
+			if !${Me.Group[${_count}].Health(exists)}
+				_AllHere:Set[FALSE]
+		}
+		return ${_AllHere}
+	}
+	function CheckAllHere()
+	{
+		while !${This._CheckAllHere}
+		{
+			wait 10
+		}
 	}
 }
 function Move(float X1, float Y1, float Z1, int MPrecision, int PauseLength, bool ClearTarget, bool StopForCombat, bool SkipCheck, bool KeepMoving, bool UseRI_Var_String_ForwardKey=TRUE, bool SkipCollisionCheck=FALSE)

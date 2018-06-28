@@ -1,0 +1,2 @@
+"""if (tlo == "PLANEOFDISEASEINFESTEDMESA.DAT")"""
+"""  pISInterface->AddTopLevelObject("PLANEOFDISEASEINFESTEDMESA.DAT", TLO_PlaneofDiseaseInfestedMesa);"""

@@ -2800,12 +2800,95 @@
 ;				The Manaetic Behemoth
 ;					Removed 2s wait before MainToon Move
 
+;v5.66 Changes 6-16-18
+;	RQ
+;		Torden, Bastion of  Thunder: Lightning Strikes [Tradeskill]
+;			Fixed a bug that would sometimes miss collection the rods
+;	RZ
+;		Added Expert Zones
+;	RI
+;		Added Balanced Synergy to AbilityCheck
+;		Crypt of Dalnir: Baron's Workshop
+;			Haggle Baron Dalnir
+;				Fixed a bug that would not invoke script on MainToon
+;		Crypt of Dalnir: Ritual Chamber
+;			Izzak Sira
+;				Fixed a bug
+;			Amalgam
+;				Now moves to and clicks appropriate runes in order
+;				(start on ramp close to the rune displays)
+;			Kly
+;				Bard will now run and click the correct orbs
+;		Lost City of Torsis: Reaver's Remnants
+;			Fixed a bug that would run off the bridge for a shiny
+;			Fixed a bug that would not pull Nehashiir
+;			Fixed a bug that would run into the wall when talking with Choosoth
+;			Tizrathk
+;				Fixed a bug with jousting
+;		Plane of Innovation: Masks of the Marvelous
+;			Clockwork Scrounger
+;				moved everyone out 5m and turned on sprint while jousting
+;				tightened up movebehind
+;		Added
+;			Plane of Disease: Infested Mesa
+;				Deathbone (RI Pull Deathbone)
+;					LockSpot and Autotarget a deadly contagion
+;					Moves group behind
+;				Carrion Walker (RI Pull Walker)
+;					LockSpot and Autotarget a deadly contagion
+;					Moves group behind
+;					Auto cancels organs in correct order
+;				Grimror (RI Pull Grimror)
+;					LockSpot and Autotarget a deadly contagion
+;					Moves group behind
+;					Moves to and clicks appropriate corpse on correct toon
+
+;v5.67 Changes 6-18-18
+;	RI
+;		Modified
+;			Plane of Disease: Infested Mesa
+;				Carrion Walker
+;					Fixed a bug that would sometimes target pets			
+
+;v5.68 Changes 6-24-18
+;	RIMUI
+;		Modified RIMUIObj Method's, Member's and *Button's
+;			member:int MainIconIDExists(int _ActorID, int _MainIconID, bool _Det=TRUE)
+;				now returns 0 if FALSE and whatever slot in the effects array the MainIconIDExists at when TRUE
+;	RI
+;		Added
+;			RILoot
+;				bring up the RILoot UI to manage items to be sent to specific toons
+;		Modified
+;			Plane of Disease: Infested Mesa
+;				Deathbone
+;					will pull more successfully now for toons/groups without pets
+;				Carrion Walker
+;					will pull more successfully now for toons/groups without pets
+;				Grimror
+;					will no longer try to move MainToon behind after clicking larvae
+;					will no longer target the Grimror Mercenary if it is up
+;			Plane of Disease: Outbreak
+;				Flesh Eater
+;					will pull more successfully now for toons/groups without pets
+;			Plane of Disease: The Source
+;				Darwol
+;					MainToon will now AutoFace the nests to ensure ranged auto will fire
+;		Added
+;			Plain of Innovation: Parts Not Included
+;				Fixit Microtock (RI Pull Microtock)
+;					Mages dispell
+;					gets out when told too
+;				Fixit Megatock (RI Pull Megatock)
+;					Moves group behind named
+;						if group member gets aggro they return to lockspot
+
 ;WIP
 ;		On chest looting, RI will now switch to leader only, open chest and check against an index of
 ;		items if found will wait 40mins with chest open for user to determine who gets item
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.65
+variable(global) float RI_Var_Float_Version=5.68
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -2836,6 +2919,7 @@ variable(global) string RI_Var_String_FoodName="Stormborn Souffle"
 variable(global) string RI_Var_String_DrinkName="Monsoon"
 variable(global) bool RI_Var_Bool_WaitForHealth=TRUE
 variable(global) bool RI_Var_Bool_Debug=FALSE
+variable(global) bool RI_Var_Bool_LootDebug=FALSE
 variable(global) bool RI_Var_Bool_AcceptTrades=TRUE
 variable(global) bool RI_Var_Bool_SkipCheckToons=FALSE
 variable(global) bool RI_Var_Bool_SkipLoot=FALSE
@@ -2857,6 +2941,7 @@ variable string RI_Var_String_ButtonChangeOriginalCommand
 variable bool TradePending=FALSE
 variable bool TradeAccepted=FALSE
 variable bool IStartedTrade=FALSE
+variable(global) RILootObject RILootObj
 ;RIMovementUI by Herculezz v1
 ;
 ;for GuildStrategist use 10m distance2d
@@ -4124,27 +4209,12 @@ variable string CurrentZoneName="${Zone.Name}"
 variable index:string GroupNames
 ;end variables for RIMUI
 variable(global) bool RI_Var_Bool_CheckLoot=FALSE
-variable index:string LootItemsToNotAutoLoot
-
+variable filepath FP
 function main()
 {
 	;disable RI_Var_Bool_Debugging
 	Script:DisableDebugging
-	
-	LootItemsToNotAutoLoot:Insert[Sillocorrosive Grease]
-	LootItemsToNotAutoLoot:Insert[Bubonian Blood]
-	LootItemsToNotAutoLoot:Insert[Storm Rider's Blood]
-	LootItemsToNotAutoLoot:Insert[Fire Mephit Blood]
-	LootItemsToNotAutoLoot:Insert[Foul Smelling Liquid]
-	LootItemsToNotAutoLoot:Insert[Clockwork Grease]
-	LootItemsToNotAutoLoot:Insert[Stormwatcher's Horn]
-	LootItemsToNotAutoLoot:Insert[Fiery Granite]
-	LootItemsToNotAutoLoot:Insert[Putrid Ooze]
-	LootItemsToNotAutoLoot:Insert[Solidified Magma]
-	LootItemsToNotAutoLoot:Insert[Clockwork Carapace]
-	LootItemsToNotAutoLoot:Insert[Drop of Pure Rain]
-	
-	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/"
+
 	;check if RIMUI.xml exists, if not create
 	;FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
 	if !${FP.PathExists}
@@ -4553,6 +4623,51 @@ function main()
 	{
 		RIConsole:UILarge[0]
 	}
+	
+	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RILoot"]
+	if !${FP.PathExists}
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI"]
+		FP:MakeSubdirectory[RILoot]	
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RILoot"]
+	}
+	
+	if !${FP.FileExists[RILootSave.xml]}
+	{
+		if ${Debug}
+			echo ${Time}: Getting RILootSave.XML
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RILootSave.xml" http://www.isxri.com/RILootSave.xml
+		wait 50
+	}
+	
+	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
+	;check if xml exists, if not create
+	if !${FP.PathExists}
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/"]
+		FP:MakeSubdirectory[RI]	
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
+	}
+	if !${FP.FileExists[RILoot.xml]}
+	{
+		if ${Debug}
+			echo ${Time}: Getting RILoot.XML
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RILoot.xml" http://www.isxri.com/RILoot.xml
+		wait 50
+	}
+	
+	;load ui
+	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
+	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RILoot.xml"
+	
+	RILootObj:LoadItems
+	RILootObj:LoadAddedItems
+	RILootObj:Group[1]
+	UIElement[LootedTextEntry@RILoot]:SetText[0]
+	variable int ChildrenCounter = 1
+	variable int AILCounter = 1
+	UIElement[RILoot]:Hide
+	
 	while 1
 	{
 		if ${QueuedCommands}
@@ -4604,25 +4719,115 @@ function main()
 					eq2ex apply_verb ${Actor[corpse,radius,10].ID} Loot
 				}
 			}
-			
-			;if a chest exists within 8m radius and looting is on
-			if ${RI_Var_Bool_Loot} || ( ${UIElement[SettingsLootingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLootChestsCheckBox@SettingsFrame@CombatBotUI].Checked} )
+			if ${UIElement[AddedItemsListbox@RILoot].Items}>0
 			{
-				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${RI_Var_Bool_Loot}
+				if ${Me.IsGroupLeader} && ( ${RI_Var_Bool_Loot} || ( ${UIElement[SettingsLootingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLootChestsCheckBox@SettingsFrame@CombatBotUI].Checked} ) )
 				{
-					noop
-				}
-				else
-				{
-					if ${Actor[chest,radius,8](exists)}
+					if ${Actor[chest,radius,7](exists)}
 					{
-						if ${RI_Var_Bool_Debug}
-							echo ISXRI: ${Time}: Looting ${Actor[chest,radius,7]} because Loot: ${RI_Var_Bool_Loot}
+						if ${RI_Var_Bool_LootDebug}
+							echo ISXRI: ${Time}: Checking Smart Loot : ${Actor[chest,radius,7]} : ${RI_Var_Bool_Loot}
+						if !${LootWindow(exists)}
+						{
+							RIMUIObj:LootOptions[ALL,LO]
+							wait 20
+							if ${RI_Var_Bool_LootDebug}
+								echo ISXRI: Clicking Chest to distribute via RILoot, main fuction in Buffer:RI
+							;doubleclick chest wait 5 then check if we need to give any items to anyone
+							Actor[chest,radius,7]:DoubleClick
+							wait 5 ${LootWindow(exists)}
+							;check if any items in chest are in our AddedItemsListbox and the Toon is in our group/raid
+						}
+						ChildrenCounter:Set[1]
+						do
+						{
+							;; We are only interested in the members of Type Text and this will be what we need to click
+							if (${LootWindow.ItemsPage.Child[${ChildrenCounter}].Type.Find[Text]})
+							{
+								;; We ignore the static member table entry as it is never an item
+								if ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Equals[table entry]}
+									continue
+								if ${RI_Var_Bool_LootDebug}	
+									echo Checking #${ChildrenCounter} of ${LootWindow.ItemsPage.NumChildren}: ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText]}
+								
+								for(AILCounter:Set[1];${AILCounter}<=${UIElement[AddedItemsListbox@RILoot].Items};AILCounter:Inc)
+								{
+									;if we find the Item of ChildCounter in our AddedItemsListbox
+									if ${RI_Var_Bool_LootDebug}
+										echo Checking #${AILCounter} of ${UIElement[AddedItemsListbox@RILoot].Items}: Checking ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText]} //${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]} // ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Equals["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}"]}
+									if ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Find["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}"](exists)}
+									{
+										;now check if the toon associated is in our group and if the QTY is either ~ or < LootedTextEntry@RILoot
+										if ${RI_Var_Bool_LootDebug}
+											echo Checking #${AILCounter} of ${UIElement[AddedItemsListbox@RILoot].Items}: ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text} // ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]} ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} < ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
+										if ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} < ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
+										{
+											;set our counter over the break to end the for loop
+											AILCounter:Set[${Math.Calc[${UIElement[AddedItemsListbox@RILoot].Items}+1]}]
+											
+											;set the group member box to this toon and send over the item as well as increment the Looted
+											if ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
+											{
+												UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}]:SetText["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}|${Math.Calc[${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]}+1]}"]
+												wait 2
+												
+												;Assign the loot
+												LootWindow.ItemsPage.Child[${ChildrenCounter}]:LeftClick
+												LootWindow.LeaderAssign:LeftClick
+												wait 2
+												relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:RequestAll
+												relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:LootAll
+												;relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:Receive
+											}
+											else
+											{
+												AILCounter:Dec
+												continue
+											}
+										}
+									}
+								}
+								
+								
+							}
+						}
+						while (${ChildrenCounter:Inc} < ${LootWindow.ItemsPage.NumChildren})
 						
-						;doubleclick chest wait 2 then loot all
-						Actor[chest,radius,7]:DoubleClick
-						wait 2
+						if ${RI_Var_Bool_LootDebug}
+							echo ISXRI: Receiving from LootWindow, because we either had nothing to distribute via RILoot or already Distributed everything, main fuction in Buffer:RI
+								
+						;just loot the rest
+						LootWindow:RequestAll
 						LootWindow:LootAll
+						;LootWindow:Receive
+						wait 5
+					}
+				}
+			}
+			else
+			{
+				;if a chest exists within 8m radius and looting is on
+				if ${RI_Var_Bool_Loot} || ( ${UIElement[SettingsLootingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLootChestsCheckBox@SettingsFrame@CombatBotUI].Checked} )
+				{
+					if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${RI_Var_Bool_Loot}
+					{
+						noop
+					}
+					else
+					{
+						if ${Actor[chest,radius,7](exists)}
+						{
+							if ${RI_Var_Bool_Debug}
+								echo ISXRI: ${Time}: Looting ${Actor[chest,radius,7]} because Loot: ${RI_Var_Bool_Loot}
+							
+							if ${RI_Var_Bool_LootDebug}
+								echo ISXRI: Clicking Chest and Receiving from LootWindow, main fuction in Buffer:RI
+							
+							;doubleclick chest wait 2 then loot all
+							Actor[chest,radius,7]:DoubleClick
+							wait 2
+							LootWindow:LootAll
+						}
 					}
 				}
 			}
@@ -4637,6 +4842,8 @@ function main()
 				}
 				else
 				{
+					if ${RI_Var_Bool_LootDebug}
+						echo ISXRI: Receiving from LootWindow, main fuction in Buffer:RI
 					LootWindow:RequestAll
 					_RI_LootImmunity_:Set[TRUE]
 					TimedCommand 5 _RI_LootImmunity_:Set[FALSE]
@@ -4709,12 +4916,14 @@ atom EQ2_onLootWindowAppeared(string LootWindowID)
 	if ( ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} ) && !${_RI_LootImmunity_} && !${RI_Var_Bool_SkipLoot}
 	;&& ${CurrentLootWindowID.NotEqual[${LootWindowID}]}
 	{
-		if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${RI_Var_Bool_AcceptLoot}
+		if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && ( !${RI_Var_Bool_AcceptLoot} || ( ${UIElement[AddedItemsListbox@RILoot].Items}>0 && ${Me.IsGroupLeader} ) )
 		{
 			noop
 		}
 		else
 		{
+			if ${RI_Var_Bool_LootDebug}
+				echo ISXRI: Receiving from LootWindow, atom EQ2_onLootWindowAppeared(string LootWindowID)
 			_RI_LootImmunity_:Set[TRUE]
 			TimedCommand 5 _RI_LootImmunity_:Set[FALSE]
 			;CurrentLootWindowID:Set[${LootWindowID}]
@@ -4809,6 +5018,342 @@ atom EQ2_onQuestOffered(string Name, string Description, int Level, int StatusRe
 		TimedCommand 3 RewardWindow:Receive
 		;TimedCommand 3 RewardWindow:Accept
 		TimedCommand 5 EQ2:AcceptPendingQuest
+	}
+}
+;RILoot Object
+objectdef RILootObject
+{
+	method AssignLoot()
+	{
+		LootWindow.LeaderAssign:LeftClick
+	}
+	method SelectItem(string _ItemName)
+	{
+		noop ${This.SelectItem["${_ItemName}"]}
+	}
+	member:bool SelectItem(string _ItemName)
+	{
+		variable int _cnt
+		for(_cnt:Set[1];${_cnt}<${LootWindow.ItemsPage.NumChildren};_cnt:Inc)
+		{
+			;; We are only interested in the members of Type Text and this will be what we need to click
+			if (${LootWindow.ItemsPage.Child[${_cnt}].Type.Find[Text]})
+			{
+				;; We ignore the static member table entry as it is never an item
+				if ${LootWindow.ItemsPage.Child[${_cnt}].GetProperty[LocalText].Equals[table entry]}
+					continue
+				
+				if ${RI_Var_Bool_LootDebug}				
+					echo Checking #${_cnt} of ${LootWindow.ItemsPage.NumChildren}: ${LootWindow.ItemsPage.Child[${_cnt}].GetProperty[LocalText]} == ${_ItemName}
+					
+				;if we find the Item of ChildCounter in our AddedItemsListbox
+				if ${LootWindow.ItemsPage.Child[${_cnt}].GetProperty[LocalText].Find["${_ItemName}"](exists)}
+				{
+					LootWindow.ItemsPage.Child[${_cnt}]:LeftClick
+					return TRUE
+				}
+			}
+		}
+		return FALSE
+	}
+	method SetGroupMember(string _Name)
+	{
+		noop ${This.SetGroupMember["${_Name}"]}
+	}
+	member:bool SetGroupMember(string _Name)
+	{
+		variable index:collection:string GroupMembers
+		variable iterator GroupMembersIterator
+		variable int GroupMembersCounter = 0
+		
+		LootWindow.GroupMembers:GetOptions[GroupMembers]
+		GroupMembers:GetIterator[GroupMembersIterator]
+		
+		if (${GroupMembersIterator:First(exists)})
+		{
+			do
+			{
+				if (${GroupMembersIterator.Value.FirstKey(exists)})
+				{
+					do
+					{
+						;echo ${GroupMembersIterator.Value.CurrentKey.Equal[text]} && ${GroupMembersIterator.Value.CurrentValue.Equal[${_Name}]}
+						if ${GroupMembersIterator.Value.CurrentKey.Equal[text]} && ${GroupMembersIterator.Value.CurrentValue.Equal[${_Name}]}
+						{
+							LootWindow.GroupMembers:Set[${GroupMembersCounter}]
+							return TRUE
+						}
+					}
+					while ${GroupMembersIterator.Value.NextKey(exists)}
+				}
+				GroupMembersCounter:Inc
+			}
+			while ${GroupMembersIterator:Next(exists)}
+		}
+		return FALSE
+	}
+	variable settingsetref RILootSet
+	method Hide()
+	{
+		if ${UIElement[RILoot](exists)}
+			UIElement[RILoot]:Hide
+	}
+	method Show()
+	{
+		if ${UIElement[RILoot](exists)}
+			UIElement[RILoot]:Show
+	}
+	method LoadToonList()
+	{
+		LavishSettings[RILoot]:Clear
+		LavishSettings:AddSet[RILoot]
+		LavishSettings[RILoot]:Import["${LavishScript.HomeDirectory}/Scripts/RI/Private/RICharList.xml"]
+		variable settingsetref Set2
+		Set2:Set[${LavishSettings[RILoot].GUID}]
+
+		variable settingsetref Set3
+		
+		variable iterator Iterator
+		variable iterator Iterator2
+		Set2:GetSetIterator[Iterator]
+		
+		if ${Iterator:First(exists)}
+		{
+			do
+			{
+				Set3:Set[${Set2.FindSet[${Iterator.Key}].GUID}]
+				Set3:GetSetIterator[Iterator2]
+
+				if ${Iterator2:First(exists)}
+				{
+					do
+					{
+						;;echo ${Iterator2.Key} // ${Iterator2.Value}
+						UIElement[ToonsListbox@RILoot]:AddItem[${Iterator2.Key}]
+					}
+					while ${Iterator2:Next(exists)}
+				}
+			}
+			while ${Iterator:Next(exists)}
+		}
+	}
+	method LoadItems()
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/"]
+		if ${FP.FileExists[RILootSave.xml]}
+		{
+			LavishSettings[ItemsList]:Clear
+			LavishSettings:AddSet[ItemsList]
+			LavishSettings[ItemsList]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+			RILootSet:Set[${LavishSettings[ItemsList].GUID}]
+
+			variable settingsetref LoadListSet=${RILootSet.FindSet[ItemsList].GUID}
+			LoadListSet:Set[${RILootSet.FindSet[ItemsList].GUID}]
+			
+			variable iterator SettingIterator
+			LoadListSet:GetSettingIterator[SettingIterator]
+			if ${SettingIterator:First(exists)}
+			{
+				do
+				{
+					;;echo "${SettingIterator.Key}=${SettingIterator.Value}"
+					UIElement[ItemsListbox@RILoot]:AddItem[${SettingIterator.Key}]
+				}
+				while ${SettingIterator:Next(exists)}
+			}
+		}
+	}
+	method LoadAddedItems()
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/"]
+		if ${FP.FileExists[RILootSave.xml]}
+		{
+			LavishSettings[AddedItemsList]:Clear
+			LavishSettings:AddSet[AddedItemsList]
+			LavishSettings[AddedItemsList]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+			RILootSet:Set[${LavishSettings[AddedItemsList].GUID}]
+
+			variable settingsetref LoadListSet=${RILootSet.FindSet[AddedItemsList].GUID}
+			LoadListSet:Set[${RILootSet.FindSet[AddedItemsList].GUID}]
+			
+			variable iterator SettingIterator
+			LoadListSet:GetSettingIterator[SettingIterator]
+			if ${SettingIterator:First(exists)}
+			{
+				do
+				{
+					;echo "${SettingIterator.Key}=${SettingIterator.Value}"
+					UIElement[AddedItemsListbox@RILoot]:AddItem[${SettingIterator.Key}]
+				}
+				while ${SettingIterator:Next(exists)}
+			}
+		}
+	}
+	method ItemsListboxLeftClick()
+	{
+		if ${UIElement[ItemsListbox@RILoot].SelectedItem.ID(exists)}
+		{
+			UIElement[ItemTextEntry@RILoot]:SetText[${UIElement[ItemsListbox@RILoot].SelectedItem}]
+		}
+	}
+	method ItemsListboxRightClick()
+	{
+		if ${UIElement[ItemsListbox@RILoot].SelectedItem.ID(exists)}
+		{
+			UIElement[ItemsListbox@RILoot]:RemoveItem[${UIElement[ItemsListbox@RILoot].SelectedItem.ID}]
+			This:SaveItems
+			This:Clear
+		}
+	}
+	method ToonsListboxLeftClick()
+	{
+		if ${UIElement[ToonsListbox@RILoot].SelectedItem.ID(exists)}
+		{
+			UIElement[GroupTextEntry@RILoot]:SetText[${UIElement[ToonsListbox@RILoot].SelectedItem}]
+		}
+	}
+	method AddedItemsListboxLeftClick()
+	{
+		if ${UIElement[AddedItemsListbox@RILoot].SelectedItem.ID(exists)}
+		{
+			UIElement[AddButton@RILoot]:SetText[Edit]
+			UIElement[ItemTextEntry@RILoot]:SetText[${UIElement[AddedItemsListbox@RILoot].SelectedItem.Text.Token[1,|]}]
+			UIElement[GroupTextEntry@RILoot]:SetText[${UIElement[AddedItemsListbox@RILoot].SelectedItem.Text.Token[2,|]}]
+			UIElement[QuantityTextEntry@RILoot]:SetText[${UIElement[AddedItemsListbox@RILoot].SelectedItem.Text.Token[3,|]}]
+			UIElement[LootedTextEntry@RILoot]:SetText[${UIElement[AddedItemsListbox@RILoot].SelectedItem.Text.Token[4,|]}]
+		}
+		else
+		{
+			This:Clear
+		}
+	}
+	method AddedItemsListboxRightClick()
+	{
+		if ${UIElement[AddedItemsListbox@RILoot].SelectedItem.ID(exists)}
+		{
+			UIElement[AddedItemsListbox@RILoot]:RemoveItem[${UIElement[AddedItemsListbox@RILoot].SelectedItem.ID}]
+			This:SaveList
+			This:Clear
+		}
+	}
+	method Group(int _GroupOnly)
+	{
+		if ${_GroupOnly}==1
+		{
+			UIElement[AllToonsCheckBox@RILoot]:UnsetChecked
+			UIElement[GroupOnlyCheckBox@RILoot]:SetChecked
+			UIElement[ToonsListbox@RILoot]:ClearItems
+			variable int i=0
+			;UIElement[ToonsListbox@RILoot]:AddItem[${Me.Name}]
+			for(i:Set[1];${i}<${Me.Group};i:Inc)
+				UIElement[ToonsListbox@RILoot]:AddItem[${Me.Group[${i}].Name}]
+		}
+		else
+		{	
+			UIElement[GroupOnlyCheckBox@RILoot]:UnsetChecked
+			UIElement[AllToonsCheckBox@RILoot]:SetChecked
+			UIElement[ToonsListbox@RILoot]:ClearItems
+			This:LoadToonList
+		}
+	}
+	;need to add code that IF the Item does not exist in our ItemsListBox to Add it and save to file.
+	method Add()
+	{
+		if ${UIElement[ItemTextEntry@RILoot].Text.NotEqual[NULL]} && ${UIElement[ItemTextEntry@RILoot].Text.NotEqual[""]} && ${UIElement[GroupTextEntry@RILoot].Text.NotEqual[NULL]} && ${UIElement[GroupTextEntry@RILoot].Text.NotEqual[""]}
+		{
+			if ${UIElement[QuantityTextEntry@RILoot].Text.Equal[NULL]} || ${UIElement[QuantityTextEntry@RILoot].Text.Equal[""]} || ${Int[${UIElement[QuantityTextEntry@RILoot].Text}]}==0
+			{
+				UIElement[QuantityTextEntry@RILoot]:SetText[~]
+			}
+			else
+			{
+				UIElement[QuantityTextEntry@RILoot]:SetText[${Int[${UIElement[QuantityTextEntry@RILoot].Text}]}]
+			}
+			if ${UIElement[LootedTextEntry@RILoot].Text.Equal[NULL]} || ${UIElement[LootedTextEntry@RILoot].Text.Equal[""]}
+			{
+				UIElement[LootedTextEntry@RILoot]:SetText[0]
+			}
+			else
+			{
+				UIElement[LootedTextEntry@RILoot]:SetText[${Int[${UIElement[LootedTextEntry@RILoot].Text}]}]
+			}
+			if ${UIElement[AddedItemsListbox@RILoot].SelectedItem.ID(exists)}
+				UIElement[AddedItemsListbox@RILoot].SelectedItem:SetText["${UIElement[ItemTextEntry@RILoot].Text}|${UIElement[GroupTextEntry@RILoot].Text}|${UIElement[QuantityTextEntry@RILoot].Text}|${UIElement[LootedTextEntry@RILoot].Text}"]
+			else
+			{
+				variable int cnt=0
+				variable bool DNE=TRUE
+				variable bool IE=FALSE
+				for(cnt:Set[0];${cnt}<=${UIElement[ItemsListbox@RILoot].Items};cnt:Inc)
+				{
+					if ${UIElement[ItemsListbox@RILoot].OrderedItem[${cnt}].Text.Equal["${UIElement[ItemTextEntry@RILoot].Text}"]}
+					{
+						IE:Set[TRUE]
+					}
+				}
+				for(cnt:Set[0];${cnt}<=${UIElement[AddedItemsListbox@RILoot].Items};cnt:Inc)
+				{
+					if ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${cnt}].Text.Token[1,|].Equal["${UIElement[ItemTextEntry@RILoot].Text}"]} && ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${cnt}].Text.Token[2,|].Equal["${UIElement[GroupTextEntry@RILoot].Text}"]}
+					{
+						UIElement[AddedItemsListbox@RILoot].OrderedItem[${cnt}]:SetText["${UIElement[ItemTextEntry@RILoot].Text}|${UIElement[GroupTextEntry@RILoot].Text}|${UIElement[QuantityTextEntry@RILoot].Text}|${UIElement[LootedTextEntry@RILoot].Text}"]
+						DNE:Set[FALSE]
+					}
+				}
+				if !${IE}
+				{
+					UIElement[ItemsListbox@RILoot]:AddItem["${UIElement[ItemTextEntry@RILoot].Text}"]
+					This:SaveItems
+				}
+				if ${DNE}
+					UIElement[AddedItemsListbox@RILoot]:AddItem["${UIElement[ItemTextEntry@RILoot].Text}|${UIElement[GroupTextEntry@RILoot].Text}|${UIElement[QuantityTextEntry@RILoot].Text}|${UIElement[LootedTextEntry@RILoot].Text}"]
+			}
+			This:Clear
+			This:SaveList
+		}
+	}
+	method Clear()
+	{
+		UIElement[ItemTextEntry@RILoot]:SetText[""]
+		UIElement[GroupTextEntry@RILoot]:SetText[""]
+		UIElement[QuantityTextEntry@RILoot]:SetText[""]
+		UIElement[LootedTextEntry@RILoot]:SetText[0]
+		UIElement[ItemsListbox@RILoot]:ClearSelection
+		UIElement[ToonsListbox@RILoot]:ClearSelection
+		UIElement[AddedItemsListbox@RILoot]:ClearSelection
+		UIElement[AddButton@RILoot]:SetText[Add]
+		UIElement[AddButton@RILoot]:SetFocus
+	}
+	method SaveList()
+	{
+		variable string SetName
+		SetName:Set[AddedItemsList]
+		LavishSettings[RILoot]:Clear
+		LavishSettings:AddSet[RILoot]
+		LavishSettings[RILoot]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+		LavishSettings[RILoot]:AddSet[${SetName}]
+		LavishSettings[RILoot].FindSet[${SetName}]:Clear
+		variable int count=0
+		for(count:Set[1];${count}<=${UIElement[AddedItemsListbox@RILoot].Items};count:Inc)
+		{
+			LavishSettings[RILoot].FindSet[${SetName}]:AddSetting["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${count}].Text}",""]
+		}
+		LavishSettings[RILoot]:Export["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+	}
+	method SaveItems()
+	{
+		variable string SetName
+		SetName:Set[ItemsList]
+		LavishSettings[RILoot]:Clear
+		LavishSettings:AddSet[RILoot]
+		LavishSettings[RILoot]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+		LavishSettings[RILoot]:AddSet[${SetName}]
+		LavishSettings[RILoot].FindSet[${SetName}]:Clear
+		variable int count=0
+		for(count:Set[1];${count}<=${UIElement[ItemsListbox@RILoot].Items};count:Inc)
+		{
+			LavishSettings[RILoot].FindSet[${SetName}]:AddSetting["${UIElement[ItemsListbox@RILoot].OrderedItem[${count}].Text}",""]
+		}
+		LavishSettings[RILoot]:Export["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
 	}
 }
 objectdef RIMovementObject
@@ -5039,12 +5584,6 @@ objectdef RIMovementObject
 			;chest's id
 			variable int ChestID=${Actor[Chest,radius,100].ID}
 			
-			if ${RI_Var_Bool_CheckLoot}
-			{
-				RIMUIObj:LootOptions[ALL,LO]
-				relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[1]
-				wait 5
-			}
 			if ${RI_Var_Bool_Loot}
 			{
 				;first try to summon chest, if we are not flying, and chest is more than 7m away
@@ -5063,27 +5602,7 @@ objectdef RIMovementObject
 						relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 						return
 					}
-					if ${RI_Var_Bool_CheckLoot}
-					{
-						wait 5 ${Actor[id,${ChestID}].Distance}<7
-						Actor[id,${ChestID}]:DoubleClick
-						wait 5 ${LootWindow(exists)}
-						if ${This.LootItemsToNotAutoLootExists[${LootItemsToNotAutoLoot}]}
-						{
-							while ${Actor[${ChestID}](exists)} && ${LONLCnt:Inc}<2400
-							{
-								wait 10
-							}
-						}
-						else
-						{
-							relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
-							wait 10
-							LootWindow:RequestAll
-						}
-					}
-					else
-						wait 10
+					wait 10
 				}
 				
 				;if the chest is not within 7m, move to it
@@ -5105,27 +5624,7 @@ objectdef RIMovementObject
 					if ${Me.FlyingUsingMount}
 						call This.FlyDown
 					
-					wait 5 ${Actor[id,${ChestID}].Distance}<11
-					Actor[id,${ChestID}]:DoubleClick
-					wait 5 ${LootWindow(exists)}	
-					if ${RI_Var_Bool_CheckLoot}
-					{
-						if ${This.LootItemsToNotAutoLootExists[${LootItemsToNotAutoLoot}]}
-						{
-							while ${Actor[${ChestID}](exists)} && ${LONLCnt:Inc}<2400
-							{
-								wait 10
-							}
-						}
-						else
-						{
-							relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
-							wait 10
-							LootWindow:RequestAll
-						}
-					}
-					else
-						wait 10
+					wait 10
 					;move back to original loc
 					call This.Move ${TempX} ${TempY} ${TempZ} ${Precision} 10 TRUE TRUE FALSE FALSE TRUE
 				}
@@ -5884,7 +6383,7 @@ objectdef RIMovementObject
 		RIMUIObj:TravelMap[${Me.Name},${_ZoneToZoneName},${_ZoneOption}]
 		if ${_ZoneOption}==-1
 		{
-			wait 600 ${Me.IsMoving}
+			wait 50 ${Me.IsMoving}
 			wait 600 !${Me.IsMoving}
 		}
 		else
@@ -6318,6 +6817,7 @@ objectdef RIMUIObject
 				;echo ISXRI: City Timeline Completed Qeynos/Freeport: ${CTD}
 				echo ISXRI: Tik-Tok Language Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The Mysteries of Tik-Tok](exists)}]}
 				echo ISXRI: Pygmy Language Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Handle With Care](exists)}]}
+				echo ISXRI: Krombral Language Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Words of a Giant](exists)}]}
 				echo ISXRI: The Symbol in the Flesh Heritage Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The Symbol in the Flesh](exists)}]}
 				echo ISXRI: The Bone Bladed Claymore Heritage Quest Complete: ${Bool[${QuestJournalWindow.CompletedQuest[The Bone Bladed Claymore](exists)}]}
 				echo ISXRI: ToT Crafting Sig Timeline Complete: ${Bool[${QuestJournalWindow.CompletedQuest[Containing the Stone](exists)}]}
@@ -6662,7 +7162,7 @@ objectdef RIMUIObject
 		else
 			return FALSE
 	}
-	member:bool MainIconIDExists(int _ActorID, int _MainIconID, bool _Det=TRUE)
+	member:int MainIconIDExists(int _ActorID, int _MainIconID, bool _Det=TRUE)
 	{
 		variable int Counter=1
 		variable int NumActorEffects
@@ -6681,22 +7181,22 @@ objectdef RIMUIObject
 					{
 						if ${Me.Effect[detrimental,${Counter}].MainIconID}==${_MainIconID}
 						{
-							return TRUE
+							return ${Counter}
 						}
 					}
 					else
 					{
 						if ${Me.Effect[${Counter}].MainIconID}==${_MainIconID}
 						{
-							return TRUE
+							return ${Counter}
 						}
 					}
 				}
 				while (${Counter:Inc} <= ${NumActorEffects})
-				return FALSE
+				return 0
 			}
 			else
-				return FALSE
+				return 0
 		}
 		elseif (${Actor[id,${_ActorID}](exists)})
 		{
@@ -6708,17 +7208,17 @@ objectdef RIMUIObject
 				{
 					if ${Actor[id,${_ActorID}].Effect[${Counter}].MainIconID}==${_MainIconID}
 					{
-						return TRUE
+						return ${Counter}
 					}
 				}
 				while (${Counter:Inc} <= ${NumActorEffects})
-				return FALSE
+				return 0
 			}
 			else
-				return FALSE
+				return 0
 		}
 		else
-			return FALSE
+			return 0
 	}
 	method RQEngage(string _Item)
 	{
@@ -10823,6 +11323,7 @@ function atexit()
 	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml"
 	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
 	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIConsole.xml"
+	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RILoot.xml"
 	squelch Hud -remove NN1P1
 	squelch Hud -remove NN1P2
 	squelch Hud -remove NP1P1
@@ -10886,6 +11387,14 @@ atom(global) ri(... args)
 		{
 			switch ${args[1]}
 			{
+				case CONSOLE
+				{
+					RIConsole
+				}
+				case LOOT
+				{
+					RILoot
+				}
 				case SKIPLOOT
 				case SL
 				{
@@ -11330,6 +11839,8 @@ atom(global) ri(... args)
 				case AvailableCommands
 				{
 					echo ISXRI: Available RI and !RI commands:
+					echo RICONSOLE
+					echo RILOOT
 					echo UNLOAD	
 					echo UNLOADEXTENSION
 					echo END (RIMUI,RIMOVEMENT,CB,RI,RIMOBHUD)
@@ -11624,4 +12135,10 @@ atom(global) riconsole(string _what)
 	else
 		RIConsole:Show
 }
-			
+atom(global) riloot(string _what)
+{
+	if ${_what.Upper.EqualCS[HIDE]}
+		RILootObj:Hide
+	else
+		RILootObj:Show
+}			

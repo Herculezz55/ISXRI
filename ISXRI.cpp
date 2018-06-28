@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.65 5-28-18"
-double EXTVER = 5.65;
+#define EXTENSION_VERSION "5.68 6-24-18"
+double EXTVER = 5.68;
 #include "ISXRI.h"
 
 
@@ -175,6 +175,7 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "PlaneofInnovationGearsintheMachine.h"
 #include "PlaneofDiseaseOutbreak.h"
 #include "PlaneofDiseaseTheSource.h"
+#include "PlaneofDiseaseInfestedMesa.h"
 #include "BrackishVaults.h"
 #include "SolusekRosTowerMonolithofFire.h"
 #include "SolusekRosTowerTheObsidianCore.h"
@@ -1021,6 +1022,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("PlaneofInnovationGearsintheMachine");
 	pISInterface->RemoveTopLevelObject("PlaneofDiseaseOutbreak");
 	pISInterface->RemoveTopLevelObject("PlaneofDiseaseTheSource");
+	pISInterface->RemoveTopLevelObject("PlaneofDiseaseInfestedMesa");
 	pISInterface->RemoveTopLevelObject("BrackishVaults");
 	pISInterface->RemoveTopLevelObject("SolusekRosTowerMonolithofFire");
 	pISInterface->RemoveTopLevelObject("SolusekRosTowerTheObsidianCore");
@@ -1832,6 +1834,7 @@ void updatefunction()
 	string ISXRICharListXMLPath;
 	string ISXRIIXMLPath;
 	string ISXRIConsoleXMLPath;
+	string ISXRILootXMLPath;
 	char InnerspacePath[512];
 	char InnerspaceScriptsPath[512];
 	pISInterface->GetInnerSpacePath(InnerspacePath, sizeof(InnerspacePath));
@@ -1863,6 +1866,7 @@ void updatefunction()
 	ISXRICharListXMLPath = InnerspaceScriptsPath;
 	ISXRIIXMLPath = InnerspaceScriptsPath;
 	ISXRIConsoleXMLPath = InnerspaceScriptsPath;
+	ISXRILootXMLPath = InnerspaceScriptsPath;
 	//strcat_s(ISXRIXMLPath, InnerspacePath);
 	//printf("XML: %s", ISXRIPath);
 	//strcat_s(ISXRIXMLPath, "\\Extensions\\ISXRI.xml");
@@ -1891,6 +1895,7 @@ void updatefunction()
 	ISXRIIXMLPath += "\\RI\\RIInventory.xml";
 	ISXRICharListXMLPath += "\\RI\\RICharListUI.xml";
 	ISXRIConsoleXMLPath += "\\RI\\RIConsole.xml";
+	ISXRILootXMLPath += "\\RI\\RILoot.xml";
 	ISXRIFolderPath += "\\RI";
 	ISXRICombatBotFolderPath += "\\RI\\CombatBot";
 	bool CreateISXRIFolder = CreateDirectory(ISXRIFolderPath.c_str(), 0);
@@ -1918,6 +1923,7 @@ void updatefunction()
 	remove(ISXRICharListXMLPath.c_str());
 	remove(ISXRIIXMLPath.c_str());
 	remove(ISXRIConsoleXMLPath.c_str());
+	remove(ISXRILootXMLPath.c_str());
 	Sleep(1000);
 	//printf("Folder: %s", InnerspacePath);
 	//printf("DLL: %s", ISXRIPath);
@@ -1954,6 +1960,8 @@ void updatefunction()
 	DeleteUrlCacheEntry("http://www.isxri.com/RICharListUI.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RIInventory.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RIConsole.xml");
+	DeleteUrlCacheEntry("http://www.isxri.com/RILoot.xml");
+
 	//download new RI.xml
 	HRESULT hRez1 = URLDownloadToFile(NULL, "http://www.isxri.com/RI.xml", ISXRIXMLPath.c_str(), 0, NULL);
 	//download new RZ.xml
@@ -2000,6 +2008,8 @@ void updatefunction()
 	HRESULT hRez18 = URLDownloadToFile(NULL, "http://www.isxri.com/RIInventory.xml", ISXRIIXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez19 = URLDownloadToFile(NULL, "http://www.isxri.com/RIConsole.xml", ISXRIConsoleXMLPath.c_str(), 0, NULL);
+	//download
+	HRESULT hRez20 = URLDownloadToFile(NULL, "http://www.isxri.com/RILoot.xml", ISXRILootXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez = URLDownloadToFile(NULL, "http://www.isxri.com/ISXRI.dll", ISX_Orig_Path.c_str(), 0, NULL);
 
@@ -27432,6 +27442,42 @@ bool __cdecl TLO_PlaneofDiseaseTheSource(int argc, char *argv[], LSTYPEVAR &Dest
 	return false;
 }
 //TLO to return string arrays
+bool __cdecl TLO_PlaneofDiseaseInfestedMesa(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(PlaneofDiseaseInfestedMesa) / sizeof(PlaneofDiseaseInfestedMesa[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = PlaneofDiseaseInfestedMesa[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
 bool __cdecl TLO_LegacyofPowerDeepTrouble(int argc, char *argv[], LSTYPEVAR &Dest)
 {
 	int numberofelements = sizeof(LegacyofPowerDeepTrouble) / sizeof(LegacyofPowerDeepTrouble[0]);
@@ -28054,6 +28100,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("PlaneofDiseaseOutbreak", TLO_PlaneofDiseaseOutbreak);
 		if (tlo == "PlaneofDiseaseTheSource")
 			pISInterface->AddTopLevelObject("PlaneofDiseaseTheSource", TLO_PlaneofDiseaseTheSource);
+		if (tlo == "PlaneofDiseaseInfestedMesa")
+			pISInterface->AddTopLevelObject("PlaneofDiseaseInfestedMesa", TLO_PlaneofDiseaseInfestedMesa);
 		if (tlo == "BrackishVaults")
 			pISInterface->AddTopLevelObject("BrackishVaults", TLO_BrackishVaults);
 		if (tlo == "SolusekRosTowerMonolithofFire")

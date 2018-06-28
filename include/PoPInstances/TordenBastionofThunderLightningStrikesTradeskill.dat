@@ -1872,15 +1872,18 @@ ClickActor fired_lightning_rods
 -611.217346 -16.939684 -544.392639
 Custom
 ClickActor TintFlags-17096
--605.844116 -16.935492 -554.964294
+-606.051941 -16.934278 -555.457947
 Wait
-150
--605.844116 -16.935492 -554.964294
+100
+-606.051941 -16.934278 -555.457947
 Custom
-ClickActor tempered_lightning_rods
--605.844116 -16.935492 -554.964294
+ClickActor -Actor tempered_lightning_rods -LoopUntilNoHighlightOnMouseHover
+-606.051941 -16.934278 -555.457947
+Wait
+20
+-606.051941 -16.934278 -555.457947
 Custom
-ClickActor tempered_lightning_rods
+ClickActor -Actor tempered_lightning_rods -LoopUntilNoHighlightOnMouseHover
 -605.844116 -16.935492 -554.964294
 -596.888733 -16.939938 -559.727722
 -588.000671 -16.948130 -564.455261

@@ -63,6 +63,21 @@ function BuildIndexes()
 	ZoneUnlockTime:Insert[5400]
 	
 	;Zone
+	_Zone:Insert["Plane of Innovation: Masks of the Marvelous [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Innovation: Masks of the Marvelous [Expert]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_poi"]
+	ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
 	_Zone:Insert["Plane of Innovation: Gears in the Machine [Solo]"]
 	UIElement[ZonesAvail@RZ]:AddItem["Plane of Innovation: Gears in the Machine [Solo]"]
 	ZoneFrom:Insert["Coliseum of Valor"]
@@ -80,6 +95,21 @@ function BuildIndexes()
 	;Zone
 	_Zone:Insert["Plane of Innovation: Gears in the Machine [Heroic]"]
 	UIElement[ZonesAvail@RZ]:AddItem["Plane of Innovation: Gears in the Machine [Heroic]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_poi"]
+	ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["Plane of Innovation: Gears in the Machine [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Innovation: Gears in the Machine [Expert]"]
 	ZoneFrom:Insert["Coliseum of Valor"]
 	ZoneTimer:Insert[90]
 	ZoneExit:Insert["zone_to_valor"]
@@ -123,6 +153,21 @@ function BuildIndexes()
 	ZoneUnlockTime:Insert[5400]
 	
 	;Zone
+	_Zone:Insert["Plane of Disease: Outbreak [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: Outbreak [Expert]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_pod"]
+	ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
 	_Zone:Insert["Plane of Disease: The Source [Solo]"]
 	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: The Source [Solo]"]
 	ZoneFrom:Insert["Coliseum of Valor"]
@@ -153,6 +198,66 @@ function BuildIndexes()
 	ZoneUnlockTime:Insert[5400]
 	
 	;Zone
+	_Zone:Insert["Plane of Disease: The Source [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: The Source [Expert]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_pod"]
+	ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["Plane of Disease: Infested Mesa [Duo]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: Infested Mesa [Duo]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["Zone Exit"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_pod"]
+	ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["Plane of Disease: Infested Mesa [Event Heroic]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: Infested Mesa [Event Heroic]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["Zone Exit"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_pod"]
+	ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["Plane of Disease: Infested Mesa [Expert Event]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Disease: Infested Mesa [Expert Event]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["Zone Exit"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_pod"]
+	ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
 	_Zone:Insert["Torden, Bastion of Thunder: Tower Breach [Solo]"]
 	UIElement[ZonesAvail@RZ]:AddItem["Torden, Bastion of Thunder: Tower Breach [Solo]"]
 	ZoneFrom:Insert["Coliseum of Valor"]
@@ -167,7 +272,7 @@ function BuildIndexes()
 	ZoneSetTime:Insert[0]
 	ZoneUnlockTime:Insert[5400]
 	
-		;Zone
+	;Zone
 	_Zone:Insert["Torden, Bastion of Thunder: Tower Breach [Heroic]"]
 	UIElement[ZonesAvail@RZ]:AddItem["Torden, Bastion of Thunder: Tower Breach [Heroic]"]
 	ZoneFrom:Insert["Coliseum of Valor"]
@@ -182,7 +287,22 @@ function BuildIndexes()
 	ZoneSetTime:Insert[0]
 	ZoneUnlockTime:Insert[5400]
 	
-		;Zone
+	;Zone
+	_Zone:Insert["Torden, Bastion of Thunder: Tower Breach [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Torden, Bastion of Thunder: Tower Breach [Expert]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["Exit"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_bot"]
+	ZoneEntranceLoc:Insert[-94.660004 2.940000 -164.080002]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
 	_Zone:Insert["Torden, Bastion of Thunder: Winds of Change [Solo]"]
 	UIElement[ZonesAvail@RZ]:AddItem["Torden, Bastion of Thunder: Winds of Change [Solo]"]
 	ZoneFrom:Insert["Coliseum of Valor"]
@@ -212,6 +332,21 @@ function BuildIndexes()
 	ZoneSetTime:Insert[0]
 	ZoneUnlockTime:Insert[5400]
 	
+	;Zone
+	_Zone:Insert["Torden, Bastion of Thunder: Winds of Change [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Torden, Bastion of Thunder: Winds of Change [Expert]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["Exit"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_bot"]
+	ZoneEntranceLoc:Insert[-94.660004 2.940000 -164.080002]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
 	_Zone:Insert["Solusek Ro's Tower: The Obsidian Core [Solo]"]
 	UIElement[ZonesAvail@RZ]:AddItem["Solusek Ro's Tower: The Obsidian Core [Solo]"]
 	ZoneFrom:Insert["Coliseum of Valor"]
@@ -228,6 +363,20 @@ function BuildIndexes()
 	
 	_Zone:Insert["Solusek Ro's Tower: The Obsidian Core [Heroic]"]
 	UIElement[ZonesAvail@RZ]:AddItem["Solusek Ro's Tower: The Obsidian Core [Heroic]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_ro_tower"]
+	ZoneEntranceLoc:Insert[94.830002 2.940000 -164.320007]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	_Zone:Insert["Solusek Ro's Tower: The Obsidian Core [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Solusek Ro's Tower: The Obsidian Core [Expert]"]
 	ZoneFrom:Insert["Coliseum of Valor"]
 	ZoneTimer:Insert[90]
 	ZoneExit:Insert["zone_to_valor"]
@@ -269,6 +418,19 @@ function BuildIndexes()
 	ZoneSetTime:Insert[0]
 	ZoneUnlockTime:Insert[5400]
 	
+	_Zone:Insert["Solusek Ro's Tower: Monolith of Fire [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Solusek Ro's Tower: Monolith of Fire [Expert]"]
+	ZoneFrom:Insert["Coliseum of Valor"]
+	ZoneTimer:Insert[90]
+	ZoneExit:Insert["zone_to_valor"]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneExitLoc:Insert[]
+	ZoneEntrance:Insert["zone_to_ro_tower"]
+	ZoneEntranceLoc:Insert[94.830002 2.940000 -164.320007]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
 	return
 	
 	;Zone
@@ -286,7 +448,7 @@ function BuildIndexes()
 	ZoneUnlockTime:Insert[5400]
 	
 }
-
+variable(global) int RZ_Var_Int_Count=1
 function main(... args)
 {
 	;disable debugging
@@ -386,6 +548,11 @@ function main(... args)
 	;main loop
 	while 1
 	{
+		;wait while paused
+		while ${RZ_Var_Bool_Paused}
+		{
+			wait 5
+		}
 		;wait until start is pushed
 		while !${RZ_Var_Bool_Start}
 		{
@@ -401,9 +568,20 @@ function main(... args)
 		{
 			;if Zone is unlocked run it
 			
-			for(Count:Set[1];${Count}<=${UIElement[AddedZoneList@RZ].Items};Count:Inc)
+			for(RZ_Var_Int_Count:Set[1];${RZ_Var_Int_Count}<=${UIElement[AddedZoneList@RZ].Items};RZ_Var_Int_Count:Inc)
 			{
-				if ${Count}==1 && !${UIElement[InfiniteLoopListCheckBox@RZ].Checked}
+				;wait while paused
+				while ${RZ_Var_Bool_Paused}
+				{
+					wait 5
+				}
+				;if not start exit for loop
+				if !${RZ_Var_Bool_Start}
+				{
+					RZ_Var_Int_Count:Set[${Math.Calc[${UIElement[AddedZoneList@RZ].Items}+1]}]
+					continue
+				}
+				if ${RZ_Var_Int_Count}==1 && !${UIElement[InfiniteLoopListCheckBox@RZ].Checked}
 				{
 					;echo limited loops checking ${RZ_Var_Int_Loops}<=${UIElement[LoopCountTextEntry@RZ].Text}
 					if ${RZ_Var_Int_Loops}<=${UIElement[LoopCountTextEntry@RZ].Text}
@@ -411,15 +589,15 @@ function main(... args)
 					else
 					{
 						RZObj:Stop
-						Count:Set[${Math.Calc[${UIElement[AddedZoneList@RZ].Items}+1]}]
+						RZ_Var_Int_Count:Set[${Math.Calc[${UIElement[AddedZoneList@RZ].Items}+1]}]
 						continue
 					}
 				}
 				;call CheckZones function
 				call RZObj.CheckZones
-				;echo checking if ${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]} at ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]} is unlocked: ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]}]}
-				if ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]}]}
-					call Zone ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${Count}]}"]}
+				;echo checking if ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]} at ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]} is unlocked: ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]}]}
+				if ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]}]}
+					call Zone ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]}
 			}
 			
 			;call CheckZones function
@@ -582,8 +760,11 @@ function Zone(int _IndexPosition)
 	UIElement[Start@RI]:SetText[Pause]
 	wait 50
 	
+	;if it was our last zone Stop RZ
+	if ${RZ_Var_Int_Count}>=${UIElement[AddedZoneList@RZ].Items} && ${RZ_Var_Int_Loops}>=${UIElement[LoopCountTextEntry@RZ].Text}
+		RZObj:Stop
 	;while runinstances is running wait
-	while ${Script[Buffer:RunInstances](exists)}
+	while ${Script[Buffer:RunInstances](exists)} || ${RZ_Var_Bool_Paused}
 		wait 20
 	wait 10
 	
@@ -679,9 +860,11 @@ objectdef RZObject
 	{
 		UIElement[StartButton@RZm]:SetText[Resume]
 		RZ_Var_Bool_Paused:Set[1]
+		Script:Pause
 	}
 	method Resume()
 	{
+		Script:Resume
 		UIElement[StartButton@RZm]:SetText[Pause]
 		RZ_Var_Bool_Paused:Set[0]
 	}
