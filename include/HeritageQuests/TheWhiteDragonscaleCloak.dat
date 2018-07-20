@@ -12,7 +12,7 @@ Wait
 50
 -210.831543 14.301663 108.009216
 Custom
-ExecuteCommand "Me.Inventory[Sailing with Three Sheets to the Wind]:Read"
+ReadBook "Sailing with Three Sheets to the Wind" 1
 -210.831543 14.301663 108.009216
 Custom
 MessageBox "Hit Last button on book to accept quest then resume"

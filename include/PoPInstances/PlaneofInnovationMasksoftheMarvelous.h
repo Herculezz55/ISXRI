@@ -290,7 +290,7 @@ string PlaneofInnovationMasksoftheMarvelous[] = {"-2.587736 -10.179273 146.73345
 "-141.766968 5.542172 -269.331451", 
 "StopForCombat", 
 "ReturnLOCS", 
-"Custom", 
-"Masksshinyhunt", 
-"-141.766968 5.542172 -269.331451", 
+"Wait", 
+"50", 
+"-143.020386 9.893293 -253.026489", 
 };

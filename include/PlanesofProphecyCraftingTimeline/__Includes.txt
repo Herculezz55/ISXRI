@@ -1,2 +1,0 @@
-"""#include "AStitchinTimePartIILightningStrikes.h""""
-"""#include "AStitchinTimePartISecurityMeasures.h""""

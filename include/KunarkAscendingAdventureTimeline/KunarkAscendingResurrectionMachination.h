@@ -146,7 +146,7 @@ string KunarkAscendingResurrectionMachination[] = {"Kunark Ascending: Resurrecti
 "Instance", 
 "0 0 0", 
 "Custom", 
-"CheckQuestStep \"Deposit Drusella's Bones\"", 
+"CheckQuestStep \"Deposit Drusella's Bones\" 0 0", 
 "0 0 0", 
 "Custom", 
 "CallToGuildHall", 

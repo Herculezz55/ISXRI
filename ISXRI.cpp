@@ -11,7 +11,7 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.68 6-24-18"
+#define EXTENSION_VERSION "5.68 7-15-18"
 double EXTVER = 5.68;
 #include "ISXRI.h"
 
@@ -183,6 +183,14 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "TordenBastionofThunderWindsofChange.h"
 #include "PlaneofInnovationSecurityMeasuresTradeskill.h"
 #include "TordenBastionofThunderLightningStrikesTradeskill.h"
+#include "NektulosForestApotheosisTradeskill.h"
+#include "PlaneofDiseaseCryptofDecayTradeskill.h"
+#include "PlaneofInnovationNickofTimeTradeskill.h"
+#include "ShardofHateEyeSpyTradeskill.h"
+#include "ShardofHateNewOwnershipTradeskill.h"
+#include "SolusekRosTowerFromtheAshesTradeskill.h"
+#include "TheMoltenThroneHatesEssencesTradeskill.h"
+#include "ShardofHateUtterContempt.h"
 
 //Quest Dat Files
 #include "AnythingforJumjum.h"
@@ -812,7 +820,9 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "LegacyofPowerTyrantsThrone.h"
 #include "AStitchinTimePartIILightningStrikes.h"
 #include "AStitchinTimePartISecurityMeasures.h"
-
+#include "AStitchinTimePartIIIFromBirthtoTombs.h"
+#include "AStitchinTimePartIVAFavorofLove.h"
+#include "AStitchinTimePartVSealedwithHate.h"
 //#include ".h"
 //End Quest Dat Files
 
@@ -1015,7 +1025,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("MistmyrManor");
 	pISInterface->RemoveTopLevelObject("RavenscaleRepository");
 	pISInterface->RemoveTopLevelObject("TheRuinsofCabilis");
-	
+	pISInterface->RemoveTopLevelObject("ShardofHateUtterContempt");
 
 	//pop
 	pISInterface->RemoveTopLevelObject("PlaneofInnovationMasksoftheMarvelous");
@@ -1030,6 +1040,13 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("TordenBastionofThunderWindsofChange");
 	pISInterface->RemoveTopLevelObject("PlaneofInnovationSecurityMeasuresTradeskill");
 	pISInterface->RemoveTopLevelObject("TordenBastionofThunderLightningStrikesTradeskill");
+	pISInterface->RemoveTopLevelObject("NektulosForestApotheosisTradeskill.DAT");
+	pISInterface->RemoveTopLevelObject("PlaneofDiseaseCryptofDecayTradeskill.DAT");
+	pISInterface->RemoveTopLevelObject("PlaneofInnovationNickofTimeTradeskill.DAT");
+	pISInterface->RemoveTopLevelObject("ShardofHateEyeSpyTradeskill.DAT");
+	pISInterface->RemoveTopLevelObject("ShardofHateNewOwnershipTradeskill.DAT");
+	pISInterface->RemoveTopLevelObject("SolusekRosTowerFromtheAshesTradeskill.DAT");
+	pISInterface->RemoveTopLevelObject("TheMoltenThroneHatesEssencesTradeskill.DAT");
 	//Quest TLO's
 	pISInterface->RemoveTopLevelObject("ANYTHINGFORJUMJUM");
 	pISInterface->RemoveTopLevelObject("ANEYEINTHESKY");
@@ -1658,6 +1675,9 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("LEGACYOFPOWERTYRANTSTHRONE");
 	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTIILIGHTNINGSTRIKES");
 	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTISECURITYMEASURES");
+	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTIIIFROMBIRTHTOTOMBS");
+	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTIVAFAVOROFLOVE");
+	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTVSEALEDWITHHATE");
 }
 
 void ISXRIUnRegisterCommands()
@@ -27982,7 +28002,402 @@ bool __cdecl TLO_AStitchinTimePartISecurityMeasures(int argc, char *argv[], LSTY
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_NektulosForestApotheosisTradeskill(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(NektulosForestApotheosisTradeskill) / sizeof(NektulosForestApotheosisTradeskill[0]);
 
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = NektulosForestApotheosisTradeskill[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PlaneofDiseaseCryptofDecayTradeskill(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(PlaneofDiseaseCryptofDecayTradeskill) / sizeof(PlaneofDiseaseCryptofDecayTradeskill[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = PlaneofDiseaseCryptofDecayTradeskill[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PlaneofInnovationNickofTimeTradeskill(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(PlaneofInnovationNickofTimeTradeskill) / sizeof(PlaneofInnovationNickofTimeTradeskill[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = PlaneofInnovationNickofTimeTradeskill[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShardofHateEyeSpyTradeskill(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ShardofHateEyeSpyTradeskill) / sizeof(ShardofHateEyeSpyTradeskill[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ShardofHateEyeSpyTradeskill[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShardofHateNewOwnershipTradeskill(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ShardofHateNewOwnershipTradeskill) / sizeof(ShardofHateNewOwnershipTradeskill[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ShardofHateNewOwnershipTradeskill[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_SolusekRosTowerFromtheAshesTradeskill(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(SolusekRosTowerFromtheAshesTradeskill) / sizeof(SolusekRosTowerFromtheAshesTradeskill[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = SolusekRosTowerFromtheAshesTradeskill[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheMoltenThroneHatesEssencesTradeskill(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheMoltenThroneHatesEssencesTradeskill) / sizeof(TheMoltenThroneHatesEssencesTradeskill[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheMoltenThroneHatesEssencesTradeskill[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AStitchinTimePartIIIFromBirthtoTombs(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(AStitchinTimePartIIIFromBirthtoTombs) / sizeof(AStitchinTimePartIIIFromBirthtoTombs[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = AStitchinTimePartIIIFromBirthtoTombs[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AStitchinTimePartIVAFavorofLove(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(AStitchinTimePartIVAFavorofLove) / sizeof(AStitchinTimePartIVAFavorofLove[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = AStitchinTimePartIVAFavorofLove[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AStitchinTimePartVSealedwithHate(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(AStitchinTimePartVSealedwithHate) / sizeof(AStitchinTimePartVSealedwithHate[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = AStitchinTimePartVSealedwithHate[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShardofHateUtterContempt(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ShardofHateUtterContempt) / sizeof(ShardofHateUtterContempt[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ShardofHateUtterContempt[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -28116,6 +28531,22 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("PlaneofInnovationSecurityMeasuresTradeskill", TLO_PlaneofInnovationSecurityMeasuresTradeskill);
 		if (tlo == "TordenBastionofThunderLightningStrikesTradeskill")
 			pISInterface->AddTopLevelObject("TordenBastionofThunderLightningStrikesTradeskill", TLO_TordenBastionofThunderLightningStrikesTradeskill);
+		if (tlo == "NektulosForestApotheosisTradeskill")
+			pISInterface->AddTopLevelObject("NektulosForestApotheosisTradeskill", TLO_NektulosForestApotheosisTradeskill);
+		if (tlo == "PlaneofDiseaseCryptofDecayTradeskill")
+			pISInterface->AddTopLevelObject("PlaneofDiseaseCryptofDecayTradeskill", TLO_PlaneofDiseaseCryptofDecayTradeskill);
+		if (tlo == "PlaneofInnovationNickofTimeTradeskill")
+			pISInterface->AddTopLevelObject("PlaneofInnovationNickofTimeTradeskill", TLO_PlaneofInnovationNickofTimeTradeskill);
+		if (tlo == "ShardofHateEyeSpyTradeskill")
+			pISInterface->AddTopLevelObject("ShardofHateEyeSpyTradeskill", TLO_ShardofHateEyeSpyTradeskill);
+		if (tlo == "ShardofHateNewOwnershipTradeskill")
+			pISInterface->AddTopLevelObject("ShardofHateNewOwnershipTradeskill", TLO_ShardofHateNewOwnershipTradeskill);
+		if (tlo == "SolusekRosTowerFromtheAshesTradeskill")
+			pISInterface->AddTopLevelObject("SolusekRosTowerFromtheAshesTradeskill", TLO_SolusekRosTowerFromtheAshesTradeskill);
+		if (tlo == "TheMoltenThroneHatesEssencesTradeskill")
+			pISInterface->AddTopLevelObject("TheMoltenThroneHatesEssencesTradeskill", TLO_TheMoltenThroneHatesEssencesTradeskill);
+		if (tlo == "ShardofHateUtterContempt")
+			pISInterface->AddTopLevelObject("ShardofHateUtterContempt", TLO_ShardofHateUtterContempt);
 
 		if (tlo == "ANYTHINGFORJUMJUM")
 			pISInterface->AddTopLevelObject("ANYTHINGFORJUMJUM", TLO_ANYTHINGFORJUMJUM);
@@ -29370,6 +29801,12 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTIILIGHTNINGSTRIKES", TLO_AStitchinTimePartIILightningStrikes);
 		if (tlo == "ASTITCHINTIMEPARTISECURITYMEASURES")
 			pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTISECURITYMEASURES", TLO_AStitchinTimePartISecurityMeasures);
+		if (tlo == "ASTITCHINTIMEPARTIIIFROMBIRTHTOTOMBS")
+			pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTIIIFROMBIRTHTOTOMBS", TLO_AStitchinTimePartIIIFromBirthtoTombs);
+		if (tlo == "ASTITCHINTIMEPARTIVAFAVOROFLOVE")
+			pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTIVAFAVOROFLOVE", TLO_AStitchinTimePartIVAFavorofLove);
+		if (tlo == "ASTITCHINTIMEPARTVSEALEDWITHHATE")
+			pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTVSEALEDWITHHATE", TLO_AStitchinTimePartVSealedwithHate);
 	}
 	return 1;
 }

@@ -933,24 +933,24 @@ function main(... args)
 			Zone1MoveToExit:Set[FALSE]
 			Zone1MoveToExitLocX:Set[0]
 			Zone1MoveToExitLocZ:Set[0]
-			Zone2:Set[]
-			Zone2Exit:Set[]
-			Zone2PopupSelection:Set[]
-			Zone2MoveToExit:Set[]
-			Zone2MoveToExitLocX:Set[]
-			Zone2MoveToExitLocZ:Set[]
-			Zone3:Set[]
-			Zone3Exit:Set[]
-			Zone3PopupSelection:Set[]
-			Zone3MoveToExit:Set[]
-			Zone3MoveToExitLocX:Set[]
-			Zone3MoveToExitLocZ:Set[]
+			Zone2:Set["Kaesora: Tomb of the Venerated [Expert Event]"]
+			Zone2Exit:Set[Exit]
+			Zone2PopupSelection:Set[1]
+			Zone2MoveToExit:Set[FALSE]
+			Zone2MoveToExitLocX:Set[0]
+			Zone2MoveToExitLocZ:Set[0]
+			Zone3:Set["The Ruins of Cabilis [Expert]"]
+			Zone3Exit:Set[Exit]
+			Zone3PopupSelection:Set[4]
+			Zone3MoveToExit:Set[FALSE]
+			Zone3MoveToExitLocX:Set[0]
+			Zone3MoveToExitLocZ:Set[0]
 			ZoneEntrance:Set["Teleporter to Expert Kaesora"]
 			ZoneEntranceMoveToZone:Set[TRUE]
 			ZoneEntranceMoveToZoneLocX:Set[520]
 			ZoneEntranceMoveToZoneLocZ:Set[1352]
-			RZ_Var_Bool_ExcludeZone2:Set[TRUE]
-			RZ_Var_Bool_ExcludeZone3:Set[TRUE]
+			;RZ_Var_Bool_ExcludeZone2:Set[TRUE]
+			;RZ_Var_Bool_ExcludeZone3:Set[TRUE]
 			Experts:Set[TRUE]
 			ExpertsSummonOption:Set["Kaesora [Expert]"]
 			;6HourZones:Set[TRUE]
@@ -1063,9 +1063,9 @@ function main(... args)
 		}
 		case 17
 		{
-			if !${Me.GetGameData[Self.ZoneName].Label.Find["Kunzar Jungle"](exists)} || ${Math.Distance[${Me.Loc},520.677246,250.506332,1353.012451]}>35
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Obulus Frontier"](exists)} || ${Math.Distance[${Me.Loc},520.677246,250.506332,1353.012451]}>35
 			{
-				echo ${Time}: You must be in Zone Kunzar Jungle and within 35 distance of -258.103027,150.091827,-1155.984497 to run this script for Torsis Zones.
+				echo ${Time}: You must be in Zone Obulus Frontier and within 35 distance of 520.677246,250.506332,1353.012451 to run this script for Kaesora Expert Zone.
 				Script:End
 			}
 			RZ_Var_String_ZoneSet:Set[LC]
@@ -1168,9 +1168,9 @@ function main(... args)
 		}
 		case 22
 		{
-			if !${Me.GetGameData[Self.ZoneName].Label.Find["Obulus Frontier"](exists)} || ${Math.Distance[${Me.Loc},790.735962,-129.386322,-583.942261]}>35
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Obulus Frontier"](exists)} || ${Math.Distance[${Me.Loc},520.677246,250.506332,1353.012451]}>35
 			{
-				echo ${Time}: You must be in Zone Obulus Frontier and within 35 distance of 790.735962,-129.386322,-583.942261 to run this script for Torsis Zones.
+				echo ${Time}: You must be in Zone Obulus Frontier and within 35 distance of 520.677246,250.506332,1353.012451 to run this script for Kaesora Expert Zone.
 				Script:End
 			}
 			RZ_Var_String_ZoneSet:Set[CD]

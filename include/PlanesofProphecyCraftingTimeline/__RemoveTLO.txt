@@ -1,2 +1,0 @@
-"""pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTIILIGHTNINGSTRIKES.DAT");""" 
-"""pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTISECURITYMEASURES.DAT");""" 

@@ -2850,45 +2850,119 @@
 ;				Carrion Walker
 ;					Fixed a bug that would sometimes target pets			
 
-;v5.68 Changes 6-24-18
+;v5.68 Changes 7-15-18
+;;;;;;;;;;;;;;;; HAPPY BIRTHDAY HERCULEZZ ;;;;;;;;;;;;;;;;;;;;;
+;	RZ
+;		Added Save button to save current Added Zones List
+;		will now auto load saved list if exists
 ;	RIMUI
 ;		Modified RIMUIObj Method's, Member's and *Button's
 ;			member:int MainIconIDExists(int _ActorID, int _MainIconID, bool _Det=TRUE)
 ;				now returns 0 if FALSE and whatever slot in the effects array the MainIconIDExists at when TRUE
+;			ShareMissions
+;				added code to parse out DBG's addition of Current zone: to the beggining
+;				CB will now properly share missions for Current Zone
+;	RQ
+;		Modified
+;			Kunark Ascending: Resurrection Machination
+;				Fixed a bug that was not clicking Drusella's Bones
+;		Added
+;			A Stitch in Time, Part III: From Birth to Tombs
+;				Includes:
+;					Solusek Ro's Tower: From the Ashes [Tradeskill]
+;						Requires manual harvesting of condensed magma and sulfur
+;					Plane of Disease: Crypt of Decay [Tradeskill]
+;						Requires manual intervention of Main Room (For Now)
+;			A Stitch in Time, Part IV: A Favor of Love
+;				Includes:
+;					Shard of Hate: Eye Spy [Tradeskill]
+;						Requires manual harvesting of all needed supplies
+;			A Stitch in Time, Part V: Sealed with Hate
+;					Includes:
+;						The Molten Throne: Hate's Essences [Tradeskill]
+;							Requires manual harvesting of molten shards
+;						Nektulos Forest: Apotheosis [Tradeskill]
+;						Shard of Hate: New Ownership [Tradeskill]
+;						Plane of Innovation: Nick of Time [Tradeskill]
 ;	RI
+;		Fixed a bug that would cause some toons to not move behind while running RI
 ;		Added
 ;			RILoot
 ;				bring up the RILoot UI to manage items to be sent to specific toons
 ;		Modified
+;			Torden, Bastion of Thunder: Tower Breach
+;				Modified pathing
+;				Fixed a bug that was not skipping Chest Hunt in Expert
+;			Torden, Bastion of Thunder: Winds of Change
+;				Modified pathing
+;				Fixed a bug that was not skipping Chest Hunt in Expert
+;				Torstien
+;					Fixed a bug that would target even when mob hit 1%
 ;			Plane of Disease: Infested Mesa
 ;				Deathbone
 ;					will pull more successfully now for toons/groups without pets
 ;				Carrion Walker
 ;					will pull more successfully now for toons/groups without pets
 ;				Grimror
+;					now waits until Grimror exists to invoke script
 ;					will no longer try to move MainToon behind after clicking larvae
 ;					will no longer target the Grimror Mercenary if it is up
 ;			Plane of Disease: Outbreak
 ;				Flesh Eater
 ;					will pull more successfully now for toons/groups without pets
 ;			Plane of Disease: The Source
+;				Modified pathing
 ;				Darwol
 ;					MainToon will now AutoFace the nests to ensure ranged auto will fire
+;			Solusek Ro: Obsidian Core
+;				Disabled ShinyScan on First Floor
+;				Cindrax
+;					Now waits until mob is within 10 before moving to ensure he is pulled
+;			Plane of Innovation: Masks of the Marvelous
+;				Disabled ShinyHunt Temporarily
 ;		Added
 ;			Plain of Innovation: Parts Not Included
+;				Only RI Pull (For Now)
 ;				Fixit Microtock (RI Pull Microtock)
 ;					Mages dispell
 ;					gets out when told too
 ;				Fixit Megatock (RI Pull Megatock)
 ;					Moves group behind named
 ;						if group member gets aggro they return to lockspot
+;			Shard of Hate: Utter Contempt
+;				Skimp (RI Pull Skimp)
+;					Move group behind named
+;				 	Appropriate toons will swap
+;				Morg (RI Pull Morg)
+;					Move group behind named
+;				 	Appropriate toons will click the meat
+;				Horb (RI Pull Horb)
+;					Move group behind named
+;				 	Appropriate toons will click the meat
+;				Morghorb (RI Pull Morghorb)
+;					Spreads group out into circles
+;					Moves behind and in front as needed
+;					Auto targets Cages
+;					Moves out of circles to get cured
+;				Estir the Spiteful (RI Pull Estir)
+;					Tries (it's very best) to joust Yellow Circles (have not found a way to read the actual circles)
+;					Keeps appropriate adds up
+;					Cures correct toons
+;					Turns off AE's and Encounter Hostiles
+;					Turns on Singular Focus/Focused Offensive
+
+;v5.69 Changes 7-19-18
+;	RI
+;		Modified
+;			Shard of Hate: Utter Contempt
+;				Estir
+;					Fixed a bug that would sometimes not cure correctly
 
 ;WIP
-;		On chest looting, RI will now switch to leader only, open chest and check against an index of
-;		items if found will wait 40mins with chest open for user to determine who gets item
+
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.68
+variable(global) float RI_Var_Float_Version=5.69
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -2898,6 +2972,8 @@ variable(global) RIConsoleObject RIConsole
 variable(global) RIMovementObject RIMObj
 variable string MySubClass=${Me.SubClass}
 variable(global) string RI_Var_Int_RIConsoleID
+variable(global) string RI_Var_String_LookDownKey=\"Page Down\"
+variable(global) string RI_Var_String_LookUpKey=\"Page Up\"
 variable(global) string RI_Var_String_FlyUpKey=Home
 variable(global) string RI_Var_String_FlyDownKey=End
 variable(global) string RI_Var_String_StrafeLeftKey=q
@@ -2933,6 +3009,7 @@ variable(global) bool RI_Var_Bool_PauseMovement=FALSE
 variable(global) bool RI_Var_Bool_GlobalOthers=FALSE
 variable(global) bool RI_Var_Bool_Start=FALSE
 variable(global) bool RI_Var_Bool_Paused=FALSE
+variable(global) int RI_Var_Int_BadChestCnt=0
 variable(global) string RI_Var_String_RelayGroup=NONE
 variable(global) string RI_Var_Int_RelayGroupSize=0
 variable(global) bool _RI_LootImmunity_=FALSE
@@ -4210,6 +4287,7 @@ variable index:string GroupNames
 ;end variables for RIMUI
 variable(global) bool RI_Var_Bool_CheckLoot=FALSE
 variable filepath FP
+variable bool GrabingShinys=FALSE
 function main()
 {
 	;disable RI_Var_Bool_Debugging
@@ -4636,7 +4714,7 @@ function main()
 	{
 		if ${Debug}
 			echo ${Time}: Getting RILootSave.XML
-		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RILootSave.xml" http://www.isxri.com/RILootSave.xml
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml" http://www.isxri.com/RILootSave.xml
 		wait 50
 	}
 	
@@ -4660,6 +4738,7 @@ function main()
 	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RILoot.xml"
 	
+	RILootObj:LoadRILootOn
 	RILootObj:LoadItems
 	RILootObj:LoadAddedItems
 	RILootObj:Group[1]
@@ -4668,6 +4747,11 @@ function main()
 	variable int AILCounter = 1
 	UIElement[RILoot]:Hide
 	
+	if ${Input.Button[PGUP](exists)}
+	{
+		RI_Var_String_LookDownKey:Set[PGDOWN]
+		RI_Var_String_LookUpKey:Set[PGUP]
+	}
 	while 1
 	{
 		if ${QueuedCommands}
@@ -4705,7 +4789,7 @@ function main()
 			CurrentZoneName:Set["${Zone.Name}"]
 			RIMUIObj.NumFactions:Set[0]
 		}
-		if !${RI_Var_Bool_SkipLoot} && !${Me.Name.Find["Skyshrine "](exists)} && !${LootWindow(exists)}
+		if !${RI_Var_Bool_SkipLoot} && !${Me.Name.Find["Skyshrine "](exists)}
 		{
 			;if a corpse exists within 8m radius and corpse looting is on
 			if ${RI_Var_Bool_CorpseLoot} || ( ${UIElement[SettingsLootingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLootCorpsesCheckBox@SettingsFrame@CombatBotUI].Checked} )
@@ -4719,88 +4803,129 @@ function main()
 					eq2ex apply_verb ${Actor[corpse,radius,10].ID} Loot
 				}
 			}
-			if ${UIElement[AddedItemsListbox@RILoot].Items}>0
+			if ${UIElement[AddedItemsListbox@RILoot].Items}>0 && ${UIElement[RILootOnCheckbox@RILoot].Checked} && ${Me.Group}>1 && ( ${Me.Group[2].Type.NotEqual[Mercenary]} || ${Me.Group}>2 ) && ( ${Actor[Exquisite Chest,radius,7](exists)} || ${Actor[Gaukr Sandstorm's Treasure,radius,7](exists)} || ${Actor[Hreidar Lynhillig's Treasure,radius,7](exists)} )
 			{
-				if ${Me.IsGroupLeader} && ( ${RI_Var_Bool_Loot} || ( ${UIElement[SettingsLootingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLootChestsCheckBox@SettingsFrame@CombatBotUI].Checked} ) )
+				if ${Me.IsGroupLeader} && ( ${RI_Var_Bool_Loot} || ( ${UIElement[SettingsLootingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLootChestsCheckBox@SettingsFrame@CombatBotUI].Checked} ) ) && !${GrabingShinys}
 				{
-					if ${Actor[chest,radius,7](exists)}
+					if ( ${Actor[Exquisite Chest,radius,7](exists)} || ${Actor[Gaukr Sandstorm's Treasure,radius,7](exists)} || ${Actor[Hreidar Lynhillig's Treasure,radius,7](exists)} )
 					{
 						if ${RI_Var_Bool_LootDebug}
-							echo ISXRI: ${Time}: Checking Smart Loot : ${Actor[chest,radius,7]} : ${RI_Var_Bool_Loot}
-						if !${LootWindow(exists)}
+							echo ISXRI: ${Time}: Checking Smart Loot : ( ${Actor[Exquisite Chest,radius,7](exists)} || ${Actor[Gaukr Sandstorm's Treasure,radius,7](exists)} || ${Actor[Hreidar Lynhillig's Treasure,radius,7](exists)} ) : ${RI_Var_Bool_Loot}
+						if ${LootWindow(exists)}
+							noop
+						else
 						{
+							LootWindow:Close
+							eq2ex close_top_window
 							RIMUIObj:LootOptions[ALL,LO]
 							wait 20
 							if ${RI_Var_Bool_LootDebug}
 								echo ISXRI: Clicking Chest to distribute via RILoot, main fuction in Buffer:RI
 							;doubleclick chest wait 5 then check if we need to give any items to anyone
-							Actor[chest,radius,7]:DoubleClick
+							Actor[Exquisite Chest,radius,7]:DoubleClick
+							Actor[Gaukr Sandstorm's Treasure,radius,7]:DoubleClick
+							Actor[Hreidar Lynhillig's Treasure,radius,7]:DoubleClick
 							wait 5 ${LootWindow(exists)}
+							Actor[Exquisite Chest,radius,7]:DoubleClick
+							Actor[Gaukr Sandstorm's Treasure,radius,7]:DoubleClick
+							Actor[Hreidar Lynhillig's Treasure,radius,7]:DoubleClick
+							wait 5 ${LootWindow(exists)}
+							wait 2
+							
 							;check if any items in chest are in our AddedItemsListbox and the Toon is in our group/raid
 						}
-						ChildrenCounter:Set[1]
-						do
+						if ${LootWindow(exists)}
 						{
-							;; We are only interested in the members of Type Text and this will be what we need to click
-							if (${LootWindow.ItemsPage.Child[${ChildrenCounter}].Type.Find[Text]})
+							do
 							{
-								;; We ignore the static member table entry as it is never an item
-								if ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Equals[table entry]}
-									continue
-								if ${RI_Var_Bool_LootDebug}	
-									echo Checking #${ChildrenCounter} of ${LootWindow.ItemsPage.NumChildren}: ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText]}
-								
-								for(AILCounter:Set[1];${AILCounter}<=${UIElement[AddedItemsListbox@RILoot].Items};AILCounter:Inc)
+								ChildrenCounter:Set[1]
+								FoundVar:Set[0]
+								do
 								{
-									;if we find the Item of ChildCounter in our AddedItemsListbox
-									if ${RI_Var_Bool_LootDebug}
-										echo Checking #${AILCounter} of ${UIElement[AddedItemsListbox@RILoot].Items}: Checking ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText]} //${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]} // ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Equals["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}"]}
-									if ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Find["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}"](exists)}
+									;; We are only interested in the members of Type Text and this will be what we need to click
+									if (${LootWindow.ItemsPage.Child[${ChildrenCounter}].Type.Find[Text]})
 									{
-										;now check if the toon associated is in our group and if the QTY is either ~ or < LootedTextEntry@RILoot
-										if ${RI_Var_Bool_LootDebug}
-											echo Checking #${AILCounter} of ${UIElement[AddedItemsListbox@RILoot].Items}: ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text} // ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]} ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} < ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
-										if ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} < ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
+										;; We ignore the static member table entry as it is never an item
+										if ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Equals[table entry]}
+											continue
+										if ${RI_Var_Bool_LootDebug}	
+											echo Checking #${ChildrenCounter} of ${LootWindow.ItemsPage.NumChildren}: ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText]}
+										
+										for(AILCounter:Set[1];${AILCounter}<=${UIElement[AddedItemsListbox@RILoot].Items};AILCounter:Inc)
 										{
-											;set our counter over the break to end the for loop
-											AILCounter:Set[${Math.Calc[${UIElement[AddedItemsListbox@RILoot].Items}+1]}]
-											
-											;set the group member box to this toon and send over the item as well as increment the Looted
-											if ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
+											;if we find the Item of ChildCounter in our AddedItemsListbox
+											if ${RI_Var_Bool_LootDebug}
+												echo Checking #${AILCounter} of ${UIElement[AddedItemsListbox@RILoot].Items}: Checking ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText]} //${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]} // ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Find["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}"](exists)}
+											if ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Find["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}"](exists)}
 											{
-												UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}]:SetText["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}|${Math.Calc[${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]}+1]}"]
-												wait 2
-												
-												;Assign the loot
-												LootWindow.ItemsPage.Child[${ChildrenCounter}]:LeftClick
-												LootWindow.LeaderAssign:LeftClick
-												wait 2
-												relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:RequestAll
-												relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:LootAll
-												;relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:Receive
-											}
-											else
-											{
-												AILCounter:Dec
-												continue
+												;now check if the toon associated is in our group and if the QTY is either ~ or < LootedTextEntry@RILoot
+												if ${RI_Var_Bool_LootDebug}
+													echo Checking #${AILCounter} of ${UIElement[AddedItemsListbox@RILoot].Items}: ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text} // ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]} ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} > ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
+												if ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} > ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
+												{
+													;increment our Foundvar
+													FoundVar:Inc
+													;set the group member box to this toon and send over the item as well as increment the Looted
+													noop ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
+													wait 5
+													if ${RI_Var_Bool_LootDebug}
+														echo Setting GroupMember ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
+													if ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
+													{
+														if ${RI_Var_Bool_LootDebug}
+															echo Setting Looted +1
+															
+														;set looted +1
+														UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}]:SetText["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}|${Math.Calc[${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]}+1].Precision[0]}"]
+														;save and reload to All
+														RILootObj:SaveList
+														relay "all other" RILootObj:LoadAddedItems
+														wait 5
+														
+														;Assign the loot
+														LootWindow.ItemsPage.Child[${ChildrenCounter}]:LeftClick
+														LootWindow.LeaderAssign:LeftClick
+														wait 5
+														relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:RequestAll
+														relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:LootAll
+														;relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:Receive
+														;set our counter over the break to end the for loop
+														AILCounter:Set[${Math.Calc[${UIElement[AddedItemsListbox@RILoot].Items}+1]}]
+													}
+													else
+													{
+														AILCounter:Dec
+														continue
+													}
+												}
 											}
 										}
 									}
 								}
-								
-								
+								while (${ChildrenCounter:Inc} < ${LootWindow.ItemsPage.NumChildren})
 							}
-						}
-						while (${ChildrenCounter:Inc} < ${LootWindow.ItemsPage.NumChildren})
-						
-						if ${RI_Var_Bool_LootDebug}
-							echo ISXRI: Receiving from LootWindow, because we either had nothing to distribute via RILoot or already Distributed everything, main fuction in Buffer:RI
+							while ${FoundVar}>0
+							
+							;we did not see anything return and try again on next loop iteration
+							if ${ChildrenCounter}==1 || ${FoundVar}>0
+							{
+								if ${RI_Var_Loot_Debug}
+									echo Somethings not right: ChildrenCounter: ${ChildrenCounter}  FoundVar: ${FoundVar}
 								
-						;just loot the rest
-						LootWindow:RequestAll
-						LootWindow:LootAll
-						;LootWindow:Receive
-						wait 5
+								noop
+							}
+							else
+							{
+								if ${RI_Var_Bool_LootDebug}
+									echo ISXRI: Receiving from LootWindow, because we either had nothing to distribute via RILoot or already Distributed everything, main fuction in Buffer:RI
+										
+								;just loot the rest
+								LootWindow:RequestAll
+								LootWindow:LootAll
+								;LootWindow:Receive
+							}
+							wait 5
+						}
 					}
 				}
 			}
@@ -4832,11 +4957,15 @@ function main()
 				}
 			}
 		}
-		elseif ${LootWindow(exists)} && !${_RI_LootImmunity_} && !${RI_Var_Bool_SkipLoot}
+		if ${LootWindow(exists)} && !${_RI_LootImmunity_} && !${RI_Var_Bool_SkipLoot} 
 		{
 			if ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 			{
-				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${RI_Var_Bool_AcceptLoot}
+				if ${UIElement[AddedItemsListbox@RILoot].Items}>0 && ${UIElement[RILootOnCheckbox@RILoot].Checked} && ${Me.Group}>1 && ( ${Me.Group[2].Type.NotEqual[Mercenary]} || ${Me.Group}>2 ) && ${Actor[Exquisite Chest,radius,7](exists)}
+				{
+					noop
+				}
+				elseif ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${RI_Var_Bool_AcceptLoot}
 				{
 					noop
 				}
@@ -4916,7 +5045,7 @@ atom EQ2_onLootWindowAppeared(string LootWindowID)
 	if ( ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} ) && !${_RI_LootImmunity_} && !${RI_Var_Bool_SkipLoot}
 	;&& ${CurrentLootWindowID.NotEqual[${LootWindowID}]}
 	{
-		if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && ( !${RI_Var_Bool_AcceptLoot} || ( ${UIElement[AddedItemsListbox@RILoot].Items}>0 && ${Me.IsGroupLeader} ) )
+		if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && ( !${RI_Var_Bool_AcceptLoot} || ( ${UIElement[AddedItemsListbox@RILoot].Items}>0 && ${Me.IsGroupLeader} && ( ${Actor[Exquisite Chest,radius,7](exists)} || ${Actor[Gaukr Sandstorm's Treasure,radius,7](exists)} || ${Actor[Hreidar Lynhillig's Treasure,radius,7](exists)} ) && ${UIElement[RILootOnCheckbox@RILoot].Checked} && ${Me.Group}>1 && ( ${Me.Group[2].Type.NotEqual[Mercenary]} || ${Me.Group}>2 ) ) )
 		{
 			noop
 		}
@@ -5023,6 +5152,38 @@ atom EQ2_onQuestOffered(string Name, string Description, int Level, int StatusRe
 ;RILoot Object
 objectdef RILootObject
 {
+	method LoadRILootOn()
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/"]
+		if ${FP.FileExists[RILootSave.xml]}
+		{
+			LavishSettings[RILootSet]:Clear
+			LavishSettings:AddSet[RILootSet]
+			LavishSettings[RILootSet]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+			RILootSet:Set[${LavishSettings[RILootSet].GUID}]
+			if ${RILootSet.FindSetting[RILootOn]}
+				UIElement[RILootOnCheckbox@RILoot]:SetChecked
+			else
+				UIElement[RILootOnCheckbox@RILoot]:UnsetChecked
+		}
+	}
+	method SaveRILootOn()
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/"]
+		if ${FP.FileExists[RILootSave.xml]}
+		{
+			LavishSettings[RILootSet]:Clear
+			LavishSettings:AddSet[RILootSet]
+			LavishSettings[RILootSet]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+			RILootSet:Set[${LavishSettings[RILootSet].GUID}]
+			LavishSettings[RILootSet]:AddSetting[RILootOn,${UIElement[RILootOnCheckbox@RILoot].Checked}]
+			LavishSettings[RILootSet]:Export["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+		}
+		if ${UIElement[RILootOnCheckbox@RILoot].Checked}
+			relay "all other" UIElement[RILootOnCheckbox@RILoot]:SetChecked
+		else
+			relay "all other" UIElement[RILootOnCheckbox@RILoot]:UnsetChecked
+	}
 	method AssignLoot()
 	{
 		LootWindow.LeaderAssign:LeftClick
@@ -5168,6 +5329,7 @@ objectdef RILootObject
 		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/"]
 		if ${FP.FileExists[RILootSave.xml]}
 		{
+			UIElement[AddedItemsListbox@RILoot]:ClearItems
 			LavishSettings[AddedItemsList]:Clear
 			LavishSettings:AddSet[AddedItemsList]
 			LavishSettings[AddedItemsList]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
@@ -5203,6 +5365,7 @@ objectdef RILootObject
 			UIElement[ItemsListbox@RILoot]:RemoveItem[${UIElement[ItemsListbox@RILoot].SelectedItem.ID}]
 			This:SaveItems
 			This:Clear
+			relay "all other" RILootObj:LoadItems
 		}
 	}
 	method ToonsListboxLeftClick()
@@ -5234,6 +5397,7 @@ objectdef RILootObject
 			UIElement[AddedItemsListbox@RILoot]:RemoveItem[${UIElement[AddedItemsListbox@RILoot].SelectedItem.ID}]
 			This:SaveList
 			This:Clear
+			relay "all other" RILootObj:LoadAddedItems
 		}
 	}
 	method Group(int _GroupOnly)
@@ -5244,7 +5408,8 @@ objectdef RILootObject
 			UIElement[GroupOnlyCheckBox@RILoot]:SetChecked
 			UIElement[ToonsListbox@RILoot]:ClearItems
 			variable int i=0
-			;UIElement[ToonsListbox@RILoot]:AddItem[${Me.Name}]
+			if ${Me.Name(exists)}
+				UIElement[ToonsListbox@RILoot]:AddItem[${Me.Name}]
 			for(i:Set[1];${i}<${Me.Group};i:Inc)
 				UIElement[ToonsListbox@RILoot]:AddItem[${Me.Group[${i}].Name}]
 		}
@@ -5303,12 +5468,14 @@ objectdef RILootObject
 				{
 					UIElement[ItemsListbox@RILoot]:AddItem["${UIElement[ItemTextEntry@RILoot].Text}"]
 					This:SaveItems
+					relay "all other" RILootObj:LoadItems
 				}
 				if ${DNE}
 					UIElement[AddedItemsListbox@RILoot]:AddItem["${UIElement[ItemTextEntry@RILoot].Text}|${UIElement[GroupTextEntry@RILoot].Text}|${UIElement[QuantityTextEntry@RILoot].Text}|${UIElement[LootedTextEntry@RILoot].Text}"]
 			}
 			This:Clear
 			This:SaveList
+			relay "all other" RILootObj:LoadAddedItems
 		}
 	}
 	method Clear()
@@ -5574,15 +5741,24 @@ objectdef RIMovementObject
 		if ${Actor[Chest,radius,100](exists)} && !${Me.IsSwimming} && !${Me.FlyingUsingMount}
 		;&& !${Me.CheckCollision[${Actor[Chest].X},${Actor[Chest].Z}]}
 		{
+			;chest's id
+			variable int ChestID=${Actor[Chest,radius,100].ID}
+			variable int cnt=0
+			
+			if ${RI_Var_Loot_Debug}
+				echo ISXRI: Found Chest ${ChestID}:${Actor[Chest,radius,100].Name} at ${Actor[Chest,radius,100].Distance}
+			
 			;if ChestID is 0 leave function
 			if ${ChestID}==0 || ${RIMUIObj.InvalidChestCheck[${ChestID}]}
+			{
+				if ${RI_Var_Loot_Debug}
+					echo ISXRI: Chest ${ChestID}:${Actor[Chest,radius,100].Name} at ${Actor[Chest,radius,100].Distance} is BAD leaving function
 				return
-				
+			}
+			
 			;stop moving
 			press -release ${RI_Var_String_ForwardKey}
 
-			;chest's id
-			variable int ChestID=${Actor[Chest,radius,100].ID}
 			
 			if ${RI_Var_Bool_Loot}
 			{
@@ -5595,12 +5771,19 @@ objectdef RIMovementObject
 					;this makes this wait cause a stutter in our movement, until i can find out why im removing the wait
 					;but we need this or it will not summon as we are moving
 					wait 10
-					if ${RI_Var_Bool_BadChestTrigger}
+					if ${RI_Var_Bool_BadChestTrigger} && ${RI_Var_Int_BadChestCnt:Inc}>5
 					{
+						if ${RI_Var_Loot_Debug}
+							echo ISXRI: Chest ${ChestID}:${Actor[Chest,radius,100].Name} at ${Actor[Chest,radius,100].Distance} is BAD Adding it to our InvalidChest Index which has ${RI_Var_IndexInt_InvalidChest.Used} chests in it.
 						RI_Var_IndexInt_InvalidChest:Insert[${ChestID}]
 						RI_Var_Bool_BadChestTrigger:Set[0]
+						RI_Var_Int_BadChestCnt:Set[0]
 						relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 						return
+					}
+					else
+					{
+						RI_Var_Bool_BadChestTrigger:Set[0]
 					}
 					wait 10
 				}
@@ -5628,6 +5811,20 @@ objectdef RIMovementObject
 					;move back to original loc
 					call This.Move ${TempX} ${TempY} ${TempZ} ${Precision} 10 TRUE TRUE FALSE FALSE TRUE
 				}
+				;wait while lootwindow exists
+				if ( ${LootWindow(exists)} || ${Actor[${ChestID}].Name.Find[Chest](exists)} ) && ${ChestID}!=0 && ${cnt:Inc}<600 && !${RI_Var_Bool_QuestMode} && ${UIElement[AddedItemsListbox@RILoot].Items}>0 && ${UIElement[RILootOnCheckbox@RILoot].Checked} && ( ${Actor[Exquisite Chest,radius,7](exists)} || ${Actor[Gaukr Sandstorm's Treasure,radius,7](exists)} || ${Actor[Hreidar Lynhillig's Treasure,radius,7](exists)} )
+				{
+					while ( ${LootWindow(exists)} || ${Actor[${ChestID}].Name.Find[Chest](exists)} ) && ${ChestID}!=0 && ${cnt:Inc}<600 && !${RI_Var_Bool_QuestMode} && ${UIElement[AddedItemsListbox@RILoot].Items}>0 && ${UIElement[RILootOnCheckbox@RILoot].Checked} && ( ${Actor[Exquisite Chest,radius,7](exists)} || ${Actor[Gaukr Sandstorm's Treasure,radius,7](exists)} || ${Actor[Hreidar Lynhillig's Treasure,radius,7](exists)} )
+					{
+						if ${RI_Var_Bool_LootDebug}
+							echo ISXRI: ${cnt}: Waiting while ${Actor[${ChestID}].Name} with ID: ${ChestID} has Chest in the name (aka still exists): ${Actor[${ChestID}].Name.Find[Chest](exists)} or LootWindow is open: ${LootWindow(exists)} and our QuestMode is: ${RI_Var_Bool_QuestMode}
+						wait 1
+					}
+				}
+				else
+				{
+					wait 50 ( !${Actor[${ChestID}].Name.Find[Chest](exists)} && !${LootWindow(exists)} ) || ${ChestID}!=0
+				}
 			}
 			else
 			{
@@ -5635,8 +5832,8 @@ objectdef RIMovementObject
 					wait 1
 			}
 		}
-		if ${RI_Var_Bool_CheckLoot}
-			relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
+		;if ${RI_Var_Bool_CheckLoot}
+		;	relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 		;wait 10
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Ending LootChest
@@ -5696,6 +5893,7 @@ objectdef RIMovementObject
 		
 		if !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${Actor[${ShinyID}].X},${Math.Calc[${Actor[${ShinyID}].Y}+2]},${Actor[${ShinyID}].Z}]}
 		{
+			GrabingShinys:Set[1]
 			if ${Devel.Equal[TRUE]}
 				RIMUIObj:LootOptions[ALL,RR]
 			if ${RI_Var_Bool_Debug}
@@ -5753,6 +5951,7 @@ objectdef RIMovementObject
 					echo ${Time}: Shiny not in LOS
 				eq2ex target_none
 			}
+			GrabingShinys:Set[0]
 		}
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Ending CheckShiny
@@ -6903,8 +7102,9 @@ objectdef RIMUIObject
 			{
 				if ${QuestsIterator.Value.Category.Equal[Mission]} || ${QuestsIterator.Value.Category.Equal[Mission: Weekly]}
 				{
+					;;;;;;;;;;;; Added .Right[-14] to CurrentZone to parse out DBG's New Addition of Current zone: to the beggining on 7-2-18
 					;echo _FormattedZoneName: ${_FormattedZoneName} // QuestsIterator.Value.CurrentZone: ${QuestsIterator.Value.CurrentZone} // ${QuestsIterator.Value.CurrentZone.Equal["${_FormattedZoneName}"]} // ${QuestsIterator.Value.Name} // _ZoneTier: ${_ZoneTier} // ${QuestsIterator.Value.Name.Find[${_ZoneTier}](exists)}
-					if ( ${QuestsIterator.Value.CurrentZone.Equal[${_FormattedZoneName}]} && ${QuestsIterator.Value.Name.Find[${_ZoneTier}](exists)} ) || ${QuestsIterator.Value.CurrentZone.Equal["${_ZoneName}"]} || ${QuestsIterator.Value.CurrentZone.Equal["Multiple Locations"]}
+					if ( ${QuestsIterator.Value.CurrentZone.Right[-14].Equal[${_FormattedZoneName}]} && ${QuestsIterator.Value.Name.Find[${_ZoneTier}](exists)} ) || ${QuestsIterator.Value.CurrentZone.Right[-14].Equal["${_ZoneName}"]} || ${QuestsIterator.Value.CurrentZone.Equal["Multiple LocationsDISABLED"]}
 					{
 						echo ISXRI: Sharing: "${QuestsIterator.Value.Name}"
 						QuestsIterator.Value:Share
@@ -7453,6 +7653,9 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:ClearItems
 				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part I: Security Measures"]
 				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part II: Lightning Strikes"]
+				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part III: From Birth to Tombs"]
+				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part IV: A Favor of Love"]
+				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part V: Sealed with Hate"]
 				UIElement[QuestsListBox@RI]:AddItem[Planes of Prophecy Timeline,0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Secrets in an Arcane Land]
 				UIElement[QuestsListBox@RI]:AddItem[House Yrzu Faction Timeline,0,FFE8E200]
@@ -11422,12 +11625,12 @@ atom(global) ri(... args)
 						if ${args[2].Equal[ON]} || ${Int[${args[2]}]}==1
 							RI_Var_Bool_WaitForLastNamedChest:Set[1];echo ISXRI: Turning ON WaitForLastNamedChest
 						elseif ${args[2].Equal[OFF]} || ${Int[${args[2]}]}==0
-							RI_Var_Bool_WaitForLastNamedChest:Set[0];echo ISXRI: Turning OFF WaitForLastNamedChest
+							RI_Var_Bool_WaitForLastNamedChest:Set[0];echo ISXRI: Turning OFF WaitForLastNamedChest;relay all RI_Var_Bool_SkipLoot:Set[0]
 					}
 					else
 					{
 						if ${RI_Var_Bool_WaitForLastNamedChest}
-							RI_Var_Bool_WaitForLastNamedChest:Set[0];echo ISXRI: Turning OFF WaitForLastNamedChest
+							RI_Var_Bool_WaitForLastNamedChest:Set[0];echo ISXRI: Turning OFF WaitForLastNamedChest;relay all RI_Var_Bool_SkipLoot:Set[0]
 						else
 							RI_Var_Bool_WaitForLastNamedChest:Set[1];echo ISXRI: Turning ON WaitForLastNamedChest
 					}

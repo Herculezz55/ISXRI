@@ -156,8 +156,8 @@ Named
 Walker
 CustomNamed
 -153.127045 239.846176 -50.024651
-Wait
-150
+Custom
+WaitForMob Grimror 100 1 0 600
 -161.098068 239.635071 -54.425819
 Named
 Grimror

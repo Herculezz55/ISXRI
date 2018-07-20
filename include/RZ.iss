@@ -24,7 +24,7 @@ variable bool InstanceExpired=FALSE
 variable bool DontEchoExit=FALSE
 variable bool Developer=FALSE
 variable bool 6HourZones=FALSE
-
+variable filepath FP
 variable int MainArrayCounter
 variable index:string istrMain
 variable bool Others=FALSE
@@ -434,18 +434,49 @@ function BuildIndexes()
 	return
 	
 	;Zone
-	_Zone:Insert[""]
-	UIElement[ZonesAvail@RZ]:AddItem[""]
-	ZoneFrom:Insert[""]
-	ZoneTimer:Insert[]
-	ZoneExit:Insert[""]
+	_Zone:Insert["Shard of Hate: Utter Contempt [Solo]"]
+	UIElement[ZonesAvail@RZ]:AddItem[""Shard of Hate: Utter Contempt [Heroic]""]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
 	ZoneExitLoc:Insert[]
-	ZoneEntrance:Insert[""]
-	ZoneEntranceLoc:Insert[]
-	ZonePathFile:Insert[]
-	ZoneUnlocked:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["Shard of Hate Portal"]
+	ZoneEntranceLoc:Insert[-763.766663 347.377350 1048.609009]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
 	ZoneSetTime:Insert[0]
-	ZoneUnlockTime:Insert[5400]
+	ZoneUnlockTime:Insert[64800]
+	
+	;Zone
+	_Zone:Insert["Shard of Hate: Utter Contempt [Heroic]"]
+	UIElement[ZonesAvail@RZ]:AddItem[""Shard of Hate: Utter Contempt [Heroic]""]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["Shard of Hate Portal"]
+	ZoneEntranceLoc:Insert[-763.766663 347.377350 1048.609009]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[64800]
+	
+	;Zone
+	_Zone:Insert["Shard of Hate: Udder Contempt [Eggspert]"]
+	UIElement[ZonesAvail@RZ]:AddItem[""Shard of Hate: Utter Contempt [Heroic]""]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["Shard of Hate Portal"]
+	ZoneEntranceLoc:Insert[-763.766663 347.377350 1048.609009]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[64800]
 	
 }
 variable(global) int RZ_Var_Int_Count=1
@@ -488,7 +519,7 @@ function main(... args)
 		; ;echo done zoning out
 	; }
 	;check if RZ.xml exists, if not create
-	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/"
+	
 	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
 	if !${FP.PathExists}
 	{
@@ -496,6 +527,14 @@ function main(... args)
 		FP:MakeSubdirectory[RI]	
 		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
 	}
+	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RZ"]
+	if !${FP.PathExists}
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI"]
+		FP:MakeSubdirectory[RZ]	
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RZ"]
+	}
+	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
 	if !${FP.FileExists[RZ.xml]}
 	{
 		if ${RI_Var_Bool_Debug}
@@ -517,7 +556,7 @@ function main(... args)
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml"
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml"
 	RZObj:Maximize
-	
+	RZObj:LoadSave
 	UIElement[ExpacComboBox@RZ]:AddItem["Planes of Prophecy"]
 	UIElement[ExpacComboBox@RZ]:SelectItem[1]
 	call BuildIndexes
@@ -838,6 +877,48 @@ function ZoneOut(string ZoneExit, string ZoneName)
 ;RZObj object
 objectdef RZObject
 {
+	method Save()
+	{
+		variable string SetName
+		SetName:Set[Zones]
+		LavishSettings[RZ]:Clear
+		LavishSettings:AddSet[RZ]
+		LavishSettings[RZ]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RZ/RZSave.xml"]
+		LavishSettings[RZ]:AddSet[${SetName}]
+		LavishSettings[RZ].FindSet[${SetName}]:Clear
+		variable int count=0
+		for(count:Set[1];${count}<=${UIElement[AddedZoneList@RZ].Items};count:Inc)
+		{
+			LavishSettings[RZ].FindSet[${SetName}]:AddSetting["${UIElement[AddedZoneList@RZ].OrderedItem[${count}].Text}",""]
+		}
+		LavishSettings[RZ]:Export["${LavishScript.HomeDirectory}/Scripts/RI/RZ/RZSave.xml"]
+	}
+	method LoadSave()
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RZ/"]
+		variable settingsetref RZSet
+		if ${FP.FileExists[RZSave.xml]}
+		{
+			LavishSettings[Zones]:Clear
+			LavishSettings:AddSet[Zones]
+			LavishSettings[Zones]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RZ/RZSave.xml"]
+			RZSet:Set[${LavishSettings[Zones].GUID}]
+			variable settingsetref LoadListSet=${RZSet.FindSet[Zones].GUID}
+			LoadListSet:Set[${RZSet.FindSet[Zones].GUID}]
+			
+			variable iterator SettingIterator
+			LoadListSet:GetSettingIterator[SettingIterator]
+			if ${SettingIterator:First(exists)}
+			{
+				do
+				{
+					;;echo "${SettingIterator.Key}=${SettingIterator.Value}"
+					UIElement[AddedZoneList@RZ]:AddItem["${SettingIterator.Key}"]
+				}
+				while ${SettingIterator:Next(exists)}
+			}
+		}
+	}
 	method Start()
 	{
 		if ${UIElement[AddedZoneList@RZ].Items}<1

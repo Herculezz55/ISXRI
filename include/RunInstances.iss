@@ -596,6 +596,13 @@ function ShinyCollection()
 		EQ2UIPage[Journals,JournalsQuest]:Close
 	}
 }
+function ReadBook(string _BookName, bool _ClickLastPage)
+{
+	Me.Inventory["${_BookName}"]:Read
+	wait 5
+	if ${_ClickLastPage}
+		EQ2UIPage[Popup,Book_Simple].Child[Button,LastButton]:LeftClick
+}
 ; atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 ; {
 	; ;echo call PreGo "${_EXTVar}" "${_Verbose}"
@@ -1260,6 +1267,16 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 				istrMain:Insert[${SolusekRosTowerMonolithofFire[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
+		case Shard of Hate: Utter Contempt [Solo]
+		case Shard of Hate: Utter Contempt [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO ShardofHateUtterContempt
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[ShardofHateUtterContempt]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ShardofHateUtterContempt[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${ShardofHateUtterContempt[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
 		case "Brackish Vaults [Solo]"
 		case "Brackish Vaults [Duo]"
 		{
@@ -1749,9 +1766,61 @@ function SetShinyScanDistance(int _Distance)
 ;object RunInstancesObject
 objectdef RunInstancesObject
 {
+	member:int MobCount(string _MobName, int _Distance=100)
+	{
+		variable index:actor ActorIndex
+		EQ2:GetActors[ActorIndex,range,${_Distance}]
+		EQ2:QueryActors[ActorIndex,( Type =="NPC" || Type =="NamedNPC" ) && Health >0 && IsDead = FALSE && Distance <= ${_Distance} && Name=-"${_MobName}"]
+		return ${ActorIndex.Used}
+	}
+	function SingularFocus(int _OnOff=1)
+	{
+		if ${_OnOff}==1
+		{
+			;turn on Singular Focus 4026518400  or if guardian Focused Offensive 1432018334
+			if ${Me.SubClass.Equal[guardian]} && ${Me.Ability[id,1432018334].IsReady}
+			{
+				while !${Me.Maintained[Focused Offensive](exists)}
+				{
+					while ${Me.Ability[id,1432018334].IsReady}
+					{
+						Me.Ability[id,1432018334]:Use
+						wait 5 ${Me.Maintained[Focused Offensive](exists)}
+					}
+					wait 5 ${Me.Maintained[Focused Offensive](exists)}
+				}
+			}
+			elseif ${Me.Ability[id,4026518400].IsReady}
+			{
+				
+				while !${Me.Maintained[Singular Focus](exists)}
+				{
+					while ${Me.Ability[id,4026518400].IsReady}
+					{
+						Me.Ability[id,4026518400]:Use
+						wait 5 ${Me.Maintained[Singular Focus](exists)}
+					}
+					wait 5 ${Me.Maintained[Singular Focus](exists)}
+				}
+			}
+		}
+		else
+		{
+			if ${Me.SubClass.Equal[guardian]}
+				Me.Maintained[Focused Offensive]:Cancel
+			else
+				Me.Maintained[Singular Focus]:Cancel
+		}
+		
+	}
 	function Target(... args)
 	{
 		variable int _cnt=0
+		variable bool LowestHealth=0
+		variable int MobWithLowestHealth=100
+		variable int MobWithLowestHealthID=100
+		variable index:actor ActorIndex
+		variable int i=0
 		if !${RI_Var_Bool_GlobalOthers}
 		{
 			for(_cnt:Set[1];${_cnt}<=${args.Used};_cnt:Inc)
@@ -1759,6 +1828,11 @@ objectdef RunInstancesObject
 				if ${args[${_cnt}].Find["-Distance"](exists)}
 				{
 					_cnt:Inc
+					continue
+				}
+				if ${args[${_cnt}].Find["-LowestHealth"](exists)}
+				{
+					LowestHealth:Set[1]
 					continue
 				}
 				if ${Int[${args[${_cnt}]}]}>0
@@ -1790,18 +1864,56 @@ objectdef RunInstancesObject
 					{
 						if ${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE && Distance<=${Int[${args[${Math.Calc[${_cnt}+2]}]}]}](exists)}
 						{
-							if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE].ID}
-								Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE]:DoTarget
-							return
+							if ${LowestHealth}
+							{	
+								EQ2:GetActors[ActorIndex,range,${Int[${args[${Math.Calc[${_cnt}+2]}]}]}]
+								EQ2:QueryActors[ActorIndex,( Type =="NPC" || Type =="NamedNPC" ) && InCombatMode = TRUE && Health >0 && IsDead = FALSE && Distance <= ${Int[${args[${Math.Calc[${_cnt}+2]}]}]} && Name=-"${args[${_cnt}]}"]
+								for(i:Set[1];${i}<=${ActorIndex.Used};i:Inc)
+								{
+									if ${ActorIndex[${i}].Health}<=${MobWithLowestHealth}
+									{
+										MobWithLowestHealthID:Set[${ActorIndex[${i}].ID}]
+										MobWithLowestHealth:Set[${ActorIndex[${i}].Health}]
+									}
+								}
+								if ${Target.ID}!=${MobWithLowestHealthID}
+									Actor[Query, ID=${MobWithLowestHealthID} && IsDead=FALSE]:DoTarget
+								return
+							}
+							else
+							{
+								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE].ID}
+									Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE]:DoTarget
+								return
+							}
 						}
 					}
 					else
 					{
 						if ${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE](exists)}
 						{
-							if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE].ID}
-								Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE]:DoTarget
-							return
+							if ${LowestHealth}
+							{	
+								EQ2:GetActors[ActorIndex,range,${Int[${args[${Math.Calc[${_cnt}+2]}]}]}]
+								EQ2:QueryActors[ActorIndex,( Type =="NPC" || Type =="NamedNPC" ) && InCombatMode = TRUE && Health >0 && IsDead = FALSE && Distance <= ${Int[${args[${Math.Calc[${_cnt}+2]}]}]} && Name=-"${args[${_cnt}]}"]
+								for(i:Set[1];${i}<=${ActorIndex.Used};i:Inc)
+								{
+									if ${ActorIndex.Get[${i}].Health]}<=${MobWithLowestHealth}
+									{
+										MobWithLowestHealthID:Set[${ActorIndex.Get[${i}].ID]}]
+										MobWithLowestHealth:Set[${ActorIndex.Get[${i}].Health]}]
+									}
+								}
+								if ${Target.ID}!=${MobWithLowestHealthID}
+									Actor[Query, ID=${MobWithLowestHealthID} && IsDead=FALSE]:DoTarget
+								return
+							}
+							else
+							{
+								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE].ID}
+									Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE]:DoTarget
+								return
+							}
 						}
 					}
 				}
@@ -2397,6 +2509,7 @@ function Named(string Name, bool Lock, float LockMXN, float LockMYN, float LockM
 				relay ${RI_Var_String_RelayGroup} -noredirect RIMUIObj:SetLockSpot[OFF]
 				RI_Var_Bool_Follow:Set[TRUE]
 				call RIMObj.follow
+				wait 20
 				if !${RI_Var_Bool_SkipLoot}
 					call RIMObj.LootChest
 				if !${Script[Buffer:CoT]}
@@ -2473,7 +2586,8 @@ function MoveBehind(int _On, int _Dist=30, int _Health=99)
 		RIMUIObj:SetLockSpot[OFF]
 		RI_Obj_CB:SetUISetting[SettingsMoveBehindCheckBox,1]
 		RI_Obj_CB:SetUISetting[SettingsSkipMobMoveHealthCheckBox,0]
-		RI_Obj_CB:SetUISetting[SettingsMoveHealthTextEntry,99]
+		RI_Obj_CB:SetUISetting[SettingsMoveHealthTextEntry,${_Health}]
+		RI_Obj_CB:SetUISetting[SettingsMoveDistanceTextEntry,${_Dist}]
 	}
 	elseif ${_On}==0
 	{
@@ -2607,18 +2721,19 @@ function POISTWaitForMobDeactivated(string _Mob, int _Distance=100, int ZLess=0)
 		}
 	}
 }
-function WaitForMob(string WMName, int WMDistance=100, bool Aggro=FALSE, bool CheckExists=FALSE)
+function WaitForMob(string WMName, int WMDistance=100, bool Aggro=FALSE, bool CheckExists=FALSE, int _BreakTime=999999999999999999999999999999)
 {
 	;set ID number of closest mob named WMName
 	;variable int WMID = ${Actor[Query, Name=-"${WMName}" && Distance<=${WMDistance}].ID}
 	;wait for mob to exist
+	variable int _breaker=0
 	relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[ALL,${Me.X},${Me.Y},${Me.Z}]
 	;relay "${RI_Var_String_RelayGroup}" RI_Atom_SetLockSpot ALL ${Me.X} ${Me.Y} ${Me.Z}
 	if ${Aggro}
 	{
 		if ${CheckExists} && !${Actor[Query,Name=-"${WMName}"](exists)}
 			return
-		while !${Actor[Query,Name=-"${WMName}" && Distance<=${WMDistance} && IsDead=FALSE && IsAggro=TRUE](exists)} && ${RI_Var_Bool_Start}
+		while !${Actor[Query,Name=-"${WMName}" && Distance<=${WMDistance} && IsDead=FALSE && IsAggro=TRUE](exists)} && ${RI_Var_Bool_Start} && ${_breaker:Inc}<${_BreakTime}
 		{
 			call ExecuteQueued
 			if ${Me.InCombat}
@@ -2632,7 +2747,7 @@ function WaitForMob(string WMName, int WMDistance=100, bool Aggro=FALSE, bool Ch
 	{
 		if ${CheckExists} && !${Actor[Query,Name=-"${WMName}"](exists)}
 			return
-		while !${Actor[Query,Name=-"${WMName}" && Distance<=${WMDistance} && IsDead=FALSE](exists)} && ${RI_Var_Bool_Start}
+		while !${Actor[Query,Name=-"${WMName}" && Distance<=${WMDistance} && IsDead=FALSE](exists)} && ${RI_Var_Bool_Start} && ${_breaker:Inc}<${_BreakTime}
 		{
 			call ExecuteQueued
 			if ${Me.InCombat}
@@ -2898,13 +3013,13 @@ function HailActor(string _Actor, int _NumberOfResponses=1, int _ResponseNumber=
 			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
 			;wait 5
 			;change camera
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold "Page Down"
+			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookDownKey}
 			wait ${_CameraTime}
 			;change camera
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -release "Page Down"
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold "Page Up"
+			relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookDownKey}
+			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookUpKey}
 			wait 3
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -release "Page Up"
+			relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookUpKey}
 			
 			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
 			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
@@ -3049,13 +3164,13 @@ function HailActorGetQuest(... args)
 			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
 			;wait 5
 			;change camera
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold "Page Down"
+			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookDownKey}
 			wait 15
 			;change camera
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -release "Page Down"
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold "Page Up"
+			relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookDownKey}
+			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookUpKey}
 			wait 3
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -release "Page Up"
+			relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookUpKey}
 			
 			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
 			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
@@ -4222,6 +4337,8 @@ function _Move3(float X1, float Y1, float Z1, bool CheckDeath=0, bool TargetSelf
 }
 function Blackhand()
 {
+	if ${QuestJournalWindow.ActiveQuest[Awakening Bonds: Whispers of the Past](exists)}
+		return
 	echo ISXRI: Starting Blackhand v6
 	
 	RI_Atom_SetLockSpot ${Me.Name} 96.219154 -85.600647 -177.131744
@@ -5069,7 +5186,7 @@ function _MoveCannons()
 	call _MoveC -331.23 -62.59
 	
 	;change camera, pick up Cannon
-	Press -hold "Page Down"
+	Press -hold ${RI_Var_String_LookDownKey}
 	wait 5
 	Actor["a cannon"]:DoubleClick
 	wait 5
@@ -5100,10 +5217,10 @@ function _MoveCannons()
 	RI_CMD_Assisting 1
 	
 	wait 5
-	Press -release "Page Down"
-	Press -hold "Page Up"
+	Press -release ${RI_Var_String_LookDownKey}
+	Press -hold ${RI_Var_String_LookUpKey}
 	wait 2
-	Press -release "Page Up"
+	Press -release ${RI_Var_String_LookUpKey}
 	
 	;move back to camp
 	call _MoveC -309.81 -83.11
@@ -5116,7 +5233,7 @@ function _MoveCannon(float mcX, float mcZ, float mcX2, float mcZ2)
 	call _MoveC ${mcX} ${mcZ}
 	
 	;change camera, pick up Cannon
-	Press -hold "Page Down"
+	Press -hold ${RI_Var_String_LookDownKey}
 	wait 5
 	Actor["a cannon"]:DoubleClick
 	wait 5
@@ -7237,7 +7354,7 @@ function Wharfie()
 				wait 10
 				
 				;change camera, pick up keg
-				Press -hold "Page Down"
+				Press -hold ${RI_Var_String_LookDownKey}
 				wait 5
 				Actor[keg]:DoubleClick
 				
@@ -7253,10 +7370,10 @@ function Wharfie()
 				Mouse:LeftClick
 				
 				wait 5
-				Press -release "Page Down"
-				Press -hold "Page Up"
+				Press -release ${RI_Var_String_LookDownKey}
+				Press -hold ${RI_Var_String_LookUpKey}
 				wait 2
-				Press -release "Page Up"
+				Press -release ${RI_Var_String_LookUpKey}
 				
 				;move back to our position and turn on assisting
 				call _MoveC -236 195 FALSE TRUE
@@ -7297,7 +7414,7 @@ function Wharfie()
 				wait 10
 				
 				;change camera, pick up keg
-				Press -hold "Page Down"
+				Press -hold ${RI_Var_String_LookDownKey}
 				wait 5
 				Actor[keg]:DoubleClick
 				
@@ -7313,10 +7430,10 @@ function Wharfie()
 				Mouse:LeftClick
 				
 				wait 5
-				Press -release "Page Down"
-				Press -hold "Page Up"
+				Press -release ${RI_Var_String_LookDownKey}
+				Press -hold ${RI_Var_String_LookUpKey}
 				wait 2
-				Press -release "Page Up"
+				Press -release ${RI_Var_String_LookUpKey}
 				
 				;move back to our position
 				call _MoveC -236 195 FALSE TRUE
@@ -7358,7 +7475,7 @@ function Wharfie()
 				wait 10
 				
 				;change camera, pick up keg
-				Press -hold "Page Down"
+				Press -hold ${RI_Var_String_LookDownKey}
 				wait 2
 				Actor[keg]:DoubleClick
 				
@@ -7376,10 +7493,10 @@ function Wharfie()
 				Mouse:LeftClick
 				
 				wait 5
-				Press -release "Page Down"
-				Press -hold "Page Up"
+				Press -release ${RI_Var_String_LookDownKey}
+				Press -hold ${RI_Var_String_LookUpKey}
 				wait 2
-				Press -release "Page Up"
+				Press -release ${RI_Var_String_LookUpKey}
 				
 				;move back to our position
 				call _MoveC -236 195 FALSE TRUE
@@ -7836,7 +7953,7 @@ function Grogmogo()
 		call _MoveC 136.77 115.04
 		
 		;change camera, pick up keg
-		Press -hold "Page Down"
+		Press -hold ${RI_Var_String_LookDownKey}
 		wait 5
 		Actor[keg]:DoubleClick
 		wait 5
@@ -7853,10 +7970,10 @@ function Grogmogo()
 		Mouse:LeftClick
 		
 		wait 5
-		Press -release "Page Down"
-		Press -hold "Page Up"
+		Press -release ${RI_Var_String_LookDownKey}
+		Press -hold ${RI_Var_String_LookUpKey}
 		wait 2
-		Press -release "Page Up"
+		Press -release ${RI_Var_String_LookUpKey}
 		
 		;move back to camp
 		call _MoveC 149.99 119.10
@@ -8120,7 +8237,7 @@ function Corsair()
 		call _MoveC -33.07 210.90
 		
 		;change camera, pick up Cannon
-		Press -hold "Page Down"
+		Press -hold ${RI_Var_String_LookDownKey}
 		wait 5
 		Actor[Cannon]:DoubleClick
 		wait 5
@@ -8160,11 +8277,11 @@ function Corsair()
 			;click to place
 			Mouse:LeftClick
 		}
-		Press -release "Page Down"
+		Press -release ${RI_Var_String_LookDownKey}
 		wait 5
-		Press -hold "Page Up"
+		Press -hold ${RI_Var_String_LookUpKey}
 		wait 2
-		Press -release "Page Up"
+		Press -release ${RI_Var_String_LookUpKey}
 		call _MoveC -105.01 170.91
 		call _MoveC -117.38 185.46
 		call _MoveC -111.53 190.01
@@ -17150,7 +17267,7 @@ function CheckAndSet(... args)
 			}
 			case -Expert
 			{
-				_NamedNPC:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
+				_Expert:Set[1]
 				_Index:Insert[${Int[${args[${Math.Calc[${_acnt}+2]}]}]}]
 				break
 			}
@@ -21280,13 +21397,13 @@ function PathItemHail(int _PathLines, int _Distance, int _Precision, bool _Loop,
 								relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
 								;wait 5
 								;change camera
-								relay ${RI_Var_String_RelayGroup} -noredirect Press -hold "Page Down"
+								relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookDownKey}
 								wait 15
 								;change camera
-								relay ${RI_Var_String_RelayGroup} -noredirect Press -release "Page Down"
-								relay ${RI_Var_String_RelayGroup} -noredirect Press -hold "Page Up"
+								relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookDownKey}
+								relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookUpKey}
 								wait 3
-								relay ${RI_Var_String_RelayGroup} -noredirect Press -release "Page Up"
+								relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookUpKey}
 								
 								relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
 								relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
@@ -21437,13 +21554,13 @@ function PathItemHail(int _PathLines, int _Distance, int _Precision, bool _Loop,
 										relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
 										;wait 5
 										;change camera
-										relay ${RI_Var_String_RelayGroup} -noredirect Press -hold "Page Down"
+										relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookDownKey}
 										wait 15
 										;change camera
-										relay ${RI_Var_String_RelayGroup} -noredirect Press -release "Page Down"
-										relay ${RI_Var_String_RelayGroup} -noredirect Press -hold "Page Up"
+										relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookDownKey}
+										relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookUpKey}
 										wait 3
-										relay ${RI_Var_String_RelayGroup} -noredirect Press -release "Page Up"
+										relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookUpKey}
 										
 										relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
 										relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
@@ -23955,22 +24072,25 @@ function ReplyDialog(... args)
 function PlaceHouseItem()
 {
 	;change camera
-	Press -hold "Page Down"
+	Press -hold ${RI_Var_String_LookDownKey}
 	wait 10
 	;move mouse to just above center of screen aka on top of you and up
 	Mouse:SetPosition[${Math.Calc[${Display.Width}/2]},${Math.Calc[(${Display.Height}/2)-((${Display.Height}/2)*.1)]}]
-	wait 2
-	
+	wait 1
+	Mouse:SetPosition[${Math.Calc[${Display.Width}/2]},${Math.Calc[(${Display.Height}/2)-((${Display.Height}/2)*.1)]}]
+	wait 1
 	;click to place
 	Mouse:LeftClick
-	
-	wait 10
+	wait 1
+	Mouse:LeftClick
+	wait 1
+	wait 5
 	
 	;change camera
-	Press -release "Page Down"
-	Press -hold "Page Up"
+	Press -release ${RI_Var_String_LookDownKey}
+	Press -hold ${RI_Var_String_LookUpKey}
 	wait 3
-	Press -release "Page Up"
+	Press -release ${RI_Var_String_LookUpKey}
 }
 function MessageBox(string _Message, bool _Pause=1)
 {
@@ -24090,6 +24210,25 @@ function ReaversSigCheck()
 		call RIMObj.Move -16.716248 -4.995886 -1131.974243 1 0 0 0 1 1 1 1
 		call RIMObj.Move 6.298306 -1.754801 -1118.231689 1 0 0 0 1 1 1 1
 	}
+	if ${QuestJournalWindow.ActiveQuest[Awakening Bonds: Whispers of the Past](exists)}
+	{
+		call RIMObj.Move -0.384015 -1.754801 -1115.690796 1 0 0 0 1 1 1 1
+		call RIMObj.Move -17.538403 -4.995497 -1135.468994 1 0 0 0 1 1 1 1
+		call RIMObj.Move -17.917027 -5.219389 -1158.058960 1 0 0 0 1 1 1 1
+		call RIMObj.Move -16.785690 -4.971283 -1177.287109 1 0 0 0 1 1 1 1
+		call RIMObj.Move -0.729423 -4.971283 -1178.138306 1 0 0 0 1 1 1 1
+		call RIMObj.Move -0.321138 -5.149948 -1207.141235 1 0 0 0 1 1 1 1
+		call RIMObj.Move -5.120276 -5.149990 -1214.553955 1 0 0 0 1 1 1 1
+		call RIMObj.Move -5.840823 -5.149997 -1225.532959 1 0 0 0 1 0 1 1
+		CustomLoc:Set["0 0 0"]
+		call ClickActor TintFlags-27761
+		call RIMObj.Move -5.120276 -5.149990 -1214.553955 1 0 0 0 1 1 1 1
+		call RIMObj.Move -0.584382 -5.165592 -1200.475830 1 0 0 0 1 1 1 1
+		call RIMObj.Move -0.992143 -4.971283 -1179.257568 1 0 0 0 1 1 1 1
+		call RIMObj.Move -17.032045 -4.971283 -1177.873047 1 0 0 0 1 1 1 1
+		call RIMObj.Move -16.716248 -4.995886 -1131.974243 1 0 0 0 1 1 1 1
+		call RIMObj.Move 6.298306 -1.754801 -1118.231689 1 0 0 0 1 1 1 1
+	}
 }
 function TargetUntilAnnounce(string _TargetName, int _Distance, string _Announce)
 {
@@ -24198,13 +24337,13 @@ function DrusellaSigCheck2()
 	if ${QuestJournalWindow.ActiveQuest[Kunark Ascending: Resurrection Machination](exists)}
 	{
 		wait 50
-		call MoveToActor TF-7683
+		call MoveToActor TintFlags-7683
 		wait 50
-		call ClickActor TF-7683
+		call ClickActor TintFlags-7683
 		wait 5
-		call ClickActor TF-7683
+		call ClickActor TintFlags-7683
 		wait 5
-		call ClickActor TF-7683
+		call ClickActor TintFlags-7683
 		wait 20
 		RI_Var_Bool_SkipLoot:Set[FALSE]
 	}
@@ -24769,6 +24908,10 @@ function LockAndWait(... args)
 	waitframe
 	wait ${_WaitAfter}
 	noop
+}
+function SkipLoot(int _On=0)
+{
+	relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[${_On}]
 }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28157,7 +28300,7 @@ function Torstien()
 		if !${RI_Var_Bool_GlobalOthers}
 		{
 			call RIObj.Target ${_TargetID}
-			if ${Trigger} || ( ${Target.Health}==1 && ${Zone.Name.Find[Solo]} )
+			if ${Trigger} || ${Target.Health}==1
 			{
 				Trigger:Set[0]
 				if ${_TargetID}==${_HreidarID}
@@ -28549,7 +28692,7 @@ function Cindrax()
 	if !${RI_Var_Bool_GlobalOthers}
 	{
 		Actor[Query, ID=${_CindraxID} && IsDead=FALSE]:DoTarget
-		wait 20
+		wait 120 ${Math.Distance[${Me.Loc},${Actor[Query, ID=${_CindraxID} && IsDead=FALSE].Loc}]}<10
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-53.932232,-5.677016,-101.803299]
 		wait 150 ${Math.Distance[${Me.Loc},-53.932232,-5.677016,-101.803299]}<3
 		wait 150 ${Actor[Query, ID=${_CindraxID} && IsDead=FALSE].Distance}<11
@@ -30912,6 +31055,322 @@ function Megatock()
 }
 
 ;;;;;;;; End Plane of Innovation: Parts not Included
+;;;;;;;; Start Shard of Hate: Utter Contempt
+function Skimp()
+{
+	echo ISXRI: Starting Skimp
+
+	IncomingText:Insert["before Skimp swaps hate"]
+	IncomingText:Insert["can't swap"]
+	
+	variable int _SkimpID=${Actor[Query, Name=-"Skimp the imp" && IsDead=FALSE].ID}
+
+	call RIObj.LockAndPull ${_SkimpID} "43.657230,0.443123,232.577332"
+
+	while ${Actor[Query, ID=${_SkimpID} && IsDead=FALSE](exists)}
+	{
+		call RIObj.Target ${_SkimpID}
+
+		if ${Trigger}
+		{
+			if ${TriggerMessage.Find[before skimp swaps hate](exists)}
+			{
+				echo ISXRI: Swapping with ${TriggerMessage.Right[-23].Left[-25]}
+				wait 10
+				RIMUIObj:SetLockSpot[${Me.Name},${Me.Group[${TriggerMessage.Right[-23].Left[-25]}].Loc},1,100]
+				Trigger:Set[0]
+				wait 150 ${Trigger}
+				if !${RI_Var_Bool_GlobalOthers}
+					RIMUIObj:SetLockSpot[${Me.Name},43.657230,0.443123,232.577332]
+				else
+					RIMUIObj:SetLockSpot[OFF]
+			}
+			Trigger:Set[0]
+		}
+		waitframe
+	}
+	
+	echo ISXRI: Ending Skimp
+}
+function Morg()
+{
+	echo ISXRI: Starting Morg
+	wait 100 ${Actor[Query, Name=-"Morg"].IsAggro}
+	variable int _MorgID=${Actor[Query, Name=-"Morg" && IsDead=FALSE].ID}
+
+	call RIObj.LockAndPull ${_MorgID} "215.800415,33.360989,-67.065239"
+	if ${RI_Var_Bool_GlobalOthers}
+	{
+		RI_Var_Int_MoveDistanceMod:Set[8]
+		call MoveBehind ${Actor[Query, ID=${_MorgID} && IsDead=FALSE].ID}
+	}
+	while ${Actor[Query, ID=${_MorgID} && IsDead=FALSE](exists)}
+	{
+		call RIObj.Target ${_MorgID}
+		
+		if ${Actor[Query, ID=${_MorgID} && IsDead=FALSE].Effect[${RIMUIObj.MainIconIDExists[${_MorgID},790]}].CurrentIncrements}>0
+			call RIObj.MageAbsorbMagic ${_MorgID} -1
+		
+		while ${Me.Cursed}==-1
+		{
+			if ${Actor[rotting meat].Distance}>5
+				RIMUIObj:SetLockSpot[${Me.Name},${Actor[rotting meat].Loc},5,500]
+			Actor[rotting meat]:DoubleClick
+		}
+		if ${RI_Var_Bool_GlobalOthers}
+			RIMUIObj:SetLockSpot[OFF]
+		else
+			RIMUIObj:SetLockSpot[${Me.Name},215.800415,33.360989,-67.065239,1,500]
+		wait 2
+	}
+	
+	echo ISXRI: Ending Morg
+}
+function Horb()
+{
+	echo ISXRI: Starting Horb
+
+	variable int _HorbID=${Actor[Query, Name=-"Horb" && IsDead=FALSE].ID}
+
+	while !${Actor[Query, Name=-"Horb"].IsAggro}
+	{
+		if ${Actor[Query, Name=-"Horb"].Distance}<7
+			Actor[Query, Name=-"Horb"]:DoubleClick
+	}
+	
+	wait 5
+	
+	_HorbID:Set[${Actor[Query, Name=-"Horb" && IsDead=FALSE].ID}]
+	
+	call RIObj.LockAndPull ${_HorbID} "-108.844803,15.214252,-87.956612"
+	if ${RI_Var_Bool_GlobalOthers}
+	{
+		RI_Var_Int_MoveDistanceMod:Set[8]
+		call MoveBehind ${Actor[Query, ID=${_HorbID} && IsDead=FALSE].ID}
+	}
+	while ${Actor[Query, ID=${_HorbID} && IsDead=FALSE](exists)}
+	{
+		call RIObj.Target ${_HorbID}
+		
+		if ${Actor[Query, ID=${_MorgID} && IsDead=FALSE].Effect[${RIMUIObj.MainIconIDExists[${_MorgID},790]}].CurrentIncrements}>0
+			call RIObj.MageAbsorbMagic ${_MorgID} -1
+		
+		while ${Me.Cursed}==-1
+		{
+			if ${Actor[rotting meat].Distance}>5
+				RIMUIObj:SetLockSpot[${Me.Name},${Actor[rotting meat].Loc},5,500]
+			Actor[rotting meat]:DoubleClick
+		}
+		if ${RI_Var_Bool_GlobalOthers}
+			RIMUIObj:SetLockSpot[OFF]
+		else
+			RIMUIObj:SetLockSpot[${Me.Name},-108.844803,15.214252,-87.956612,1,500]
+		wait 2
+	}
+	
+	echo ISXRI: Ending Morg
+}
+function Morghorb()
+{
+	echo ISXRI: Starting Morghorb
+	RI_Var_Int_MoveDistanceMod:Set[1]
+	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
+	IncomingText:Insert[repares a rear assault!]	
+	IncomingText:Insert[repares a frontal assault!]
+	IncomingText:Insert[entire bodies turns volatile!]
+	
+	variable int _MorghorbID=${Actor[Query, Name=-"Morghorb" && IsDead=FALSE].ID}
+	variable string _MyLoc
+	variable int _cnt
+	variable int i
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		RIMUIObj:SetLockSpot[${Me.Name},49.785309,30.552780,-210.096008,1,500]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[1].Name},49.291969,30.242695,-197.981033,1,500]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[2].Name},37.592064,30.180744,-192.161621,1,500]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[3].Name},25.795946,30.463148,-197.856186,1,500]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[4].Name},25.309896,30.557432,-209.757980,1,500]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5].Name},37.228035,30.621916,-215.940475,1,500]
+	}
+	wait 50
+	if ${Me.Distance[49.785309,30.552780,-210.096008]}<5
+		_MyLoc:Set["49.785309,30.552780,-210.096008"]
+	elseif ${Me.Distance[49.291969,30.242695,-197.981033]}<5
+		_MyLoc:Set["49.291969,30.242695,-197.981033"]
+	elseif ${Me.Distance[37.592064,30.180744,-192.161621]}<5
+		_MyLoc:Set["37.592064,30.180744,-192.161621"]
+	elseif ${Me.Distance[25.795946,30.463148,-197.856186]}<5
+		_MyLoc:Set["25.795946,30.463148,-197.856186"]
+	elseif ${Me.Distance[25.309896,30.557432,-209.757980]}<5
+		_MyLoc:Set["25.309896,30.557432,-209.757980"]
+	elseif ${Me.Distance[37.228035,30.621916,-215.940475]}<5
+		_MyLoc:Set["37.228035,30.621916,-215.940475"]
+	while ${Actor[Query, ID=${_MorghorbID} && IsDead=FALSE](exists)}
+	{
+		if ${Me.Archetype.Equal[priest]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Trauma}==1 && ${Me.Group[${i}].Distance[${Actor[Query, ID=${_MorghorbID} && IsDead=FALSE].Loc}]}<5
+					eq2ex useabilityonplayer ${Me.Group[${i}].Name} 2945678992
+			}
+		}
+		call RIObj.Target "Cage of Condemnation" ${_MorghorbID}
+		
+		if ${Actor[Query, ID=${_MorghorbID} && IsDead=FALSE].Effect[${RIMUIObj.MainIconIDExists[${_MorghorbID},790]}].CurrentIncrements}>0
+			call RIObj.MageAbsorbMagic ${_MorghorbID} -1
+		
+		if ${Trigger}
+		{
+			if ${TriggerMessage.Find[frontal](exists)}
+			{
+				;move behind
+				RIMUIObj:SetLockSpot[OFF]
+				RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[1]
+				call MoveInFront 0
+				call MoveBehind ${_MorghorbID}
+				RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[1]
+				wait 70
+				RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[0]
+				call MoveBehind 0
+				RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[0]
+			}
+			elseif ${TriggerMessage.Find[rear](exists)}
+			{
+				;move infront
+				RIMUIObj:SetLockSpot[OFF]
+				RI_Var_Bool_MoveInFrontIgnoreAggroCheck:Set[1]
+				call MoveBehind 0
+				call MoveInFront ${_MorghorbID}
+				RI_Var_Bool_MoveInFrontIgnoreAggroCheck:Set[1]
+				wait 70
+				RI_Var_Bool_MoveInFrontIgnoreAggroCheck:Set[0]
+				call MoveInFront 0
+				RI_Var_Bool_MoveInFrontIgnoreAggroCheck:Set[0]
+			}
+			elseif ${TriggerMessage.Find[volatile](exists)}
+			{
+				_cnt:Set[0]
+				while !${Me.IsCrouching} && ${_cnt:Inc}<10
+				{
+					press ${RI_Var_String_CrouchKey}
+					wait 5
+				}
+				
+				TimedCommand 100 press ${RI_Var_String_JumpKey}
+			}
+			
+			RIMUIObj:SetLockSpot[${Me.Name},${_MyLoc},1,500]
+			Trigger:Set[FALSE]
+		}
+		if ${Me.Trauma}==1
+			RIMUIObj:SetLockSpot[${Me.Name},${Actor[Query, ID=${_MorghorbID} && IsDead=FALSE].Loc},1,500]
+		elseif ${Me.Distance[${_MyLoc}]}>3
+			RIMUIObj:SetLockSpot[${Me.Name},${_MyLoc},1,500]
+
+		wait 2
+	}
+	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,1]
+	echo ISXRI: Ending Morg
+}
+variable(global) bool BatsSpawned=0
+
+function Estir()
+{
+	echo ISXRI: Starting Estir
+	
+	AnnounceText:Insert[ALL your SCOUTS I shall destroy]
+	AnnounceText:Insert[ALL your MAGES I shall destroy]
+	AnnounceText:Insert[ALL your PRIESTS I shall destroy]
+	AnnounceText:Insert[ALL your FIGHTERS I shall destroy]
+	AnnounceText:Insert[ALL your SCOUT I shall destroy]
+	AnnounceText:Insert[ALL your MAGE I shall destroy]
+	AnnounceText:Insert[ALL your PRIEST I shall destroy]
+	AnnounceText:Insert[ALL your FIGHTER I shall destroy]
+	AnnounceText:Insert[I shall destroy]
+	
+	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
+	RI_Obj_CB:DoNotCastAE[1]
+	RI_Obj_CB:DoNotCastEncounter[1]
+	call RIObj.SingularFocus 1
+	
+	;;;also turn off wards bane
+	
+	variable int _EstirID=${Actor[Query, Name=-"Estir the Spiteful" && IsDead=FALSE].ID}
+	variable string _Archetype
+	variable int i
+	variable int cnt=0
+	
+	while !${Actor[Query, Name=-"Estir the Spiteful"].IsAggro}
+	{
+		Actor[Query, Name=-"Estir the Spiteful"]:DoTarget
+		eq2ex hail
+		wait 10
+	}
+	wait 5
+	_EstirID:Set[${Actor[Query, Name=-"Estir the Spiteful" && IsDead=FALSE].ID}]
+	call RIObj.LockAndPull ${_EstirID} "24.072706,-154.004944,-254.849579" 10 0
+
+	while ${Actor[Query, ID=${_EstirID} && IsDead=FALSE](exists)}
+	{
+		if ${Actor[Query, ID=${_MorghorbID} && IsDead=FALSE].Effect[${RIMUIObj.MainIconIDExists[${_MorghorbID},790]}].CurrentIncrements}>0
+			call RIObj.MageAbsorbMagic ${_MorghorbID} -1
+		;1 add is 100-75 2 75-50 3 50-25 4 25-0
+		if ${RIObj.MobCount["of spite"]}==${Actor[Query, ID=${_EstirID} && IsDead=FALSE].Effect[${RIMUIObj.MainIconIDExists[${_EstirID},390]}].CurrentIncrements}
+			call RIObj.Target ${_EstirID}
+		else
+			call RIObj.Target -LowestHealth "of spite" -Distance 30
+
+		if !${BatsSpawned} && ${Actor[vampire bat](exists)} && ${Actor[vampire bat].Distance}<35
+		{
+			BatsSpawned:Set[1]
+			;if ${Me.Distance[16.230272,-154.004944,-255.064316]}<3
+				RIMUIObj:SetLockSpot[${Me.Name},38.599449,-151.346619,-255.422134]
+			;else
+			TimedCommand 70 RIMUIObj:SetLockSpot[${Me.Name},24.072706,-154.004944,-254.849579]
+		}
+		if ${BatsSpawned} && ( !${Actor[vampire bat](exists)} || ${Actor[vampire bat].Distance}>35 )
+		{
+			TimedCommand 50 BatsSpawned:Set[0]
+		}
+		if ${Trigger}
+		{
+			wait 50 ${Me.Noxious}==1
+			wait 5
+			;echo Trigger
+			if ${Me.Archetype.Equal[priest]}
+			{
+				if ${TriggerMessage.Find[SCOUT]}
+					_Archetype:Set[scout]
+				if ${TriggerMessage.Find[MAGE]}
+					_Archetype:Set[mage]
+				if ${TriggerMessage.Find[PRIEST]}
+					_Archetype:Set[priest]
+				if ${TriggerMessage.Find[FIGHTER]}
+					_Archetype:Set[fighter]
+				echo Archetype=${_Archetype}
+				for(i:Set[0];${i}<${Me.Group};i:Inc)
+				{
+					echo checking ${Me.Group[${i}].Name}:${RIObj.Archetype[${Me.Group[${i}].ID}].Equal[${_Archetype}]} && ${Me.Group[${i}].Noxious}==1
+					while ${RIObj.Archetype[${Me.Group[${i}].ID}].Equal[${_Archetype}]} && ${Me.Group[${i}].Noxious}==1
+						eq2ex useabilityonplayer ${Me.Group[${i}].Name} 2945678992
+				}
+			}
+			wait 5
+			if ${Me.Noxious}==0
+				Trigger:Set[0]
+		}
+		wait 2
+	}
+	
+	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,1]
+	RI_Obj_CB:DoNotCastAE[0]
+	RI_Obj_CB:DoNotCastEncounter[0]
+	call RIObj.SingularFocus 0
+	
+	echo ISXRI: Ending Estir
+}
+;;;;;;;; End Shard of Hate: Utter Contempt
 function Blood()
 {
 	echo ISXRI: Starting Blood 
@@ -31131,6 +31590,35 @@ function Bleeder()
 		wait 2
 	}
 	echo ISXRI: Ending Bleeder 
+}
+function Karnah()
+{
+	echo ISXRI: Starting Karnah
+	variable int _KarnahID=${Actor[Query, Name=-"Karnah" && IsDead=FALSE].ID}
+
+	;set lockspot
+	if !${Me.Archetype.Equal[fighter]}
+		RIMUIObj:SetLockSpot[ALL,-110.423981,4.213838,-197.020660]
+		
+	while ${Actor[Query, ID=${_KarnahID} && IsDead=FALSE](exists)}
+	{
+		if !${Me.Archetype.Equal[fighter]}
+		{
+			if ${Me.RaidGroupNum}==1 && ${Me.Class.Equal[bard]}
+			{
+				if ${RIObj.MainIconIDExists[${Me.ID},0]}
+				{
+					RIMUIObj:SetLockSpot[ALL,-110.423981,4.213838,-197.020660]
+				}
+				else
+				{
+					RIMUIObj:SetLockSpot[ALL,-116.499802,4.213838,-196.189377]
+				}
+			}
+		}
+		wait 2
+	}
+	echo ISXRI: Ending Omega 
 }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

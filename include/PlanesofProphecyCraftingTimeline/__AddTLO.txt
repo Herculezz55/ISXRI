@@ -1,4 +1,0 @@
-"""if (tlo == "ASTITCHINTIMEPARTIILIGHTNINGSTRIKES.DAT")"""
-"""  pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTIILIGHTNINGSTRIKES.DAT", TLO_AStitchinTimePartIILightningStrikes);"""
-"""if (tlo == "ASTITCHINTIMEPARTISECURITYMEASURES.DAT")"""
-"""  pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTISECURITYMEASURES.DAT", TLO_AStitchinTimePartISecurityMeasures);"""

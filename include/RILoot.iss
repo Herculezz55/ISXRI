@@ -32,7 +32,7 @@ function main()
 	;load ui
 	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RILoot.xml"
-	
+	RILootObj:LoadRILootOn
 	RILootObj:LoadItems
 	RILootObj:LoadAddedItems
 	RILootObj:Group[1]
@@ -48,6 +48,35 @@ function main()
 objectdef RILootObject
 {
 	variable settingsetref RILootSet
+	method LoadRILootOn()
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/"]
+		if ${FP.FileExists[RILootSave.xml]}
+		{
+			LavishSettings[RILootSet]:Clear
+			LavishSettings:AddSet[RILootSet]
+			LavishSettings[RILootSet]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+			RILootSet:Set[${LavishSettings[RILootSet].GUID}]
+			if ${RILootSet.FindSetting[RILootOn]}
+				UIElement[RILootOnCheckbox@RILoot]:SetChecked
+			else
+				UIElement[RILootOnCheckbox@RILoot]:UnsetChecked
+		}
+	}
+	method SaveRILootOn()
+	{
+		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/"]
+		if ${FP.FileExists[RILootSave.xml]}
+		{
+			LavishSettings[RILootSet]:Clear
+			LavishSettings:AddSet[RILootSet]
+			LavishSettings[RILootSet]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+			RILootSet:Set[${LavishSettings[RILootSet].GUID}]
+			LavishSettings[RILootSet]:AddSetting[RILootOn,${UIElement[RILootOnCheckbox@RILoot].Checked}]
+			LavishSettings[RILootSet]:Export["${LavishScript.HomeDirectory}/Scripts/RI/RILoot/RILootSave.xml"]
+		}
+	}
+	
 	method LoadToonList()
 	{
 		LavishSettings[RILoot]:Clear

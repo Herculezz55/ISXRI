@@ -1,2 +1,2 @@
-"""if (tlo == "PLANEOFDISEASEINFESTEDMESA.DAT")"""
-"""  pISInterface->AddTopLevelObject("PLANEOFDISEASEINFESTEDMESA.DAT", TLO_PlaneofDiseaseInfestedMesa);"""
+"""if (tlo == "SHARDOFHATEUTTERCONTEMPT.DAT")"""
+"""  pISInterface->AddTopLevelObject("SHARDOFHATEUTTERCONTEMPT.DAT", TLO_ShardofHateUtterContempt);"""

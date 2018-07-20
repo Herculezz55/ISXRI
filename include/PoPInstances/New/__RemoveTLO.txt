@@ -1,1 +1,1 @@
-"""pISInterface->RemoveTopLevelObject("PLANEOFDISEASEINFESTEDMESA.DAT");""" 
+"""pISInterface->RemoveTopLevelObject("SHARDOFHATEUTTERCONTEMPT.DAT");""" 
