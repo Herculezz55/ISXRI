@@ -1,6 +1,6 @@
 A Stitch in Time"," Part V: Sealed with Hate
 Custom
-ClickActor "zone_to_molten_throne" "The Molten Throne: Hate's Essences"
+ZoneDoor "zone_to_molten_throne" "The Molten Throne: Hate's Essences"
 94.191910 2.938255 -152.806030
 Custom
 Instance
@@ -8,6 +8,8 @@ Instance
 Custom
 ZoneDoor "Zone to Coliseum of Valor"
 0 0 0
+Custom
+UseItem "Deific Vessel"
 80.472168 2.335057 -138.974091
 75.528717 0.002500 -130.581223
 70.304047 0.002500 -121.710907

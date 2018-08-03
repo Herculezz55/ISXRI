@@ -150,13 +150,13 @@ function main()
 				}
 			}
 			;if we are to movebehind all checks are true call RIMoveBehind
-			if ${RI_Var_Bool_MovingBehind} && !${RI_Var_Bool_LockSpotting} && !${EQ2.Zoning} && !${RI_Var_Bool_Paused}
+			if ${RI_Var_Bool_MovingBehind} && !${RI_Var_Bool_LockSpotting} && !${EQ2.Zoning} && !${RI_Var_Bool_Paused} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health(exists)}
 			{
 				;echo calling move
 				call RIMoveBehind
 			}
 			;if we are to moveInFront all checks are true call RIMoveInFront
-			if ${RI_Var_Bool_MovingInFront} && !${RI_Var_Bool_LockSpotting} && !${EQ2.Zoning} && !${RI_Var_Bool_Paused}
+			if ${RI_Var_Bool_MovingInFront} && !${RI_Var_Bool_LockSpotting} && !${EQ2.Zoning} && !${RI_Var_Bool_Paused} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Health(exists)}
 				call RIMoveInFront
 			wait 1
 		}
@@ -991,9 +991,11 @@ function RIMoveBehindOLD()
 }
 function RIMoveBehind()
 {
+	if !${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health(exists)}
+		return
 	if ${RI_Var_Bool_MoveDebug}
 		echo rimovebehind ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${RI_Var_Int_MoveBehindDistance} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health}<=${RI_Var_Int_MoveBehindHealth} && !${RI_Var_Bool_LockSpotting}
-	if ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${RI_Var_Int_MoveBehindDistance} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health}<=${RI_Var_Int_MoveBehindHealth} && !${RI_Var_Bool_LockSpotting}
+	if ${RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${RI_Var_Int_MoveBehindDistance} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health}<=${RI_Var_Int_MoveBehindHealth} && !${RI_Var_Bool_LockSpotting} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health(exists)}
 	{
 		if ${RI_Var_Bool_MoveDebug}
 			echo Valid Rimovebehind: {RI_Var_Bool_MovingBehind} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Distance2D}<${RI_Var_Int_MoveBehindDistance} && ${Actor[id,${RI_Var_Int_MoveBehindMobID}].Health}<=${RI_Var_Int_MoveBehindHealth} && !${RI_Var_Bool_LockSpotting}`
@@ -1121,6 +1123,8 @@ function RIMoveBehind()
 }
 function RIMoveInFront()
 {
+	if !${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Health(exists)}
+		return
 	if ${RI_Var_Bool_MovingInFront} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Distance2D}<${RI_Var_Int_MoveInFrontDistance} && ${Actor[id,${RI_Var_Int_MoveInFrontMobID}].Health}<=${RI_Var_Int_MoveInFrontHealth} && !${RI_Var_Bool_LockSpotting}
 	{
 		;declaration

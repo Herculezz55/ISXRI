@@ -1,4 +1,5 @@
-string ShardofHateNewOwnershipTradeskill[] = {"Custom", 
+string ShardofHateNewOwnershipTradeskill[] = {"0 0 0", 
+"Custom", 
 "HailActor \"Innoruuk\" 9", 
 "-206.244064 19.005644 -5.694997", 
 "Custom", 

@@ -2951,18 +2951,84 @@
 ;					Turns off AE's and Encounter Hostiles
 ;					Turns on Singular Focus/Focused Offensive
 
-;v5.69 Changes 7-19-18
+;v5.69 Changes 7-31-18
+;	RIMUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			member:int InventoryQuantity(string _ItemName)
+;				returns the Total Quantity of _ItemName in your inventory
 ;	RI
+;		Fixed a bug that would cause the toons to stutter after finishing 
+;		some instances and moving onto another
+;
+;		Will now be a bit smarter about getting shinys and try to find the 
+;		closest waypoint in our ZoneFile and grab from that point, as well
+;		will now attempt to recover from Shinys on ledges and being stuck 
+;		going after shinys
+;		
 ;		Modified
+;			Plane of Disease: Outbreak
+;				Rallius
+;					Fixed a bug that would sometimes not detect being ported
 ;			Shard of Hate: Utter Contempt
 ;				Estir
 ;					Fixed a bug that would sometimes not cure correctly
+;		Added
+;			Shard of Hate: Udder Contempt
+;				Moo the Cow (RI Pull Moo)
+;					Move group behind named
+;				 	Appropriate toons will swap
+;				Topsir (RI Pull Topsir)
+;					Move group behind named
+;				 	Appropriate toons will click the meat
+;				Loin (RI Pull Loin)
+;					Move group behind named
+;				 	Appropriate toons will click the meat
+;				Top Sirloin (RI Pull Sirloin)
+;					Spreads group out into circles
+;					Moves behind and in front as needed
+;					Auto targets Cages
+;					Moves out of circles to get cured
+;				Taurine the Spiteful (RI Pull Taurine)
+;					Tries (it's very best) to joust Yellow Circles (have not found a way to read the actual circles)
+;					Keeps appropriate adds up
+;					Cures correct toons
+;					Turns off AE's and Encounter Hostiles
+;					Turns on Singular Focus/Focused Offensive
+;	RQ
+;		A Stitch in Time Timeline and Zones
+;			Fixed numerous bugs
+;		A Stitch in Time, Part III: From Birth to Tombs
+;			Fixed a bug that was not zoning into Sol Ro
+;		A Stitch in Time, Part V: Sealed with Hate
+;			Fixed a bug that was not zoning into Molten Throne
+;	RZ
+;		will now Close RI if it is running upon starting
+
+;v5.70 Changes 8-1-18
+;	RI
+;		Fixed a bug that would sometimes stop all Movement
+;		Fixed a bug in CheckPreReqs function
+;		Modified
+;			Crypt of Dalnir: Ritual Chamber
+;				Kly
+;					Fixed a bug that was engaging challenge mode and going to wrong lockspot
+;			Shard of Hate: Udder Contempt
+;				Taurine the Spiteful
+;					Tweaked the Yellow Circle jousting
+;			Shard of Hate: Utter Contempt
+;				Estir
+;					Tweaked the Yellow Circle jousting
+
+
+
+;;;;;;;;;; IMPORTANT TODO: STUCK ROUTINE FOR MOVE FUNCTION, INCLUDING COLAB WITH SHINY FUNCTION (READ NOTES IN SHINY FUNCTION);;;;;;;;;
+
 
 ;WIP
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.69
+variable(global) float RI_Var_Float_Version=5.70
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -3029,6 +3095,7 @@ variable(global) bool RI_Var_Bool_BadChestTrigger=0
 variable(global) int RI_Var_Int_MoveMaxDistance=500
 
 variable(global) index:int RI_Var_IndexInt_InvalidChest
+variable(global) index:int RI_Var_IndexInt_InvalidShiny
 variable bool LoadRIMUI=FALSE
 variable bool RIMUILoaded=FALSE
 variable bool CommandQ=FALSE
@@ -4873,7 +4940,7 @@ function main()
 													if ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
 													{
 														if ${RI_Var_Bool_LootDebug}
-															echo Setting Looted +1
+															echo Setting Looted +1 for ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text}
 															
 														;set looted +1
 														UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}]:SetText["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}|${Math.Calc[${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]}+1].Precision[0]}"]
@@ -5038,6 +5105,7 @@ function main()
 atom EQ2_FinishedZoning(string TimeInSeconds)
 {
 	RI_Var_IndexInt_InvalidChest:Clear
+	RI_Var_IndexInt_InvalidShiny:Clear
 }
 ;atom triggered when a loot window is detected
 atom EQ2_onLootWindowAppeared(string LootWindowID)
@@ -5886,20 +5954,54 @@ objectdef RIMovementObject
 	}
 	function CheckShiny()
 	{
+		;; need to do a couple things here in this order, 1 - if Shiny's X is more than 1.5 > than Me.X then face shiny and do jump up function, -- DONE
+		;; 2 - record the amount of times this function is called (after the closest point return) on the same Shiny ID (use globalvar), if>5 then 
+		;; add to ignore index (which we will reset everytime you zone like the chest index) -- DONE
+		;;
+		;; 3 - Add a stuck function independent of MoveFunction but in Collab with, so if we get stuck it will first try to jump and move forward,
+		;; then strafe left, then strafe right if unsuccesful will add shiny to ignore (move will set a Global Shinystuck flag) that shiny function 
+		;; will ignore on return to and then proceed back to original spot
+		
+		;; ALSO NOTE FOR STUCK FUNCTION IN RI, If we are stuck and cant recover we need to first set a global stuck var, then try the next 3-5 waypoints 
+		;; see if we can recover via those if not then pause and popup RICOnsole w/ Message and Sound RICOnsole ALARM
+		
+		;echo ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[?,radius,${ShinyScanDistance}].Loc}"]}!=${MainArrayCounter}
+		;if ChestID is 0 leave function
 		
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Starting CheckShiny
-		ShinyID:Set[${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].ID}]
-		
-		if !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${Actor[${ShinyID}].X},${Math.Calc[${Actor[${ShinyID}].Y}+2]},${Actor[${ShinyID}].Z}]}
+		RI_Var_Int_ShinyID:Set[${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].ID}]
+		if ${RI_Var_Int_ShinyID}==0 || ${RIMUIObj.InvalidShinyCheck[${RI_Var_Int_ShinyID}]}
 		{
+			if ${RI_Var_Loot_Debug}
+				echo ISXRI: Shint ${RI_Var_Int_ShinyID}:${Actor[id,${RI_Var_Int_ShinyID}].Name} at ${Actor[id,${RI_Var_Int_ShinyID}].Distance} is BAD leaving function
+			return
+		}
+		if !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[${RI_Var_Int_ShinyID}].X},${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+1]},${Actor[${RI_Var_Int_ShinyID}].Z}]}
+		{
+			if ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${RI_Var_Int_ShinyID}].Loc}"]}!=${MainArrayCounter}
+			{
+				return
+			}
+			if ${RI_Var_Int_ShinyID}==${RI_Var_Int_LastShinyID}
+			{
+				RI_Var_Int_SameShinyCount:Inc
+				if ${RI_Var_Int_SameShinyCount}>4
+				{
+					RI_Var_IndexInt_InvalidShiny:Insert[${RI_Var_Int_ShinyID}]
+					return
+				}
+			}
+			else
+				RI_Var_Int_SameShinyCount:Set[0]
+			RI_Var_Int_LastShinyID:Set[${RI_Var_Int_ShinyID}]
 			GrabingShinys:Set[1]
 			if ${Devel.Equal[TRUE]}
 				RIMUIObj:LootOptions[ALL,RR]
 			if ${RI_Var_Bool_Debug}
-				echo ${Time}: Shiny is close enough being ${Actor[${ShinyID}].Distance}
+				echo ${Time}: Shiny is close enough being ${Actor[${RI_Var_Int_ShinyID}].Distance}
 			press -release ${RI_Var_String_ForwardKey}
-			Actor[id,${ShinyID}]:DoTarget
+			Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
 			wait 1
 			if ${Me.TargetLOS}
 			{
@@ -5911,31 +6013,41 @@ objectdef RIMovementObject
 				TempZ:Set[${Me.Z}]
 				wait 5
 				call This.follow
-				call This.Move ${Actor[${ShinyID}].X} ${Math.Calc[${Actor[${ShinyID}].Y}+0.01]} ${Actor[${ShinyID}].Z} ${Precision} 10 FALSE TRUE TRUE FALSE TRUE
+				call This.Move ${Actor[${RI_Var_Int_ShinyID}].X} ${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+0.01]} ${Actor[${RI_Var_Int_ShinyID}].Z} ${Precision} 10 FALSE TRUE TRUE FALSE TRUE
 				declare count int 0
 				for (count:Set[1];${count}<50;count:Inc)
 				{
 					call This.CheckCombat
 					wait 1
 				}
+				
+				;check our shinys Y position vs ours
+				if ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1.5
+				{
+					Actor[id,${RI_Var_Int_ShinyID}]:DoFace
+					wait 1
+					relay ${RI_Var_String_RelayGroup} RIMUIObj:JumpUp[ALL,${Me.X},${Me.Y},${Me.Z},${Math.Calc[${Me.Y}+.2]},${Me.Heading},5]
+					wait 100 ${RIMObj.AllGroupWithinRange[1.2]}
+				}
+				
 				;target shiney click it and lootall
 				if ${RI_Var_Bool_WaitForShinys}
 				{
-					while ${Actor[id,${ShinyID}](exists)}
+					while ${Actor[id,${RI_Var_Int_ShinyID}](exists)}
 						wait 50
 				}
 				else
 				;if ${Developer}
 				;{
-					relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${ShinyID}]:DoTarget
+					relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
 					waitframe
-					relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${ShinyID}]:DoubleClick
+					relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${RI_Var_Int_ShinyID}]:DoubleClick
 				;}
 				;else
 				;{
-				;	Actor[id,${ShinyID}]:DoTarget
+				;	Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
 				;	waitframe
-				;	Actor[id,${ShinyID}]:DoubleClick
+				;	Actor[id,${RI_Var_Int_ShinyID}]:DoubleClick
 				;}
 				wait 10
 				LootWindow:LootAll
@@ -6100,7 +6212,7 @@ objectdef RIMovementObject
 		}
 		return ${_AllHere}
 	}
-	member(bool) AllGroupWithinRange(_Distance)
+	member(bool) AllGroupWithinRange(float _Distance)
 	{
 		if ${EQ2.Zoning}
 			return FALSE
@@ -6134,13 +6246,13 @@ objectdef RIMovementObject
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Moving : Move(float X1=${X1}, float Y1=${Y1}, float Z1=${Z1}, int MPrecision=${MPrecision}, int PauseLength=${PauseLength}, bool ClearTarget=${ClearTarget}, bool StopForCombat=${StopForCombat}, bool SkipCheck=${SkipCheck}, bool KeepMoving=${KeepMoving}, bool UseRI_Var_String_ForwardKey=${UseRI_Var_String_ForwardKey}=TRUE, bool SkipCollisionCheck=${SkipCollisionCheck}=FALSE)	
 		;check for a Shiny if set
-		if ${RI_Var_Bool_GrabShinys} && !${RI_Var_Bool_QuestMode} && ${StopForCombat} && !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && ${Actor[?,radius,${ShinyScanDistance}](exists)}
+		if ${RI_Var_Bool_GrabShinys} && !${RI_Var_Bool_QuestMode} && ${StopForCombat} && !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && ${Actor[?,radius,${ShinyScanDistance}](exists)} 
 		{
 			if ( !${Actor[NamedNPC,radius,50](exists)} || ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}>10 ) && ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Me.Y}]}<3
 			{
-				ShinyID:Set[${Actor[?,radius,${ShinyScanDistance}].ID}]
+				RI_Var_Int_ShinyID:Set[${Actor[?,radius,${ShinyScanDistance}].ID}]
 				if ${RI_Var_Bool_Debug}
-					echo ${Time}: Closest Shiny ID: ${ShinyID} @ ${Actor[${ShinyID}].X} ${Actor[${ShinyID}].Y} ${Actor[${ShinyID}].Z} Which is ${Actor[${ShinyID}].Distance} Away
+					echo ${Time}: Closest Shiny ID: ${RI_Var_Int_ShinyID} @ ${Actor[${RI_Var_Int_ShinyID}].X} ${Actor[${RI_Var_Int_ShinyID}].Y} ${Actor[${RI_Var_Int_ShinyID}].Z} Which is ${Actor[${RI_Var_Int_ShinyID}].Distance} Away
 				;press -release ${RI_Var_String_ForwardKey}
 				call This.CheckShiny
 			}
@@ -6222,9 +6334,9 @@ objectdef RIMovementObject
 					{
 						if ( !${Actor[NamedNPC,radius,50](exists)} || ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}>10 ) && ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Me.Y}]}<3
 						{
-							ShinyID:Set[${Actor[?,radius,${ShinyScanDistance}].ID}]
+							RI_Var_Int_ShinyID:Set[${Actor[?,radius,${ShinyScanDistance}].ID}]
 							if ${RI_Var_Bool_Debug}
-								echo ${Time}: Closest Shiny ID: ${ShinyID} @ ${Actor[${ShinyID}].X} ${Actor[${ShinyID}].Y} ${Actor[${ShinyID}].Z} Which is ${Actor[${ShinyID}].Distance} Away
+								echo ${Time}: Closest Shiny ID: ${RI_Var_Int_ShinyID} @ ${Actor[${RI_Var_Int_ShinyID}].X} ${Actor[${RI_Var_Int_ShinyID}].Y} ${Actor[${RI_Var_Int_ShinyID}].Z} Which is ${Actor[${RI_Var_Int_ShinyID}].Distance} Away
 							;press -release ${RI_Var_String_ForwardKey}
 							call This.CheckShiny
 						}
@@ -6724,6 +6836,20 @@ objectdef RIConsoleObject
 }
 objectdef RIMUIObject
 {
+	member:int InventoryQuantity(string _Item)
+	{
+		variable index:item _Items
+		variable int _ItemCount=0
+		variable int _count2
+		_Items:Clear
+		Me:QueryInventory[_Items, Location=="Inventory" && Name=-"${_Item}"]
+		;echo ${_Items.Used}
+		for(_count2:Set[1];${_count2}<=${_Items.Used};_count2:Inc)
+		{
+			_ItemCount:Set[${Math.Calc[${_ItemCount}+${_Items.Get[${_count2}].Quantity}]}]
+		}
+		return ${_ItemCount}
+	}
 	method DisablePets(string _ForWho)
 	{
 		if ${This.ForWhoCheck[${_ForWho}]}
@@ -6869,6 +6995,16 @@ objectdef RIMUIObject
 		for(_cnt:Set[1];${_cnt}<=${RI_Var_IndexInt_InvalidChest.Used};_cnt:Inc)
 		{
 			if ${RI_Var_IndexInt_InvalidChest.Get[${_cnt}]}==${_ID}
+				return TRUE
+		}
+		return FALSE
+	}
+	member InvalidShinyCheck(int _ID)
+	{
+		variable int _cnt=1
+		for(_cnt:Set[1];${_cnt}<=${RI_Var_IndexInt_InvalidShiny.Used};_cnt:Inc)
+		{
+			if ${RI_Var_IndexInt_InvalidShiny.Get[${_cnt}]}==${_ID}
 				return TRUE
 		}
 		return FALSE

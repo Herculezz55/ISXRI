@@ -993,9 +993,9 @@ function main(... args)
 		}
 		case 15
 		{
-			if !${Me.GetGameData[Self.ZoneName].Label.Find["Kunzar Jungle"](exists)} || ${Math.Distance[${Me.Loc},520.677246,250.506332,1353.012451]}>35
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Kunzar Jungle"](exists)} || ${Math.Distance[${Me.Loc},-258.121796,151.009216,-1162.882324]}>35
 			{
-				echo ${Time}: You must be in Zone Kunzar Jungle and within 35 distance of -258.103027,150.091827,-1155.984497 to run this script for Torsis Zones.
+				echo ${Time}: You must be in Zone Kunzar Jungle and within 35 distance of -258.121796,151.009216,-1162.882324 to run this script for Torsis Zones.
 				Script:End
 			}
 			RZ_Var_String_ZoneSet:Set[LC]
@@ -1020,7 +1020,7 @@ function main(... args)
 			ZoneEntrance:Set["City of Mist Entrance Door"]
 			ZoneEntranceMoveToZone:Set[TRUE]
 			ZoneEntranceMoveToZoneLocX:Set[-258]
-			ZoneEntranceMoveToZoneLocZ:Set[-1156]
+			ZoneEntranceMoveToZoneLocZ:Set[-1162]
 			Experts:Set[FALSE]
 			ExpertsSummonOption:Set[""]
 			;6HourZones:Set[TRUE]
@@ -1028,9 +1028,9 @@ function main(... args)
 		}
 		case 16
 		{
-			if !${Me.GetGameData[Self.ZoneName].Label.Find["Kunzar Jungle"](exists)} || ${Math.Distance[${Me.Loc},520.677246,250.506332,1353.012451]}>35
+			if !${Me.GetGameData[Self.ZoneName].Label.Find["Kunzar Jungle"](exists)} || ${Math.Distance[${Me.Loc},-258.121796,151.009216,-1162.882324]}>35
 			{
-				echo ${Time}: You must be in Zone Kunzar Jungle and within 35 distance of -258.103027,150.091827,-1155.984497 to run this script for Torsis Zones.
+				echo ${Time}: You must be in Zone Kunzar Jungle and within 35 distance of -258.121796,151.009216,-1162.882324 to run this script for Torsis Zones.
 				Script:End
 			}
 			RZ_Var_String_ZoneSet:Set[LC]
@@ -1244,19 +1244,19 @@ function main(... args)
 			RZ_Var_String_ZoneSet:Set[AS]
 			Zone1:Set["Arcanna'se Spire: Forgotten Sanctum [Solo]"]
 			Zone1Exit:Set["invis_wal"]
-			Zone1PopupSelection:Set[1]
+			Zone1PopupSelection:Set[2]
 			Zone1MoveToExit:Set[FALSE]
 			Zone1MoveToExitLocX:Set[0]
 			Zone1MoveToExitLocZ:Set[0]
 			Zone2:Set["Arcanna'se Spire: Repository of Secrets [Solo]"]
 			Zone2Exit:Set["Exit"]
-			Zone2PopupSelection:Set[4]
+			Zone2PopupSelection:Set[5]
 			Zone2MoveToExit:Set[FALSE]
 			Zone2MoveToExitLocX:Set[0]
 			Zone2MoveToExitLocZ:Set[0]
 			Zone3:Set["Arcanna'se Spire: Vessel of the Sorceress [Advanced Solo]"]
 			Zone3Exit:Set["Exit Door Left"]
-			Zone3PopupSelection:Set[8]
+			Zone3PopupSelection:Set[7]
 			Zone3MoveToExit:Set[TRUE]
 			Zone3MoveToExitLocX:Set[-470]
 			Zone3MoveToExitLocZ:Set[-107]

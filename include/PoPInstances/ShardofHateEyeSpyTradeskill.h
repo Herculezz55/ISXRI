@@ -1,4 +1,5 @@
-string ShardofHateEyeSpyTradeskill[] = {"Custom", 
+string ShardofHateEyeSpyTradeskill[] = {"0 0 0", 
+"Custom", 
 "MessageBox \"Go Harvest 50 blackwood 50 twisting worms 50 red shard of malice 50 fiend stool 50 charred bone marrow and 50 dark abhorent ore and resume at The Fiend Fount\"", 
 "0 0 0", 
 "Custom", 

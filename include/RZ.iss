@@ -551,6 +551,9 @@ function main(... args)
 	}
 	echo ISXRI: ${Time}: Starting RZ
 	
+	if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
+		endscript ${RI_Var_String_RunInstancesScriptName}
+	
 	;load ui
 	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml"

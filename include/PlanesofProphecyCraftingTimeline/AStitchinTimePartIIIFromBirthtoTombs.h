@@ -1,6 +1,6 @@
-string AStitchinTimePartIIIFromBirthtoTombs[] = {"A Stitch in Time, Part III: From Birth to Tombs", 
+string AStitchinTimePartIIIFromBirthtoTombs[] = {"A Stitch in Time\",\" Part III: From Birth to Tombs", 
 "Custom", 
-"ZoneDoor \"zone_to_solro\" \"Solusek Ro's Tower: From the Ashes\"", 
+"ZoneDoor \"zone_to_ro_tower\" \"Solusek Ro's Tower: From the Ashes\"", 
 "93.380745 2.938255 -161.815735", 
 "Custom", 
 "Instance", 
