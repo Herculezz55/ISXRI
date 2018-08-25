@@ -3004,22 +3004,102 @@
 ;	RZ
 ;		will now Close RI if it is running upon starting
 
-;v5.70 Changes 8-1-18
+;v5.70 Changes 8-10-18
 ;	RI
+;		Fixed a bug that was preventing auto missions sharing
 ;		Fixed a bug that would sometimes stop all Movement
 ;		Fixed a bug in CheckPreReqs function
 ;		Modified
 ;			Crypt of Dalnir: Ritual Chamber
+;				Izzak
+;					Fixed a bug that would occasionally miss a rune
+;					Fixed a bug that would prematurely end code
 ;				Kly
 ;					Fixed a bug that was engaging challenge mode and going to wrong lockspot
 ;			Shard of Hate: Udder Contempt
+;				Loin
+;					Fixed a bug that was ending script
 ;				Taurine the Spiteful
+;					Fixed a bug that was ignoring the yellow circles
 ;					Tweaked the Yellow Circle jousting
 ;			Shard of Hate: Utter Contempt
-;				Estir
+;				Estir the Spiteful
 ;					Tweaked the Yellow Circle jousting
 
+;v5.71 Changes 8-22-18
+;	RZ
+;		Fixed a bug that was preventing unlimited looping
+;		Will now reset all added zones before starting
+;		Added Shard of Hate and Fabled Guk Zones
+;	CombatBot
+;		Will now ensure that Buffer:RI is running
+;	RI
+;		Will now ensure that Buffer:RI is running
+;		Will now turn on SkipMobAttackHealthCheck on MainToon
+;		Fixed a bug in quest sharing
+;		Fixed a bug in Torden zones that would sometimes attempt 
+;		to run to and loot Fixed Chests before have key
+;		Modified
+;			Torden Bastion of Thunder: Winds of Change
+;				Modified pathing
+;			Torden Bastion of Thunder: Tower Breach
+;				Modified pathing
+;			Solusek's Ro: The Obsidian Core
+;				Balrezu
+;					Fixed a bug
+;			Plane of Disease: Outbreak
+;				Rallius
+;					Non priest toons will attempt to use a Noxious Remedy if they have any
+;			Plane of Disease: The Source
+;				Rancine
+;					Toons will now joust and target themselves when his root and dmg shield is up
+;				Darwol and Wavadozzik Adan
+;					Toons will now move closer to nests
+;			Shard of Hate: Udder Contempt
+;				Fixed pathing for killing Wicked Cows
+;				Loin
+;					Fixed a bug that was ending script
+;				Taurine the Spiteful
+;					Fixed a bug that was ignoring the yellow circles
+;		Added Raid Coding
+;			Culler of Bones (RI Pull Culler)
+;				Jousting on appropriate toons
+;				tanks need to keep named 30m away
+;			Lord of Ire (RI Pull Ire)
+;				grabs dagger and uses as needed on appropriate toon
+;	RQ
+;		Added
+;			The "Travels" of Yun Zi - An Oasis For Your Thoughts 
+;			The "Travels" of Yun Zi - In a Kingdom Far Away 
+;			The "Travels" of Yun Zi - Echoes of the Past 
+;			The "Travels" of Yun Zi - Kunark or Bust 
+;			The "Travels" of Yun Zi - I Need to See Moors Places 
+;			The "Travels" of Yun Zi - Ice to See Velious 
+;			The "Travels" of Yun Zi - An Eternity Without You 
+;			The "Travels" of Yun Zi - Tears for Fears 
+;			The "Travels" of Yun Zi - An Altar-Nate Malice 
+;			The new "Travels" of Yun Zi - Antonica or Bust
+;	RII
+;		Added command line options:
+;			-start 
+;				starts execute after load
+;			-noui 
+;				Hides ui after load
+;			-loop
+;				continously loops execute
 
+;v5.72 Changes 8-23-18
+;	RI
+;		Modified
+;			Plane of Disease: The Source
+;				Rancine
+;					Removed jousting in heroics
+;	RIMUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			*method GrabShinys(bool _OnOff)
+;				Turns RI's GrabShiny function on or off
+;			*method SetShinyScanDistance(int _Distance=100)
+;				Sets the distance to scan for shinies
 
 ;;;;;;;;;; IMPORTANT TODO: STUCK ROUTINE FOR MOVE FUNCTION, INCLUDING COLAB WITH SHINY FUNCTION (READ NOTES IN SHINY FUNCTION);;;;;;;;;
 
@@ -3028,7 +3108,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.70
+variable(global) float RI_Var_Float_Version=5.71
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -4598,6 +4678,8 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[FoodDrinkConsume - Toggles the consumption of your equiped food and drink\n\nArgument 1: For Who\nArgument 2: 1=On or 0=Off]
 	RI_Index_String_AvailableRIMUICommands:Insert[FoodDrinkReplenish]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[FoodDrinkReplenish - Replenishes raid food and drink from the nearest FoodDrink depot\n\nArgument 1: For Who]
+	RI_Index_String_AvailableRIMUICommands:Insert[GrabShinys]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[GrabShinys - Turns RI's GrabShiny function on or off\n\nArgument 1: On/Off (1/0) or (TRUE/FALSE)]
 	RI_Index_String_AvailableRIMUICommands:Insert[GuidedAscension]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[GuidedAscension - Applies Guided Ascension if it exists in your inventory and is useable\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[GuildBuffs]
@@ -4670,6 +4752,8 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RunScript - Runs a script\n\nArgument 1: For Who\nArgument 2: Script Name]
 	RI_Index_String_AvailableRIMUICommands:Insert[ScribeBook]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ScribeBook - Scribes the recipe book if it exists in your inventory (case insesitive and partial book names are fine\n\nArgument 1: For Who\n\nArgument 2: Book Name]
+	RI_Index_String_AvailableRIMUICommands:Insert[SetInGameFollow]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetInGameFollow - Turns on In Game Follow\n\nAccepts Unlimited Arguments in Sets of 2\nALL ARGUMENTS REQUIRED:\nArgument 1: For Who\nArgument 2: Who to follow]
 	RI_Index_String_AvailableRIMUICommands:Insert[SetLockSpot]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetLockSpot - Turns on LockSpot\nAccepts Unlimited Arguments in Sets of 6\nALL ARGUMENTS REQUIRED:\nArgument 1: For Who\nArgument 2: X or OFF\nArgument 3: Y\nArgument 4: Z\nArgument 5: Min\nArgument 6: Max]
 	RI_Index_String_AvailableRIMUICommands:Insert[SetMoveBehind]
@@ -4680,8 +4764,8 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetMoveInFront - Turns on/off/toggles MoveInFront in CombatBot\nAccepts Unlimited Arguments in Sets of 4\nALL ARGUMENTS REQUIRED:\nArgument 1: For Who\nArgument 2: On/Off/Toggle (1/0/-1)\nArgument 3: Move Health\nArgument 4: Skip Move Health Check (TRUE/FALSE)]
 	RI_Index_String_AvailableRIMUICommands:Insert[SetRIFollow]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetRIFollow - Turns on RIFollow\n\nArgument 1: For Who (Default: ALL)\nArgument 2: On Who (Default: OFF)\nArgument 3: Min (Default: 1)\nArgument 4: Max (Default: 100)]
-	RI_Index_String_AvailableRIMUICommands:Insert[SetInGameFollow]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetInGameFollow - Turns on In Game Follow\n\nAccepts Unlimited Arguments in Sets of 2\nALL ARGUMENTS REQUIRED:\nArgument 1: For Who\nArgument 2: Who to follow]
+		RI_Index_String_AvailableRIMUICommands:Insert[SetShinyScanDistance]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetShinyScanDistance - Sets the distance to scan for shinies\n\nArgument 1: Distance]
 	RI_Index_String_AvailableRIMUICommands:Insert[SetUISetting]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetUISetting - Turns on/off/toggles UISettings in CombatBot\nAccepts Unlimited Arguments in Sets of 3\nALL ARGUMENTS REQUIRED:\nArgument 1: For Who\nArgument 2: Setting Name\nArgument 3: On/Off/Toggle (1/0/-1)]
 	RI_Index_String_AvailableRIMUICommands:Insert[Special]
@@ -4821,6 +4905,30 @@ function main()
 	}
 	while 1
 	{
+		if ${_BALREZUSCRIPTRUNNING}
+		{
+			if ${Actor[corpse,radius,8](exists)} && ${Actor[Query, Name=-"Balrezu"](exists)}
+			{
+				if ${RI_Var_Bool_Debug}
+					echo ISXRI: ${Time}: Looting ${Actor[corpse,radius,10]}
+				
+				;loot corpse via apply verb
+				eq2ex apply_verb ${Actor[corpse,radius,10].ID} Loot
+			}
+			if ${Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"](exists)}
+				Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"]:Destroy
+		}
+		if ${RI_Var_Bool_Podts}
+		{
+			if ${RI_Var_Bool_Podtstombhorrow}
+			{
+				Me.Inventory[Query, Name=-"Embalming Kit" && Location=="Inventory"]:Use
+			}
+			if ${Actor[Query, Name=-"minigame flesh cube blocker" && Distance<10](exists)}
+				Actor[Query, Name=-"minigame flesh cube blocker" && Distance<10]:DoubleClick
+			waitframe
+		}
+		
 		if ${QueuedCommands}
 			call RIMObj.ExecuteQueued
 		if ${MySubClass.NotEqual[${Me.SubClass}]}
@@ -4955,6 +5063,7 @@ function main()
 														wait 5
 														relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:RequestAll
 														relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:LootAll
+														wait 5
 														;relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:Receive
 														;set our counter over the break to end the for loop
 														AILCounter:Set[${Math.Calc[${UIElement[AddedItemsListbox@RILoot].Items}+1]}]
@@ -5203,7 +5312,7 @@ atom(script) EQ2_onChoiceWindowAppeared()
 	{
 		ChoiceWindow:DoChoice1
 	}
-	if ${ChoiceWindow.Text.GetProperty[Text].Find["would you like to loot"]} && ( !${Script[Buffer:CombatBot](exists)} || ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} )
+	if ${ChoiceWindow.Text.GetProperty[Text].Find["would you like to loot"]} && ( !${Script[Buffer:CombatBot](exists)} || ${UIElement[SettingsAcceptLootCheckBox@SettingsFrame@CombatBotUI].Checked} || ( ${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && ${RI_Var_Bool_Loot} ) )
 	{
 		ChoiceWindow:DoChoice1
 	}
@@ -5855,9 +5964,20 @@ objectdef RIMovementObject
 					}
 					wait 10
 				}
-				
+				if ${Actor["Auliffe Chaoswind's Treasure",radius,100].Name.EqualCS["Auliffe Chaoswind's Treasure"]} && ${Math.Distance[${Actor["Auliffe Chaoswind's Treasure",radius,100].Loc},${Me.Loc}]}>5
+					return
+				if ${Actor["Gaukr Sandstorm's Treasure",radius,100].Name.EqualCS["Gaukr Sandstorm's Treasure"]} && ${Math.Distance[${Actor["Gaukr Sandstorm's Treasure",radius,100].Loc},${Me.Loc}]}>5
+					return
+				if ${Actor["Hreidar Lynhillig's Treasure",radius,100].Name.EqualCS["Hreidar Lynhillig's Treasure"]} && ${Math.Distance[${Actor["Hreidar Lynhillig's Treasure",radius,100].Loc},${Me.Loc}]}>5
+					return
+				if ${Actor["Yveti Stormbrood's Treasure",radius,100].Name.EqualCS["Yveti Stormbrood's Treasure"]} && ${Math.Distance[${Actor["Yveti Stormbrood's Treasure",radius,100].Loc},${Me.Loc}]}>5
+					return
+				if ${Actor["Treasure Chest",radius,100].Name.EqualCS["Treasure Chest"]} && ${Math.Distance[${Actor["Treasure Chest",radius,100].Loc},${Me.Loc}]}>5
+					return
+				if ${Actor["Gooey Hoard",radius,100].Name.EqualCS["Gooey Hoard"]} && ${Math.Distance[${Actor["Gooey Hoard Chest",radius,100].Loc},${Me.Loc}]}>5
+					return
 				;if the chest is not within 7m, move to it
-				if ${Actor[${ChestID}](exists)} && ${Math.Distance[${Me.Loc},${Actor[${ChestID}].Loc}]}>7 && !${RI_Var_Bool_QuestMode}
+				if ${Actor[${ChestID}](exists)} && ${Actor[${ChestID}].Name.Find[Chest](exists)} && ${Math.Distance[${Me.Loc},${Actor[${ChestID}].Loc}]}>7 && !${RI_Var_Bool_QuestMode}
 				{
 					;set original loc
 					TempX:Set[${Me.X}]
@@ -5974,7 +6094,7 @@ objectdef RIMovementObject
 		if ${RI_Var_Int_ShinyID}==0 || ${RIMUIObj.InvalidShinyCheck[${RI_Var_Int_ShinyID}]}
 		{
 			if ${RI_Var_Loot_Debug}
-				echo ISXRI: Shint ${RI_Var_Int_ShinyID}:${Actor[id,${RI_Var_Int_ShinyID}].Name} at ${Actor[id,${RI_Var_Int_ShinyID}].Distance} is BAD leaving function
+				echo ISXRI: Shiny ${RI_Var_Int_ShinyID}:${Actor[id,${RI_Var_Int_ShinyID}].Name} at ${Actor[id,${RI_Var_Int_ShinyID}].Distance} is BAD leaving function
 			return
 		}
 		if !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[${RI_Var_Int_ShinyID}].X},${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+1]},${Actor[${RI_Var_Int_ShinyID}].Z}]}
@@ -6022,7 +6142,7 @@ objectdef RIMovementObject
 				}
 				
 				;check our shinys Y position vs ours
-				if ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1.5
+				if ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1
 				{
 					Actor[id,${RI_Var_Int_ShinyID}]:DoFace
 					wait 1
@@ -6989,6 +7109,14 @@ objectdef RIMUIObject
 	{
 		RI_Var_Bool_WaitForHealth:Set[${_OnOff}]
 	}
+	method GrabShinys(bool _OnOff)
+	{
+		RI_Var_Bool_GrabShinys:Set[${_OnOff}]
+	}
+	method SetShinyScanDistance(int _Distance=100)
+	{
+		RIObj:SetShinyScanDistance[${_Distance}]
+	}
 	member InvalidChestCheck(int _ID)
 	{
 		variable int _cnt=1
@@ -7240,7 +7368,7 @@ objectdef RIMUIObject
 				{
 					;;;;;;;;;;;; Added .Right[-14] to CurrentZone to parse out DBG's New Addition of Current zone: to the beggining on 7-2-18
 					;echo _FormattedZoneName: ${_FormattedZoneName} // QuestsIterator.Value.CurrentZone: ${QuestsIterator.Value.CurrentZone} // ${QuestsIterator.Value.CurrentZone.Equal["${_FormattedZoneName}"]} // ${QuestsIterator.Value.Name} // _ZoneTier: ${_ZoneTier} // ${QuestsIterator.Value.Name.Find[${_ZoneTier}](exists)}
-					if ( ${QuestsIterator.Value.CurrentZone.Right[-14].Equal[${_FormattedZoneName}]} && ${QuestsIterator.Value.Name.Find[${_ZoneTier}](exists)} ) || ${QuestsIterator.Value.CurrentZone.Right[-14].Equal["${_ZoneName}"]} || ${QuestsIterator.Value.CurrentZone.Equal["Multiple LocationsDISABLED"]}
+					if ( ${QuestsIterator.Value.CurrentZone.Right[-14].Equal[${_FormattedZoneName}]} && ${QuestsIterator.Value.Name.Find[${_ZoneTier}](exists)} ) || ${QuestsIterator.Value.CurrentZone.Right[-14].Equal["${_FormattedZoneName}"]} || ${QuestsIterator.Value.CurrentZone.Equal["Multiple LocationsDISABLED"]} || ${QuestsIterator.Value.CurrentZone.Equal["${_FormattedZoneName}"]}
 					{
 						echo ISXRI: Sharing: "${QuestsIterator.Value.Name}"
 						QuestsIterator.Value:Share
@@ -7821,6 +7949,22 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[Dedication Rewarded]
 				
 			}
+			elseif ${_CatName.Equal[Yun Zi]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Oasis For Your Thoughts"]
+				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - In a Kingdom Far Away"]
+				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - Echoes of the Past"]
+				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - Kunark or Bust"]
+				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - I Need to See Moors Places"]
+				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - Ice to See Velious"]
+				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Eternity Without You"]
+				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - Tears for Fears"]
+				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Altar-Nate Malice"]
+				;UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Antonica or Bust"]
+			}
 		}
 	}
 	method RQ(string _QuestName=!NONE!)
@@ -7850,6 +7994,7 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:AddItem[Epic 2.0 Pre Reqs]
 			UIElement[CategoryComboBox@RI]:AddItem[Heritage Quests]
 			UIElement[CategoryComboBox@RI]:AddItem[Planes of Prophecy]
+			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
 			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Planes of Prophecy].ID}]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			

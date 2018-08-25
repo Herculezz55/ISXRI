@@ -9,6 +9,7 @@ variable index:string ZoneEntrance
 variable index:int ZoneEntrancePopupSelection
 variable index:string ZoneEntranceLoc
 variable index:string ZonePathFile
+variable index:string ZoneFrom
 variable index:bool ZoneUnlocked
 variable index:int ZoneSetTime
 variable index:int ZoneUnlockTime
@@ -431,11 +432,10 @@ function BuildIndexes()
 	ZoneUnlocked:Insert[TRUE]
 	ZoneSetTime:Insert[0]
 	ZoneUnlockTime:Insert[5400]
-	return
 	
 	;Zone
 	_Zone:Insert["Shard of Hate: Utter Contempt [Solo]"]
-	UIElement[ZonesAvail@RZ]:AddItem[""Shard of Hate: Utter Contempt [Heroic]""]
+	UIElement[ZonesAvail@RZ]:AddItem["Shard of Hate: Utter Contempt [Solo]"]
 	ZoneFrom:Insert["Plane of Magic"]
 	ZoneTimer:Insert[1080]
 	ZoneExit:Insert[Exit]
@@ -446,11 +446,11 @@ function BuildIndexes()
 	ZonePathFile:Insert[0]
 	ZoneUnlocked:Insert[TRUE]
 	ZoneSetTime:Insert[0]
-	ZoneUnlockTime:Insert[64800]
+	ZoneUnlockTime:Insert[5400]
 	
 	;Zone
 	_Zone:Insert["Shard of Hate: Utter Contempt [Heroic]"]
-	UIElement[ZonesAvail@RZ]:AddItem[""Shard of Hate: Utter Contempt [Heroic]""]
+	UIElement[ZonesAvail@RZ]:AddItem["Shard of Hate: Utter Contempt [Heroic]"]
 	ZoneFrom:Insert["Plane of Magic"]
 	ZoneTimer:Insert[1080]
 	ZoneExit:Insert[Exit]
@@ -461,11 +461,11 @@ function BuildIndexes()
 	ZonePathFile:Insert[0]
 	ZoneUnlocked:Insert[TRUE]
 	ZoneSetTime:Insert[0]
-	ZoneUnlockTime:Insert[64800]
+	ZoneUnlockTime:Insert[21600]
 	
 	;Zone
-	_Zone:Insert["Shard of Hate: Udder Contempt [Eggspert]"]
-	UIElement[ZonesAvail@RZ]:AddItem[""Shard of Hate: Utter Contempt [Heroic]""]
+	_Zone:Insert["Shard of Hate: Udder Contempt [Herd Mode]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Shard of Hate: Udder Contempt [Herd Mode]"]
 	ZoneFrom:Insert["Plane of Magic"]
 	ZoneTimer:Insert[1080]
 	ZoneExit:Insert[Exit]
@@ -476,7 +476,190 @@ function BuildIndexes()
 	ZonePathFile:Insert[0]
 	ZoneUnlocked:Insert[TRUE]
 	ZoneSetTime:Insert[0]
-	ZoneUnlockTime:Insert[64800]
+	ZoneUnlockTime:Insert[21600]
+	
+	return
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk: Halls of the Fallen [Solo]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Ruins of Guk: Halls of the Fallen [Solo]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk: Halls of the Fallen [Heroic]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Ruins of Guk: Halls of the Fallen [Heroic]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk: Halls of the Fallen [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Ruins of Guk: Halls of the Fallen [Expert]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk: Halls of the Fallen [Frenzied]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Ruins of Guk: Halls of the Fallen [Frenzied]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk: The Lower Corridors [Solo]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Ruins of Guk: The Lower Corridors [Solo]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk: The Lower Corridors [Heroic]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Ruins of Guk: The Lower Corridors [Heroic]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk: The Lower Corridors [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Ruins of Guk: The Lower Corridors [Expert]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk: The Lower Corridors [Frenzied]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Ruins of Guk: The Lower Corridors [Frenzied]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	return
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk:  [Solo]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Guk [Solo]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk:  [Heroic]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Guk [Heroic]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk:  [Expert]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Guk [Expert]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
+	
+	;Zone
+	_Zone:Insert["The Fabled Ruins of Guk:  [Frenzied]"]
+	UIElement[ZonesAvail@RZ]:AddItem["The Fabled Guk [Frenzied]"]
+	ZoneFrom:Insert["Plane of Magic"]
+	ZoneTimer:Insert[1080]
+	ZoneExit:Insert[Exit]
+	ZoneExitLoc:Insert[]
+	ZoneExitPopupSelection:Insert[0]
+	ZoneEntrance:Insert["GUKPORTALCHANGE"]
+	ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
+	ZonePathFile:Insert[0]
+	ZoneUnlocked:Insert[TRUE]
+	ZoneSetTime:Insert[0]
+	ZoneUnlockTime:Insert[5400]
 	
 }
 variable(global) int RZ_Var_Int_Count=1
@@ -566,7 +749,7 @@ function main(... args)
 	
 	;start RIMovement if it is not running
 	relay all -noredirect ${If[!${Script[Buffer:RIMovement](exists)},RIMovement,noop]}
-	
+	variable bool ZonesReset=FALSE
 	;wait until start is pushed
 	while !${RZ_Var_Bool_Start}
 	{
@@ -586,17 +769,18 @@ function main(... args)
 	
 	;load RI_AntiAFK
 	relay all -noredirect RI_AntiAFK
-	
+	relay all -noredirect RG
 	;main loop
 	while 1
 	{
 		;wait while paused
-		while ${RZ_Var_Bool_Paused}
+		if ${RZ_Var_Bool_Paused}
 		{
 			wait 5
+			continue
 		}
 		;wait until start is pushed
-		while !${RZ_Var_Bool_Start}
+		if !${RZ_Var_Bool_Start}
 		{
 			;execute queued commands
 			if ${QueuedCommands}
@@ -604,12 +788,44 @@ function main(... args)
 				ExecuteQueued
 			}
 			wait 5
+			continue
 		}
+		
+		if !${ZonesReset}
+		{
+			;open zones window to populate zones, then close
+			relay "${RI_Var_String_RelayGroup}" eq2ex togglezonereuse
+			wait 5
+			relay "${RI_Var_String_RelayGroup}" eq2ex togglezonereuse
+			wait 5
+			relay "${RI_Var_String_RelayGroup}" eq2ex togglezonereuse
+			wait 5
+			relay "${RI_Var_String_RelayGroup}" eq2ex togglezonereuse
+			wait 5
+			;if Zone is unlocked run it
+			for(RZ_Var_Int_Count:Set[1];${RZ_Var_Int_Count}<=${UIElement[AddedZoneList@RZ].Items};RZ_Var_Int_Count:Inc)
+			{
+				echo Reseting: ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				wait 3
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				wait 3
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				wait 3
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				wait 3
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				wait 3
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				wait 5
+			}
+			ZonesReset:Set[1]
+		}
+		
 		;if we are not zoning
 		if ${EQ2.Zoning}==0
 		{
 			;if Zone is unlocked run it
-			
 			for(RZ_Var_Int_Count:Set[1];${RZ_Var_Int_Count}<=${UIElement[AddedZoneList@RZ].Items};RZ_Var_Int_Count:Inc)
 			{
 				;wait while paused
@@ -684,7 +900,7 @@ atom EQ2_onIncomingText(string Text)
 		{
 			if ${Text.Find["${_Zone.Get[${_count}]}"]}
 			{
-				echo ISXRI: ${Time}: Succesfully Reset ${_one.Get[${_count}]}
+				echo ISXRI: ${Time}: Succesfully Reset ${_Zone.Get[${_count}]}
 				ZoneSetTime.Get[${_count}]:Set[0]
 				ZoneUnlocked.Get[${_count}]:Set[TRUE]
 			}
@@ -710,19 +926,131 @@ atom EQ2_onIncomingText(string Text)
 ;Zone function
 function Zone(int _IndexPosition)
 {
-	;if we are more than 10 away from EntranceLoc move closer, but check collision and not more than 200 else, call to guild hall and run path to zonein
+	;echo Zone Function
+	;if we are more than 10 away from EntranceLoc move closer, but check collision and not more than 200 else, call to guild hall and run path to zonein - UM NOPE
 	;${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]}
 	;${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]}
 	;${ZoneEntranceLoc.Get[${_IndexPosition}].Token[3," "]}
 	;echo if ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10 && !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]},${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[3," "]}]} && ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}<200
-	if ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10 && !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]},${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[3," "]}]} && ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}<200
-		call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 10 0 0 1 1 0 1 1
-	elseif ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10
+	;echo ${ZoneFrom.Get[${_IndexPosition}]}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find[Coliseum of Valor](exists)}
 	{
-		call RIMObj.Move 0.199857 6.007895 -0.344092 3 0 0 1 1 0 1 1
-		call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 10 0 0 1 1 0 1 1
+		;echo if
+		if ${Zone.Name.Find[Coliseum of Valor](exists)}
+		{
+			if ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10 && !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]},${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[3," "]}]} && ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}<200
+				call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 10 0 0 1 1 0 1 1
+			elseif ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10
+			{
+				call RIMObj.Move 0.199857 6.007895 -0.344092 3 0 0 1 1 0 1 1
+				call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 10 0 0 1 1 0 1 1
+			}
+		}
+		elseif ${Zone.Name.Find[Plane of Magic](exists)} && ${Me.Distance[-787.492065,344.555206,1113.450806]}<85
+		{
+			relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+			relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},2,100]
+			wait 2
+			relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+			relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},2,100]
+			call RIMObj.Move -787.492065 344.555206 1113.450806 2 0 0 1 1 0 1 1
+			;wait for group members
+			if ${Me.Group}>1 && ${Me.Group[1].Type.Equal[PC]}
+			{
+				while !${RIMObj.AllGroupWithinRange[5]}
+				{
+					relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},2,100]
+					wait 5
+				}
+			}
+			call ZoneOut "zone_to_pov" "Coliseum of Valor"
+			
+			;wait 5s
+			wait 50
+			
+			;if we are not in the correct zone, exit function
+			if ${Me.GetGameData[Self.ZoneName].Label.Left[17].NotEqual["Coliseum of Valor"]}
+				return
+				
+			relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+			relay "${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,OFF]
+				
+			if ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10 && !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]},${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]},${ZoneEntranceLoc.Get[${_IndexPosition}].Token[3," "]}]} && ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}<200
+				call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 10 0 0 1 1 0 1 1
+			elseif ${Math.Distance[${Me.Loc},${ZoneEntranceLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>10
+			{
+				call RIMObj.Move 0.199857 6.007895 -0.344092 3 0 0 1 1 0 1 1
+				call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 10 0 0 1 1 0 1 1
+			}
+		}
+		else
+		{
+			MessageBox -skin eq2 "You must be either in Coliseum of Valor or in Plane of Magic (within 85 of Valor Portal)"
+			RZObj:Stop
+			return
+		}
 	}
-		
+	if ${ZoneFrom.Get[${_IndexPosition}].Find[Plane of Magic](exists)}
+	{
+		if ${Zone.Name.Find[Coliseum of Valor](exists)}
+		{
+			relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+			relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},2,100]
+			;zoneout loc
+			if ${Math.Distance[${Me.Loc},92.623001,2.938255,160.673553}]}>10 && !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+2]},${Me.Z},92.623001,4.938255,160.673553]} && ${Math.Distance[${Me.Loc},92.623001,2.938255,160.673553]}<200
+				call RIMObj.Move 92.623001 2.938255 160.673553 4 0 0 1 1 0 1 1
+			;center then to zoneout
+			elseif ${Math.Distance[${Me.Loc},92.623001,2.938255,160.673553]}>10
+			{
+				call RIMObj.Move 0.199857 6.007895 -0.344092 3 0 0 1 1 0 1 1
+				;wait for group members
+				if ${Me.Group}>1 && ${Me.Group[1].Type.Equal[PC]}
+				{
+					while !${RIMObj.AllGroupWithinRange[5]}
+					{
+						relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+						relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},2,100]
+						wait 5
+					}
+				}
+				call RIMObj.Move 92.623001 2.938255 160.673553 4 0 0 1 1 0 1 1
+			}
+			;wait for group members
+			if ${Me.Group}>1 && ${Me.Group[1].Type.Equal[PC]}
+			{
+				while !${RIMObj.AllGroupWithinRange[5]}
+				{
+					relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},2,100]
+					wait 5
+				}
+			}
+			call ZoneOut "zone_to_pom" "Plane of Magic"
+			
+			;wait 5s
+			wait 50
+			
+			;if we are not in the correct zone, exit function
+			if ${Me.GetGameData[Self.ZoneName].Label.Left[14].NotEqual["Plane of Magic"]}
+				return
+				
+			relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+			relay "${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,OFF]
+			
+			call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 3 0 0 1 1 0 1 1
+		}
+		elseif ${Zone.Name.Find[Plane of Magic](exists)} && ${Me.Distance[-787.492065,344.555206,1113.450806]}<85
+		{	
+			call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 3 0 0 1 1 0 1 1
+		}
+		else
+		{
+			MessageBox -skin eq2 "You must be either in Coliseum of Valor or in Plane of Magic (within 85 of Valor Portal)"
+			RZObj:Stop
+			return
+		}
+	}
 	wait 20
 
 	echo ${Time}: Zoning into ${_Zone.Get[${_IndexPosition}]}
@@ -803,8 +1131,11 @@ function Zone(int _IndexPosition)
 	wait 50
 	
 	;if it was our last zone Stop RZ
-	if ${RZ_Var_Int_Count}>=${UIElement[AddedZoneList@RZ].Items} && ${RZ_Var_Int_Loops}>=${UIElement[LoopCountTextEntry@RZ].Text}
+	if ${RZ_Var_Int_Count}>=${UIElement[AddedZoneList@RZ].Items} && ${RZ_Var_Int_Loops}>=${UIElement[LoopCountTextEntry@RZ].Text} && !${UIElement[InfiniteLoopListCheckBox@RZ].Checked}
+	{
 		RZObj:Stop
+		return
+	}
 	;while runinstances is running wait
 	while ${Script[Buffer:RunInstances](exists)} || ${RZ_Var_Bool_Paused}
 		wait 20
@@ -846,11 +1177,15 @@ function ZoneOut(string ZoneExit, string ZoneName)
 	;while we are not zoning and in ${_Zone} keep clicking the exit
 	relay ${RI_Var_String_RelayGroup} Actor[${Actor[${ZoneExit}].ID}]:DoubleClick
 	wait 5
+	;;;;changed to select last zone
 	;select row 1
-	relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[1]
-	wait 5
+	;relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[1]
+	;wait 5
 	;confirm selection and zone
-	relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
+	;relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
+	;;;;;changed to select last zone
+	
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:Door[ALL,0]
 	wait 20
 	while !${EQ2.Zoning} && ${Me.GetGameData[Self.ZoneName].Label.Equal["${ZoneName}"]}
 	{
@@ -860,11 +1195,15 @@ function ZoneOut(string ZoneExit, string ZoneName)
 		{
 			if ${EQ2UIPage[popup,ZoneTeleporter].IsVisible}
 			{
+				;;;;;changed to select last zone
 				;select row 1
-				relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[1]
-				wait 5
+				;relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[1]
+				;wait 5
 				;confirm selection and zone
-				relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
+				;relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
+				;;;;;changed to select last zone
+	
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:Door[ALL,0]
 			}
 		}
 		wait 20

@@ -1,5 +1,8 @@
 Shattered Seas: Dark Threats on Dshinn
 Custom
+CheckQuest -Active "Taking the Thunder Pass" 81 -Completed "Taking the Thunder Pass" 81
+0 0 0
+Custom
 HailActor "Harbinger Gloska" 6
 1229.492310 17.629728 1256.299683
 Custom
@@ -92,7 +95,7 @@ Custom
 Quest "Allu'thoa Abduction"
 0 0 0
 Custom
-Quest "Ceremonial Vestments and Condiments" 112
+Quest "Ceremonial Vestments and Condiments" 115
 0 0 0
 -1404.248291 8.942090 926.060120
 -1404.248291 59.108303 926.060120
@@ -120,7 +123,7 @@ Custom
 Quest "Redoubt About It"
 0 0 0
 Custom
-Quest "Zaveta's Treasure Hunt" 184
+Quest "Zaveta's Treasure Hunt" 187
 0 0 0
 -755.249756 95.250053 1031.838135
 -755.249756 145.412033 1031.838135

@@ -1020,7 +1020,7 @@ function main(... args)
 			ZoneEntrance:Set["City of Mist Entrance Door"]
 			ZoneEntranceMoveToZone:Set[TRUE]
 			ZoneEntranceMoveToZoneLocX:Set[-258]
-			ZoneEntranceMoveToZoneLocZ:Set[-1162]
+			ZoneEntranceMoveToZoneLocZ:Set[-1157]
 			Experts:Set[FALSE]
 			ExpertsSummonOption:Set[""]
 			;6HourZones:Set[TRUE]
@@ -1055,7 +1055,7 @@ function main(... args)
 			ZoneEntrance:Set["City of Mist Entrance Door"]
 			ZoneEntranceMoveToZone:Set[TRUE]
 			ZoneEntranceMoveToZoneLocX:Set[-258]
-			ZoneEntranceMoveToZoneLocZ:Set[-1156]
+			ZoneEntranceMoveToZoneLocZ:Set[-1157]
 			Experts:Set[FALSE]
 			ExpertsSummonOption:Set[""]
 			;6HourZones:Set[TRUE]
@@ -1087,10 +1087,10 @@ function main(... args)
 			Zone3MoveToExit:Set[TRUE]
 			Zone3MoveToExitLocX:Set[-130]
 			Zone3MoveToExitLocZ:Set[-221]
-			ZoneEntrance:Set["Teleporter to Expert Lost"]
+			ZoneEntrance:Set["Teleporter to Expert City of Mist"]
 			ZoneEntranceMoveToZone:Set[TRUE]
-			ZoneEntranceMoveToZoneLocX:Set[-258]
-			ZoneEntranceMoveToZoneLocZ:Set[-1156]
+			ZoneEntranceMoveToZoneLocX:Set[520]
+			ZoneEntranceMoveToZoneLocZ:Set[1352]
 			Experts:Set[TRUE]
 			ExpertsSummonOption:Set["Lost City of Torsis [Expert]"]
 			;6HourZones:Set[TRUE]
@@ -1502,11 +1502,26 @@ function Zone1()
 	Actor["${ZoneEntrance}"]:DoubleClick
 	wait 10
 	
-	;select Row
-	EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${Zone1PopupSelection}]
+	CheckZone:GetZoneLists
+	wait 20
+	variable int _ZCNT=0
+	while ${CheckZone.RowByName["${Zone1}"]}==0 && ${_ZCNT:Inc}<10
+	{
+		CheckZone:GetZoneLists
+		wait 5
+	}
+	if ${CheckZone.RowByName["${Zone1}"]}==0
+	{
+		echo ISXRI: Can't find that zone in the Destination list
+		Script:End
+	}
 	wait 10
+	EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${CheckZone.RowByName["${Zone1}"]}]
+	wait 10
+	
 	;confirm selection and zone
 	EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
+	
 	;wait until we start zoning, or are unable to zone
 	wait 6000 ${EQ2.Zoning} || ${UnableToZone} || ${InstanceExpired}
 	
@@ -1655,8 +1670,21 @@ function Zone2()
 	Actor["${ZoneEntrance}"]:DoubleClick
 	wait 10
 	
-	;select Row
-	EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${Zone2PopupSelection}]
+	CheckZone:GetZoneLists
+	wait 20
+	variable int _ZCNT=0
+	while ${CheckZone.RowByName["${Zone2}"]}==0 && ${_ZCNT:Inc}<10
+	{
+		CheckZone:GetZoneLists
+		wait 5
+	}
+	if ${CheckZone.RowByName["${Zone2}"]}==0
+	{
+		echo ISXRI: Can't find that zone in the Destination list
+		Script:End
+	}
+	wait 10
+	EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${CheckZone.RowByName["${Zone2}"]}]
 	wait 10
 	
 	;confirm selection and zone
@@ -1779,9 +1807,23 @@ function Zone3()
 	else
 		Actor["${ZoneEntrance}"]:DoubleClick
 	wait 10
-	;select Row
-	EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${Zone3PopupSelection}]
+	CheckZone:GetZoneLists
+	wait 20
+	variable int _ZCNT=0
+	while ${CheckZone.RowByName["${Zone3}"]}==0 && ${_ZCNT:Inc}<10
+	{
+		CheckZone:GetZoneLists
+		wait 5
+	}
+	if ${CheckZone.RowByName["${Zone3}"]}==0
+	{
+		echo ISXRI: Can't find that zone in the Destination list
+		Script:End
+	}
 	wait 10
+	EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${CheckZone.RowByName["${Zone3}"]}]
+	wait 10
+	
 	;confirm selection and zone
 	EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
 	;wait until we start zoning
@@ -1877,6 +1919,41 @@ function Zone3()
 ;checkzone object
 objectdef CheckZoneObject
 {
+	variable index:string ZoneList
+	method GetZoneLists()
+	{
+		variable index:collection:string _Zones
+		variable iterator _ZonesIterator
+
+		EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:GetOptions[_Zones]
+
+		ZoneList:Clear
+		
+		_Zones:GetIterator[_ZonesIterator]
+		if ${_ZonesIterator:First(exists)}
+		{
+			do
+			{
+				ZoneList:Insert["${_ZonesIterator.Value.Element[text]}"]
+			}
+			while ${_ZonesIterator:Next(exists)}
+		}
+	}
+	member(int) RowByName(string _ZoneName)
+	{
+		variable iterator _ZonesIterator
+		ZoneList:GetIterator[_ZonesIterator]
+		if ${_ZonesIterator:First(exists)}
+		{
+			do
+			{
+				if ${_ZonesIterator.Value.Upper.Find["${_ZoneName.Upper}"](exists)}
+					return ${_ZonesIterator.Key}
+			}
+			while ${_ZonesIterator:Next(exists)}
+		}
+		return 0
+	}
 	;check current seconds since midnight against locktimer return true or false
 	member:bool Unlocked(int SecondsSinceMidnightTheZoneWasSetAt)
 	{

@@ -5018,6 +5018,8 @@ function main()
 	;disable debugging
 	Script:DisableDebugging
 	
+	RI_CMD_Hidden_RIS
+	
 	while ${Me.IsCamping}
 	{
 		if ${CombatBotDebug}

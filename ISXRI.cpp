@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.70 8-1-18"
-double EXTVER = 5.70;
+#define EXTENSION_VERSION "5.71 8-22-18"
+double EXTVER = 5.71;
 #include "ISXRI.h"
 
 
@@ -823,6 +823,18 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "AStitchinTimePartIIIFromBirthtoTombs.h"
 #include "AStitchinTimePartIVAFavorofLove.h"
 #include "AStitchinTimePartVSealedwithHate.h"
+#include "ThenewTravelsofYunZiAntonicaorBust.h"
+#include "ThenewTravelsofYunZiTimeline.h"
+#include "TheTravelsofYunZiAnAltarNateMalice.h"
+#include "TheTravelsofYunZiAnEternityWithoutYou.h"
+#include "TheTravelsofYunZiAnOasisForYourThoughts.h"
+#include "TheTravelsofYunZiEchoesofthePast.h"
+#include "TheTravelsofYunZiIcetoSeeVelious.h"
+#include "TheTravelsofYunZiInaKingdomFarAway.h"
+#include "TheTravelsofYunZiINeedtoSeeMoorsPlaces.h"
+#include "TheTravelsofYunZiKunarkorBust.h"
+#include "TheTravelsofYunZiTearsforFears.h"
+#include "TheTravelsofYunZiTimeline.h"
 //#include ".h"
 //End Quest Dat Files
 
@@ -1040,13 +1052,13 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("TordenBastionofThunderWindsofChange");
 	pISInterface->RemoveTopLevelObject("PlaneofInnovationSecurityMeasuresTradeskill");
 	pISInterface->RemoveTopLevelObject("TordenBastionofThunderLightningStrikesTradeskill");
-	pISInterface->RemoveTopLevelObject("NektulosForestApotheosisTradeskill.DAT");
-	pISInterface->RemoveTopLevelObject("PlaneofDiseaseCryptofDecayTradeskill.DAT");
-	pISInterface->RemoveTopLevelObject("PlaneofInnovationNickofTimeTradeskill.DAT");
-	pISInterface->RemoveTopLevelObject("ShardofHateEyeSpyTradeskill.DAT");
-	pISInterface->RemoveTopLevelObject("ShardofHateNewOwnershipTradeskill.DAT");
-	pISInterface->RemoveTopLevelObject("SolusekRosTowerFromtheAshesTradeskill.DAT");
-	pISInterface->RemoveTopLevelObject("TheMoltenThroneHatesEssencesTradeskill.DAT");
+	pISInterface->RemoveTopLevelObject("NektulosForestApotheosisTradeskill");
+	pISInterface->RemoveTopLevelObject("PlaneofDiseaseCryptofDecayTradeskill");
+	pISInterface->RemoveTopLevelObject("PlaneofInnovationNickofTimeTradeskill");
+	pISInterface->RemoveTopLevelObject("ShardofHateEyeSpyTradeskill");
+	pISInterface->RemoveTopLevelObject("ShardofHateNewOwnershipTradeskill");
+	pISInterface->RemoveTopLevelObject("SolusekRosTowerFromtheAshesTradeskill");
+	pISInterface->RemoveTopLevelObject("TheMoltenThroneHatesEssencesTradeskill");
 	//Quest TLO's
 	pISInterface->RemoveTopLevelObject("ANYTHINGFORJUMJUM");
 	pISInterface->RemoveTopLevelObject("ANEYEINTHESKY");
@@ -1678,6 +1690,19 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTIIIFROMBIRTHTOTOMBS");
 	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTIVAFAVOROFLOVE");
 	pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTVSEALEDWITHHATE");
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIANTONICAORBUST");
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZITIMELINE");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZIANALTARNATEMALICE");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZIANETERNITYWITHOUTYOU");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZIANOASISFORYOURTHOUGHTS");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZIECHOESOFTHEPAST");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZIICETOSEEVELIOUS");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZIINAKINGDOMFARAWAY");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZIINEEDTOSEEMOORSPLACES");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZIKUNARKORBUST");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZITEARSFORFEARS");
+	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZITIMELINE");
+
 }
 
 void ISXRIUnRegisterCommands()
@@ -1787,6 +1812,8 @@ void ISXRIUnRegisterCommands()
 	pISInterface->RemoveCommand("MD5");
 	pISInterface->RemoveCommand("RI_CMD_Hidden_AddTLO");
 	pISInterface->RemoveCommand("RI_CMD_Hidden_RemoveTLO");
+	pISInterface->RemoveCommand("RI_CMD_Hidden_RIS");
+
 	// pISInterface->RemoveCommand("CB");
 }
 
@@ -28398,6 +28425,438 @@ bool __cdecl TLO_ShardofHateUtterContempt(int argc, char *argv[], LSTYPEVAR &Des
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiAntonicaorBust(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiAntonicaorBust) / sizeof(ThenewTravelsofYunZiAntonicaorBust[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiAntonicaorBust[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiTimeline(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiTimeline) / sizeof(ThenewTravelsofYunZiTimeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiTimeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiAnAltarNateMalice(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiAnAltarNateMalice) / sizeof(TheTravelsofYunZiAnAltarNateMalice[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiAnAltarNateMalice[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiAnEternityWithoutYou(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiAnEternityWithoutYou) / sizeof(TheTravelsofYunZiAnEternityWithoutYou[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiAnEternityWithoutYou[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiAnOasisForYourThoughts(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiAnOasisForYourThoughts) / sizeof(TheTravelsofYunZiAnOasisForYourThoughts[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiAnOasisForYourThoughts[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiEchoesofthePast(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiEchoesofthePast) / sizeof(TheTravelsofYunZiEchoesofthePast[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiEchoesofthePast[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiIcetoSeeVelious(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiIcetoSeeVelious) / sizeof(TheTravelsofYunZiIcetoSeeVelious[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiIcetoSeeVelious[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiInaKingdomFarAway(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiInaKingdomFarAway) / sizeof(TheTravelsofYunZiInaKingdomFarAway[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiInaKingdomFarAway[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiINeedtoSeeMoorsPlaces(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiINeedtoSeeMoorsPlaces) / sizeof(TheTravelsofYunZiINeedtoSeeMoorsPlaces[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiINeedtoSeeMoorsPlaces[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiKunarkorBust(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiKunarkorBust) / sizeof(TheTravelsofYunZiKunarkorBust[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiKunarkorBust[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiTearsforFears(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiTearsforFears) / sizeof(TheTravelsofYunZiTearsforFears[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiTearsforFears[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiTimeline(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(TheTravelsofYunZiTimeline) / sizeof(TheTravelsofYunZiTimeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = TheTravelsofYunZiTimeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -29807,6 +30266,31 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTIVAFAVOROFLOVE", TLO_AStitchinTimePartIVAFavorofLove);
 		if (tlo == "ASTITCHINTIMEPARTVSEALEDWITHHATE")
 			pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTVSEALEDWITHHATE", TLO_AStitchinTimePartVSealedwithHate);
+
+		if (tlo == "THENEWTRAVELSOFYUNZIANTONICAORBUST")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZIANTONICAORBUST", TLO_ThenewTravelsofYunZiAntonicaorBust);
+		if (tlo == "THENEWTRAVELSOFYUNZITIMELINE")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZITIMELINE", TLO_ThenewTravelsofYunZiTimeline);
+		if (tlo == "THETRAVELSOFYUNZIANALTARNATEMALICE")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZIANALTARNATEMALICE", TLO_TheTravelsofYunZiAnAltarNateMalice);
+		if (tlo == "THETRAVELSOFYUNZIANETERNITYWITHOUTYOU")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZIANETERNITYWITHOUTYOU", TLO_TheTravelsofYunZiAnEternityWithoutYou);
+		if (tlo == "THETRAVELSOFYUNZIANOASISFORYOURTHOUGHTS")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZIANOASISFORYOURTHOUGHTS", TLO_TheTravelsofYunZiAnOasisForYourThoughts);
+		if (tlo == "THETRAVELSOFYUNZIECHOESOFTHEPAST")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZIECHOESOFTHEPAST", TLO_TheTravelsofYunZiEchoesofthePast);
+		if (tlo == "THETRAVELSOFYUNZIICETOSEEVELIOUS")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZIICETOSEEVELIOUS", TLO_TheTravelsofYunZiIcetoSeeVelious);
+		if (tlo == "THETRAVELSOFYUNZIINAKINGDOMFARAWAY")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZIINAKINGDOMFARAWAY", TLO_TheTravelsofYunZiInaKingdomFarAway);
+		if (tlo == "THETRAVELSOFYUNZIINEEDTOSEEMOORSPLACES")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZIINEEDTOSEEMOORSPLACES", TLO_TheTravelsofYunZiINeedtoSeeMoorsPlaces);
+		if (tlo == "THETRAVELSOFYUNZIKUNARKORBUST")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZIKUNARKORBUST", TLO_TheTravelsofYunZiKunarkorBust);
+		if (tlo == "THETRAVELSOFYUNZITEARSFORFEARS")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZITEARSFORFEARS", TLO_TheTravelsofYunZiTearsforFears);
+		if (tlo == "THETRAVELSOFYUNZITIMELINE")
+			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZITIMELINE", TLO_TheTravelsofYunZiTimeline);
 	}
 	return 1;
 }
@@ -31342,7 +31826,7 @@ int __cdecl CMD_CloseRI(int argc, char *argv[])
 	pISInterface->RunScriptFromBuffer("RILooter", c, sizeof(RILooter), 1, k);
 	return 1;
 }*/
-void CMD_RIS()
+void vCMD_RIS()
 {
 	//printf("ISXRI: Starting RI");
 	char *k[] = { "3rtZdjv7" };
@@ -31350,6 +31834,17 @@ void CMD_RIS()
 	const char * c = (const char *)p;
 
 	pISInterface->RunScriptFromBuffer("RI", c, sizeof(RI), 1, k);
+}
+int __cdecl CMD_RIS(int argc, char *argv[])
+{
+	//printf("ISXRI: Starting RI");
+	char *k[] = { "3rtZdjv7" };
+	const unsigned char * p = RI;
+	const char * c = (const char *)p;
+
+	pISInterface->RunScriptFromBuffer("RI", c, sizeof(RI), 1, k);
+
+	return 1;
 }
 int __cdecl CMD_Replenish(int argc, char *argv[])
 {
@@ -31359,6 +31854,7 @@ int __cdecl CMD_Replenish(int argc, char *argv[])
 	const char * c = (const char *)p;
 
 	pISInterface->RunScriptFromBuffer("Replenish", c, sizeof(Replenish), 1, k);
+
 	return 1;
 }
 int __cdecl CMD_RelayGroup(int argc, char *argv[])
@@ -31998,7 +32494,7 @@ return 1;
 void RegisterCommandsAfterAuth()
 {
 	CheckForAndLoadISXEQ2();
-	CMD_RIS();
+	vCMD_RIS();
 	pISInterface->AddCommand("CloseRI", CMD_CloseRI, true, false);
 	pISInterface->AddCommand("RIMovement", CMD_RIMovement, true, false);
 	pISInterface->AddCommand("RI_CMD_ExecuteCommand", CMD_ExecuteCommand, true, false);
@@ -32107,6 +32603,7 @@ void RegisterCommandsAfterAuth()
 	pISInterface->AddCommand("RI_CMD_Hidden_GetItems", CMD_GI, true, true);
 	pISInterface->AddCommand("RI_CMD_Hidden_AddTLO", CMD_AddTLO, true, true);
 	pISInterface->AddCommand("RI_CMD_Hidden_RemoveTLO", CMD_RemoveTLO, true, true);
+	pISInterface->AddCommand("RI_CMD_Hidden_RIS", CMD_RIS, true, true);
 	pISInterface->AddCommand("MD5", CMD_MD5, true, true);
 	//end hidden commands
 

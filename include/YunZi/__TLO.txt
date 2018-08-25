@@ -1,0 +1,432 @@
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiAntonicaorBust(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(ThenewTravelsofYunZiAntonicaorBust) / sizeof(ThenewTravelsofYunZiAntonicaorBust[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = ThenewTravelsofYunZiAntonicaorBust[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiTimeline(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(ThenewTravelsofYunZiTimeline) / sizeof(ThenewTravelsofYunZiTimeline[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = ThenewTravelsofYunZiTimeline[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiAnAltarNateMalice(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiAnAltarNateMalice) / sizeof(TheTravelsofYunZiAnAltarNateMalice[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiAnAltarNateMalice[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiAnEternityWithoutYou(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiAnEternityWithoutYou) / sizeof(TheTravelsofYunZiAnEternityWithoutYou[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiAnEternityWithoutYou[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiAnOasisForYourThoughts(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiAnOasisForYourThoughts) / sizeof(TheTravelsofYunZiAnOasisForYourThoughts[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiAnOasisForYourThoughts[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiEchoesofthePast(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiEchoesofthePast) / sizeof(TheTravelsofYunZiEchoesofthePast[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiEchoesofthePast[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiIcetoSeeVelious(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiIcetoSeeVelious) / sizeof(TheTravelsofYunZiIcetoSeeVelious[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiIcetoSeeVelious[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiInaKingdomFarAway(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiInaKingdomFarAway) / sizeof(TheTravelsofYunZiInaKingdomFarAway[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiInaKingdomFarAway[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiINeedtoSeeMoorsPlaces(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiINeedtoSeeMoorsPlaces) / sizeof(TheTravelsofYunZiINeedtoSeeMoorsPlaces[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiINeedtoSeeMoorsPlaces[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiKunarkorBust(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiKunarkorBust) / sizeof(TheTravelsofYunZiKunarkorBust[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiKunarkorBust[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiTearsforFears(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiTearsforFears) / sizeof(TheTravelsofYunZiTearsforFears[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiTearsforFears[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheTravelsofYunZiTimeline(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+  int numberofelements = sizeof(TheTravelsofYunZiTimeline) / sizeof(TheTravelsofYunZiTimeline[0]);
+
+    if (argc > 1)
+    {
+        if (strcmp(argv[0], "3rtZdjv7") != 0)
+        {
+            return false;
+        }
+        int num = atoi(argv[1]);
+        if (*argv[1] == '#')
+        {
+            Dest.Int = numberofelements;
+            Dest.Type = pIntType;
+            return true;
+        }
+        else if (num<numberofelements)
+        {
+            Dest.ConstCharPtr = TheTravelsofYunZiTimeline[num].c_str();
+            Dest.Type = pStringType;
+            return true;
+        }
+        else
+        {
+            printf("Array out of bounds");
+            return false;
+        }
+    }
+    else
+    {
+        printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+    }
+    return false;
+}

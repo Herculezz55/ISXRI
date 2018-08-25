@@ -1,5 +1,8 @@
 Shattered Seas: Highpass to Nowhere
 Custom
+CheckQuest -Active "Bone Removal" 46 -Completed "Bone Removal" 46
+0 0 0
+Custom
 HailActor "Opal Darkbriar" 9
 1354.006958 24.411779 1192.756104
 Custom
@@ -54,7 +57,7 @@ Custom
 Quest "Clerical Error"
 0 0 0
 Custom
-Quest "Minds Behind the Barrage" 71
+Quest "Minds Behind the Barrage" 74
 0 0 0
 Custom
 FlyUp 15

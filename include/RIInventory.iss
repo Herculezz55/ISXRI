@@ -14,6 +14,7 @@ variable bool UseBag4=FALSE
 variable bool UseBag5=FALSE
 variable bool UseBag6=FALSE
 variable bool DepositToDepot=FALSE
+variable bool Start=FALSE
 variable index:string Inventory
 
 function main(... args)
@@ -57,24 +58,27 @@ function main(... args)
 				LoadUI:Set[FALSE]
 				break
 			case -loop
+			{
 				Loop:Set[TRUE]
+				Start:Set[1]
 				break
+			}
 			case -start
-				RIInventoryObj:Execute
+				Start:Set[1]
 				break
 			default
 				break
 		}
 		ArgCount:Inc
 	}
-	
+	echo ISXRI: Starting RI Inventory
 	;load ui
-	if ${LoadUI}
-	{
+	;if ${LoadUI}
+	;{
 		ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIInventory.xml"
-	}
-	
+	;}
+
 	;set button colors
 	UIElement[AddSellButton@RIInventory].Font:SetColor[FF0099FF]
 	UIElement[AddDestroyButton@RIInventory].Font:SetColor[FFFF0000]
@@ -87,6 +91,13 @@ function main(... args)
 	;load inventory list into listbox
 	RIInventoryObj:LoadInventoryList
 	
+	if ${Start}
+		RIInventoryObj:Execute
+	
+	if !${LoadUI}
+	{
+		UIElement[RIInventory]:Hide
+	}
 	;load events
 	Event[EQ2_onRewardWindowAppeared]:AttachAtom[EQ2_onRewardWindowAppeared]
 	
@@ -105,7 +116,13 @@ atom(global) displayindex()
 		echo ${counter}: ${Items.Get[${counter}]}
 	}
 }
-
+atom(global) rii(string _What)
+{
+	if ${_What.Upper.Equal[END]} || ${_What.Upper.Equal[EXIT]}
+		Script:End
+	else
+		UIElement[RIInventory]:Show
+}
 objectdef RIInventoryObject
 {
 	method Execute()
@@ -162,6 +179,8 @@ objectdef RIInventoryObject
 	function ExecuteActions()
 	{
 		echo ISXRI: Executing Actions
+		;UIElement[ExecuteButton@RIInventory].Font:SetColor[FFF9F099]
+		UIElement[ExecuteButton@RIInventory]:SetText[Executing]
 		RIInventoryObj:Load[0]
 		if ${DepositToDepot}
 		{
@@ -191,6 +210,8 @@ objectdef RIInventoryObject
 		variable bool _SkipThisItem=0
 		for(counter:Set[1];${counter}<=${Items.Used};counter:Inc)
 		{
+			while ${Me.InCombat}
+				wait 1
 			;echo ${counter}: ${Items.Get[${counter}]} // ${Items.Get[${counter}].Token[1,|]} // ${Items.Get[${counter}].Token[2,|]}
 			_SkipThisItem:Set[0]
 			if ${Items.Get[${counter}].Token[2,|].Equal[Transmute]} || ${Items.Get[${counter}].Token[2,|].Equal[Sell]} || ${Items.Get[${counter}].Token[2,|].Equal[Destroy]} || ${Items.Get[${counter}].Token[2,|].Equal[Salvage]}
@@ -214,6 +235,8 @@ objectdef RIInventoryObject
 		{
 			RIInventoryExecuteActions:Set[0]
 			echo ISXRI: Done Executing Actions
+			UIElement[ExecuteButton@RIInventory].Font:SetColor[FFF9F099]
+			UIElement[ExecuteButton@RIInventory]:SetText[Execute]
 			if ${EQ2UIPage[Inventory,Merchant].IsVisible}
 				EQ2UIPage[Inventory,Merchant]:Close
 		}
@@ -629,4 +652,5 @@ atom EQ2_onRewardWindowAppeared()
 function atexit()
 {
 	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIInventory.xml"
+	echo ISXRI: Ending RI Inventory
 }
