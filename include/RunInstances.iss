@@ -1203,6 +1203,17 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 				istrMain:Insert[${PlaneofInnovationGearsintheMachine[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
+		case Plane of Innovation: Parts Not Included [Duo]
+		case Plane of Innovation: Parts Not Included [Event Heroic]
+		case Plane of Innovation: Parts Not Included [Expert Event]
+		{
+			RI_CMD_Hidden_AddTLO PlaneofInnovationPartsNotIncluded
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[PlaneofInnovationPartsNotIncluded]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofInnovationPartsNotIncluded[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${PlaneofInnovationPartsNotIncluded[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
 		case Plane of Disease: Outbreak [Solo]
 		case Plane of Disease: Outbreak [Heroic]
 		case Plane of Disease: Outbreak [Expert]
@@ -1226,7 +1237,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Plane of Disease: Infested Mesa [Duo]
-		case Plane of Disease: Infested Mesa [Heroic]
+		case Plane of Disease: Infested Mesa [Event Heroic]
 		case Plane of Disease: Infested Mesa [Expert Event]
 		{
 			RI_CMD_Hidden_AddTLO PlaneofDiseaseInfestedMesa 
@@ -27419,6 +27430,11 @@ function Rallius()
 		wait 1
 	while ${Actor[Query, ID=${_RalliusID} && IsDead=FALSE](exists)}
 	{
+		if ${Me.Equipment[1].Name.NotEqual["${_MainWep}"]}
+			Me.Inventory[Query,Location=="Inventory" && Name=="${_MainWep}"]:Equip
+		if ${Me.Equipment[2].Name.NotEqual["${_SecWep}"]}
+			Me.Inventory[Query,Location=="Inventory" && Name=="${_SecWep}"]:Equip
+		
 		RI_CMD_PauseCombatBots 0
 		if !${RI_Var_Bool_GlobalOthers}
 		{
@@ -29202,13 +29218,26 @@ function Molten()
 function Balrezu()
 {
 	echo ISXRI: Starting Balrezu (Special thanks to MultiCharacter)
+	variable int _DeadAddID=0
+	while ${Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"](exists)} || ${Actor[Query, Name=-"a scorched fiend" && IsDead=TRUE](exists)}
+	{
+		Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"]:Destroy
+		_DeadAddID:Set[${Actor[Query, Name=-"a scorched fiend" && IsDead=TRUE].ID}]
+		relay ${RI_Var_Bool_RelayGroup} Actor[id,${_DeadAddID}]:DoubleClick
+		relay ${RI_Var_Bool_RelayGroup} eq2ex apply_verb ${_DeadAddID} Loot
+		wait 1
+		relay ${RI_Var_Bool_RelayGroup} LootWindow:RequestAll
+		relay ${RI_Var_Bool_RelayGroup} LootWindow:LootAll
+		waitframe
+	}
+	
 	declare _BALREZUSCRIPTRUNNING bool global TRUE
 	Event[EQ2_ActorDespawned]:AttachAtom[EQ2_ActorDespawnedBalrezu]
 	Event[EQ2_ActorSpawned]:AttachAtom[EQ2_ActorSpawnedBalrezu]
 	
 	RI_Var_Bool_Follow:Set[0]
 	variable int _BalrezuID=${Actor[Query, Name=-"Balrezu" && IsDead=FALSE].ID}
-	variable int _DeadAddID=0
+	
 	declare brazier1 int script 0
 	declare brazier2 int script 0
 	declare brazier3 int script 0
@@ -29264,6 +29293,7 @@ function Balrezu()
 		if ${Actor[Query, Name=-"a scorched fiend" && IsDead=TRUE](exists)}
 		{
 			_DeadAddID:Set[${Actor[Query, Name=-"a scorched fiend" && IsDead=TRUE].ID}]
+			relay ${RI_Var_Bool_RelayGroup} Actor[id,${_DeadAddID}]:DoubleClick
 			relay ${RI_Var_Bool_RelayGroup} eq2ex apply_verb ${_DeadAddID} Loot
 			wait 1
 			relay ${RI_Var_Bool_RelayGroup} LootWindow:RequestAll
@@ -29292,6 +29322,7 @@ function Balrezu()
 					if ${Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"](exists)}
 						Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"]:Destroy
 					_DeadAddID:Set[${Actor[Query, Name=-"a scorched fiend" && IsDead=TRUE].ID}]
+					relay ${RI_Var_Bool_RelayGroup} Actor[id,${_DeadAddID}]:DoubleClick
 					relay ${RI_Var_Bool_RelayGroup} eq2ex apply_verb ${_DeadAddID} Loot
 					wait 1
 					relay ${RI_Var_Bool_RelayGroup} LootWindow:RequestAll
@@ -31285,7 +31316,35 @@ function Grimror()
 	echo ISXRI: Ending Grimror
 }
 ;;;;;;;; End Plane of Disease: Infested Mesa
-;;;;;;;; Start Plane of Innovation: Parts not Included
+;;;;;;;; Start Plane of Innovation: Parts Not Included
+function Poipniring()
+{
+	echo ISXRI: Starting Plane of Innovation: Parts Not Included Swarm Ring Event
+	Actor[Factory East Side Door 03]:DoubleClick
+	wait 1
+	Actor[Factory East Side Door 03]:DoubleClick
+	wait 1
+	Actor[Factory East Side Door 03]:DoubleClick
+	while ${Actor[Factory East Side Door 03].Interactable}
+		wait 1
+	echo ISXRI: Ending Plane of Innovation: Parts Not Included Swarm Ring Event
+}
+function Poipniactivate(string _Who)
+{
+	echo ISXRI: Starting Activate ${_Who}
+	while !${Actor[${_Who}].IsAggro}
+	{
+		if ${Actor[${_Who}].Distance}>3
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[${_Who}].Loc},3,500]
+		if !${Me.InCombat} && ${Actor[${_Who}].Overlay.Equal[shut_down_idle]} && ${Actor[${_Who}].Distance}<=4
+		{
+			relay ${RI_Var_String_RelayGroup} Actor[${_Who}]:DoubleClick
+			wait 50
+		}
+		waitframe
+	}
+	echo ISXRI: Ending Activate ${_Who}
+}
 
 function Microtock()
 {
@@ -31330,26 +31389,53 @@ function Microtock()
 function Megatock()
 {
 	echo ISXRI: Starting Megatock
-
+	
+	IncomingText:Insert["tracks his next target"]
+	
 	variable int _MegatockID=${Actor[Query, Name=-"Fixit Megatock" && IsDead=FALSE].ID}
 
-	call RIObj.LockAndPull ${_MegatockID} "-75.395172,-3.232449,-382.744110"
+	call RIObj.LockAndPull ${_MegatockID} "-88.440086,-3.231944,-376.388092" 10 0
 	
 	while ${Actor[Query, ID=${_MegatockID} && IsDead=FALSE](exists)}
 	{
 		call RIObj.Target ${_MegatockID}
-		if ${Actor[Query, ID=${_MegatockID} && IsDead=FALSE].Target.ID}==${Me.ID}
+		call RIObj.MageAbsorbMagic ${_MegatockID} 509
+		if ${Trigger}
 		{
-			call MoveBehind 0
-			RIMUIObj:SetLockSpot[${Me.Name},-75.395172,-3.232449,-382.744110]
+			wait 20
+			RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+			RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+			RIMUIObj:SetLockSpot[ALL,-89.016090,3.954799,-351.488678]
+			wait 100 ${Me.Distance[-89.016090,3.954799,-351.488678]}<3
+			wait 200 ${Actor[Query, ID=${_MegatockID} && IsDead=FALSE].Distance}<10
+			RIMUIObj:SetLockSpot[ALL,-88.440086,-3.231944,-376.388092]
+			RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+			RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+			Trigger:Set[FALSE]
 		}
 		wait 2
 	}
 	
 	echo ISXRI: Ending Megatock
 }
+function Omegatock()
+{
+	echo ISXRI: Starting Omegatock
 
-;;;;;;;; End Plane of Innovation: Parts not Included
+	variable int _OmegatockID=${Actor[Query, Name=-"Omegatock" && IsDead=FALSE].ID}
+
+	call RIObj.LockAndPull ${_OmegatockID} "-118.489128 -3.119570 -491.245422" 10 0
+	
+	while ${Actor[Query, ID=${_OmegatockID} && IsDead=FALSE](exists)}
+	{
+		call RIObj.Target ${_OmegatockID}
+		call RIObj.MageAbsorbMagic ${_OmegatockID} 509
+		wait 2
+	}
+	
+	echo ISXRI: Ending Omegatock
+}
+;;;;;;;; End Plane of Innovation: Parts Not Included
 ;;;;;;;; Start Shard of Hate: Utter Contempt
 function Skimp()
 {
@@ -31600,10 +31686,10 @@ function Morghorb()
 	variable int i
 	if !${RI_Var_Bool_GlobalOthers}
 	{
-		RIMUIObj:SetLockSpot[${Me.Name},49.785309,30.552780,-210.096008,1,500]
+		RIMUIObj:SetLockSpot[${Me.Name},37.592064,30.180744,-192.161621,1,500]
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[1].Name},49.291969,30.242695,-197.981033,1,500]
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[2].Name},37.592064,30.180744,-192.161621,1,500]
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[3].Name},25.795946,30.463148,-197.856186,1,500]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[2].Name},25.795946,30.463148,-197.856186,1,500]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[3].Name},49.785309,30.552780,-210.096008,1,500]
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[4].Name},25.309896,30.557432,-209.757980,1,500]
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5].Name},37.228035,30.621916,-215.940475,1,500]
 	}
@@ -31707,10 +31793,10 @@ function Sirloin()
 	variable int i
 	if !${RI_Var_Bool_GlobalOthers}
 	{
-		RIMUIObj:SetLockSpot[${Me.Name},49.785309,30.552780,-210.096008,1,500]
+		RIMUIObj:SetLockSpot[${Me.Name},37.592064,30.180744,-192.161621,1,500]
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[1].Name},49.291969,30.242695,-197.981033,1,500]
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[2].Name},37.592064,30.180744,-192.161621,1,500]
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[3].Name},25.795946,30.463148,-197.856186,1,500]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[2].Name},25.795946,30.463148,-197.856186,1,500]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[3].Name},49.785309,30.552780,-210.096008,1,500]
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[4].Name},25.309896,30.557432,-209.757980,1,500]
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5].Name},37.228035,30.621916,-215.940475,1,500]
 	}
@@ -32094,21 +32180,17 @@ function Nfaprotect()
 	echo ISXRI: Starting Innoruk Protect
 	variable bool _Done=FALSE
 	AnnounceText:Insert["You must seal the crack that has formed in the shield"]
-	AnnounceText:Insert["The barrier bursts"]
-	IncomingText:Insert["The barrier bursts"]
 	RIMUIObj:SetLockSpot[ALL,-1392.000000,30.500000,-1345.000000]
 	wait 600 ${Actor[Saryrn](exists)}
 	while !${Actor[Query, Name=-"Enter shard of hate"](exists)}
 	{
-		if ( ${Trigger} && ${TriggerMessage.Find["The barrier bursts"](exists)} )
-			_Done:Set[1]
 		if ${Trigger} && ${TriggerMessage.Find["You must seal the crack that has formed in the shield"](exists)}
 		{
-			while ${Actor[Wellspring of Hate].HighlightOnMouseHover}
+			while ${Actor[Wellspring of Hate].HighlightOnMouseHover} && !${Actor[Query, Name=-"Enter shard of hate"](exists)}
 				Actor[Wellspring of Hate]:DoubleClick
 			wait 50
 			call LockAndWait -Loc ${Actor["fx for crack in barrier"].Loc}
-			while ${Actor["fx for crack in barrier"](exists)}
+			while ${Actor["fx for crack in barrier"](exists)} && !${Actor[Query, Name=-"Enter shard of hate"](exists)}
 				Actor["fx for crack in barrier"]:DoubleClick
 			Trigger:Set[0]
 			RIMUIObj:SetLockSpot[ALL,-1392.000000,30.500000,-1345.000000]

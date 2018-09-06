@@ -270,6 +270,9 @@ StopForCombat
 Custom
 UseItem "Hirudin Extract"
 232.244095 391.621765 -3.057931
+Custom
+PreHeal
+232.244095 391.621765 -3.057931
 Named
 Flesh
 CustomNamed

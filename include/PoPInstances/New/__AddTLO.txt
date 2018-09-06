@@ -1,2 +1,2 @@
-"""if (tlo == "SHARDOFHATEUTTERCONTEMPT.DAT")"""
-"""  pISInterface->AddTopLevelObject("SHARDOFHATEUTTERCONTEMPT.DAT", TLO_ShardofHateUtterContempt);"""
+if (tlo == "PlaneofInnovationPartsNotIncluded")
+  pISInterface->AddTopLevelObject("PlaneofInnovationPartsNotIncluded", TLO_PlaneofInnovationPartsNotIncluded);

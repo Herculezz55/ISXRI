@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.71 8-22-18"
-double EXTVER = 5.71;
+#define EXTENSION_VERSION "5.74 9-4-18"
+double EXTVER = 5.74;
 #include "ISXRI.h"
 
 
@@ -191,6 +191,7 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "SolusekRosTowerFromtheAshesTradeskill.h"
 #include "TheMoltenThroneHatesEssencesTradeskill.h"
 #include "ShardofHateUtterContempt.h"
+#include "PlaneofInnovationPartsNotIncluded.h"
 
 //Quest Dat Files
 #include "AnythingforJumjum.h"
@@ -835,6 +836,7 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "TheTravelsofYunZiKunarkorBust.h"
 #include "TheTravelsofYunZiTearsforFears.h"
 #include "TheTravelsofYunZiTimeline.h"
+#include "ThenewTravelsofYunZiCommonlandsUncommonHeart.h"
 //#include ".h"
 //End Quest Dat Files
 
@@ -1059,6 +1061,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("ShardofHateNewOwnershipTradeskill");
 	pISInterface->RemoveTopLevelObject("SolusekRosTowerFromtheAshesTradeskill");
 	pISInterface->RemoveTopLevelObject("TheMoltenThroneHatesEssencesTradeskill");
+	pISInterface->RemoveTopLevelObject("PlaneofInnovationPartsNotIncluded");
 	//Quest TLO's
 	pISInterface->RemoveTopLevelObject("ANYTHINGFORJUMJUM");
 	pISInterface->RemoveTopLevelObject("ANEYEINTHESKY");
@@ -1702,7 +1705,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZIKUNARKORBUST");
 	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZITEARSFORFEARS");
 	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZITIMELINE");
-
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZICOMMONLANDSUNCOMMONHEART");
 }
 
 void ISXRIUnRegisterCommands()
@@ -28857,7 +28860,78 @@ bool __cdecl TLO_TheTravelsofYunZiTimeline(int argc, char *argv[], LSTYPEVAR &De
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiCommonlandsUncommonHeart(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiCommonlandsUncommonHeart) / sizeof(ThenewTravelsofYunZiCommonlandsUncommonHeart[0]);
 
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiCommonlandsUncommonHeart[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PlaneofInnovationPartsNotIncluded(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(PlaneofInnovationPartsNotIncluded) / sizeof(PlaneofInnovationPartsNotIncluded[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = PlaneofInnovationPartsNotIncluded[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
 	if (argc > 1)
@@ -29006,6 +29080,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("TheMoltenThroneHatesEssencesTradeskill", TLO_TheMoltenThroneHatesEssencesTradeskill);
 		if (tlo == "ShardofHateUtterContempt")
 			pISInterface->AddTopLevelObject("ShardofHateUtterContempt", TLO_ShardofHateUtterContempt);
+		if (tlo == "PlaneofInnovationPartsNotIncluded")
+			pISInterface->AddTopLevelObject("PlaneofInnovationPartsNotIncluded", TLO_PlaneofInnovationPartsNotIncluded);
 
 		if (tlo == "ANYTHINGFORJUMJUM")
 			pISInterface->AddTopLevelObject("ANYTHINGFORJUMJUM", TLO_ANYTHINGFORJUMJUM);
@@ -30291,6 +30367,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZITEARSFORFEARS", TLO_TheTravelsofYunZiTearsforFears);
 		if (tlo == "THETRAVELSOFYUNZITIMELINE")
 			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZITIMELINE", TLO_TheTravelsofYunZiTimeline);
+		if (tlo == "THENEWTRAVELSOFYUNZICOMMONLANDSUNCOMMONHEART")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZICOMMONLANDSUNCOMMONHEART", TLO_ThenewTravelsofYunZiCommonlandsUncommonHeart);
 	}
 	return 1;
 }

@@ -1,7 +1,7 @@
 //TLO to return string arrays
-bool __cdecl TLO_PlaneofInnovationPartsNotIncluded(int argc, char *argv[], LSTYPEVAR &Dest)
+bool __cdecl TLO_ThenewTravelsofYunZiCommonlandsUncommonHeart(int argc, char *argv[], LSTYPEVAR &Dest)
 {
-  int numberofelements = sizeof(PlaneofInnovationPartsNotIncluded) / sizeof(PlaneofInnovationPartsNotIncluded[0]);
+  int numberofelements = sizeof(ThenewTravelsofYunZiCommonlandsUncommonHeart) / sizeof(ThenewTravelsofYunZiCommonlandsUncommonHeart[0]);
 
     if (argc > 1)
     {
@@ -18,7 +18,7 @@ bool __cdecl TLO_PlaneofInnovationPartsNotIncluded(int argc, char *argv[], LSTYP
         }
         else if (num<numberofelements)
         {
-            Dest.ConstCharPtr = PlaneofInnovationPartsNotIncluded[num].c_str();
+            Dest.ConstCharPtr = ThenewTravelsofYunZiCommonlandsUncommonHeart[num].c_str();
             Dest.Type = pStringType;
             return true;
         }

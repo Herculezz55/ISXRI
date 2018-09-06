@@ -1000,11 +1000,14 @@ objectdef RI_Object_CB
 							{
 								switch ${Iterator.Value}
 								{
+									case NonNamedCA
+									case Debuff
 									case CA
 									{
 										_istrAbilityType:Insert[Hostile]
 										break
 									}
+									case NamedDebuff
 									case NamedCA
 									{
 										_istrAbilityType:Insert[NamedHostile]
@@ -7484,6 +7487,8 @@ atom EQ2_onIncomingText(string Text)
 ;Ast - Brittle Armor
 ;Dirgod Withering Ast - Frozen Heavens -  Defidus Withering
 ;Coercig Ethermancy - Ast - Scorched Earth - Swashiro Ethermancy
+
+
 	;Ascension Combos
 	;"hits" "for a" "of" "damage"
 	

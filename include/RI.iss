@@ -3088,7 +3088,10 @@
 ;			-loop
 ;				continously loops execute
 
-;v5.72 Changes 8-23-18
+;v5.72 Changes 8-28-18
+;	RQ
+;		Added
+;			The new "Travels" of Yun Zi - Commonlands, Uncommon Heart
 ;	RI
 ;		Modified
 ;			Plane of Disease: The Source
@@ -3101,6 +3104,47 @@
 ;			*method SetShinyScanDistance(int _Distance=100)
 ;				Sets the distance to scan for shinies
 
+;v5.73 Changes 8-28-18
+;	RQ
+;		Modified
+;			The new "Travels" of Yun Zi - Commonlands, Uncommon Heart
+;				Fixed a bug that was not grabbing the quest
+;	RI
+;		Modified
+;			Plane of Disease: Infested Mesa
+;				Fixed a bug that was not allowing RI to run Event Heroic
+
+;v5.74 Changes 9-4-18
+;	RZ
+;		Added
+;			Plane of Innovation: Parts Not Included [Duo, Event Heroic and Expert Event]
+;	RI
+;		Modified
+;			Solusek Ro's Tower: The Obsidian Core
+;				Balrezu
+;					Added code to clear out dead fiends before starting balrezu
+;			Torden, Bastion of Thunder: Tower Breach
+;				Keeper of Lore
+;					Inserted a 2s wait to ensure toons are closer to mob to invoke MoveBehind
+;			Plane of Disease: Outbreak
+;				will now cast a PreHeal before running into water to pull Flesh Eater
+;				Rallius
+;					script will be more persistent about requipping main and secondary weps
+;			Plane of Innovation: Parts Not Included
+;				Added pathing for zone in RI
+;				Fixit Megatock
+;					changed main LockSpot
+;					turned off MoveBehind
+;					will now joust
+;				Fixit Omegatock
+;					Lockspot for entire group
+;					Mages will dispell
+;	RIMUI
+;		now will auto add "" as needed to added arguments
+;		Added RIMUIObj Method's, Member's and *Button's
+;			*method ResetAllZones(string _ForWho)
+;				Resets all Zones
+
 ;;;;;;;;;; IMPORTANT TODO: STUCK ROUTINE FOR MOVE FUNCTION, INCLUDING COLAB WITH SHINY FUNCTION (READ NOTES IN SHINY FUNCTION);;;;;;;;;
 
 
@@ -3108,7 +3152,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.71
+variable(global) float RI_Var_Float_Version=5.74
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -4736,6 +4780,8 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ReplyDialog - Chooses option from a reply dialog window\n\nArgument 1: For Who\nArgument 2: Option]
 	RI_Index_String_AvailableRIMUICommands:Insert[ResetZone]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ResetZone - Resets zone's\n\nArgument 1: For Who\n\nArgument 2+: Zone or Zone's to Reset\n]
+	RI_Index_String_AvailableRIMUICommands:Insert[ResetAllZones]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ResetAllZones - Resets all zone's\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[ResumeBot]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ResumeBot - Resumes whatever compatible bot you are running\n\nArgument 1: For Who\n]
 	RI_Index_String_AvailableRIMUICommands:Insert[ResumeRI]
@@ -7178,6 +7224,16 @@ objectdef RIMUIObject
 			}
 		}
 	}
+	method ResetAllZones(string _ForWho)
+	{
+		if ${This.ForWhoCheck[${_ForWho}]}
+		{
+			eq2ex /reset_all_zone_timers
+			ChoiceWindow:DoChoice1
+			TimedCommand 5 ChoiceWindow:DoChoice1
+			TimedCommand 10 ChoiceWindow:DoChoice1
+		}
+	}
 	method CheckEpic2PreReqs(string _ForWho=ALL)
 	{
 		if !${This.ForWhoCheck[${_ForWho}]}
@@ -7964,6 +8020,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Altar-Nate Malice"]
 				;UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Antonica or Bust"]
+				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Commonlands, Uncommon Heart"]
 			}
 		}
 	}
