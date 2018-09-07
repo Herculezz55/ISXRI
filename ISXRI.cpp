@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.74 9-4-18"
-double EXTVER = 5.74;
+#define EXTENSION_VERSION "5.75 9-7-18"
+double EXTVER = 5.75;
 #include "ISXRI.h"
 
 
@@ -837,6 +837,7 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "TheTravelsofYunZiTearsforFears.h"
 #include "TheTravelsofYunZiTimeline.h"
 #include "ThenewTravelsofYunZiCommonlandsUncommonHeart.h"
+#include "ThenewTravelsofYunZiRunNektulosForestRun.h"
 //#include ".h"
 //End Quest Dat Files
 
@@ -1706,6 +1707,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZITEARSFORFEARS");
 	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZITIMELINE");
 	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZICOMMONLANDSUNCOMMONHEART");
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIRUNNEKTULOSFORESTRUN");
 }
 
 void ISXRIUnRegisterCommands()
@@ -28932,6 +28934,43 @@ bool __cdecl TLO_PlaneofInnovationPartsNotIncluded(int argc, char *argv[], LSTYP
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiRunNektulosForestRun(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiRunNektulosForestRun) / sizeof(ThenewTravelsofYunZiRunNektulosForestRun[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiRunNektulosForestRun[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
 	if (argc > 1)
@@ -30369,6 +30408,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("THETRAVELSOFYUNZITIMELINE", TLO_TheTravelsofYunZiTimeline);
 		if (tlo == "THENEWTRAVELSOFYUNZICOMMONLANDSUNCOMMONHEART")
 			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZICOMMONLANDSUNCOMMONHEART", TLO_ThenewTravelsofYunZiCommonlandsUncommonHeart);
+		if (tlo == "THENEWTRAVELSOFYUNZIRUNNEKTULOSFORESTRUN")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZIRUNNEKTULOSFORESTRUN", TLO_ThenewTravelsofYunZiRunNektulosForestRun);
 	}
 	return 1;
 }

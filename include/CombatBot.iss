@@ -2764,6 +2764,7 @@ objectdef RI_Object_CB
 	}
 	method AddCastStackAbilitiesListBoxItem(string _AbilityDisabled, string _AbilityName, int _ExportPosition, string _Type, string _Target, string _%, string _#, string _SD, string _SE, string _SAE, string _RIE , string _MAX, int _Savagery, int _DissonanceLess,int _DissonanceGreater)
 	{
+		echo ${_AbilityName}:${_#}
 		variable string temp=""
 		temp:Set["${_AbilityName}"]
 		if ${_SD.Equal[TRUE]}

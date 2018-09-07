@@ -3145,6 +3145,24 @@
 ;			*method ResetAllZones(string _ForWho)
 ;				Resets all Zones
 
+;v5.75 Changes 9-7-18
+;	RQ
+;		Added
+;			The new "Travels" of Yun Zi - Run Nektulos Forest Run
+;	RI
+;		Modified
+;			Plane of Innovation: Masks of the Marvelous
+;				Ancient Clockwork Protocol
+;					Will now be less persistent about grabbing the chest
+;			Torden, Bastion of Thunder: Winds of Change
+;				Fixed pathing issues in Expert
+;				Expert will now exit from the top of the tower
+;			Torden, Bastion of Thunder: Tower Breach
+;				Fixed pathing issues in Expert
+;				Expert will now exit from the top of the tower
+;			Solusek Ro's Tower: The Obsidian Core
+;				Added pathing at end for Shiny
+
 ;;;;;;;;;; IMPORTANT TODO: STUCK ROUTINE FOR MOVE FUNCTION, INCLUDING COLAB WITH SHINY FUNCTION (READ NOTES IN SHINY FUNCTION);;;;;;;;;
 
 
@@ -3152,7 +3170,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.74
+variable(global) float RI_Var_Float_Version=5.75
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -8021,6 +8039,7 @@ objectdef RIMUIObject
 				;UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Antonica or Bust"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Commonlands, Uncommon Heart"]
+				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Run Nektulos Forest Run"]
 			}
 		}
 	}

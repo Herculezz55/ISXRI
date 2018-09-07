@@ -24302,8 +24302,10 @@ function ReplyDialog(... args)
 		wait 5
 	}
 }
-function PlaceHouseItem()
+function PlaceHouseItem(int _FaceDegree=${Me.Heading})
 {
+	Face ${_FaceDegree}
+	wait 2
 	;change camera
 	Press -hold ${RI_Var_String_LookDownKey}
 	wait 10
@@ -26060,6 +26062,22 @@ function Ancient()
 		}
 		wait 5
 	}
+	wait 20 ${Actor[Query, Name=-"Exquisite Chest" && Distance<50](exists)}
+	variable int _ChestID
+	variable int _ChestCNT=0
+	_ChestID:Set[${Actor[Query, Name=-"Exquisite Chest" && Distance<50].ID}]
+	
+	while ${Actor[id,${_ChestID}](exists)} && ${_ChestCNT:Inc}<10
+	{
+		call RIMObj.LootChest
+		wait 2
+		relay ${RI_Var_Bool_RelayGroup} LootWindow:RequestAll
+		relay ${RI_Var_Bool_RelayGroup} LootWindow:LootAll
+		wait 2
+	}
+	if ${Actor[id,${_ChestID}](exists)}
+		RI_Var_IndexInt_InvalidChest:Insert[${_ChestID}]
+	
 	echo ISXRI: Ending Ancient 
 	;delete global variables
 	deletevariable _InvalidTargets
