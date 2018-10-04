@@ -1,5 +1,5 @@
 ;CoT by Herculezz v2
-
+variable int Counter=0
 function main()
 {
 	;echo Starting CoT v2
@@ -21,6 +21,14 @@ function main()
 		;if all group member's are 59m or more away
 		if ${Me.Group[1].Distance}>=59 && ${Me.Group[2].Distance}>=59 && ${Me.Group[3].Distance}>=59 && ${Me.Group[4].Distance}>=59 && ${Me.Group[5].Distance}>=59
 		{
+			if ${Counter}<11
+			{
+				Counter:Inc
+				wait 10
+				continue
+			}
+			else
+				Counter:Set[0]
 			;if Call of the Tinkerer is ready and I am RIFollowing
 			if ${Me.Inventory[Call of the Tinkerer].IsReady} && !${Me.InCombat}
 			{
@@ -67,6 +75,8 @@ function main()
 				TimedCommand 100 RI_CMD_Assisting 1
 			}
 		}	
+		else
+			Counter:Set[0]
 		wait 10
 	}
 }

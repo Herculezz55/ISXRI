@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.75 9-7-18"
-double EXTVER = 5.75;
+#define EXTENSION_VERSION "5.81 10-9-18"
+double EXTVER = 5.81;
 #include "ISXRI.h"
 
 
@@ -838,6 +838,10 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "TheTravelsofYunZiTimeline.h"
 #include "ThenewTravelsofYunZiCommonlandsUncommonHeart.h"
 #include "ThenewTravelsofYunZiRunNektulosForestRun.h"
+#include "ThenewTravelsofYunZiThunderingSteppesBySteppes.h"
+#include "ThenewTravelsofYunZiDisenchantingtheEnchanted.h"
+#include "ThenewTravelsofYunZiToZekWithIt.h"
+#include "ThenewTravelsofYunZiFeerrottNotIShallFindYou.h"
 //#include ".h"
 //End Quest Dat Files
 
@@ -1708,6 +1712,10 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("THETRAVELSOFYUNZITIMELINE");
 	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZICOMMONLANDSUNCOMMONHEART");
 	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIRUNNEKTULOSFORESTRUN");
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZITHUNDERINGSTEPPESBYSTEPPES");
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIDISENCHANTINGTHEENCHANTED");
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZITOZEKWITHIT");
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIFEERROTTNOTISHALLFINDYOU");
 }
 
 void ISXRIUnRegisterCommands()
@@ -28970,6 +28978,150 @@ bool __cdecl TLO_ThenewTravelsofYunZiRunNektulosForestRun(int argc, char *argv[]
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiThunderingSteppesBySteppes(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiThunderingSteppesBySteppes) / sizeof(ThenewTravelsofYunZiThunderingSteppesBySteppes[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiThunderingSteppesBySteppes[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiDisenchantingtheEnchanted(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiDisenchantingtheEnchanted) / sizeof(ThenewTravelsofYunZiDisenchantingtheEnchanted[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiDisenchantingtheEnchanted[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiToZekWithIt(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiToZekWithIt) / sizeof(ThenewTravelsofYunZiToZekWithIt[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiToZekWithIt[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiFeerrottNotIShallFindYou(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiFeerrottNotIShallFindYou) / sizeof(ThenewTravelsofYunZiFeerrottNotIShallFindYou[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiFeerrottNotIShallFindYou[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -30410,6 +30562,14 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZICOMMONLANDSUNCOMMONHEART", TLO_ThenewTravelsofYunZiCommonlandsUncommonHeart);
 		if (tlo == "THENEWTRAVELSOFYUNZIRUNNEKTULOSFORESTRUN")
 			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZIRUNNEKTULOSFORESTRUN", TLO_ThenewTravelsofYunZiRunNektulosForestRun);
+		if (tlo == "THENEWTRAVELSOFYUNZITHUNDERINGSTEPPESBYSTEPPES")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZITHUNDERINGSTEPPESBYSTEPPES", TLO_ThenewTravelsofYunZiThunderingSteppesBySteppes);
+		if (tlo == "THENEWTRAVELSOFYUNZIDISENCHANTINGTHEENCHANTED")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZIDISENCHANTINGTHEENCHANTED", TLO_ThenewTravelsofYunZiDisenchantingtheEnchanted);
+		if (tlo == "THENEWTRAVELSOFYUNZITOZEKWITHIT")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZITOZEKWITHIT", TLO_ThenewTravelsofYunZiToZekWithIt);
+		if (tlo == "THENEWTRAVELSOFYUNZIFEERROTTNOTISHALLFINDYOU")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZIFEERROTTNOTISHALLFINDYOU", TLO_ThenewTravelsofYunZiFeerrottNotIShallFindYou);
 	}
 	return 1;
 }

@@ -1,2 +1,0 @@
-if (tlo == "PlaneofInnovationPartsNotIncluded")
-  pISInterface->AddTopLevelObject("PlaneofInnovationPartsNotIncluded", TLO_PlaneofInnovationPartsNotIncluded);

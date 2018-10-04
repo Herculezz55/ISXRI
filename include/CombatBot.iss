@@ -196,6 +196,7 @@
 ;===================================================
 ;===          AutoAttack Timing                 ====
 ;===================================================
+
 variable(global) bool CombatBotDoBackFlankCalcs=TRUE
 variable float RI_Var_Float_LocalCBVersion=${RI_Var_Float_Version.Precision[2]}
 variable float PrimaryDelay
@@ -267,6 +268,7 @@ variable int intCFQuery
 variable(global) index:string istrCastStackAbiltiesListBoxOriginalColor
 variable string strMyName=${Me.Name}
 variable(global) string RI_Var_String_MySubClass=${Me.SubClass.Left[1].Upper}${Me.SubClass.Right[-1]}
+variable(global) bool RI_Var_Bool_CurseCallDebug=FALSE
 variable int intMyLevel=${Me.Level}
 variable settingsetref setProfile
 variable settingsetref setExport
@@ -948,7 +950,8 @@ objectdef RI_Object_CB
 					}
 					while ${Iterator:Next(exists)}
 				}
-				
+				variable string str#temp
+				variable string str%temp
 				;now iterate through everyset in caststack
 				for(j:Set[1];${j}<=${CSCount};j:Inc)
 				{
@@ -991,9 +994,15 @@ objectdef RI_Object_CB
 							if ${Iterator.Key.Equal[ID]}
 								_istrAbilityIgnoreDuration:Set[${j},${Iterator.Value}]
 							if ${Iterator.Key.Equal[#]}
-								_istrAbility#:Set[${j},${Iterator.Value}]
+							{
+								str#temp:Set[${Iterator.Value}]
+								_istrAbility#:Set[${j},${str#temp.Replace[">",""]}]
+							}
 							if ${Iterator.Key.Equal[%]}
-								_istrAbility%:Set[${j},${Iterator.Value}]
+							{
+								str%temp:Set[${Iterator.Value}]
+								_istrAbility%:Set[${j},${str%temp.Replace[">",""]}]
+							}
 							if ${Iterator.Key.Equal[__SourceName]}
 								_istrAbilities:Insert[${Iterator.Value}]
 							if ${Iterator.Key.Equal[Type]}
@@ -2613,7 +2622,7 @@ objectdef RI_Object_CB
 				;echo | Type:${temp}
 				UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:SelectItem[${UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI].ItemByText[${temp}].ID}]
 		
-				if ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}]}>0
+				if ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}]}>0 || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[1,|].Equal[Clearwater Current]}
 				{
 					UIElement[CastStackSkipDurationCheckBox@CastStackFrame@CombatBotUI]:Show
 					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| SD"](exists)}
@@ -2764,7 +2773,7 @@ objectdef RI_Object_CB
 	}
 	method AddCastStackAbilitiesListBoxItem(string _AbilityDisabled, string _AbilityName, int _ExportPosition, string _Type, string _Target, string _%, string _#, string _SD, string _SE, string _SAE, string _RIE , string _MAX, int _Savagery, int _DissonanceLess,int _DissonanceGreater)
 	{
-		echo ${_AbilityName}:${_#}
+		;echo ${_AbilityName}:${_#}
 		variable string temp=""
 		temp:Set["${_AbilityName}"]
 		if ${_SD.Equal[TRUE]}
@@ -2777,13 +2786,29 @@ objectdef RI_Object_CB
 			temp:Concat[" | RIE"]
 		if ${_#.NotEqual[FALSE]}
 		{
-			if ${_#}>0
-				temp:Concat[" | #=${_#}"]
+			if ${_#.Find[">"](exists)}
+			{
+				if ${_#.Replace[">",""]}>0
+					temp:Concat[" | #=${_#.Replace[">",""]}"]
+			}
+			else
+			{
+				if ${_#}>0
+					temp:Concat[" | #=${_#}"]
+			}
 		}
 		if ${_%.NotEqual[FALSE]}>0
 		{
-			if ${_%}>0
-				temp:Concat[" | %=${_%}"]
+			if ${_%.Find[">"](exists)}
+			{
+				if ${_%.Replace[">",""]}>0
+					temp:Concat[" | %=${_%.Replace[">",""]}"]
+			}
+			else
+			{
+				if ${_%}>0
+					temp:Concat[" | %=${_%}"]
+			}
 		}
 		if ${_MAX.Equal[TRUE]}
 			temp:Concat[" | Max"]
@@ -3415,6 +3440,7 @@ objectdef RI_Object_CB
 				UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].Items}]:SetTextColor[FF636363]
 			}
 			SetTargets:Set[1]
+			This:LoadRaidGroupList
 		}
 	}
 	method AliasListClick()
@@ -3455,6 +3481,7 @@ objectdef RI_Object_CB
 		{
 			UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI]:RemoveItem[${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].SelectedItem.ID}]
 			SetTargets:Set[1]
+			This:LoadRaidGroupList
 		}
 	}
 	method AliasesLoadRaidGroupList()
@@ -3477,6 +3504,20 @@ objectdef RI_Object_CB
 		UIElement[AliasesRaidGroupListBox@AliasesFrame@CombatBotUI]:ClearItems
 		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:ClearItems
 		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:ClearItems
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Tank]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@DPS1]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@DPS2]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Healer1]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Healer2]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Enchanter]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Bard]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Tank]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@DPS1]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@DPS2]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Healer1]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Healer2]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Enchanter]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Bard]
 		variable int i=0
 		if ${Me.Raid}>0
 		{
@@ -3530,6 +3571,13 @@ objectdef RI_Object_CB
 	{
 		variable int i=0
 		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:ClearItems
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Tank]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@DPS1]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@DPS2]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Healer1]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Healer2]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Enchanter]
+		UIElement[AssistRaidGroupListBox@AssistFrame@CombatBotUI]:AddItem[@Bard]
 		if ${Me.Raid}>0
 		{
 			for(i:Set[1];${i}<=${Me.Raid};i:Inc)
@@ -3551,6 +3599,13 @@ objectdef RI_Object_CB
 		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@NotSelfGroup]
 		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@PCTarget]
 		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Raid]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Tank]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@DPS1]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@DPS2]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Healer1]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Healer2]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Enchanter]
+		UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:AddItem[@Bard]
 
 		if ${ME.Raid}>0
 		{
@@ -3709,6 +3764,61 @@ objectdef RI_Object_CB
 					; {
 						; UIElement[CastStackSavageryText@CastStackFrame@CombatBotUI]:Hide
 						; UIElement[CastStackSavageryTextEntry@CastStackFrame@CombatBotUI]:Hide
+					; }
+					; if ${istrExportDissonanceCost.Get[${ExportPosition}]}>0 || 
+					; {
+						; UIElement[CastStackDissonanceLessText@CastStackFrame@CombatBotUI]:Show
+						; UIElement[CastStackDissonanceLessTextEntry@CastStackFrame@CombatBotUI]:Show
+						; UIElement[CastStackDissonanceGreaterText@CastStackFrame@CombatBotUI]:Show
+						; UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI]:Show
+					; }
+					; else
+					; {
+						UIElement[CastStackDissonanceLessText@CastStackFrame@CombatBotUI]:Hide
+						UIElement[CastStackDissonanceLessTextEntry@CastStackFrame@CombatBotUI]:Hide
+						UIElement[CastStackDissonanceGreaterText@CastStackFrame@CombatBotUI]:Hide
+						UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI]:Hide
+					;}
+					return
+				}
+				if ${istrExport.Get[${ExportPosition}].Find["Confront Fear"](exists)}
+				{
+					if ${CombatBotCSCDebug}
+						echo ISXRI: CombatBot: IsACure/ICT/CF
+					This:ClearOptions
+					;if ${istrExportIsGroupAbility.Get[${ExportPosition}].Equal[TRUE]} || ${istrExportIsSelfAbility.Get[${ExportPosition}].Equal[TRUE]}
+						;UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:Hide;UIElement[CastStackTargetText@CastStackFrame@CombatBotUI]:Hide
+					;else
+						UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:Show;UIElement[CastStackTargetText@CastStackFrame@CombatBotUI]:Show
+					UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:ClearItems
+					UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[Cure]
+					UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[InCombatTargeted]
+					;if ${istrExportIsGroupAbility.Get[${ExportPosition}].Equal[TRUE]}
+					;{
+						;UIElement[CastStackRequired#Text@CastStackFrame@CombatBotUI]:Show
+						;UIElement[CastStackRequired#TextEntry@CastStackFrame@CombatBotUI]:Show
+					;}
+					;else
+					;{
+						UIElement[CastStackRequired#Text@CastStackFrame@CombatBotUI]:Hide
+						UIElement[CastStackRequired#TextEntry@CastStackFrame@CombatBotUI]:Hide
+			;		}
+					UIElement[CastStack%Text@CastStackFrame@CombatBotUI]:Hide
+					UIElement[CastStack%TextEntry@CastStackFrame@CombatBotUI]:Hide
+					UIElement[CastStackSkipDurationCheckBox@CastStackFrame@CombatBotUI]:Hide
+					UIElement[CastStackRequiresMaxIncrementsCheckBox@CastStackFrame@CombatBotUI]:Hide
+					UIElement[CastStackSkipEncounterCheckBox@CastStackFrame@CombatBotUI]:Hide
+					UIElement[CastStackSkipAECheckBox@CastStackFrame@CombatBotUI]:Hide
+					UIElement[CastStackSkipEncounterCheckBox@CastStackFrame@CombatBotUI]:Hide
+					; if ${istrExportSavageryCost.Get[${ExportPosition}]}>0
+					; {
+						 ;UIElement[CastStackSavageryText@CastStackFrame@CombatBotUI]:Show
+						; UIElement[CastStackSavageryTextEntry@CastStackFrame@CombatBotUI]:Show
+					; }
+					; else
+					; {
+						 UIElement[CastStackSavageryText@CastStackFrame@CombatBotUI]:Hide
+						 UIElement[CastStackSavageryTextEntry@CastStackFrame@CombatBotUI]:Hide
 					; }
 					; if ${istrExportDissonanceCost.Get[${ExportPosition}]}>0 || 
 					; {
@@ -3969,7 +4079,7 @@ objectdef RI_Object_CB
 					}
 					UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:Show
 					UIElement[CastStackTargetText@CastStackFrame@CombatBotUI]:Show
-					if ${istrExportMaxDuration.Get[${ExportPosition}]}>0
+					if ${istrExportMaxDuration.Get[${ExportPosition}]}>0 || ${istrExport.Get[${ExportPosition}].Equal[Clearwater Current]}
 						UIElement[CastStackSkipDurationCheckBox@CastStackFrame@CombatBotUI]:Show
 					else
 						UIElement[CastStackSkipDurationCheckBox@CastStackFrame@CombatBotUI]:Hide
@@ -5600,32 +5710,37 @@ function main()
 		{
 			for(i:Set[1];${i}<=${istrCurses.Used};i:Inc)
 			{
-				;echo checking ${istrCurses.Get[${i}]} for Curse
+				if ${RI_Var_Bool_CurseCallDebug}
+					echo ISXRI: Checking ${istrCurses.Get[${i}]} for Curse
 				if ${Me.Raid}>0 
 				{
-					if ${Me.Raid[${istrCurses.Get[${i}]}].Cursed}==1
+					if ${Me.Raid[${istrCurses.Get[${i}]}].Cursed}>0
 					{
-						;echo yes they are cursed, Curing
+						if ${RI_Var_Bool_CurseCallDebug}
+							echo ISXRI: ${istrCurses.Get[${i}]} is Cursed, Curing
 						RI_Obj_CB:CastOn[Cure Curse,${istrCurses.Get[${i}]},TRUE]
 						break
 					}
 					else
 					{
-						;echo not cursed, Removing from index 
+						if ${RI_Var_Bool_CurseCallDebug}
+							echo ISXRI: ${istrCurses.Get[${i}]} is not Cursed, Removing from Index
 						istrCurses:Remove[${i}]
 					}
 				}
 				else
 				{
-					if ${Me.Group[${istrCurses.Get[${i}]}].Cursed}==1
+					if ${Me.Group[${istrCurses.Get[${i}]}].Cursed}>0
 					{
-						;echo yes they are cursed, Curing
+						if ${RI_Var_Bool_CurseCallDebug}
+							echo ISXRI: ${istrCurses.Get[${i}]} is Cursed, Curing
 						RI_Obj_CB:CastOn[Cure Curse,${istrCurses.Get[${i}]},TRUE]
 						break
 					}
 					else
 					{
-						;echo not cursed, Removing from index 
+						if ${RI_Var_Bool_CurseCallDebug}
+							echo ISXRI: ${istrCurses.Get[${i}]} is not Cursed, Removing from Index
 						istrCurses:Remove[${i}]
 					}
 				}
@@ -7436,7 +7551,7 @@ atom EQ2_FinishedZoning(string TimeInSeconds)
 	}
 	if ${UIElement[SettingsAutoShareMissionsCheckBox@SettingsFrame@CombatBotUI].Checked}
 	{
-		RIMUIObj:ShareMissions["${Zone.Name}","${_ZoneTier}",1]
+		RIMUIObj:ShareMissions["${Zone.Name}",1]
 	}
 }
 ;atom triggered when ChoiceWindow is detected
@@ -7880,11 +7995,15 @@ atom EQ2_onIncomingText(string Text)
 		if ${Text.Find["You say"](exists)} || ${Text.Find["You shout"](exists)}
 		{
 			CurseName:Set[${Me.Name}]
+			if ${RI_Var_Bool_CurseCallDebug}
+				echo ISXRI: Adding ${CurseName} to Curse Cure Index
 		}
 		else
 		{
 			strTemp1:Set[${Text.Right[-${Text.Find[":"]}]}]
 			CurseName:Set[${strTemp1.Left[-${Math.Calc[${strTemp1.Length}-${strTemp1.Find[/a]}+1]}]}]
+			if ${RI_Var_Bool_CurseCallDebug}
+				echo ISXRI: Adding ${CurseName} to Curse Cure Index
 		}
 	}
 	if ${Text.Find["${RI_Var_String_CB_ConfrontFearText}"](exists)}
@@ -8154,7 +8273,128 @@ objectdef CheckAbilitiesObject
 	}
 	member:int RaidGroupMember(string _member)
 	{
-		variable int tempid
+		;echo ${_member}
+		variable int tempid=0
+		variable int i=0
+		variable int inc=0
+		if ${_member.Equal[@Tank]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${RIMUIObj.Archetype[${Me.Group[${i}].ID}].Equal[fighter]}
+				{
+					tempid:Set[${Me.Group[${i}].ID}]
+					if ${tempid}>0
+						return ${tempid}
+				}
+			}
+		}
+		if ${_member.Equal[@Enchanter]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Class.Equal[coercer]} || ${Me.Group[${i}].Class.Equal[illusionist]}
+				{
+					tempid:Set[${Me.Group[${i}].ID}]
+					if ${tempid}>0
+						return ${tempid}
+				}
+			}
+		}
+		if ${_member.Equal[@Bard]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Class.Equal[dirge]} || ${Me.Group[${i}].Class.Equal[troubador]}
+				{
+					tempid:Set[${Me.Group[${i}].ID}]
+					if ${tempid}>0
+						return ${tempid}
+				}
+			}
+		}
+		if ${_member.Equal[@Healer1]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${RIMUIObj.Archetype[${Me.Group[${i}].ID}].Equal[priest]}
+				{
+					tempid:Set[${Me.Group[${i}].ID}]
+					if ${tempid}>0
+						return ${tempid}
+				}
+			}
+		}
+		if ${_member.Equal[@Healer2]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${RIMUIObj.Archetype[${Me.Group[${i}].ID}].Equal[priest]}
+				{
+					if ${inc}>0
+					{
+						tempid:Set[${Me.Group[${i}].ID}]
+						if ${tempid}>0
+							return ${tempid}
+					}
+					else
+						inc:Inc
+				}
+			}
+		}
+		if ${_member.Equal[@DPS1]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Class.Equal[ranger]} || ${Me.Group[${i}].Class.Equal[assassin]} || ${Me.Group[${i}].Class.Equal[swashbuckler]} || ${Me.Group[${i}].Class.Equal[brigand]} || ${Me.Group[${i}].Class.Equal[warlock]} || ${Me.Group[${i}].Class.Equal[wizard]} || ${Me.Group[${i}].Class.Equal[conjuror]} || ${Me.Group[${i}].Class.Equal[necromancer]} || ${Me.Group[${i}].Class.Equal[beastlord]}
+				{
+					tempid:Set[${Me.Group[${i}].ID}]
+					if ${tempid}>0
+						return ${tempid}
+				}
+			}
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Class.Equal[dirge]} || ${Me.Group[${i}].Class.Equal[troubador]} || ${Me.Group[${i}].Class.Equal[coercer]} || ${Me.Group[${i}].Class.Equal[illusionist]}
+				{
+					tempid:Set[${Me.Group[${i}].ID}]
+					if ${tempid}>0
+						return ${tempid}
+				}
+			}
+		}
+		if ${_member.Equal[@DPS2]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Class.Equal[ranger]} || ${Me.Group[${i}].Class.Equal[assassin]} || ${Me.Group[${i}].Class.Equal[swashbuckler]} || ${Me.Group[${i}].Class.Equal[brigand]} || ${Me.Group[${i}].Class.Equal[warlock]} || ${Me.Group[${i}].Class.Equal[wizard]} || ${Me.Group[${i}].Class.Equal[conjuror]} || ${Me.Group[${i}].Class.Equal[necromancer]} || ${Me.Group[${i}].Class.Equal[beastlord]}
+				{
+					if ${inc}>0
+					{
+						tempid:Set[${Me.Group[${i}].ID}]
+						if ${tempid}>0
+							return ${tempid}
+					}
+					else
+						inc:Inc
+				}
+			}
+			inc:Set[0]
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Class.Equal[dirge]} || ${Me.Group[${i}].Class.Equal[troubador]} || ${Me.Group[${i}].Class.Equal[coercer]} || ${Me.Group[${i}].Class.Equal[illusionist]}
+				{
+					if ${inc}>0
+					{
+						tempid:Set[${Me.Group[${i}].ID}]
+						if ${tempid}>0
+							return ${tempid}
+					}
+					else
+						inc:Inc
+				}
+			}
+		}
 		if ${Me.Raid}>0
 		{
 			tempid:Set[${Me.Raid[${_member}].ID}]
@@ -8605,7 +8845,7 @@ objectdef CheckAbilitiesObject
 				}
 			}
 			;then check if MaxDuration is >0 and ignore duration is set to false
-			elseif ( ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0 || ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==-1 ) && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[7,|].NotEqual[TRUE]}
+			elseif ( ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}>0 || ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}==-1 || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].Equal[Clearwater Current]} ) && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[7,|].NotEqual[TRUE]}
 			{
 				;echo Maintained Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}]}
 				;echo checking maintained because duration is either >0 or -1
@@ -9566,8 +9806,8 @@ objectdef CheckAbilitiesObject
 							}
 						}
 					}
-					;check if ability requires flanking   --- NO LONGER NEEDED AS OF 1-5-17 PATCH BY EQ2 MADE ABILITIES GREY OUT WHEN NOT BEHIND/FLANKING
-					if ${CombatBotDoBackFlankCalcs} && !${Me.Maintained[Unfetter](exists)}
+					;check if ability requires flanking   --- NO LONGER NEEDED AS OF 1-5-17 PATCH BY EQ2 MADE ABILITIES GREY OUT WHEN NOT BEHIND/FLANKING - They Reversed it
+					if ${CombatBotDoBackFlankCalcs} && ( !${Me.Maintained[Unfetter](exists)} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].NotEqual[Rear Shot]} )
 					{
 						if ${istrExportReqFlanking.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]}
 						{
@@ -10602,8 +10842,8 @@ objectdef CheckAbilitiesObject
 				}
 				;echo after maintained check
 				;echo after maintained checking ${count}
-				;check if ability requires flanking   --- NO LONGER NEEDED AS OF 1-5-17 PATCH BY EQ2 MADE ABILITIES GREY OUT WHEN NOT BEHIND/FLANKING
-				if ${CombatBotDoBackFlankCalcs} && !${Me.Maintained[Unfetter](exists)}
+				;check if ability requires flanking   --- NO LONGER NEEDED AS OF 1-5-17 PATCH BY EQ2 MADE ABILITIES GREY OUT WHEN NOT BEHIND/FLANKING - Reversed
+				if ${CombatBotDoBackFlankCalcs} && ( !${Me.Maintained[Unfetter](exists)} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|].NotEqual[Rear Shot]} )
 				{
 					if ${istrExportReqFlanking.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}].Equal[TRUE]}
 					{

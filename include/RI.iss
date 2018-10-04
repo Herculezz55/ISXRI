@@ -1,3 +1,5 @@
+;;;;;;;;;;; STILL NEED TO TAKE RELAY ALL OUT OF POPs
+
 
 ;coming soon
 ;moving MY Boss Code to Extension to make the CustomNamed smaller, so people can make their custom code. - FORGET THAT, They use my code or suck a dick -- DONE
@@ -3163,6 +3165,154 @@
 ;			Solusek Ro's Tower: The Obsidian Core
 ;				Added pathing at end for Shiny
 
+;v5.76 Changes 9-13-18
+; 	RQ
+;		Added
+;			The new "Travels" of Yun Zi - Thundering Steppes By Steppes
+;	RIMUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			*method CancelMaintained(... args)
+;				Accepts an unlimited amount of args in sets of 2
+;					string _ForWho, string _MaintainedAbiltyName
+;		Modified RIMUIObj Method's, Member's and *Button's
+;			*method UseItem(... args)
+;				Fixed a bug that was ignoring this method
+;			*method CancelMaintained(... args)
+;				Fixed a bug that was ignoring this method
+;	RZ
+;		Fixed a typo in Plane of Innovation: Parts Not Included [Duo]
+;	RI
+;		Added
+;			The Fabled Ruins of Guk: Halls of the Fallen
+;				Pathing for zone (manual intervention required for puzzle)
+;				Lord Kurpep
+;					Auto targets adds
+;					Paths back from up top
+;		Modified
+;			Plane of Innovation: Parts Not Included
+;				Fixit Omegatock
+;					Moved LockSpot
+;					Now Overload's systems in Duo
+;					Now Auto targets scrap mites
+;			Solusek Ro's Tower: The Obsidian Core
+;				fixed a bug that was not looting the bodies while waiting
+;				to engage balrezu
+;			Torden Zones
+;				Fixed pathing bug in Expert's after last named
+;				Fixed a bug with Looting of last chest for RILoot
+;			Shard of Hare
+;				Morghorb
+;					reversed changes
+
+
+;v5.77 Changes 9-18-18
+;	RQ
+;		Added
+;			The new "Travels" of Yun Zi - Disenchanting the Enchanted
+;	RIMUI
+;
+;		Added 
+;			All rimui buttons will now echo their underlying command structure to RIConsole
+;			RelayGroup CheckBox
+;				This will relay only to the toon clicking the button's currently set relaygroup
+;				That is set in RI_Var_String_RelayGroup
+;				RI sets this, you can also set it manually in console by typing relay all rg, when in your setup group
+;	RI
+;		Fixed a bug that was not sharing missions in SoH
+;		Modified
+;			Solusek Ro's Tower: The Obsidian Core
+;				Balrezu
+;					Fixed a bug that was not exiting the loop before expiration when
+;					all the scorch fiends have been cleared
+;			Shard of Hate: Utter Contempt
+;				Added
+;					Hateful Plate (RI Pull Hateful)
+;						Removes weapons as needed
+;					Gruesome Twosome (RI Pull Twosome)
+;						Tries (it's very best) to joust Yellow Circles (have not found a way to read the actual circles)
+;						Kills Estir then Laxil'Vas
+;						Keeps appropriate adds up
+;						Cures correct toons
+;						Turns off AE's and Encounter Hostiles
+;						Turns on Singular Focus/Focused Offensive
+;					Cantankerous Triumvirate (RI Pull Triumvirate)
+;						Tries (it's very best) to joust Yellow Circles (have not found a way to read the actual circles)
+;						Kills Estir/Laxil'Vas then Ragash'Ta
+;						Keeps appropriate adds up
+;						Cures correct toons when nox is up otherwise cures trauma
+;						Turns off AE's and Encounter Hostiles
+;						Turns on Singular Focus/Focused Offensive
+;
+;v5.78 Changes 9-18-18
+;	RQ
+;		Added (For Real)
+;			The new "Travels" of Yun Zi - Disenchanting the Enchanted
+
+
+;v5.79 Changes 9-25-18
+;	RQ
+;		Added
+;			The new "Travels" of Yun Zi - To Zek With It
+;	CoT
+;		Added 10s wait before invoking
+;	RI
+;		Modified
+;			Plane of Disease: Infested Mesa
+;				Turned off StopForCombat on Bridge
+;			Plane of Disease: The Source
+;				Rancine
+;					Solo only: now targets lesion of doom while jousted
+;			Shard of Hate: Utter Contempt
+;				Added
+;					Ulvaug the Bloodfang (RI Pull Ulvaug)
+;						Toons will cast while moving
+;						Toons will joust into Ulvaug belly on curse
+;						Toons will joust behind on spray
+;						Auto targets adds
+;						Fighters and scouts will auto joust within melee of Blood of Ulvaug
+;			Shard of Hate: Udder Contempt
+;				Modified
+;					Topsir
+;						Fixed spawning
+
+;v5.80 Changes 10-2-18
+;	RQ
+;		Added
+;			The new "Travels" of Yun Zi - Feerrott Not, I Shall Find You
+; 	RIMUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			member:string 3rdPointLine(float x1, float y1, float x2, float y2, float distance)
+;				calculates the 3rd point in a line given point 1 (x1,y1) and point 2 (x2,y2) at distance away from point 2
+;				returns x3,y3 as string
+;	RI
+;		Modified
+;			Plane of Innovation: Masks of the Marvelous
+;				Scrounger
+;					Now sends toons to campspots based on Index in GroupArray from MainToon 
+;					instead of session number
+;			Plane of Disease: Outbreak
+;				High Dragoon Va'Liar
+;					Added a 2nd set of lockspots for after the adds are killed
+;				Rallius Rattican
+;					Toons will now cancel casting upon port
+
+;v5.81 Changes 10-9-18
+;	RQ
+;		Modified
+;			Assumed Identity
+;				Corrected spelling of quest update
+
+; HIDDEN UPDATE NOTES
+;	CB
+;		Fixed a bug that was not maintaining Clearwater Current
+;		Added @Tank,@Healer1,@Healer2,@DPS1,@DPS2,@Enchanter,@Bard - These will logically choose the toon in your group
+
+;NOTE: Topsir's Revenge is a Frontal and Loins Reconing is a Rear KB
+
+;					
+
+;		TODO: Added code to maintain Confront Fear (Will use a index:string and on cast add the CastTarget to the index:String then Timedcommand remove them after duration seconds, then on the checker for that particular ability check if they are in the index:string)
+
 ;;;;;;;;;; IMPORTANT TODO: STUCK ROUTINE FOR MOVE FUNCTION, INCLUDING COLAB WITH SHINY FUNCTION (READ NOTES IN SHINY FUNCTION);;;;;;;;;
 
 
@@ -3170,7 +3320,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.75
+variable(global) float RI_Var_Float_Version=5.81
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -3201,6 +3351,7 @@ variable(global) string RI_Var_String_Poison4Name="Expert Marked Target"
 variable(global) string RI_Var_String_Poison5Name="Expert Warding Ebb"
 variable(global) string RI_Var_String_FoodName="Stormborn Souffle"
 variable(global) string RI_Var_String_DrinkName="Monsoon"
+variable(global) bool RI_Var_Bool_RIMUICommandsEchoToConsole=TRUE
 variable(global) bool RI_Var_Bool_WaitForHealth=TRUE
 variable(global) bool RI_Var_Bool_Debug=FALSE
 variable(global) bool RI_Var_Bool_LootDebug=FALSE
@@ -3218,7 +3369,7 @@ variable(global) bool RI_Var_Bool_GlobalOthers=FALSE
 variable(global) bool RI_Var_Bool_Start=FALSE
 variable(global) bool RI_Var_Bool_Paused=FALSE
 variable(global) int RI_Var_Int_BadChestCnt=0
-variable(global) string RI_Var_String_RelayGroup=NONE
+variable(global) string RI_Var_String_RelayGroup=ALL
 variable(global) string RI_Var_Int_RelayGroupSize=0
 variable(global) bool _RI_LootImmunity_=FALSE
 variable string RI_Var_String_ButtonToChange
@@ -4482,6 +4633,8 @@ variable(global) string RI_String_RIMUI_BTNR7C7F10Com="noop"
 variable(global) string RI_String_RIMUI_BTNR8C7F10Com="noop"
 variable(global) string RI_String_RIMUI_BTNR9C7F10Com="noop"
 variable(global) string RI_String_RIMUI_BTNR10C7F10Com="noop"
+variable(global) string RI_String_RIMUI_RelayTarget="ALL"
+variable bool RelayGroupChecked=FALSE
 variable bool NearesetNPCHudLoaded=FALSE
 variable bool NearesetPlayerHudLoaded=FALSE
 variable bool RaidGroupHudLoaded=FALSE
@@ -4501,7 +4654,13 @@ function main()
 {
 	;disable RI_Var_Bool_Debugging
 	Script:DisableDebugging
-
+	
+	;if RelayGroup is check on rimui chage RI_String_RIMUI_RelayTarget to \${RI_Var_String_RelayGroup}
+	if ${UIElement[RelayGroup@Titlebar@RIMovementUI].Checked}
+		RI_String_RIMUI_RelayTarget:Set["\${RI_Var_String_RelayGroup}"]
+	else
+		RI_String_RIMUI_RelayTarget:Set["ALL"]
+	
 	;check if RIMUI.xml exists, if not create
 	;FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/"]
 	if !${FP.PathExists}
@@ -4688,6 +4847,8 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[BalanceTrash - Turns on/off Balancing of trash mobs with RunInstances (must be done on Main session aka Tank)]
 	RI_Index_String_AvailableRIMUICommands:Insert[CancelAllMaintained]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[CancelAllMaintained - Cancels all Maintained Abilities\n\nArgument 1: For Who]
+	RI_Index_String_AvailableRIMUICommands:Insert[CancelMaintained]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[CancelMaintained - Cancels Maintained Abilities\nRequires CombatBot to use Base Ability Names\nAccepts Unlimited Arguments in sets of 2\n\nArgument 1: For Who\nArgument 2:Maintained Ability to Cancel]
 	RI_Index_String_AvailableRIMUICommands:Insert[CallGH]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[CallGH - Calls to the Guild Hall\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[CampCharacterSelect]
@@ -4807,7 +4968,7 @@ function main()
 	RI_Index_String_AvailableRIMUICommands:Insert[ResumeRIM]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ResumeRIM - Resumes RIMovement\n\nArgument 1: For Who\n]
 	RI_Index_String_AvailableRIMUICommands:Insert[Revive]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Revive - Revives at junction 0\n\nArgument 1: For Who]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Revive - Revives at junction\n\nArgument 1: For Who\n\nArgument 2: Junction (Default: 0)]
 	RI_Index_String_AvailableRIMUICommands:Insert[RIFollowChange]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RIFollowChange - Changes min of RIFollow\n\nArgument 1: For Who (Default: ALL)\nArgument 2: Change(#)]
 	RI_Index_String_AvailableRIMUICommands:Insert[RIFollowPop]
@@ -4969,19 +5130,19 @@ function main()
 	}
 	while 1
 	{
-		if ${_BALREZUSCRIPTRUNNING}
-		{
-			if ${Actor[corpse,radius,8](exists)} && ${Actor[Query, Name=-"Balrezu"](exists)}
-			{
-				if ${RI_Var_Bool_Debug}
-					echo ISXRI: ${Time}: Looting ${Actor[corpse,radius,10]}
+		; if ${_BALREZUSCRIPTRUNNING}
+		; {
+			; if ${Actor[corpse,radius,8](exists)} && ${Actor[Query, Name=-"Balrezu"](exists)}
+			; {
+				; if ${RI_Var_Bool_Debug}
+					; echo ISXRI: ${Time}: Looting ${Actor[corpse,radius,10]}
 				
-				;loot corpse via apply verb
-				eq2ex apply_verb ${Actor[corpse,radius,10].ID} Loot
-			}
-			if ${Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"](exists)}
-				Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"]:Destroy
-		}
+				;;loot corpse via apply verb
+				; eq2ex apply_verb ${Actor[corpse,radius,10].ID} Loot
+			; }
+			; if ${Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"](exists)}
+				; Me.Inventory[Query, Location=="Inventory" && Name=="Obsidian Sun Disc"]:Destroy
+		; }
 		if ${RI_Var_Bool_Podts}
 		{
 			if ${RI_Var_Bool_Podtstombhorrow}
@@ -5125,10 +5286,10 @@ function main()
 														LootWindow.ItemsPage.Child[${ChildrenCounter}]:LeftClick
 														LootWindow.LeaderAssign:LeftClick
 														wait 5
-														relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:RequestAll
-														relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:LootAll
+														relay "other ${RI_Var_String_RelayGroup}" LootWindow:RequestAll
+														relay "other ${RI_Var_String_RelayGroup}" LootWindow:LootAll
 														wait 5
-														;relay "other ${RI_Var_Bool_RelayGroup}" LootWindow:Receive
+														;relay "other ${RI_Var_String_RelayGroup}" LootWindow:Receive
 														;set our counter over the break to end the for loop
 														AILCounter:Set[${Math.Calc[${UIElement[AddedItemsListbox@RILoot].Items}+1]}]
 													}
@@ -6979,6 +7140,11 @@ objectdef RIConsoleObject
 		if ${UIElement[RIConsole](exists)}
 			UIElement[RIConsole]:Show
 	}
+	method EchoVanilla(string _Message)
+	{
+		if ${UIElement[RIConsole](exists)}
+			UIElement[RIConsole@RIConsole]:Echo["${_Message}"]
+	}
 	method Echo(string _Message, bool _ShowConsole=FALSE, int _FlashConsoleTimeInSeconds=0, bool _PlayAlarm=FALSE)
 	{
 		if ${_ShowConsole}
@@ -7020,6 +7186,101 @@ objectdef RIConsoleObject
 }
 objectdef RIMUIObject
 {
+	member:string 3rdPointLine(float x1, float y1, float x2, float y2, float distance)
+	{
+		distance:Set[${Math.Calc[${Math.Distance[${x1},${y1},${x2},${y2}]}+${distance}]}]
+		variable float dx
+		variable float dx2
+		variable float dy
+		variable float dy2
+		variable float k
+		variable float distance2
+		variable float dx2y2
+		variable float distance2dx2y2
+		variable float x3
+		variable float y3
+		distance2:Set[${Math.Calc[${distance}*${distance}]}]
+		dx:Set[${Math.Calc[${x2}-${x1}]}]
+		dy:Set[${Math.Calc[${y2}-${y1}]}]
+		dx2:Set[${Math.Calc[${dx}*${dx}]}]
+		dy2:Set[${Math.Calc[${dy}*${dy}]}]
+		dx2y2:Set[${Math.Calc[${dx2}+${dy2}]}]
+		distance2dx2y2:Set[${Math.Calc[${distance2}/${dx2y2}]}]
+		k:Set[${Math.Sqrt[${distance2dx2y2}]}]
+		x3:Set[${Math.Calc[${x1}+${dx}*${k}]}]
+		y3:Set[${Math.Calc[${y1}+${dy}*${k}]}]
+		return "${x3},${y3}"
+	}
+	method ButtonExecute(string _Button)
+	{
+		;echo ${_Button}
+		;echo RIConsole:Echo["${RI_String_RIMUI_${_Button}Com}"]
+		if ${RI_Var_Bool_RIMUICommandsEchoToConsole}
+			RIConsole:EchoVanilla["${RI_String_RIMUI_${_Button}Com}"]
+		;echo execute relay ${RI_String_RIMUI_RelayTarget} ${RI_String_RIMUI_${_Button}Com}
+		execute relay ${RI_String_RIMUI_RelayTarget} ${RI_String_RIMUI_${_Button}Com}
+	}
+	member:string Archetype(string _Actor)
+	{
+		variable int _ID
+		if ${Int[${_Actor}]}>5
+		{
+			_ID:Set[${Int[${_Actor}]}]
+		}
+		elseif ${Int[${_Actor}]}>0
+		{
+			_ID:Set[${Me.Group[${Int[${_Actor}]}].ID}]
+		}
+		else
+		{
+			_ID:Set[${Actor[Query, Name=-"${_Actor}"].ID}]
+		}
+		switch ${Actor[Query, ID=${_ID}].Class}
+		{
+			case defiler
+			case mystic
+			case warden
+			case fury
+			case templar
+			case inquisitor
+			case channeler
+			{
+				return priest
+				break
+			}
+			case dirge
+			case troubador
+			case assassin
+			case ranger
+			case brigand
+			case swashbuckler
+			case beastlord
+			{
+				return scout
+				break
+			}
+			case monk
+			case bruiser
+			case guardian
+			case berserker
+			case shadowknight
+			case paladin
+			{
+				return fighter
+				break
+			}
+			case coercer
+			case illusionist
+			case wizard
+			case warlock
+			case necromancer
+			case conjuror
+			{
+				return mage
+				break
+			}
+		}
+	}
 	member:int InventoryQuantity(string _Item)
 	{
 		variable index:item _Items
@@ -7387,7 +7648,12 @@ objectdef RIMUIObject
 		;format zonename
 		variable string _FormattedZoneName
 		variable string _ZoneTier
-		if ${Zone.Name.Find["[Heroic]"](exists)} || ${Zone.Name.Find["[Expert]"](exists)}
+		if ${Zone.Name.Find["Shard of Hate: Utter Contempt [Heroic]"](exists)}
+		{
+			_FormattedZoneName:Set["${Zone.Name}"]
+			_ZoneTier:Set["[Heroic]"]
+		}
+		elseif ${Zone.Name.Find["[Heroic]"](exists)} || ${Zone.Name.Find["[Expert]"](exists)}
 		{
 			_FormattedZoneName:Set["${Zone.Name.Left[-9]}"]
 			_ZoneTier:Set["[Heroic]"]
@@ -8040,6 +8306,10 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Antonica or Bust"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Commonlands, Uncommon Heart"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Run Nektulos Forest Run"]
+				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Thundering Steppes By Steppes"]
+				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Disenchanting the Enchanted"]
+				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - To Zek With It"]
+				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Feerrott Not, I Shall Find You"]
 			}
 		}
 	}
@@ -8293,6 +8563,39 @@ objectdef RIMUIObject
 		if ${Pass.Equal[DAF]}
 			This:DisplayAllFactions
 		FactionsInitializing:Set[FALSE]
+	}
+	
+	
+	;;;;; need to finish this
+	function InitializeCurrency(string Pass=NONE)
+	{
+		CurrencyInitializing:Set[TRUE]
+		;this opens every faction dropdown
+		eq2ex TOGGLEPERSONA
+		wait 5
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,13]:SetProperty[visible,TRUE]
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,2]:SetProperty[visible,FALSE]
+		wait 5
+		variable index:collection:string test
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,13].Child[Page,2]:GetOptions[test]
+		
+		variable int count
+		for(count:Set[0];${count}<${test.Used};count:Inc)
+		{
+			EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,13].Child[Page,2]:Set[${count}]
+			wait 5
+		}
+		wait 5
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,13]:SetProperty[visible,FALSE]
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,2]:SetProperty[visible,TRUE]
+		wait 5
+		eq2ex TOGGLEPERSONA
+		NumCurrency:Set[${EQ2UIPage[Mainhud,Persona].Child[page,Persona.MainPage.CurrencyPage.currencylist.scrollpage].NumChildren}]
+		;if ${Pass.Equal[IF]}
+		;	echo ISXRI: Done Initializing Factions
+		if ${Pass.Equal[DAC]}
+			This:DisplayAllCurrency
+		CurrencyInitializing:Set[FALSE]
 	}
 	method TravelMapPop(string TForWho, string ForWho=~NONE~)
 	{
@@ -9011,13 +9314,25 @@ objectdef RIMUIObject
 	}
 	method UseItem(... args)
 	{
+		
 		variable int _count=0
 		for(_count:Set[1];${_count}<=${args.Size};_count:Inc)
 		{
+			;echo UseItem: ${args[${_count}]} // ${args[${Math.Calc[${_count}+1]}]} // \${Me.Inventory[Query,Location=="Inventory" && Name=-"${args[${Math.Calc[${_count}+1]}]}"](exists)} // ${Me.Inventory[Query,Location=="Inventory" && Name=-"${args[${Math.Calc[${_count}+1]}]}"](exists)}
 			if ${This.ForWhoCheck[${args[${_count}]}]} && ${Me.Inventory[Query,Location=="Inventory" && Name=-"${args[${Math.Calc[${_count}+1]}]}"](exists)}
 				Me.Inventory[Query,Location=="Inventory" && Name=-"${args[${Math.Calc[${_count}+1]}]}"]:Use
 			if ${This.ForWhoCheck[${args[${_count}]}]} && ${Me.Equipment["${args[${Math.Calc[${_count}+1]}]}"](exists)}
 				Me.Equipment["${args[${Math.Calc[${_count}+1]}]}"]:Use
+			_count:Inc
+		}
+	}
+	method CancelMaintained(... args)
+	{
+		variable int _count=0
+		for(_count:Set[1];${_count}<=${args.Size};_count:Inc)
+		{
+			if ${This.ForWhoCheck[${args[${_count}]}]}
+				Me.Maintained[${RI_Obj_CB.ConvertAbility["${args[${Math.Calc[${_count}+1]}]}"]}]:Cancel
 			_count:Inc
 		}
 	}
@@ -9065,6 +9380,7 @@ objectdef RIMUIObject
 	}
 	method ExecuteCommand(string ForWho, string CommandName)
 	{
+		;echo ExecuteCommand(string ${ForWho}, string ${CommandName})
 		if ${This.ForWhoCheck[${ForWho}]}
 		{
 			if ${CommandName.Left[5].Upper.Equal[RELAY]}
@@ -9093,14 +9409,14 @@ objectdef RIMUIObject
 		if ${This.ForWhoCheck[${ForWho}]}
 			Actor[special]:DoubleClick
 	}
-	method Revive(string ForWho)
+	method Revive(string ForWho, int _Junction=0)
 	{
 		if ${This.ForWhoCheck[${ForWho}]}
 		{
 			variable int Rand
 			Rand:Set[${Math.Rand[4]}]
-			Rand:Set[${Math.Calc[${Rand}+1]}]
-			TimedCommand ${Rand} eq2ex "select_junction 0"
+			Rand:Set[${Math.Calc[${Rand}+6]}]
+			TimedCommand ${Rand} eq2ex "select_junction ${_Junction}"
 		}
 	}
 	method FoodDrinkConsume(string ForWho, int OnOff)
@@ -9454,6 +9770,11 @@ objectdef RIMUIObject
 	method UIMedium(int _Save=1)
 	{
 		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml"
+		if ${RelayGroupChecked}	
+			UIElement[RelayGroup@Titlebar@RIMovementUI]:SetChecked
+		else
+			UIElement[RelayGroup@Titlebar@RIMovementUI]:UnsetChecked
+		This:RelayGroup[0]
 		variable int micount1=0
 		variable int mjcount1=0
 		variable int mkcount1=0
@@ -9537,8 +9858,28 @@ objectdef RIMUIObject
 		UIElement[RIMovementUI]:SetHeight[225]
 		UIElement[RIMovementUI]:SetWidth[465]
 		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml"
+		if ${RelayGroupChecked}	
+			UIElement[RelayGroup@Titlebar@RIMovementUI]:SetChecked
+		else
+			UIElement[RelayGroup@Titlebar@RIMovementUI]:UnsetChecked
+		This:RelayGroup[0]
 		if ${_Save}>0
 			RI_Atom_SaveSize Large
+	}
+	method RelayGroup(int _Save=1)
+	{
+		if ${UIElement[RelayGroup@Titlebar@RIMovementUI].Checked}
+		{
+			RI_String_RIMUI_RelayTarget:Set["\${RI_Var_String_RelayGroup}"]
+			RelayGroupChecked:Set[TRUE]
+		}
+		else
+		{
+			RI_String_RIMUI_RelayTarget:Set["ALL"]
+			RelayGroupChecked:Set[FALSE]
+		}
+		if ${_Save}>0
+			RI_Atom_SaveRG ${UIElement[RelayGroup@Titlebar@RIMovementUI].Checked}
 	}
 	method UIEdit()
 	{
@@ -9582,7 +9923,7 @@ objectdef RIMUIObject
 		;}
 		;else
 		;{
-		tempvar:Set["${comvariable.Right[-19].Escape}"]
+		tempvar:Set["${comvariable.Right[-9].Escape}"]
 		;echo ${tempvar.Escape}
 		;echo Command: "${tempvar.Left[${Math.Calc[-1*(${tempvar.Length}-${tempvar.Find["["]})-1]}].Escape}"
 		if ${tempvar.Left[${Math.Calc[-1*(${tempvar.Length}-${tempvar.Find["["]})-1]}].Escape.Length}==0
@@ -9714,9 +10055,9 @@ objectdef RIMUIObject
 			elseif ${UIElement[AddedArgumentsLST@RIMUIEdit].OrderedItem[1](exists)}
 			{
 				if ${UIElement[AvailableCommandsCB@RIMUIEdit].SelectedItem(exists)}
-					tempvar:Set["relay all RIMUIObj:${UIElement[AvailableCommandsCB@RIMUIEdit].SelectedItem}["]
+					tempvar:Set["RIMUIObj:${UIElement[AvailableCommandsCB@RIMUIEdit].SelectedItem}["]
 				elseif ${RI_Var_String_ButtonChangeOriginalCommand.NotEqual[""]} 
-					tempvar:Set["relay all RIMUIObj:${RI_Var_String_ButtonChangeOriginalCommand}["]
+					tempvar:Set["RIMUIObj:${RI_Var_String_ButtonChangeOriginalCommand}["]
 				else
 					echo end here
 			
@@ -9750,7 +10091,7 @@ objectdef RIMUIObject
 			;
 			;
 			;
-			;CODING THE SAVE BUTTON,,, Opposite of above. build the string from relay all RIMUIObj:COMMAND[arg,arg,arg] etc
+			;CODING THE SAVE BUTTON,,, Opposite of above. build the string from RIMUIObj:COMMAND[arg,arg,arg] etc
 			;
 			;Also add a Spread, and Circle RIMUICommands , have 2nd arg be Seed #, or # to rand off for spread and who far from middle man (for man in the middle) for circle or from first man for reg circle
 			;
@@ -11269,6 +11610,14 @@ atom RI_Atom_SaveSize(string Size)
 	Set.FindSet[Size]:AddSetting[Size,"${Size}"]
 	LavishSettings[RIMUI]:Export["${LavishScript.HomeDirectory}/scripts/RI/RIMUICustom.xml"]
 }
+atom RI_Atom_SaveRG(bool Checked)
+{
+	if ${Set.FindSet[RelayGroup](exists)}
+		Set.FindSet[RelayGroup]:Remove
+	Set:AddSet[RelayGroup]
+	Set.FindSet[RelayGroup]:AddSetting[RelayGroup,"${Checked}"]
+	LavishSettings[RIMUI]:Export["${LavishScript.HomeDirectory}/scripts/RI/RIMUICustom.xml"]
+}
 atom RI_Atom_ClearButton(string ButtonName)
 {
 	if ${Set.FindSet["${ButtonName}"](exists)}
@@ -11730,13 +12079,20 @@ atom LoadUI()
 	{
 		RIMUIObj:UILarge[0]
 	}
+	if ${RelayGroupChecked}	
+		UIElement[RelayGroup@Titlebar@RIMovementUI]:SetChecked
+	else
+		UIElement[RelayGroup@Titlebar@RIMovementUI]:UnsetChecked
+	This:RelayGroup[0]
 }
 
 atom IterateSet(settingsetref Set)
 {
 	;set variables
+	variable bool export=FALSE
 	variable string commandT
 	variable string commandC
+	variable string Value
 	variable settingsetref Set4
 	variable int icCount=0
 	variable int jcCount=0
@@ -11768,6 +12124,23 @@ atom IterateSet(settingsetref Set)
 		}
 		while ${SettingIterators:Next(exists)}
 	}
+	Set4:Set[${Set.FindSet[RelayGroup].GUID}]
+	Set4:GetSettingIterator[SettingIterators]
+	
+	if ${SettingIterators:First(exists)}
+	{
+		do
+		{
+			;echo "${SettingIterators.Key}=${SettingIterators.Value}"
+			Value:Set[${SettingIterators.Value}]
+			if ${Value.Equal[TRUE]}
+				RelayGroupChecked:Set[TRUE]
+			else
+				RelayGroupChecked:Set[FALSE]
+			;/* iterator.Key is the name of the setting, and iterator.Value is the setting object, which reduces to the value of the setting */
+		}
+		while ${SettingIterators:Next(exists)}
+	}
 	for(icCount:Set[1];${icCount}<=2;icCount:Inc)
 	{
 		for(jcCount:Set[1];${jcCount}<=10;jcCount:Inc)
@@ -11783,6 +12156,11 @@ atom IterateSet(settingsetref Set)
 					{
 						if ${SettingIterator.Key.Equal[Com]}
 						{
+							if ${SettingIterator.Value.String.Left[9].Equal["relay all"]}
+							{
+								SettingIterator.Value:Set["${SettingIterator.Value.String.Escape.Right[-10]}"]
+								export:Set[1]
+							}
 							commandC:Set["RI_String_RIMUI_BTNR${jcCount}C${icCount}Com:Set[\"\${SettingIterator.Value.String.Escape}\"]"]
 							;this ${${}} parses it as a data sequence 
 							noop ${${commandC}}
@@ -11823,6 +12201,11 @@ atom IterateSet(settingsetref Set)
 						{
 							if ${SettingIterator2.Key.Equal[Com]}
 							{
+								if ${SettingIterator2.Value.String.Left[9].Equal["relay all"]}
+								{
+									SettingIterator2.Value:Set["${SettingIterator2.Value.String.Escape.Right[-10]}"]
+									export:Set[1]
+								}
 								commandC:Set["RI_String_RIMUI_BTNR${jcCount}C${icCount}F${kcCount}Com:Set[\"\${SettingIterator2.Value.String.Escape}\"]"]
 								;this ${${}} parses it as a data sequence 
 								noop ${${commandC}}
@@ -11846,6 +12229,8 @@ atom IterateSet(settingsetref Set)
 			}
 		}
 	}
+	if ${export}
+		LavishSettings[RIMUI]:Export["${LavishScript.HomeDirectory}/scripts/RI/RIMUICustom.xml"]
 }
 atom RI_Atom_RIFollowPop()
 {

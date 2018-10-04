@@ -8,11 +8,29 @@ variable(global) string RI_Var_String_RIGroupLoginScriptName=${Script.Filename}
 variable string TempGroup
 variable bool WaitForSessions=FALSE
 variable int TimeOutCNT=0
-function main(string _Group=~NONE~)
+variable int ISStart=0
+variable string _Group=~NONE~
+function main(... args)
 {
 	;disable Debugging
 	Script:DisableDebugging
-	;echo ${_Group}
+	variable int _count
+	for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
+	{
+		if ${args[${_count}].Upper.Equal[-IS]}
+		{
+			ISStart:Set[${args[${Math.Calc[${_count}+1]}]}]
+			_count:Inc
+		}
+		elseif ${args[${_count}].Upper.Equal[-SESSION]}
+		{
+			ISStart:Set[${args[${Math.Calc[${_count}+1]}]}]
+			_count:Inc
+		}
+		else
+			_Group:Set["${args[${_count}]}"]
+	}
+	;echo ${_Group} // ${ISStart}
 	if ${_Group.NotEqual[~NONE~]} && ${_Group.NotEqual[""]}
 	{
 		if !${_Group.Find[|](exists)}
@@ -29,7 +47,12 @@ function main(string _Group=~NONE~)
 			while ${ISBoxerCharacterSet(exists)} && ${Sessions}<${_Group.Count[|]} && ${TimeOutCNT:Inc}<=300 && ${_Group.Count[|]}<=${Math.Calc[${ISBoxerSlots}-1]}
 				wait 10
 			if ${Sessions}>=${_Group.Count[|]}
-				RIGroupLoginObj:LaunchGroup[${_Group}]
+			{
+				if ${ISStart}>0
+					RIGroupLoginObj:LaunchGroup[${_Group},${ISStart}]
+				else
+					RIGroupLoginObj:LaunchGroup[${_Group}]
+			}
 			elseif !${ISBoxerCharacterSet(exists)}
 				echo ISXRI: RIGroupLogin: ISBoxer Character Set not loaded and you do not have enough sessions to login
 			elseif ${_Group.Count[|]}>${Math.Calc[${ISBoxerSlots}-1]}
@@ -89,7 +112,12 @@ function main(string _Group=~NONE~)
 			while ${Sessions}<${Math.Calc[${TempGroup.Count[|]}+1]} && ${TimeOutCNT:Inc}<=300
 				wait 10
 			if ${Sessions}>=${Math.Calc[${TempGroup.Count[|]}+1]}
-				RIGroupLoginObj:LaunchGroup[${TempGroup}]
+			{
+				if ${ISStart}>0
+					RIGroupLoginObj:LaunchGroup[${_Group},${ISStart}]
+				else
+					RIGroupLoginObj:LaunchGroup[${_Group}]
+			}
 			else
 				ISXRI: RIGroupLogin: Timed out waiting for ${Math.Calc[${TempGroup.Count[|]}+1]} sessions
 			WaitForSessions:Set[0]
@@ -346,9 +374,9 @@ objectdef RIGroupLoginObject
 			This:SaveList
 		}
 	}
-	method LaunchGroup(string _Group)
+	method LaunchGroup(string _Group, int _ISStart=1)
 	{
-		;echo ${_Group}
+		;echo ${_Group} ${_ISStart}
 		if ${_Group.NotEqual[NULL]} && ${_Group.NotEqual[""]}
 		{
 			if ${ISBoxerCharacterSet(exists)} && ${Sessions}<${Math.Calc[${ISBoxerSlots}-1]}
@@ -359,12 +387,14 @@ objectdef RIGroupLoginObject
 				return
 			}
 			variable int i=0
+			variable int j=${_ISStart}
 			for(i:Set[1];${i}<=${Math.Calc[${_Group.Count[|]}+1]};i:Inc)
 			{
 				if ${_Group.Token[${i},|].Find[:](exists)}
-					relay is${i} CB ${_Group.Token[${i},|].Right[${Math.Calc[-1*${_Group.Token[${i},|].Find[:]}]}]}
+					relay is${j} CB ${_Group.Token[${i},|].Right[${Math.Calc[-1*${_Group.Token[${i},|].Find[:]}]}]}
 				else
-					relay is${i} CB ${_Group.Token[${i},|]}
+					relay is${j} CB ${_Group.Token[${i},|]}
+				j:Inc
 			}
 			Script:End
 		}

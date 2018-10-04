@@ -125,7 +125,7 @@ function BuildIndexes()
 	
 	;Zone
 	_Zone:Insert["Plane of Innovation: Parts Not Included [Duo]"]
-	UIElement[ZonesAvail@RZ]:AddItem["Plane of Innovation: Parts Not Included [Duo]]"]
+	UIElement[ZonesAvail@RZ]:AddItem["Plane of Innovation: Parts Not Included [Duo]"]
 	ZoneFrom:Insert["Coliseum of Valor"]
 	ZoneTimer:Insert[90]
 	ZoneExit:Insert["zone_to_valor"]
@@ -839,6 +839,10 @@ function main(... args)
 		if !${ZonesReset}
 		{
 			;open zones window to populate zones, then close
+			relay "${RI_Var_String_RelayGroup}" eq2ex togglezonereuse
+			wait 5
+			relay "${RI_Var_String_RelayGroup}" eq2ex togglezonereuse
+			wait 5
 			relay "${RI_Var_String_RelayGroup}" eq2ex togglezonereuse
 			wait 5
 			relay "${RI_Var_String_RelayGroup}" eq2ex togglezonereuse
