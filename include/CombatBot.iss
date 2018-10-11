@@ -276,6 +276,9 @@ variable string CastTarget
 variable bool FoundTarget=FALSE
 variable int KillTargetID=0
 variable int KillTargetHealth=-1
+variable int KillTargetThreatToMe=-1
+variable int KillTargetThreatToNext=-1
+variable int Fervor=0
 variable int mainCount=1
 variable int count2
 variable bool ItemRIE=FALSE
@@ -2589,6 +2592,27 @@ objectdef RI_Object_CB
 				UIElement[CastStackTypeText@CastStackFrame@CombatBotUI]:Show
 				UIElement[Add@CastStackFrame@CombatBotUI]:Show
 				UIElement[Edit@CastStackFrame@CombatBotUI]:Show
+				if ${strMySu}
+				{
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| D<="](exists)}
+					{
+						;echo here
+						temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| D<="]}+3)]}]}]
+						;echo ${temp}
+						temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+						;echo | #=${temp}
+						UIElement[CastStackDissonanceLessTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+					}
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| D>="](exists)}
+					{
+						;echo here
+						temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| D>="]}+3)]}]}]
+						;echo ${temp}
+						temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+						;echo | #=${temp}
+						UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+					}
+				}
 				;echo CSC --${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Left[5]}
 				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Left[5].Equal[Item:]}
 				{
@@ -2621,7 +2645,116 @@ objectdef RI_Object_CB
 				;temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
 				;echo | Type:${temp}
 				UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:SelectItem[${UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI].ItemByText[${temp}].ID}]
-		
+				if ${strMySu}
+				{
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| D<="](exists)}
+					{
+						;echo here
+						temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| D<="]}+3)]}]}]
+						;echo ${temp}
+						temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+						;echo | #=${temp}
+						UIElement[CastStackDissonanceLessTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+					}
+					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| D>="](exists)}
+					{
+						;echo here
+						temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| D>="]}+3)]}]}]
+						;echo ${temp}
+						temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+						;echo | #=${temp}
+						UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+					}
+				}
+				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| TTM<="](exists)}
+				{
+					;echo here
+					temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| TTM<="]}+3)]}]}]
+					;echo ${temp}
+					temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+					;echo | #=${temp}
+					UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+					UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI]:SetChecked
+					UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+				}
+
+				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| TTM>="](exists)}
+				{
+					;echo here
+					temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| TTM>="]}+3)]}]}]
+					;echo ${temp}
+					temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+					;echo | #=${temp}
+					UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI]:SetChecked
+					UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+					UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+				}
+				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| TTN<="](exists)}
+				{
+					;echo here
+					temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| TTN<="]}+3)]}]}]
+					;echo ${temp}
+					temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+					;echo | #=${temp}
+					UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+					UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI]:SetChecked
+					UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+				}
+				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| TTN>="](exists)}
+				{
+					;echo here
+					temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| TTN>="]}+3)]}]}]
+					;echo ${temp}
+					temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+					;echo | #=${temp}
+					UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI]:SetChecked
+					UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+					UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+				}
+				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| F<="](exists)}
+				{
+					;echo here
+					temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| F<="]}+3)]}]}]
+					;echo ${temp}
+					temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+					;echo | #=${temp}
+					UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+					UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI]:SetChecked
+					UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+				}
+				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| F>="](exists)}
+				{
+					;echo here
+					temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| F>="]}+3)]}]}]
+					;echo ${temp}
+					temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+					;echo | #=${temp}
+					UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI]:SetChecked
+					UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+					UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+				}
+				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| MH<="](exists)}
+				{
+					;echo here
+					temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| MH<="]}+3)]}]}]
+					;echo ${temp}
+					temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+					;echo | #=${temp}
+					UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+					UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI]:SetChecked
+					UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+				}
+				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| MH>="](exists)}
+				{
+					;echo here
+					temp:Set[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Right[${Math.Calc[-1*(${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| MH>="]}+3)]}]}]
+					;echo ${temp}
+					temp:Set[${temp.Left[${Math.Calc[-1*(${temp.Length}-${temp.Find[" "]})]}]}]
+					;echo | #=${temp}
+					UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI]:SetChecked
+					UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+					UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI]:SetText[${temp}]
+				}
 				if ${istrExportMaxDuration.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}]}>0 || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[1,|].Equal[Clearwater Current]}
 				{
 					UIElement[CastStackSkipDurationCheckBox@CastStackFrame@CombatBotUI]:Show
@@ -2771,7 +2904,7 @@ objectdef RI_Object_CB
 			}
 		}
 	}
-	method AddCastStackAbilitiesListBoxItem(string _AbilityDisabled, string _AbilityName, int _ExportPosition, string _Type, string _Target, string _%, string _#, string _SD, string _SE, string _SAE, string _RIE , string _MAX, int _Savagery, int _DissonanceLess,int _DissonanceGreater)
+	method AddCastStackAbilitiesListBoxItem(string _AbilityDisabled, string _AbilityName, int _ExportPosition, string _Type, string _Target, string _%, string _#, string _SD, string _SE, string _SAE, string _RIE , string _MAX, int _Savagery, int _DissonanceLess, int _DissonanceGreater, int _ThreatToMeLess, int _ThreatToMeGreater, int _ThreatToNextLess, int _ThreatToNextGreater, int _FervorLess, int _FervorGreater, int _MobHealthLess, int _MobHealthGreater)
 	{
 		;echo ${_AbilityName}:${_#}
 		variable string temp=""
@@ -2824,6 +2957,18 @@ objectdef RI_Object_CB
 			if ${_DissonanceGreater}>0
 				temp:Concat[" | D>=${_DissonanceGreater}"]
 		}
+		if ${_ThreatToMeLess}>0
+			temp:Concat[" | TTM<=${_ThreatToMeLess}"]
+		if ${_ThreatToMeGreater}>0
+			temp:Concat[" | TTM>=${_ThreatToMeGreater}"]
+		if ${_ThreatToNextLess}>0
+			temp:Concat[" | TTN<=${_ThreatToNextLess}"]
+		if ${_ThreatToNextGreater}>0
+			temp:Concat[" | TTN>=${_ThreatToNextGreater}"]
+		if ${_FervorLess}>0
+			temp:Concat[" | F<=${_FervorLess}"]
+		if ${_FervorGreater}>0
+			temp:Concat[" | F>=${_FervorGreater}"]
 		if ${_Target.NotEqual[FALSE]}
 			temp:Concat[" | Target: ${_Target}"]
 		temp:Concat[" | Type: ${_Type}"]
@@ -2879,9 +3024,9 @@ objectdef RI_Object_CB
 			}
 		}
 		if ${_AbilityDisabled.Equal[TRUE]}
-			UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI]:AddItem["${temp}","${_AbilityName}|${_ExportPosition}|${_Type}|${_Target}|${_%}|${_#}|${_SD}|${_SE}|${_SAE}|${_RIE}|${_MAX}|${_Savagery}|${_DissonanceLess}|${_DissonanceGreater}",FF636363]
+			UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI]:AddItem["${temp}","${_AbilityName}|${_ExportPosition}|${_Type}|${_Target}|${_%}|${_#}|${_SD}|${_SE}|${_SAE}|${_RIE}|${_MAX}|${_Savagery}|${_DissonanceLess}|${_DissonanceGreater}|${_ThreatToMeLess}|${_ThreatToMeGreater}|${_ThreatToNextLess}|${_ThreatToNextGreater}|${_FervorLess}|${_FervorGreater}|${_MobHealthLess}|${_MobHealthGreater}",FF636363]
 		else
-			UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI]:AddItem["${temp}","${_AbilityName}|${_ExportPosition}|${_Type}|${_Target}|${_%}|${_#}|${_SD}|${_SE}|${_SAE}|${_RIE}|${_MAX}|${_Savagery}|${_DissonanceLess}|${_DissonanceGreater}",${tempcolor}]
+			UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI]:AddItem["${temp}","${_AbilityName}|${_ExportPosition}|${_Type}|${_Target}|${_%}|${_#}|${_SD}|${_SE}|${_SAE}|${_RIE}|${_MAX}|${_Savagery}|${_DissonanceLess}|${_DissonanceGreater}|${_ThreatToMeLess}|${_ThreatToMeGreater}|${_ThreatToNextLess}|${_ThreatToNextGreater}|${_FervorLess}|${_FervorGreater}|${_MobHealthLess}|${_MobHealthGreater}",${tempcolor}]
 		;echo ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Item[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]} -- ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Item[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}].Value}
 		
 		
@@ -3000,6 +3145,62 @@ objectdef RI_Object_CB
 				}
 				;echo CastStackDissonanceGreaterTextEntry visible
 			}
+			;CastStackThreatToMeTextEntry
+			if ( ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI].Checked} ) ) || ( ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text.Equal[""]} && !${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} && !${UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: CastStackThreatToMeTextEntry text exists ( ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text} || ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text} ) and one of the checkboxes is checked : ${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI].Checked}
+				noop
+			}
+			else
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: Missing CastStackThreatToMeTextEntry text
+				GoodToGo:Set[FALSE]
+			}
+			
+			;CastStackThreatToNextTextEntry
+			if ( ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI].Checked} ) ) || ( ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text.Equal[""]} && !${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} && !${UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: CastStackThreatToNextTextEntry text exists ( ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text} || ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text} ) and one of the checkboxes is checked : ${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI].Checked}
+				noop
+			}
+			else
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: Missing CastStackThreatToNextTextEntry text
+				GoodToGo:Set[FALSE]
+			}
+			
+			;CastStackFervorTextEntry
+			if ( ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI].Checked} ) ) || ( ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text.Equal[""]} && !${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} && !${UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: CastStackFervorTextEntry text exists ( ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text} || ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text} ) and one of the checkboxes is checked : ${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI].Checked}
+				noop
+			}
+			else
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: Missing CastStackFervorTextEntry text
+				GoodToGo:Set[FALSE]
+			}
+			
+			;CastStackMobHealthTextEntry
+			if ( ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI].Checked} ) ) || ( ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text.Equal[""]} && !${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} && !${UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: CastStackMobHealthTextEntry text exists ( ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text} || ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text} ) and one of the checkboxes is checked : ${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI].Checked}
+				noop
+			}
+			else
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: Missing CastStackMobHealthTextEntry text
+				GoodToGo:Set[FALSE]
+			}
+			
 			; if ${UIElement[CastStackSkipDurationCheckBox@CastStackFrame@CombatBotUI].Visible}
 				; echo CastStackSkipDurationCheckBox visible
 			; if ${UIElement[CastStackRequiresMaxIncrementsCheckBox@CastStackFrame@CombatBotUI].Visible}
@@ -3027,6 +3228,14 @@ objectdef RI_Object_CB
 				variable string _strAbilitySavagery
 				variable string _strAbilityDissonanceLess
 				variable string _strAbilityDissonanceGreater
+				variable string _strAbilityThreatToMeLess
+				variable string _strAbilityThreatToMeGreater
+				variable string _strAbilityThreatToNextLess
+				variable string _strAbilityThreatToNextGreater
+				variable string _strAbilityFervorLess
+				variable string _strAbilityFervorGreater
+				variable string _strAbilityMobHealthLess
+				variable string _strAbilityMobHealthGreater
 				
 				_strAbilityDisabled:Set[""]
 				_strAbilityName:Set[""]
@@ -3043,7 +3252,14 @@ objectdef RI_Object_CB
 				_strAbilitySavagery:Set[""]
 				_strAbilityDissonanceLess:Set[""]
 				_strAbilityDissonanceGreater:Set[""]
-				
+				_strAbilityThreatToMeLess:Set[""]
+				_strAbilityThreatToMeGreater:Set[""]
+				_strAbilityThreatToNextLess:Set[""]
+				_strAbilityThreatToNextGreater:Set[""]
+				_strAbilityFervorLess:Set[""]
+				_strAbilityFervorGreater:Set[""]
+				_strAbilityMobHealthLess:Set[""]
+				_strAbilityMobHealthGreater:Set[""]
 				_strAbilityName:Set["${UIElement[CastStackExportAbilitiesListBox@CastStackFrame@CombatBotUI].SelectedItem}"]
 				_strAbilityType:Set[${UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI].SelectedItem}]
 				if ${UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI].Visible}
@@ -3089,9 +3305,74 @@ objectdef RI_Object_CB
 					_strAbilityDissonanceGreater:Set[${UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI].Text}]
 				else
 					_strAbilityDissonanceGreater:Set[0]	
+					
+				;CastStackThreatToMe
+				if ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+				{
+					_strAbilityThreatToMeGreater:Set[0]
+					_strAbilityThreatToMeLess:Set[0]
+					if ${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked}
+						_strAbilityThreatToMeGreater:Set[${Int[${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+					else
+						_strAbilityThreatToMeLess:Set[${Int[${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+				}
+				else
+				{
+					_strAbilityThreatToMeGreater:Set[0]
+					_strAbilityThreatToMeLess:Set[0]
+				}
+
+				;CastStackThreatToNext
+				if ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+				{
+					_strAbilityThreatToNextGreater:Set[0]
+					_strAbilityThreatToNextLess:Set[0]
+					if ${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked}
+						_strAbilityThreatToNextGreater:Set[${Int[${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+					else
+						_strAbilityThreatToNextLess:Set[${Int[${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+				}
+				else
+				{
+					_strAbilityThreatToNextGreater:Set[0]
+					_strAbilityThreatToNextLess:Set[0]
+				}
+				
+				;CastStackFervor
+				if ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+				{
+					_strAbilityFervorGreater:Set[0]
+					_strAbilityFervorLess:Set[0]
+					if ${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked}
+						_strAbilityFervorGreater:Set[${Int[${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+					else
+						_strAbilityFervorLess:Set[${Int[${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+				}
+				else
+				{
+					_strAbilityFervorGreater:Set[0]
+					_strAbilityFervorLess:Set[0]
+				}
+				
+				;CastStackMobHealth
+				if ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+				{
+					_strAbilityMobHealthGreater:Set[0]
+					_strAbilityMobHealthLess:Set[0]
+					if ${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked}
+						_strAbilityMobHealthGreater:Set[${Int[${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+					else
+						_strAbilityMobHealthLess:Set[${Int[${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+				}
+				else
+				{
+					_strAbilityMobHealthGreater:Set[0]
+					_strAbilityMobHealthLess:Set[0]
+				}
+				
 				;add to caststack listbox
 				;(string _AbilityDisabled, string _AbilityName, int _ExportPosition, string _Type, string _Target, string _%, string _#, string _SD, string _SE, string _SAE, string _RIE , string _MAX, int _Savagery, int _DissonanceLess,int _DissonanceGreater)
-				This:AddCastStackAbilitiesListBoxItem[${_strAbilityDisabled},"${_strAbilityName}",${_strAbilityExportPosition},${_strAbilityType},${_strAbilityTarget},${_strAbility%},${_strAbility#},${_strAbilityIgnoreDuration},${_strAbilityIE},${_strAbilityIAE},${_strAbilityRIE},${_strAbilityMAXer},${_strAbilitySavagery},${_strAbilityDissonanceLess},${_strAbilityDissonanceGreater}]
+				This:AddCastStackAbilitiesListBoxItem[${_strAbilityDisabled},"${_strAbilityName}",${_strAbilityExportPosition},${_strAbilityType},${_strAbilityTarget},${_strAbility%},${_strAbility#},${_strAbilityIgnoreDuration},${_strAbilityIE},${_strAbilityIAE},${_strAbilityRIE},${_strAbilityMAXer},${_strAbilitySavagery},${_strAbilityDissonanceLess},${_strAbilityDissonanceGreater},${_strAbilityThreatToMeLess},${_strAbilityThreatToMeGreater},${_strAbilityThreatToNextLess},${_strAbilityThreatToNextGreater},${_strAbilityFervorLess},${_strAbilityFervorGreater},${_strAbilityMobHealthLess},${_strAbilityMobHealthGreater}]
 			}
 			else
 				noop
@@ -3210,6 +3491,66 @@ objectdef RI_Object_CB
 				}
 				;echo CastStackDissonanceGreaterTextEntry visible
 			}
+			
+			
+			;CastStackThreatToMeTextEntry
+			if ( ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI].Checked} ) ) || ( ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text.Equal[""]} && !${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} && !${UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: CastStackThreatToMeTextEntry text exists ( ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text} || ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text} ) and one of the checkboxes is checked : ${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI].Checked}
+				noop
+			}
+			else
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: Missing CastStackThreatToMeTextEntry text
+				GoodToGo:Set[FALSE]
+			}
+			
+			;CastStackThreatToNextTextEntry
+			if ( ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI].Checked} ) ) || ( ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text.Equal[""]} && !${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} && !${UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: CastStackThreatToNextTextEntry text exists ( ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text} || ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text} ) and one of the checkboxes is checked : ${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI].Checked}
+				noop
+			}
+			else
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: Missing CastStackThreatToNextTextEntry text
+				GoodToGo:Set[FALSE]
+			}
+			
+			;CastStackFervorTextEntry
+			if ( ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI].Checked} ) ) || ( ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text.Equal[""]} && !${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} && !${UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: CastStackFervorTextEntry text exists ( ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text} || ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text} ) and one of the checkboxes is checked : ${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI].Checked}
+				noop
+			}
+			else
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: Missing CastStackFervorTextEntry text
+				GoodToGo:Set[FALSE]
+			}
+			
+			;CastStackMobHealthTextEntry
+			if ( ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI].Checked} ) ) || ( ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text.Equal[""]} && !${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} && !${UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: CastStackMobHealthTextEntry text exists ( ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text} || ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text} ) and one of the checkboxes is checked : ${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI].Checked}
+				noop
+			}
+			else
+			{
+				if ${CombatBotCSCDebug}
+					echo ISXRI: CombatBot: Missing CastStackMobHealthTextEntry text
+				GoodToGo:Set[FALSE]
+			}
+			
+			
+			
 			; if ${UIElement[CastStackSkipDurationCheckBox@CastStackFrame@CombatBotUI].Visible}
 				; echo CastStackSkipDurationCheckBox visible
 			; if ${UIElement[CastStackRequiresMaxIncrementsCheckBox@CastStackFrame@CombatBotUI].Visible}
@@ -3237,6 +3578,14 @@ objectdef RI_Object_CB
 				variable string _strAbilitySavagery
 				variable string _strAbilityDissonanceLess
 				variable string _strAbilityDissonanceGreater
+				variable string _strAbilityThreatToMeLess
+				variable string _strAbilityThreatToMeGreater
+				variable string _strAbilityThreatToNextLess
+				variable string _strAbilityThreatToNextGreater
+				variable string _strAbilityFervorLess
+				variable string _strAbilityFervorGreater
+				variable string _strAbilityMobHealthLess
+				variable string _strAbilityMobHealthGreater
 				
 				_strAbilityDisabled:Set[""]
 				_strAbilityName:Set[""]
@@ -3253,6 +3602,14 @@ objectdef RI_Object_CB
 				_strAbilitySavagery:Set[""]
 				_strAbilityDissonanceLess:Set[""]
 				_strAbilityDissonanceGreater:Set[""]
+				_strAbilityThreatToMeLess:Set[""]
+				_strAbilityThreatToMeGreater:Set[""]
+				_strAbilityThreatToNextLess:Set[""]
+				_strAbilityThreatToNextGreater:Set[""]
+				_strAbilityFervorLess:Set[""]
+				_strAbilityFervorGreater:Set[""]
+				_strAbilityMobHealthLess:Set[""]
+				_strAbilityMobHealthGreater:Set[""]
 				
 				_strAbilityName:Set["${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[1,|]}"]
 				_strAbilityType:Set[${UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI].SelectedItem}]
@@ -3302,9 +3659,74 @@ objectdef RI_Object_CB
 					_strAbilityDissonanceGreater:Set[${UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI].Text}]
 				else
 					_strAbilityDissonanceGreater:Set[0]	
+					
+				;CastStackThreatToMe
+				if ${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+				{
+					_strAbilityThreatToMeGreater:Set[0]
+					_strAbilityThreatToMeLess:Set[0]
+					if ${UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI].Checked}
+						_strAbilityThreatToMeGreater:Set[${Int[${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+					else
+						_strAbilityThreatToMeLess:Set[${Int[${UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+				}
+				else
+				{
+					_strAbilityThreatToMeGreater:Set[0]
+					_strAbilityThreatToMeLess:Set[0]
+				}
+
+				;CastStackThreatToNext
+				if ${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+				{
+					_strAbilityThreatToNextGreater:Set[0]
+					_strAbilityThreatToNextLess:Set[0]
+					if ${UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI].Checked}
+						_strAbilityThreatToNextGreater:Set[${Int[${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+					else
+						_strAbilityThreatToNextLess:Set[${Int[${UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+				}
+				else
+				{
+					_strAbilityThreatToNextGreater:Set[0]
+					_strAbilityThreatToNextLess:Set[0]
+				}
+				
+				;CastStackFervor
+				if ${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+				{
+					_strAbilityFervorGreater:Set[0]
+					_strAbilityFervorLess:Set[0]
+					if ${UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI].Checked}
+						_strAbilityFervorGreater:Set[${Int[${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+					else
+						_strAbilityFervorLess:Set[${Int[${UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+				}
+				else
+				{
+					_strAbilityFervorGreater:Set[0]
+					_strAbilityFervorLess:Set[0]
+				}
+				
+				;CastStackMobHealth
+				if ${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text.NotEqual[""]} && ( ${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked} || ${UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI].Checked} )
+				{
+					_strAbilityMobHealthGreater:Set[0]
+					_strAbilityMobHealthLess:Set[0]
+					if ${UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI].Checked}
+						_strAbilityMobHealthGreater:Set[${Int[${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+					else
+						_strAbilityMobHealthLess:Set[${Int[${UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI].Text}]}]
+				}
+				else
+				{
+					_strAbilityMobHealthGreater:Set[0]
+					_strAbilityMobHealthLess:Set[0]
+				}
+					
 				;add to caststack listbox
 				;(string _AbilityDisabled, string _AbilityName, int _ExportPosition, string _Type, string _Target, string _%, string _#, string _SD, string _SE, string _SAE, string _RIE , string _MAX, int _Savagery, int _DissonanceLess,int _DissonanceGreater)
-				This:EditCastStackAbilitiesListBoxItem[${_strAbilityDisabled},"${_strAbilityName}",${_strAbilityExportPosition},${_strAbilityType},${_strAbilityTarget},${_strAbility%},${_strAbility#},${_strAbilityIgnoreDuration},${_strAbilityIE},${_strAbilityIAE},${_strAbilityRIE},${_strAbilityMAXer},${_strAbilitySavagery},${_strAbilityDissonanceLess},${_strAbilityDissonanceGreater}]
+				This:EditCastStackAbilitiesListBoxItem[${_strAbilityDisabled},"${_strAbilityName}",${_strAbilityExportPosition},${_strAbilityType},${_strAbilityTarget},${_strAbility%},${_strAbility#},${_strAbilityIgnoreDuration},${_strAbilityIE},${_strAbilityIAE},${_strAbilityRIE},${_strAbilityMAXer},${_strAbilitySavagery},${_strAbilityDissonanceLess},${_strAbilityDissonanceGreater},${_strAbilityThreatToMeLess},${_strAbilityThreatToMeGreater},${_strAbilityThreatToNextLess},${_strAbilityThreatToNextGreater},${_strAbilityFervorLess},${_strAbilityFervorGreater},${_strAbilityMobHealthLess},${_strAbilityMobHealthGreater}]
 				;echo This:EditCastStackAbilitiesListBoxItem[_strAbilityDisabled=${_strAbilityDisabled},_strAbilityName=${_strAbilityName},_strAbilityExportPosition=${_strAbilityExportPosition},_strAbilityType=${_strAbilityType},_strAbilityTarget=${_strAbilityTarget},_strAbility%=${_strAbility%},_strAbility#=${_strAbility#},_strAbilityIgnoreDuration=${_strAbilityIgnoreDuration},_strAbilityIE=${_strAbilityIE},_strAbilityIAE=${_strAbilityIAE},_strAbilityRIE=${_strAbilityRIE},_strAbilityMAXer=${_strAbilityMAXer},_strAbilitySavagery=${_strAbilitySavagery},_strAbilityDissonanceLess=${_strAbilityDissonanceLess},_strAbilityDissonanceGreater=${_strAbilityDissonanceGreater}]
 			}
 			else
@@ -3312,7 +3734,7 @@ objectdef RI_Object_CB
 				;echo somethings missing
 		}
 	}
-	method EditCastStackAbilitiesListBoxItem(string _AbilityDisabled, string _AbilityName, int _ExportPosition, string _Type, string _Target, string _%, string _#, string _SD, string _SE, string _SAE, string _RIE, string _MAX, int _Savagery, int _DissonanceLess,int _DissonanceGreater, int OrderedItem)
+	method EditCastStackAbilitiesListBoxItem(string _AbilityDisabled, string _AbilityName, int _ExportPosition, string _Type, string _Target, string _%, string _#, string _SD, string _SE, string _SAE, string _RIE, string _MAX, int _Savagery, int _DissonanceLess,int _DissonanceGreater, int _ThreatToMeLess, int _ThreatToMeGreater, int _ThreatToNextLess, int _ThreatToNextGreater, int _FervorLess, int _FervorGreater, int _MobHealthLess, int _MobHealthGreater, int OrderedItem)
 	{
 		;echo EditCastStackAbilitiesListBoxItem(string _AbilityDisabled=${_AbilityDisabled}, string _AbilityName=${_AbilityName}, int _ExportPosition=${_ExportPosition}, string _Type=${_Type}, string _Target=${_Target}, string _%=${_%}, string _#=${_#}, string _SD=${_SD}, string _SE=${_SE}, string _SAE=${_SAE}, string _RIE=${_RIE}, string _MAX=${_MAX}, int _Savagery=${_Savagery}, int _DissonanceLess=${_DissonanceLess},int _DissonanceGreater=${_DissonanceGreater}, int OrderedItem=${OrderedItem})
 		variable string temp=""
@@ -3349,12 +3771,24 @@ objectdef RI_Object_CB
 			if ${_DissonanceGreater}>0
 				temp:Concat[" | D>=${_DissonanceGreater}"]
 		}
+		if ${_ThreatToMeLess}>0
+			temp:Concat[" | TTM<=${_ThreatToMeLess}"]
+		if ${_ThreatToMeGreater}>0
+			temp:Concat[" | TTM>=${_ThreatToMeGreater}"]
+		if ${_ThreatToNextLess}>0
+			temp:Concat[" | TTN<=${_ThreatToNextLess}"]
+		if ${_ThreatToNextGreater}>0
+			temp:Concat[" | TTN>=${_ThreatToNextGreater}"]
+		if ${_FervorLess}>0
+			temp:Concat[" | F<=${_FervorLess}"]
+		if ${_FervorGreater}>0
+			temp:Concat[" | F>=${_FervorGreater}"]
 		if ${_Target.NotEqual[FALSE]}
 			temp:Concat[" | Target: ${_Target}"]
 		temp:Concat[" | Type: ${_Type}"]
 		
 		UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem:SetText["${temp}"]
-		UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem:SetValue["${_AbilityName}|${_ExportPosition}|${_Type}|${_Target}|${_%}|${_#}|${_SD}|${_SE}|${_SAE}|${_RIE}|${_MAX}|${_Savagery}|${_DissonanceLess}|${_DissonanceGreater}"]
+		UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem:SetValue["${_AbilityName}|${_ExportPosition}|${_Type}|${_Target}|${_%}|${_#}|${_SD}|${_SE}|${_SAE}|${_RIE}|${_MAX}|${_Savagery}|${_DissonanceLess}|${_DissonanceGreater}|${_ThreatToMeLess}|${_ThreatToMeGreater}|${_ThreatToNextLess}|${_ThreatToNextGreater}|${_FervorLess}|${_FervorGreater}|${_MobHealthLess}|${_MobHealthGreater}"]
 		;echo ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Item[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]} -- ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Item[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}].Value}
 		
 		switch ${_Type}
@@ -3645,6 +4079,18 @@ objectdef RI_Object_CB
 		UIElement[CastStackSavageryTextEntry@CastStackFrame@CombatBotUI]:SetText[""]
 		UIElement[CastStackDissonanceLessTextEntry@CastStackFrame@CombatBotUI]:SetText[""]
 		UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI]:SetText[""]
+		UIElement[CastStackThreatToMeGreaterCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+		UIElement[CastStackThreatToMeLessCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+		UIElement[CastStackThreatToMeTextEntry@CastStackFrame@CombatBotUI]:SetText[""]
+		UIElement[CastStackThreatToNextGreaterCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+		UIElement[CastStackThreatToNextLessCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+		UIElement[CastStackThreatToNextTextEntry@CastStackFrame@CombatBotUI]:SetText[""]
+		UIElement[CastStackFervorGreaterCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+		UIElement[CastStackFervorLessCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+		UIElement[CastStackFervorTextEntry@CastStackFrame@CombatBotUI]:SetText[""]
+		UIElement[CastStackMobHealthGreaterCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+		UIElement[CastStackMobHealthLessCheckBox@CastStackFrame@CombatBotUI]:UnsetChecked
+		UIElement[CastStackMobHealthTextEntry@CastStackFrame@CombatBotUI]:SetText[""]
 	}
 	method CastStackExportAbilitiesListBoxClick(string AbilityName, int ExportPosition, bool NoClick)
 	{
@@ -4068,7 +4514,7 @@ objectdef RI_Object_CB
 						;echo this is an ascension ability
 						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[Hostile]
 						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[NamedHostile]
-						if ${istrExport.Get[${ExportPosition}].Equal[Ethereal Conduit]} || ${istrExport.Get[${ExportPosition}].Equal[Recapture]}
+						if ${istrExport.Get[${ExportPosition}].Equal[Ethereal Conduit]} || ${istrExport.Get[${ExportPosition}].Equal[Recapture]} || ${istrExport.Get[${ExportPosition}].Equal[Phoenix Rising]}
 							UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[InCombatTargeted]
 					}
 					else
@@ -4913,6 +5359,23 @@ objectdef RI_Object_CB
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityDissonanceLess,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[13,|]}]
 			;CastStackAbilityDissonanceGreater
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityDissonanceGreater,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[14,|]}]
+			;CastStackAbilityThreatToMeLess
+			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityThreatToMeLess,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]}]
+			;CastStackAbilityThreatToMeGreater
+			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityThreatToMeGreater,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[16,|]}]
+			;CastStackAbilityThreatToNextLess
+			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityThreatToNextLess,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[17,|]}]
+			;CastStackAbilityThreatToNextGreater
+			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityThreatToNextGreater,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[18,|]}]
+			;CastStackAbilityFervorLess
+			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityFervorLess,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[19,|]}]
+			;CastStackAbilityFervorGreater
+			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityFervorGreater,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[20,|]}]
+			;CastStackAbilityMobHealthLess
+			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityMobHealthLess,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[21,|]}]
+			;CastStackAbilityMobHealthGreater
+			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityMobHealthGreater,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[22,|]}]
+			
 		}
 		;Items
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Items]:Clear
@@ -5792,7 +6255,6 @@ function main()
 			}
 			;do all these checks every .5 secs
 			;echo ${Script.RunningTime}: Before Checks
-			
 			if ${Script.RunningTime}>${Math.Calc[${intTimeChecks}+500]}
 			{
 				if ${EQ2.Zoning}==0
@@ -6745,9 +7207,20 @@ function main()
 				MaxDist:Set[${Math.Calc[${Actor[id,${KillTargetID}].Distance}-${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[${Me.ID}].CollisionRadius} * ${Actor[${Me.ID}].CollisionScale})-.5]}]}]
 				
 				if ${Actor[Query, ID=${KillTargetID} && IsDead=FALSE](exists)}
-					KillTargetHealth:Set[${Actor[Query, ID=${KillTargetID} && IsDead=FALSE](exists)}]
+				{
+					KillTargetHealth:Set[${Actor[Query, ID=${KillTargetID} && IsDead=FALSE].Health}]
+					KillTargetThreatToMe:Set[${Actor[Query, ID=${KillTargetID} && IsDead=FALSE].ThreatToMe}]
+					KillTargetThreatToNext:Set[${Actor[Query, ID=${KillTargetID} && IsDead=FALSE].ThreatToNext}]
+				}
 				else
+				{
 					KillTargetHealth:Set[-1]
+					KillTargetThreatToMe:Set[-1]
+					KillTargetThreatToNext:Set[-1]
+				}
+				
+				Fervor:Set[${Int[${RIMUIObj.DisplayStat[Fervor].Replace["%",""]}]}]
+				
 				
 				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}>0
 				{
@@ -6799,7 +7272,10 @@ function main()
 					if ${SetTargets}
 					{
 						wait 2
-						CheckAbilitiesObj:SetTargets
+						if !${RIMObj.AllGroupInZone} || !${RIMObj.AllGroupAlive}
+							noop
+						else
+							CheckAbilitiesObj:SetTargets
 					}
 						
 					;echo CS: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items} TID: ${TargetIDs.Used} TN: ${TargetNames.Used}
@@ -7520,10 +7996,6 @@ atom LoadProfile(string _Profile=${CombatBotDefaultProfile})
 			; TimedCommand 50 g need a confront fear
 	; }
 ; }
-atom EQ2_onGroupMembershipChange(int PreviousGroupCount, int NewGroupCount)
-{
-   SetTargets:Set[1]
-}
 atom EQ2_onGroupMembershipChange(int PreviousGroupCount, int NewGroupCount)
 {
    SetTargets:Set[1]
@@ -8561,6 +9033,96 @@ objectdef CheckAbilitiesObject
 						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, it is not ready
 					continue
 			}
+			;;Tokens ThreatToMeLess=15
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]}>0
+			{
+				if ${KillTargetThreatToMe}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]} && ${KillTargetThreatToMe}!=-1
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, ThreatToMe(${KillTargetThreatToMe}) is not Less than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]}
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[16,|]}>0
+			{
+				if ${KillTargetThreatToMe}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]}
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, ThreatToMe(${KillTargetThreatToMe}) is not Greater than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[16,|]}
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[17,|]}>0
+			{
+				if ${KillTargetThreatToNext}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]} && ${KillTargetThreatToNext}!=-1
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, ThreatToNext(${KillTargetThreatToMe}) is not Less than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[17,|]}
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[18,|]}>0
+			{
+				if ${KillTargetThreatToNext}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]}
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, ThreatToNext(${KillTargetThreatToMe}) is not Greater than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[18,|]}
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[19,|]}>0
+			{
+				if ${Fervor}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]}
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Fervor(${KillTargetThreatToMe}) is not Less than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[19,|]}
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[20,|]}>0
+			{
+				if ${Fervor}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]}
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Fervor(${KillTargetThreatToMe}) is not Greater than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[20,|]}
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[21,|]}>0
+			{
+				if ${KillTargetHealth}<${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]} && ${KillTargetHealth}!=-1
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, MobHealth(${KillTargetThreatToMe}) is not Less than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[21,|]}
+					continue
+				}
+			}
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[22,|]}>0
+			{
+				if ${KillTargetHealth}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[15,|]}
+					noop
+				else
+				{
+					if ${CombatBotDebug}
+						echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, MobHealth(${KillTargetThreatToMe}) is not Greater than ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[22,|]}
+					continue
+				}
+			}
+			
 			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|].NotEqual[FALSE]}
 			{
 				;CastTarget:Set[${This.SetCastTarget[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[4,|]}]}]
@@ -13337,6 +13899,22 @@ atom IterateCastStack(settingsetref Set, int CastStackCount)
 		variable bool _gotDissonanceLess
 		variable string _DissonanceGreater
 		variable bool _gotDissonanceGreater
+		variable string _ThreatToMeLess
+		variable bool _gotThreatToMeLess
+		variable string _ThreatToMeGreater
+		variable bool _gotThreatToMeGreater
+		variable string _ThreatToNextLess
+		variable bool _gotThreatToNextLess
+		variable string _ThreatToNextGreater
+		variable bool _gotThreatToNextGreater
+		variable string _FervorLess
+		variable bool _gotFervorLess
+		variable string _FervorGreater
+		variable bool _gotFervorGreater
+		variable string _MobHealthLess
+		variable bool _gotMobHealthLess
+		variable string _MobHealthGreater
+		variable bool _gotMobHealthGreater
 		
 		_AbilityDisabled:Set[""]
 		_gotAbilityDisabled:Set[FALSE]
@@ -13368,94 +13946,156 @@ atom IterateCastStack(settingsetref Set, int CastStackCount)
 		_gotDissonanceLess:Set[FALSE]
 		_DissonanceGreater:Set[""]
 		_gotDissonanceGreater:Set[FALSE]
+		_ThreatToMeLess:Set["0"]
+		_gotThreatToMeLess:Set[FALSE]
+		_ThreatToMeGreater:Set["0"]
+		_gotThreatToMeGreater:Set[FALSE]
+		_ThreatToNextLess:Set["0"]
+		_gotThreatToNextLess:Set[FALSE]
+		_ThreatToNextGreater:Set["0"]
+		_gotThreatToNextGreater:Set[FALSE]
+		_FervorLess:Set["0"]
+		_gotFervorLess:Set[FALSE]
+		_FervorGreater:Set["0"]
+		_gotFervorGreater:Set[FALSE]
+		_MobHealthLess:Set["0"]
+		_gotMobHealthLess:Set[FALSE]
+		_MobHealthGreater:Set["0"]
+		_gotMobHealthGreater:Set[FALSE]
 		
 		if ${SettingIterator:First(exists)}
 		{
-		  do
-		  {
-			;echo "${SettingIterator.Key}=${SettingIterator.Value}"
-			;/* iterator.Key is the name of the setting, and iterator.Value is the setting object, which reduces to the value of the setting */
-			if ${SettingIterator.Key.Equal[CastStackAbilityDisabled]}
+			do
 			{
-				_gotAbilityDisabled:Set[TRUE]
-				_AbilityDisabled:Set[${SettingIterator.Value}]
+				;echo "${SettingIterator.Key}=${SettingIterator.Value}"
+				;/* iterator.Key is the name of the setting, and iterator.Value is the setting object, which reduces to the value of the setting */
+				if ${SettingIterator.Key.Equal[CastStackAbilityDisabled]}
+				{
+					_gotAbilityDisabled:Set[TRUE]
+					_AbilityDisabled:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityRequiresItemEquipped]}
+				{
+					_gotRIE:Set[TRUE]
+					_RIE:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilitySkipAE]}
+				{
+					_gotSAE:Set[TRUE]
+					_SAE:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilitySkipEncounter]}
+				{
+					_gotSE:Set[TRUE]
+					_SE:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilitySkipDuration]}
+				{
+					_gotSD:Set[TRUE]
+					_SD:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityRequired#]}
+				{
+					_got#:Set[TRUE]
+					_#:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityRequired%]}
+				{
+					_got%:Set[TRUE]
+					_%:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityName]}
+				{
+					_gotAbilityName:Set[TRUE]
+					_AbilityName:Set["${SettingIterator.Value}"]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityType]}
+				{
+					_gotType:Set[TRUE]
+					_Type:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityTarget]}
+				{
+					_gotTarget:Set[TRUE]
+					_Target:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityRequiresMaxIncrements]}
+				{
+					_gotMax:Set[TRUE]
+					_MAX:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilitySavagery]}
+				{
+					_gotSavagery:Set[TRUE]
+					_Savagery:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityDissonanceLess]}
+				{
+					_gotDissonanceLess:Set[TRUE]
+					_DissonanceLess:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityDissonanceGreater]}
+				{
+					_gotDissonanceGreater:Set[TRUE]
+					_DissonanceGreater:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityThreatToMeLess]}
+				{
+					_gotThreatToMeLess:Set[TRUE]
+					_ThreatToMeLess:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityThreatToMeGreater]}
+				{
+					_gotThreatToMeGreater:Set[TRUE]
+					_ThreatToMeGreater:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityThreatToNextLess]}
+				{
+					_gotThreatToNextLess:Set[TRUE]
+					_ThreatToNextLess:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityThreatToNextGreater]}
+				{
+					_gotThreatToNextGreater:Set[TRUE]
+					_ThreatToNextGreater:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityFervorLess]}
+				{
+					_gotFervorLess:Set[TRUE]
+					_FervorLess:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityFervorGreater]}
+				{
+					_gotFervorGreater:Set[TRUE]
+					_FervorGreater:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityMobHealthLess]}
+				{
+					_gotMobHealthLess:Set[TRUE]
+					_MobHealthLess:Set[${SettingIterator.Value}]
+				}
+				if ${SettingIterator.Key.Equal[CastStackAbilityMobHealthGreater]}
+				{
+					_gotMobHealthGreater:Set[TRUE]
+					_MobHealthGreater:Set[${SettingIterator.Value}]
+				}
+				;if ${_gotAbilityDisabled} && ${_gotAbilityName} && ${_gotType} && ${_gotTarget} && ${_got%} && ${_got#} && ${_gotSD} && ${_gotSE} && ${_gotSAE} && ${_gotRIE} && ${_gotMax} && ${_gotSavagery} && ${_gotDissonanceLess} && ${_gotDissonanceGreater} && ${_gotThreatToMeLess} && ${_gotThreatToMeGreater} && ${_gotThreatToNextLess} && ${_gotThreatToNextGreater} && ${_gotFervorLess} && ${_gotFervorGreater} && ${_gotMobHealthLess} && ${_gotMobHealthGreater}
+				;{
+					;token : -- AbilityName:ExportPosition:Type:Target:%:#:SD:SE:SAE:RIE:MAX:SAV:DLess:DGreater:TTML:TTMG:TTNL:TTNG:FL:FG:MHL:MHG
+				;	if ${_AbilityName.Left[5].Equal[Item:]}
+				;		_ExportPosition:Set[0]
+				;	else
+				;		_ExportPosition:Set[${ConvertAbilityObj.Convert["${_AbilityName}"]}]
+				;	RI_Obj_CB:AddCastStackAbilitiesListBoxItem[${_AbilityDisabled},"${_AbilityName}",${_ExportPosition},${_Type},${_Target},${_%},${_#},${_SD},${_SE},${_SAE},${_RIE},${_MAX},${_Savagery},${_DissonanceLess},${_DissonanceGreater},${_ThreatToMeLess},${_ThreatToMeGreater},${_ThreatToNextLess},${_ThreatToNextGreater},${_FervorLess},${_FervorGreater},${_MobHealthLess},${_MobHealthGreater}]
+				;}
 			}
-			if ${SettingIterator.Key.Equal[CastStackAbilityRequiresItemEquipped]}
-			{
-				_gotRIE:Set[TRUE]
-				_RIE:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilitySkipAE]}
-			{
-				_gotSAE:Set[TRUE]
-				_SAE:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilitySkipEncounter]}
-			{
-				_gotSE:Set[TRUE]
-				_SE:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilitySkipDuration]}
-			{
-				_gotSD:Set[TRUE]
-				_SD:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilityRequired#]}
-			{
-				_got#:Set[TRUE]
-				_#:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilityRequired%]}
-			{
-				_got%:Set[TRUE]
-				_%:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilityName]}
-			{
-				_gotAbilityName:Set[TRUE]
-				_AbilityName:Set["${SettingIterator.Value}"]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilityType]}
-			{
-				_gotType:Set[TRUE]
-				_Type:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilityTarget]}
-			{
-				_gotTarget:Set[TRUE]
-				_Target:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilityRequiresMaxIncrements]}
-			{
-				_gotMax:Set[TRUE]
-				_MAX:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilitySavagery]}
-			{
-				_gotSavagery:Set[TRUE]
-				_Savagery:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilityDissonanceLess]}
-			{
-				_gotDissonanceLess:Set[TRUE]
-				_DissonanceLess:Set[${SettingIterator.Value}]
-			}
-			if ${SettingIterator.Key.Equal[CastStackAbilityDissonanceGreater]}
-			{
-				_gotDissonanceGreater:Set[TRUE]
-				_DissonanceGreater:Set[${SettingIterator.Value}]
-			}
-			if ${_gotAbilityDisabled} && ${_gotAbilityName} && ${_gotType} && ${_gotTarget} && ${_got%} && ${_got#} && ${_gotSD} && ${_gotSE} && ${_gotSAE} && ${_gotRIE} && ${_gotMax} && ${_gotSavagery} && ${_gotDissonanceLess} && ${_gotDissonanceGreater}
-			{
-				;token : -- AbilityName:ExportPosition:Type:Target:%:#:SD:SE:SAE:RIE:MAX:SAV:DLess:DGreater
-				if ${_AbilityName.Left[5].Equal[Item:]}
-					_ExportPosition:Set[0]
-				else
-					_ExportPosition:Set[${ConvertAbilityObj.Convert["${_AbilityName}"]}]
-				RI_Obj_CB:AddCastStackAbilitiesListBoxItem[${_AbilityDisabled},"${_AbilityName}",${_ExportPosition},${_Type},${_Target},${_%},${_#},${_SD},${_SE},${_SAE},${_RIE},${_MAX},${_Savagery},${_DissonanceLess},${_DissonanceGreater}]
-			}
-		  }
-		  while ${SettingIterator:Next(exists)}
+			while ${SettingIterator:Next(exists)}
+			;token : -- AbilityName:ExportPosition:Type:Target:%:#:SD:SE:SAE:RIE:MAX:SAV:DLess:DGreater:TTML:TTMG:TTNL:TTNG:FL:FG:MHL:MHG
+			if ${_AbilityName.Left[5].Equal[Item:]}
+				_ExportPosition:Set[0]
+			else
+				_ExportPosition:Set[${ConvertAbilityObj.Convert["${_AbilityName}"]}]
+			RI_Obj_CB:AddCastStackAbilitiesListBoxItem[${_AbilityDisabled},"${_AbilityName}",${_ExportPosition},${_Type},${_Target},${_%},${_#},${_SD},${_SE},${_SAE},${_RIE},${_MAX},${_Savagery},${_DissonanceLess},${_DissonanceGreater},${_ThreatToMeLess},${_ThreatToMeGreater},${_ThreatToNextLess},${_ThreatToNextGreater},${_FervorLess},${_FervorGreater},${_MobHealthLess},${_MobHealthGreater}]
 		}
 	}
 }

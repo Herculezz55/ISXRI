@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.81 10-9-18"
-double EXTVER = 5.81;
+#define EXTENSION_VERSION "5.82 10-11-18"
+double EXTVER = 5.82;
 #include "ISXRI.h"
 
 
@@ -842,6 +842,9 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "ThenewTravelsofYunZiDisenchantingtheEnchanted.h"
 #include "ThenewTravelsofYunZiToZekWithIt.h"
 #include "ThenewTravelsofYunZiFeerrottNotIShallFindYou.h"
+#include "ThenewTravelsofYunZiDefrostingEverfrost.h"
+#include "AgainsttheElementsforFreeport.h"
+#include "AgainsttheElementsforQeynos.h"
 //#include ".h"
 //End Quest Dat Files
 
@@ -1716,6 +1719,9 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIDISENCHANTINGTHEENCHANTED");
 	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZITOZEKWITHIT");
 	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIFEERROTTNOTISHALLFINDYOU");
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIDEFROSTINGEVERFROST");
+	pISInterface->RemoveTopLevelObject("AGAINSTTHEELEMENTSFORFREEPORT");
+	pISInterface->RemoveTopLevelObject("AGAINSTTHEELEMENTSFORQEYNOS");
 }
 
 void ISXRIUnRegisterCommands()
@@ -29122,6 +29128,114 @@ bool __cdecl TLO_ThenewTravelsofYunZiFeerrottNotIShallFindYou(int argc, char *ar
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiDefrostingEverfrost(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiDefrostingEverfrost) / sizeof(ThenewTravelsofYunZiDefrostingEverfrost[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiDefrostingEverfrost[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AgainsttheElementsforFreeport(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(AgainsttheElementsforFreeport) / sizeof(AgainsttheElementsforFreeport[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = AgainsttheElementsforFreeport[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AgainsttheElementsforQeynos(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(AgainsttheElementsforQeynos) / sizeof(AgainsttheElementsforQeynos[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = AgainsttheElementsforQeynos[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -30570,6 +30684,12 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZITOZEKWITHIT", TLO_ThenewTravelsofYunZiToZekWithIt);
 		if (tlo == "THENEWTRAVELSOFYUNZIFEERROTTNOTISHALLFINDYOU")
 			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZIFEERROTTNOTISHALLFINDYOU", TLO_ThenewTravelsofYunZiFeerrottNotIShallFindYou);
+		if (tlo == "THENEWTRAVELSOFYUNZIDEFROSTINGEVERFROST")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZIDEFROSTINGEVERFROST", TLO_ThenewTravelsofYunZiDefrostingEverfrost);
+		if (tlo == "AGAINSTTHEELEMENTSFORFREEPORT")
+			pISInterface->AddTopLevelObject("AGAINSTTHEELEMENTSFORFREEPORT", TLO_AgainsttheElementsforFreeport);
+		if (tlo == "AGAINSTTHEELEMENTSFORQEYNOS")
+			pISInterface->AddTopLevelObject("AGAINSTTHEELEMENTSFORQEYNOS", TLO_AgainsttheElementsforQeynos);
 	}
 	return 1;
 }

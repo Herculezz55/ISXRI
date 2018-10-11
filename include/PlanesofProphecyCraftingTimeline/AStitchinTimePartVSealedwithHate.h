@@ -430,8 +430,6 @@ string AStitchinTimePartVSealedwithHate[] = {"A Stitch in Time\",\" Part V: Seal
 "Instance", 
 "0 0 0", 
 "Custom", 
-"ZoneDoor \"Zone Exit\"", 
-"Custom", 
 "ZoneDoor \"Enter Shard of Hate\" \"Shard of Hate: New Ownership\"", 
 "-1359.977661 21.098385 -1389.493408", 
 "Custom", 

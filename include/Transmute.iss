@@ -109,7 +109,7 @@ function Transmute()
 {
 	UIElement[Start@RISalvage]:SetText[Stop]
 	;return
-	Me:QueryInventory[InventoryIndex, Location == "Inventory" && IsContainer=FALSE && Quantity=1 && IsFoodOrDrink=FALSE]
+	Me:QueryInventory[InventoryIndex, Location == "Inventory" && IsContainer=FALSE && IsFoodOrDrink=FALSE]
 	;echo ${InventoryIndex.Used}
 	
     if !${UIElement[Bag1@RITransmute].Checked}
@@ -267,16 +267,37 @@ function Transmute()
 							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because we are not set to Transmute Adept
 						continue
 					}
+					if ${InventoryIterator.Value.Name.Find[Accolade](exists)}
+					{
+						if ${Debug}
+							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be transmuted
+						continue
+					}
 				}
-				if ${Debug}
-					echo ISXRI: Transmuting ${InventoryIterator.Value.Name}
-				eq2ex usea Transmute
-				wait 10 ${EQ2.ReadyToRefineTransmuteOrSalvage}
-				InventoryIterator.Value:Transmute
-				wait 10 ${Me.CastingSpell}
-				wait 10 !${Me.CastingSpell}
-				wait 5
-				wait 10
+				while ${InventoryIterator.Value.Quantity}>1
+				{
+					if ${Debug}
+						echo ISXRI: Transmuting ${InventoryIterator.Value.Name}
+					eq2ex usea Transmute
+					wait 10 ${EQ2.ReadyToRefineTransmuteOrSalvage}
+					InventoryIterator.Value:Transmute
+					wait 10 ${Me.CastingSpell}
+					wait 10 !${Me.CastingSpell}
+					wait 5
+					wait 10
+				}
+				if ${InventoryIterator.Value.Quantity}>0
+				{
+					if ${Debug}
+						echo ISXRI: Transmuting ${InventoryIterator.Value.Name}
+					eq2ex usea Transmute
+					wait 10 ${EQ2.ReadyToRefineTransmuteOrSalvage}
+					InventoryIterator.Value:Transmute
+					wait 10 ${Me.CastingSpell}
+					wait 10 !${Me.CastingSpell}
+					wait 5
+					wait 10
+				}
 			}
 			else
 			{

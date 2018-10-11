@@ -3296,18 +3296,49 @@
 ;				Rallius Rattican
 ;					Toons will now cancel casting upon port
 
-;v5.81 Changes 10-9-18
+;v5.81 Changes 10-10-18
 ;	RQ
+;		Added
+;			The new "Travels" of Yun Zi - Defrosting Everfrost
+;			Against the Elements for Qeynos
+;			Against the Elements for Freeport
 ;		Modified
 ;			Assumed Identity
 ;				Corrected spelling of quest update
+;	RI
+;		Modified
+;			The Shard of Hate: Utter Contempt and Udder Contempt
+;				MorgHorb and Topsirloin
+;					Tweaked avoidances
+;				Estir, Twosome and Triumvirate and HerdMode Equivalent
+;					Tweaked circle jousting, will now joust circles flawlessly
+;		Added
+;			Torden, Bastion of Thunder: Storm Chase
+;				Arkose (RI Pull Arkose)
+;					Records and Clicks the correct Wands as needed
+;				Oveld
+;					Targets and kills storm rods
+;					Targets and kills correct storm add
+;					Moves named into correct storm
+;	RI_Transmute
+;		will now transmute things in stacks
+
+;v5.82 Changes 10-11-18
+;	RI
+;		Fixed a bug that would try to jump up for shinys that are below you instead of above you
 
 ; HIDDEN UPDATE NOTES
 ;	CB
+;		Added Cast Stack Items:
+;			ThreatToMe ><
+;			ThreatToNext ><
+;			Fervor ><
+;			MobHealth ><	
 ;		Fixed a bug that was not maintaining Clearwater Current
 ;		Added @Tank,@Healer1,@Healer2,@DPS1,@DPS2,@Enchanter,@Bard - These will logically choose the toon in your group
+;		Added InCombatTargeted to Phoenix Rising
 
-;NOTE: Topsir's Revenge is a Frontal and Loins Reconing is a Rear KB
+;NOTE: Topsir's Revenge is a Frontal and Loin's Reckoning is a Rear KB
 
 ;					
 
@@ -3320,7 +3351,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.81
+variable(global) float RI_Var_Float_Version=5.82
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -6367,12 +6398,17 @@ objectdef RIMovementObject
 				}
 				
 				;check our shinys Y position vs ours
-				if ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1
+				if ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1 && ${Actor[id,${RI_Var_Int_ShinyID}].Y}>${Me.Y}
 				{
 					Actor[id,${RI_Var_Int_ShinyID}]:DoFace
 					wait 1
 					relay ${RI_Var_String_RelayGroup} RIMUIObj:JumpUp[ALL,${Me.X},${Me.Y},${Me.Z},${Math.Calc[${Me.Y}+.2]},${Me.Heading},5]
 					wait 100 ${RIMObj.AllGroupWithinRange[1.2]}
+					for (count:Set[1];${count}<50;count:Inc)
+					{
+						call This.CheckCombat
+						wait 1
+					}
 				}
 				
 				;target shiney click it and lootall
@@ -6532,6 +6568,28 @@ objectdef RIMovementObject
 				RI_Var_Bool_PauseMovement:Set[FALSE]
 			}
 		}
+	}
+	member(bool) AllGroupAlive(bool _UseRelayGroupSize=FALSE)
+	{
+		variable int _count
+		variable bool _AllHere=TRUE
+		if ${_UseRelayGroupSize}
+		{
+			for(_count:Set[1];${_count}<${RI_Var_Int_RelayGroupSize};_count:Inc)
+			{
+				if ${Me.Group[${_count}].IsDead}
+					_AllHere:Set[FALSE]
+			}
+		}
+		else
+		{
+			for(_count:Set[1];${_count}<${Me.Group};_count:Inc)
+			{
+				if !${Me.Group[${_count}].IsDead(exists)}
+					_AllHere:Set[FALSE]
+			}
+		}
+		return ${_AllHere}
 	}
 	member(bool) AllGroupInZone(bool _UseRelayGroupSize=FALSE)
 	{
@@ -8255,6 +8313,9 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Planes of Prophecy]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem[Against the Elements for Qeynos]
+				UIElement[QuestsListBox@RI]:AddItem[Against the Elements for Freeport]
+				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part I: Security Measures"]
 				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part I: Security Measures"]
 				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part II: Lightning Strikes"]
 				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part III: From Birth to Tombs"]
@@ -8310,6 +8371,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Disenchanting the Enchanted"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - To Zek With It"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Feerrott Not, I Shall Find You"]
+				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Defrosting Everfrost"]
 			}
 		}
 	}
