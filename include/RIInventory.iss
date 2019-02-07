@@ -73,12 +73,12 @@ function main(... args)
 	}
 	echo ISXRI: Starting RI Inventory
 	;load ui
-	;if ${LoadUI}
-	;{
-		ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIInventory.xml"
-	;}
+	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
+	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIInventory.xml"
 
+	if !${LoadUI}
+		UIElement[RIInventory]:Hide
+	
 	;set button colors
 	UIElement[AddSellButton@RIInventory].Font:SetColor[FF0099FF]
 	UIElement[AddDestroyButton@RIInventory].Font:SetColor[FFFF0000]

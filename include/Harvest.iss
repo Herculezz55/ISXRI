@@ -28,6 +28,11 @@ function main()
 		waitframe
 	}
 }
+atom(global) ri_harvest(string _what)
+{
+	if ${_what.Upper.EqualCS[END]}
+		Script:End
+}
 ;atexit function
 function atexit()
 {

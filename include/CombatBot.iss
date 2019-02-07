@@ -414,7 +414,8 @@ variable(global) bool EthCastCascadingForce=0
 variable(global) bool EthCastEthermancy=0
 variable(global) bool EthCastEthershadowAssassin=0
 variable(global) bool EthCastImplosion=0
-
+variable(global) bool RI_Var_Bool_Bulwark=1
+variable(global) bool CastBulwark=FALSE
 
 atom(global) RI_Atom_CB_SetUISetting(string _SettingName, string Value)
 {	
@@ -5569,6 +5570,12 @@ objectdef RI_Object_CB
 		UIElement[CombatBotUI]:SetFocus
 	}
 }
+atom Bulwark(string Text, string BadName, string noun)
+{
+	;echo BULWARK
+	if ${Me.Archetype.Find[Fighter](exists)}
+		CastBulwark:Set[TRUE]
+}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5594,6 +5601,10 @@ function main()
 	;Turbo 2000
 	;disable debugging
 	Script:DisableDebugging
+	
+	;bulwark
+	if ${Me.Archetype.Find[Fighter](exists)}
+		AddTrigger Bulwark "\\#FF00FF@BadName@ looks for @noun@ most hated target\."
 	
 	RI_CMD_Hidden_RIS
 	
@@ -6892,6 +6903,15 @@ function main()
 				waitframe
 				continue
 			}
+			;Bulwark
+			if ${CastBulwark} && ${RI_Var_Bool_Bulwark}
+			{
+				if ${Me.Ability[id,1618257987](exists)} && ${Me.Ability[id,1618257987].TimeUntilReady}==0 && ${Me.Archetype.Find[Fighter](exists)} && ${Actor[id,${KillTargetID}](exists)} && ${Actor[id,${KillTargetID}].Distance}<=35 && ${KillTargetID}!=0
+					call CastAb "Bulwark of Order" "Bulwark of Order" 1618257987 FALSE
+				elseif ${Me.Ability[id,1618257987].TimeUntilReady}>0
+					CastBulwark:Set[0]
+				continue
+			}
 			;AscensionCombos
 			;Thaumaturgist
 			if ${ThauCastSepticStrike}
@@ -7095,7 +7115,7 @@ function main()
 					}
 				}
 				else
-					wait 100 !${Me.CastingSpell}
+					wait 100 !${Me.CastingSpell} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 				;echo call CastAb "${strDoCastName}" ${strDoCastID} ${strDoCastTarget}
 				if ${DoCastingItem}
 					call CastItemFN "${strDoCastName}"
@@ -7109,7 +7129,7 @@ function main()
 			{
 				if ${Me.CastingSpell}
 				{
-					wait 100 !${Me.CastingSpell} || ${DoCasting}
+					wait 100 !${Me.CastingSpell} || ${DoCasting} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 					;wait 2
 				}
 				if ${RI_Var_String_MySubClass.Equal[inquisitor]} && ${UIElement[SubClassInqVerdictCheckBox@SubClassFrame@CombatBotUI].Checked}
@@ -7136,6 +7156,11 @@ function main()
 							call CastAb Verdict Verdict 3138602103
 						}
 					}
+				}
+				if ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
+				{
+					waitframe
+					continue
 				}
 				if ${DoCasting}
 				{
@@ -13498,20 +13523,20 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 			do
 			{
 				;echo Casting ${CastNameShort} as ${CastName}
-				if !${Me.CastingSpell}
+				if !${Me.CastingSpell} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 				{
 					Me.Ability[id,${CastID}]:Use
 					eq2execute clearabilityqueue
 				}
-				wait 2 ${Me.CastingSpell} || !${Me.Ability[id,${CastID}].IsReady} || ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${CastName}]} )
+				wait 2 ${Me.CastingSpell} || !${Me.Ability[id,${CastID}].IsReady} || ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${CastName}]} ) || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 				;${boolInstantCast} || 
-				if ${boolBuff} || 
+				if ${boolBuff}
 					wait 5
 				if ${CastNameShort.Equal["In Plain Sight"]}
 				{
 					wait 2
 				}
-				if ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal["${CastName}"]}
+				if ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal["${CastName}"]} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 					break
 				waitframe
 			}
@@ -13525,7 +13550,9 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 			;echo Instant or Buff
 			;eq2execute clearabilityqueue
 			;wait 4 ${Me.CastingSpell} || ${DoCasting}
-			wait 100 !${Me.CastingSpell} || ${DoCasting}
+			;echo bulwark test before wait in castab ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
+			wait 100 !${Me.CastingSpell} || ${DoCasting} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
+			;echo bulwark test after wait in castab ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 		;}
 		;wait 1
 		eq2execute clearabilityqueue
@@ -13675,7 +13702,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 			;echo Instant or Buff
 			;eq2execute clearabilityqueue
 			;wait 2 ${Me.CastingSpell} || ${DoCasting}
-			wait 100 !${Me.CastingSpell} || ${DoCasting}
+			wait 100 !${Me.CastingSpell} || ${DoCasting} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 		;}
 		;wait 2 ${Me.CastingSpell} || ${DoCasting}
 		;wait 100 !${Me.CastingSpell} || ${DoCasting}

@@ -10,7 +10,10 @@ variable bool OkToTransmute=FALSE
 variable int intQuery
 variable(global) string RI_Var_String_RITransmuteScriptName=${Script.Filename}
 variable(global) bool Debug=FALSE
-function main()
+variable bool Start=FALSE
+variable bool Loop=FALSE
+
+function main(... args)
 {
 	;disable debugging
 	Script:DisableDebugging
@@ -31,9 +34,136 @@ function main()
 		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RITransmute.xml" http://www.isxri.com/RITransmute.xml
 		wait 50
 	}
-	
 	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RITransmute.xml"
+	
+	variable int ArgCount=0
+	variable bool LoadUI=TRUE
+	
+	while ${ArgCount:Inc} <= ${args.Used}
+	{
+		switch ${args[${ArgCount}]}
+		{
+			case -b1
+			case -bag1
+			{	
+				UIElement[Bag1@RITransmute]:SetChecked
+				break
+			}
+			case -b2
+			case -bag2
+			{
+				UIElement[Bag2@RITransmute]:SetChecked
+				break
+			}
+			case -b3
+			case -bag3
+			{
+				UIElement[Bag3@RITransmute]:SetChecked
+				break
+			}
+			case -b4
+			case -bag4
+			{
+				UIElement[Bag4@RITransmute]:SetChecked
+				break
+			}
+			case -b5
+			case -bag5
+			{
+				UIElement[Bag5@RITransmute]:SetChecked
+				break
+			}
+			case -b6
+			case -bag6
+			{
+				UIElement[Bag6@RITransmute]:SetChecked
+				break
+			}
+			case -l
+			case -leg
+			case -legendary
+			{
+				UIElement[Legendary@RITransmute]:SetChecked
+				break
+			}
+			case -f
+			case -fab
+			case -fabled
+			{
+				UIElement[Fabled@RITransmute]:SetChecked
+				break
+			}
+			case -myth
+			case -mythical
+			{
+				UIElement[Mythical@RITransmute]:SetChecked
+				break
+			}
+			case -eth
+			case -ethereal
+			{
+				UIElement[Ethereal@RITransmute]:SetChecked
+				break
+			}
+			case -mf
+			case -mcf
+			case -mcfab
+			case -mcfabled
+			{
+				UIElement[MCFabled@RITransmute]:SetChecked
+				break
+			}
+			case -ml
+			case -mcl
+			case -mcleg
+			case -mclegendary
+			{
+				UIElement[MCLegendary@RITransmute]:SetChecked
+				break
+			}
+			case -m
+			case -master
+			{
+				UIElement[Master@RITransmute]:SetChecked
+				break
+			}
+			case -a
+			case -adept
+			{
+				UIElement[Adept@RITransmute]:SetChecked
+				break
+			}
+			case -e
+			case -expert
+			{
+				UIElement[Expert@RITransmute]:SetChecked
+				break
+			}
+			case -noui
+			{
+				LoadUI:Set[FALSE]
+				break
+			}
+			case -loop
+			{
+				Loop:Set[TRUE]
+				Start:Set[1]
+				break
+			}
+			case -start
+			{
+				Start:Set[1]
+				break
+			}
+			default
+				break
+		}
+	}
+	
+	
+	if !${LoadUI}
+		UIElement[RITransmute]:Hide
 	
 	Event[EQ2_onRewardWindowAppeared]:AttachAtom[EQ2_onRewardWindowAppeared]
 	
@@ -49,37 +179,37 @@ function main()
 			;echo ${BagsIterator.Value.Name}
 			switch ${BagsIterator.Value.Slot}
 			{	
-				case 0
+				case -0
 				{
 					Bag1:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 1 - ${Bag1}
 					break
 				}
-				case 1
+				case -1
 				{
 					Bag2:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 2 - ${Bag2}
 					break
 				}
-				case 2
+				case -2
 				{
 					Bag3:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 3 - ${Bag3}
 					break
 				}
-				case 3
+				case -3
 				{
 					Bag4:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 4 - ${Bag4}
 					break
 				}
-				case 4
+				case -4
 				{
 					Bag5:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 5 - ${Bag5}
 					break
 				}
-				case 5
+				case -5
 				{
 					Bag6:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 6 - ${Bag6}
@@ -89,9 +219,18 @@ function main()
 		}
 		while ${BagsIterator:Next(exists)}
 	}
-	
+	if ${Start}
+		call Transmute
 	while 1
 	{
+		if ${Loop}
+		{
+			if !${Me.IsMoving} && !${Me.InCombat} && !${Me.CastingSpell}
+			{
+				call Transmute
+				wait 50
+			}
+		}
 		call ExecuteQueued
 		wait 1
 	}
@@ -107,7 +246,7 @@ function ExecuteQueued()
 }
 function Transmute()
 {
-	UIElement[Start@RISalvage]:SetText[Stop]
+	UIElement[Start@RITransmute]:SetText[Stop]
 	;return
 	Me:QueryInventory[InventoryIndex, Location == "Inventory" && IsContainer=FALSE && IsFoodOrDrink=FALSE]
 	;echo ${InventoryIndex.Used}
@@ -308,6 +447,14 @@ function Transmute()
 	}
 	UIElement[Start@RITransmute]:SetText[Start]
 }
+atom(global) rit(string _what)
+{
+	if ${_what.Upper.EqualCS[HIDE]}
+		UIElement[RITransmute]:Hide
+	else
+		UIElement[RITransmute]:Show
+}
+
 atom EQ2_onRewardWindowAppeared()
 {
 	RewardWindow:Receive

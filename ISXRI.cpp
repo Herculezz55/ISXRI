@@ -11,30 +11,15 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.82 10-11-18"
-double EXTVER = 5.82;
+#define EXTENSION_VERSION "5.93 2-6-19"
+double EXTVER = 5.93;
 #include "ISXRI.h"
 
 
 ///THIS IS THE START OF THE AUTOUPDATER FIX FOR XML FILES TO CHECK MD5 AND DOWNLOAD IF NO MATCH FINISH LATER TOO TIRED
 /// Also write a PHP or Whatever script that will check these files serverside and spit the md5 out to use so we can check against it
-/*CONST string RIXMLMD5 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIAUTOTARGETXMLMD5 = "6064CC2269D4E5ABE51818CC8ECACF90";  
-CONST string RIBALANCEXMLMD5 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIMOBHUDXMLMD5 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD51 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD52 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD53 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD54 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD55 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD56 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD57 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD58 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD59 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD50 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD522 = "6064CC2269D4E5ABE51818CC8ECACF90";
-CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
-*/
+/// Already have PHP Script on Server, http://www.isxri.com/MD5.php?f=filename.xml
+/// EX. http://www.isxri.com/MD5.php?f=RISalvage.xml   and in here we check using CMD MD5
 
 //
 //
@@ -845,6 +830,28 @@ CONST string RIXMLMD533 = "6064CC2269D4E5ABE51818CC8ECACF90";
 #include "ThenewTravelsofYunZiDefrostingEverfrost.h"
 #include "AgainsttheElementsforFreeport.h"
 #include "AgainsttheElementsforQeynos.h"
+#include "ThenewTravelsofYunZiHavingFunStormingLavastorm.h"
+
+// CD Instances
+
+#include "AwuidorTheNebulousDeep.h"
+#include "DoomfireElementsofRage.h"
+#include "DoomfireTheEnkindledTowers.h"
+#include "EryslaiTheBixelHive.h"
+#include "VegarlsonRuinsofRathe.h"
+#include "EryslaiTheMidnightAerie.h"
+
+// CD Quests
+
+#include "ElementsofDestructionPlanesofDisorder.h"
+#include "ElementsofDestructionPureAdventure.h"
+#include "ElementsofDestructionPursuitofJustice.h"
+#include "ElementsofDestructionShadowCastingintheDark.h"
+#include "ElementsofDestructionStarpyresFlames.h"
+#include "ElementsofDestructionVisitationDay.h"
+#include "ElementsofDestructionFlamesofOrder.h"
+#include "ElementsofDestructionGustsofOrder.h"
+
 //#include ".h"
 //End Quest Dat Files
 
@@ -875,6 +882,35 @@ bool boolNewVersion = false;
 HANDLE threadHandle;
 
 #include <wincrypt.h>
+
+/*char MD5(FILE *f, char *md5sum[33])
+{
+	FILE *f;
+	char md5sum[33];
+
+	//set the file
+	//char InnerspacePath[512];
+	//pISInterface->GetInnerSpacePath(InnerspacePath, sizeof(InnerspacePath));
+	string md5file;
+	//= InnerspacePath;
+	//md5file += "\\Scripts\\RI\\";
+	md5file += argv[1];
+
+	f = fopen(md5file.c_str(), "rb");
+
+	if (f)
+	{
+		//printf("the file %s was opened", md5file.c_str());
+		CalcHash(f, md5sum);
+		fclose(f);
+		printf("ISXRI: File: %s MD5: %s", md5file.c_str(), md5sum);
+	}
+	else
+	{
+		printf("ISXRI: MD5 could not find the file %s", md5file.c_str());
+	}
+	return 0;
+}*/
 
 int CalcHash(FILE *f, char *md5sum)
 {
@@ -1722,6 +1758,27 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIDEFROSTINGEVERFROST");
 	pISInterface->RemoveTopLevelObject("AGAINSTTHEELEMENTSFORFREEPORT");
 	pISInterface->RemoveTopLevelObject("AGAINSTTHEELEMENTSFORQEYNOS");
+	pISInterface->RemoveTopLevelObject("THENEWTRAVELSOFYUNZIHAVINGFUNSTORMINGLAVASTORM");
+
+	//CD Instances
+	pISInterface->RemoveTopLevelObject("AwuidorTheNebulousDeep");
+	pISInterface->RemoveTopLevelObject("DoomfireElementsofRage");
+	pISInterface->RemoveTopLevelObject("DoomfireTheEnkindledTowers");
+	pISInterface->RemoveTopLevelObject("EryslaiTheBixelHive");
+	pISInterface->RemoveTopLevelObject("VegarlsonRuinsofRathe");
+	pISInterface->RemoveTopLevelObject("EryslaiTheMidnightAerie");
+
+	//CD Quests
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONPLANESOFDISORDER");
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONPUREADVENTURE");
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONPURSUITOFJUSTICE");
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONSHADOWCASTINGINTHEDARK");
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONSTARPYRESFLAMES");
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONVISITATIONDAY");
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONFLAMESOFORDER");
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONGUSTSOFORDER");
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONFLAMESOFORDER");
+	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONGUSTSOFORDER");
 }
 
 void ISXRIUnRegisterCommands()
@@ -1827,6 +1884,9 @@ void ISXRIUnRegisterCommands()
 	pISInterface->RemoveCommand("RICharList");
 	pISInterface->RemoveCommand("RI_Inventory");
 	pISInterface->RemoveCommand("RII");
+	pISInterface->RemoveCommand("RIT");
+	pISInterface->RemoveCommand("RIS");
+	pISInterface->RemoveCommand("RIE");
 	
 	pISInterface->RemoveCommand("MD5");
 	pISInterface->RemoveCommand("RI_CMD_Hidden_AddTLO");
@@ -29236,6 +29296,546 @@ bool __cdecl TLO_AgainsttheElementsforQeynos(int argc, char *argv[], LSTYPEVAR &
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_ThenewTravelsofYunZiHavingFunStormingLavastorm(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ThenewTravelsofYunZiHavingFunStormingLavastorm) / sizeof(ThenewTravelsofYunZiHavingFunStormingLavastorm[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ThenewTravelsofYunZiHavingFunStormingLavastorm[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AwuidorTheNebulousDeep(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(AwuidorTheNebulousDeep) / sizeof(AwuidorTheNebulousDeep[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = AwuidorTheNebulousDeep[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_DoomfireElementsofRage(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(DoomfireElementsofRage) / sizeof(DoomfireElementsofRage[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = DoomfireElementsofRage[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_DoomfireTheEnkindledTowers(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(DoomfireTheEnkindledTowers) / sizeof(DoomfireTheEnkindledTowers[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = DoomfireTheEnkindledTowers[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_EryslaiTheBixelHive(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(EryslaiTheBixelHive) / sizeof(EryslaiTheBixelHive[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = EryslaiTheBixelHive[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_VegarlsonRuinsofRathe(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(VegarlsonRuinsofRathe) / sizeof(VegarlsonRuinsofRathe[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = VegarlsonRuinsofRathe[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ElementsofDestructionPlanesofDisorder(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ElementsofDestructionPlanesofDisorder) / sizeof(ElementsofDestructionPlanesofDisorder[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ElementsofDestructionPlanesofDisorder[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ElementsofDestructionPureAdventure(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ElementsofDestructionPureAdventure) / sizeof(ElementsofDestructionPureAdventure[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ElementsofDestructionPureAdventure[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ElementsofDestructionPursuitofJustice(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ElementsofDestructionPursuitofJustice) / sizeof(ElementsofDestructionPursuitofJustice[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ElementsofDestructionPursuitofJustice[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ElementsofDestructionShadowCastingintheDark(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ElementsofDestructionShadowCastingintheDark) / sizeof(ElementsofDestructionShadowCastingintheDark[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ElementsofDestructionShadowCastingintheDark[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ElementsofDestructionStarpyresFlames(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ElementsofDestructionStarpyresFlames) / sizeof(ElementsofDestructionStarpyresFlames[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ElementsofDestructionStarpyresFlames[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ElementsofDestructionVisitationDay(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ElementsofDestructionVisitationDay) / sizeof(ElementsofDestructionVisitationDay[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ElementsofDestructionVisitationDay[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ElementsofDestructionFlamesofOrder(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ElementsofDestructionFlamesofOrder) / sizeof(ElementsofDestructionFlamesofOrder[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ElementsofDestructionFlamesofOrder[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ElementsofDestructionGustsofOrder(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(ElementsofDestructionGustsofOrder) / sizeof(ElementsofDestructionGustsofOrder[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = ElementsofDestructionGustsofOrder[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_EryslaiTheMidnightAerie(int argc, char *argv[], LSTYPEVAR &Dest)
+{
+	int numberofelements = sizeof(EryslaiTheMidnightAerie) / sizeof(EryslaiTheMidnightAerie[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num<numberofelements)
+		{
+			Dest.ConstCharPtr = EryslaiTheMidnightAerie[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -29247,6 +29847,41 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 		pISInterface->AddTopLevelObject(argv[1], fLSTopLevelObject(argv[2]));*/
 
 		string tlo = argv[1];
+
+		//CD Instances
+
+		if (tlo == "AwuidorTheNebulousDeep")
+			pISInterface->AddTopLevelObject("AwuidorTheNebulousDeep", TLO_AwuidorTheNebulousDeep);
+		if (tlo == "DoomfireElementsofRage")
+			pISInterface->AddTopLevelObject("DoomfireElementsofRage", TLO_DoomfireElementsofRage);
+		if (tlo == "DoomfireTheEnkindledTowers")
+			pISInterface->AddTopLevelObject("DoomfireTheEnkindledTowers", TLO_DoomfireTheEnkindledTowers);
+		if (tlo == "EryslaiTheBixelHive")
+			pISInterface->AddTopLevelObject("EryslaiTheBixelHive", TLO_EryslaiTheBixelHive);
+		if (tlo == "VegarlsonRuinsofRathe")
+			pISInterface->AddTopLevelObject("VegarlsonRuinsofRathe", TLO_VegarlsonRuinsofRathe);
+		if (tlo == "EryslaiTheMidnightAerie")
+			pISInterface->AddTopLevelObject("EryslaiTheMidnightAerie", TLO_EryslaiTheMidnightAerie);
+
+		//CD Quests
+
+		if (tlo == "ELEMENTSOFDESTRUCTIONPLANESOFDISORDER")
+			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONPLANESOFDISORDER", TLO_ElementsofDestructionPlanesofDisorder);
+		if (tlo == "ELEMENTSOFDESTRUCTIONPUREADVENTURE")
+			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONPUREADVENTURE", TLO_ElementsofDestructionPureAdventure);
+		if (tlo == "ELEMENTSOFDESTRUCTIONPURSUITOFJUSTICE")
+			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONPURSUITOFJUSTICE", TLO_ElementsofDestructionPursuitofJustice);
+		if (tlo == "ELEMENTSOFDESTRUCTIONSHADOWCASTINGINTHEDARK")
+			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONSHADOWCASTINGINTHEDARK", TLO_ElementsofDestructionShadowCastingintheDark);
+		if (tlo == "ELEMENTSOFDESTRUCTIONSTARPYRESFLAMES")
+			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONSTARPYRESFLAMES", TLO_ElementsofDestructionStarpyresFlames);
+		if (tlo == "ELEMENTSOFDESTRUCTIONVISITATIONDAY")
+			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONVISITATIONDAY", TLO_ElementsofDestructionVisitationDay);
+		if (tlo == "ELEMENTSOFDESTRUCTIONFLAMESOFORDER")
+			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONFLAMESOFORDER", TLO_ElementsofDestructionFlamesofOrder);
+		if (tlo == "ELEMENTSOFDESTRUCTIONGUSTSOFORDER")
+			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONGUSTSOFORDER", TLO_ElementsofDestructionGustsofOrder);
+
 		if (tlo == "Acadechism")
 			pISInterface->AddTopLevelObject("Acadechism", TLO_Acadechism);
 		if (tlo == "Bilgewater")
@@ -30690,6 +31325,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("AGAINSTTHEELEMENTSFORFREEPORT", TLO_AgainsttheElementsforFreeport);
 		if (tlo == "AGAINSTTHEELEMENTSFORQEYNOS")
 			pISInterface->AddTopLevelObject("AGAINSTTHEELEMENTSFORQEYNOS", TLO_AgainsttheElementsforQeynos);
+		if (tlo == "THENEWTRAVELSOFYUNZIHAVINGFUNSTORMINGLAVASTORM")
+			pISInterface->AddTopLevelObject("THENEWTRAVELSOFYUNZIHAVINGFUNSTORMINGLAVASTORM", TLO_ThenewTravelsofYunZiHavingFunStormingLavastorm);
 	}
 	return 1;
 }
@@ -31834,25 +32471,44 @@ int __cdecl CMD_Evac(int argc, char *argv[])
 	pISInterface->RunScriptFromBuffer("Evac", c, sizeof(Evac), 1, k);
 	return 1;
 }
-
 int __cdecl CMD_Transmute(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
-	const unsigned char * p = Transmute;
-	const char * c = (const char *)p;
-
-	pISInterface->RunScriptFromBuffer("RITransmute", c, sizeof(Transmute), 1, k);
-	return 1;
+	char* args[1024];
+	/*if (argc > 1024)
+	{
+	printf("ISXRI: You have exceeded the max amount of arguments please enter less than 1024 arguments");
+	return 0;
+	}*/
+	//printf("ISXRI:Argument Count: %d", argc);
+	args[0] = "3rtZdjv7";
+	for (int i = 1; i < argc; i++)
+	{
+		args[i] = argv[i];
+	}
+	const char * buffer = (const char *)Transmute;
+	pISInterface->RunScriptFromBuffer("RITransmute", buffer, sizeof(Transmute), argc, args);
+	return 0;
 }
+
 int __cdecl CMD_Extract(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
-	const unsigned char * p = Extract;
-	const char * c = (const char *)p;
-
-	pISInterface->RunScriptFromBuffer("RIExtract", c, sizeof(Extract), 1, k);
-	return 1;
+	char* args[1024];
+	/*if (argc > 1024)
+	{
+	printf("ISXRI: You have exceeded the max amount of arguments please enter less than 1024 arguments");
+	return 0;
+	}*/
+	//printf("ISXRI:Argument Count: %d", argc);
+	args[0] = "3rtZdjv7";
+	for (int i = 1; i < argc; i++)
+	{
+		args[i] = argv[i];
+	}
+	const char * buffer = (const char *)Extract;
+	pISInterface->RunScriptFromBuffer("RIExtract", buffer, sizeof(Extract), argc, args);
+	return 0;
 }
+
 int __cdecl CMD_Auth(int argc, char *argv[])
 {
 	char *k[] = { "3rtZdjv7" };
@@ -31862,16 +32518,25 @@ int __cdecl CMD_Auth(int argc, char *argv[])
 	pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, k);
 	return 1;
 }
-
 int __cdecl CMD_Salvage(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
-	const unsigned char * p = Salvage;
-	const char * c = (const char *)p;
-
-	pISInterface->RunScriptFromBuffer("RISalvage", c, sizeof(Salvage), 1, k);
-	return 1;
+	char* args[1024];
+	/*if (argc > 1024)
+	{
+	printf("ISXRI: You have exceeded the max amount of arguments please enter less than 1024 arguments");
+	return 0;
+	}*/
+	//printf("ISXRI:Argument Count: %d", argc);
+	args[0] = "3rtZdjv7";
+	for (int i = 1; i < argc; i++)
+	{
+		args[i] = argv[i];
+	}
+	const char * buffer = (const char *)Salvage;
+	pISInterface->RunScriptFromBuffer("RISalvage", buffer, sizeof(Salvage), argc, args);
+	return 0;
 }
+
 int __cdecl CMD_RIAutoTarget(int argc, char *argv[])
 {
 	char *k[] = { "3rtZdjv7" };
@@ -32961,6 +33626,9 @@ void RegisterCommandsAfterAuth()
 		pISInterface->AddCommand("RIW", CMD_RIWriteLocs, true, false);
 		pISInterface->AddCommand("RI_WriteLocs", CMD_RIWriteLocs, true, false);
 		pISInterface->AddCommand("RII", CMD_RIInventory, true, false);
+		pISInterface->AddCommand("RIT", CMD_Transmute, true, false);
+		pISInterface->AddCommand("RIS", CMD_Salvage, true, false);
+		pISInterface->AddCommand("RIE", CMD_Extract, true, false);
 		pISInterface->AddCommand("RI_Inventory", CMD_RIInventory, true, false);
 		pISInterface->AddCommand("RI_RunInstances", CMD_RunInstances, true, false);
 		pISInterface->AddCommand("RG", CMD_RelayGroup, true, false);
@@ -32973,7 +33641,7 @@ void RegisterCommandsAfterAuth()
 		pISInterface->AddCommand("RZo", CMD_RZo, true, false);
 		pISInterface->AddCommand("RRG", CMD_RaidRelayGroup, true, false);
 		pISInterface->AddCommand("RPG", CMD_RPG, true, false);
-		/* disabling until moved to ri pull
+		// disabling until moved to ri pull - reenabled until i get time
 		pISInterface->AddCommand("RI_Teraradus", CMD_Teraradus, true, false);
 		pISInterface->AddCommand("RI_Kerridicus", CMD_Kerridicus, true, false);
 		pISInterface->AddCommand("RI_Icon", CMD_Icon, true, false);
@@ -32994,7 +33662,7 @@ void RegisterCommandsAfterAuth()
 		pISInterface->AddCommand("RI_Ritual", CMD_Ritual, true, false);
 		pISInterface->AddCommand("RI_Tserrina", CMD_Tserrina, true, false);
 		pISInterface->AddCommand("RI_Anaheed", CMD_Anaheed, true, false);
-		*/
+		//*/
 	}
 
 	//hidden commands

@@ -128,7 +128,7 @@ function main()
 		else
 		{
 			;echo 	${RI_Var_Bool_LockSpotting} && !${RI_Var_Bool_Paused} && ${RI_Var_Float_LockSpotX} != 0 && ${Me.GetGameData[Self.ZoneName].Label.Equal["${RI_Var_String_LockSpotZoneName}"]} && !${Me.FlyingUsingMount} && ( !${Script[Buffer:CombatBot](exists)} || ( ${UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} ) ) 
-			if ${RI_Var_Bool_LockSpotting} && !${RI_Var_Bool_Paused} && ${RI_Var_Float_LockSpotX} != 0 && ${Me.GetGameData[Self.ZoneName].Label.Equal["${RI_Var_String_LockSpotZoneName}"]} && !${Me.FlyingUsingMount} && ( !${Script[Buffer:CombatBot](exists)} || ( ${UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} ) ) 
+			if ${RI_Var_Bool_LockSpotting} && !${RI_Var_Bool_Paused} && ${RI_Var_Float_LockSpotX} !=0 && ${Me.GetGameData[Self.ZoneName].Label.Equal["${RI_Var_String_LockSpotZoneName}"]} && ( ( !${Me.FlyingUsingMount} && !${Me.IsSwimming} ) ||  ${RI_Var_Float_LockSpotY}!=0 ) && ( !${Script[Buffer:CombatBot](exists)} || ( ${UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} ) ) 
 			{
 				;echo calling RILockSpot
 				call RILockSpot
@@ -618,6 +618,36 @@ function CheckSwimming()
 ; }
 function RILockSpot()
 {
+	if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && ${RI_Var_Float_LockSpotY}>0 && ${Math.Distance[${Me.Y},${RI_Var_Float_LockSpotY}]}>3
+	{
+		;for Lockspotting while flying
+		;check our height vs our lockspots y height
+		;now check if we are above or below desired height
+		;below move down
+		if ${Math.Distance[${Me.Y},${RI_Var_Float_LockSpotY}]}>5 && ${Me.Y}>${RI_Var_Float_LockSpotY}
+		{
+			;echo ${Time}: flydown
+			press -release ${RI_Var_String_FlyUpKey}
+			press -hold ${RI_Var_String_FlyDownKey}
+			;wait 1
+		}
+		;above move up
+		elseif ${Math.Distance[${Me.Y},${RI_Var_Float_LockSpotY}]}>5 && ${Me.Y}<${RI_Var_Float_LockSpotY}
+		{
+			;echo ${Time}: flyup
+			press -release ${RI_Var_String_FlyDownKey}
+			press -hold ${RI_Var_String_FlyUpKey}
+			;wait 1
+		}
+		;stop moveup or down
+		elseif ${Math.Distance[${Me.Y},${RI_Var_Float_LockSpotY}]}<=5
+		{
+			;echo ${Time}: we are there lets stop flying up or down
+			press -release ${RI_Var_String_FlyUpKey}
+			press -release ${RI_Var_String_FlyDownKey}
+			;wait 1
+		}
+	}
 	if ${RI_Var_Bool_LockSpotting} && !${RI_Var_Bool_Paused} && !${EQ2.Zoning} && ${RI_Var_Float_LockSpotX} != 0 && ${Math.Distance[${Me.X},${Me.Z},${RI_Var_Float_LockSpotX},${RI_Var_Float_LockSpotZ}]} < ${RI_Var_Int_LockSpotMax} && ${Math.Distance[${Me.X},${Me.Z},${RI_Var_Float_LockSpotX},${RI_Var_Float_LockSpotZ}]} > ${RI_Var_Int_LockSpotPrecision} && ( !${Script[Buffer:CombatBot](exists)} || ( ${UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} ) ) 
 	{
 		if ${RI_Var_Bool_Debug}
@@ -633,6 +663,38 @@ function RILockSpot()
 		{
 			;check if we are swimming and if we should be staying afloat
 			;call CheckSwimming
+			
+			;for Lockspotting while flying
+			if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && ${RI_Var_Float_LockSpotY}>0
+			{
+				;check our height vs our lockspots y height
+				;now check if we are above or below desired height
+				;below move down
+				if ${Math.Distance[${Me.Y},${RI_Var_Float_LockSpotY}]}>3 && ${Me.Y}>${RI_Var_Float_LockSpotY}
+				{
+					;echo ${Time}: flydown
+					press -release ${RI_Var_String_FlyUpKey}
+					press -hold ${RI_Var_String_FlyDownKey}
+					;wait 1
+				}
+				;above move up
+				elseif ${Math.Distance[${Me.Y},${RI_Var_Float_LockSpotY}]}>3 && ${Me.Y}<${RI_Var_Float_LockSpotY}
+				{
+					;echo ${Time}: flyup
+					press -release ${RI_Var_String_FlyDownKey}
+					press -hold ${RI_Var_String_FlyUpKey}
+					;wait 1
+				}
+				;stop moveup or down
+				elseif ${Math.Distance[${Me.Y},${RI_Var_Float_LockSpotY}]}<=3
+				{
+					;echo ${Time}: we are there lets stop flying up or down
+					press -release ${RI_Var_String_FlyUpKey}
+					press -release ${RI_Var_String_FlyDownKey}
+					;wait 1
+				}
+			}
+			
 			if ${RI_Var_Bool_Debug}
 				echo ${Time}: We are more than ${RI_Var_Int_LockSpotPrecision} away from ${RI_Var_Float_LockSpotX} ${RI_Var_Float_LockSpotZ}, Moving Closer
 			;if we are following in game, cancel
@@ -798,6 +860,7 @@ function RIFlyFollow()
 		call StopAutoRun
 		
 }
+
 function RISwimFollow()
 {
 	while !${RI_Var_Bool_Paused} && !${EQ2.Zoning} && ${RI_Var_Bool_RIFollowing} && ${RI_Var_Int_RIFollowTargetID} > 0 && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} < ${RI_Var_Int_RIFollowMaxDistance} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} > ${Math.Calc[${RI_Var_Int_RIFollowMinDistance}+6]} && !${RI_Var_Bool_LockSpotting} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].IsSwimming}

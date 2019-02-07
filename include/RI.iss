@@ -3327,6 +3327,350 @@
 ;	RI
 ;		Fixed a bug that would try to jump up for shinys that are below you instead of above you
 
+;v5.83 Changes 10-16-18
+;	RQ
+;		Added
+;			The new "Travels" of Yun Zi - Having Fun Storming Lavastorm
+;	RI
+;		Modified
+;			Plane of Innovation: Security Measures
+;				Tweaked for completion of Daily TS Mission
+;			Plane of Disease: Crypt of Decay
+;				Tweaked for completion of Daily TS Mission
+;			Torden, Bastion of Thunder: Lightning Strikes
+;				Now auto completes harvesting on ice side
+;				Tweaked for completion of Daily TS Mission
+;			The Molten Throne: Hate's Essences
+;				Tweaked for completion of Daily TS Mission
+;			Plane of Innovation: Gears in the Machine
+;				Toa the Shiny
+;					Now will target self if Curses>1
+;			Torden, Bastion of Thunder: Tower Breach
+;				Keeper of Lore
+;					Fixed a bug that would sometimes not move group members in
+;			The Shard of Hate: Utter Contempt and Udder Contempt
+;				MorgHorb and Topsirloin
+;					Tweaked avoidances a little more
+;				Estir, Twosome and Triumvirate and HerdMode Equivalent
+;					Tweaked circle jousting a little more
+;					Now Supports HerdMode:
+;						RI Pull Moosome
+;						RI Pull Cowtankerous
+;	RI_Harvest
+;		will now end with command RI_Harvest END
+;	RITransmute
+;		Added short command RIT
+;		Now accepts unlimited arguments of the following
+;			-b1
+;			-bag1
+;				Sets Bag 1
+;			-b2
+;			-bag2
+;				Sets Bag 2
+;			-b3
+;			-bag3
+;				Sets Bag 3
+;			-b4
+;			-bag4
+;				Sets Bag 4
+;			-b5
+;			-bag5
+;				Sets Bag 5
+;			-b6
+;			-bag6
+;				Sets Bag 6
+;			-l
+;			-leg
+;			-legendary
+;				Sets Legendary
+;			-f
+;			-fab
+;			-fabled
+;				Sets Fabled
+;			-myth
+;			-mythical
+;				Sets Mythical
+;			-eth
+;			-ethereal
+;				Sets Ethereal
+;			-mf
+;			-mcf
+;			-mcfab
+;			-mcfabled
+;				Sets MC Fabled
+;			-ml
+;			-mcl
+;			-mcleg
+;			-mclegendary
+;				Sets MC Legendary
+;			-m
+;			-master
+;				Sets Master
+;			-a
+;			-adept
+;				Sets Adept
+;			-e
+;			-expert
+;				Sets Expert
+;			-noui
+;				Hide's the UI (for use in Loop mode)
+;					rit while running will show the ui
+;			-loop
+;				Loops transmute in 5s intervals
+;			-start
+;				Auto starts transmute
+
+;v5.84 Changes 10-28-18
+;	CB
+;		Added auto casting of Bulwark for fighters
+;	RQ
+;		Added:
+;			Elements of Destruction: Pursuit of Justice
+;			Elements of Destruction: Visitation Day
+;			Elements of Destruction: Starpyre's Flames
+;			Elements of Destruction: Pure Adventure
+;			Elements of Destruction: Planes of Disorder
+;			Elements of Destruction: Shadow Casting in the Dark
+;	RI
+;		Added:
+;			Doomfire: The Enkindled Towers (Not yet tweaked for Heroic)
+;				Pathing through zone
+;				Added:
+;					Kreigor (RI Pull Kreigor)
+;						Lockspots toons
+;					Morgelon (RI Pull Morgelon)
+;						Lockspots toons
+;					Moracar (RI Pull Moracar)
+;						Lockspots toons
+;					Pyrefist (RI Pull Pyrefist)
+;						Lockspots toons
+;					Ra-Sekjet (RI Pull Rasekjet)
+;						Lockspots toons
+;			Eryslai: The Bixel Hive (Not yet tweaked for Heroic)
+;				Pathing through zone
+;				Added:
+;					Matron (RI Pull Matron)
+;						Lockspots toons
+;					Anzarion (RI Pull Anzarion)
+;						Lockspots toons
+;					Daishani (RI Pull Daishani)
+;						Lockspots toons
+;					Bzzkill the Honeymonger (RI Pull Bzzkill)
+;						Lockspots toons
+;					Aurorax (RI Pull Aurorax)
+;						Lockspots toons
+;			Awuidor: The Nebulous Deep (Not yet tweaked for Heroic)
+;				Pathing through zone
+;				Added:
+;					Glaucos of the Sink (RI Pull Glaucos)
+;						Lockspots toons
+;					Nehalenea Frostbringer (RI Pull Nehalenea)
+;						Lockspots toons
+;					Pontis Aqueous (RI Pull Pontis)
+;						Lockspots toons
+;					Oceanus the Titan (RI Pull Oceanus)
+;						Lockspots toons
+;					Aegaeon (RI Pull Aegaeon)
+;						Lockspots toons
+;			Doomfire: Elements of Rage (Not yet tweaked for Heroic)
+;				Pathing through zone
+;				Added:
+;					Spikesnot the Gall (RI Pull Spikesnot)
+;						Lockspots toons
+;					Daedalus the Sunbird (RI Pull Daedalus)
+;						Lockspots toons
+;					Manacrush (RI Pull Manacrush)
+;						Lockspots toons
+;						Jousts
+;						Targets Mana cages
+;					Wrathflame the Chosen (RI Pull Wrathflame)
+;						Lockspots toons
+;						Kills Adds
+;					Firemonger Rosnarga (RI Pull Rosnarga)
+;						Lockspots toons
+;						Kills Adds		
+;			Vegarlson: Ruins of Rathe		
+;				Pathing through zone
+;				Added:
+;					Glimmerstone (RI Pull Glimmerstone)
+;						Lockspots toons
+;						Moves to and kills Stones
+;					Heaper (RI Pull Heaper)
+;						Lockspots toons
+;					Slurpgaloop (RI Pull Slurpgaloop)
+;						Lockspots toons
+;					The Monstrous Mudwalker (RI Pull Mudwalker)
+;						Lockspots toons
+;					Pete Bog (RI Pull Pete)
+;						Lockspots toons
+
+;v5.85 Changes 11-29-18
+;	RI
+;		Added Global Boolean
+;			RI_Var_Bool_Bulwark
+;				If True CB will auto cast Bulwark when needed
+;				you can toggle this on or off by the command RI Bulwark (case does not matter)
+;				alternatively RI Bulwark ON or 1
+;				alternatively RI Bulwark OFF or 0
+;				** You can add these commands to CombatBot OnLoad events (on Your MainToon) so you never have to type them
+;	CB
+;		Fixed a bug related to Auto Casting of Bulwark of Order
+;	RQ
+;		Fixed a bug that was not detecting solo zones for sig quests
+;		Elements of Destruction: Pursuit of Justice
+;			Now closes book after reading it
+;			Fixed a bug that was not clicking to meditate
+;			Fixed a bug that was running infinite loops
+;		Elements of Destruction: Starpyre's Flames
+;			Fixed a bug that was not gathering the Oil
+;			Added checking of both Gallery's for the oil
+;		Elements of Destruction: Shadow Casting in the Dark
+;			Fixed a bug that was running infinite loops
+
+;v5.86 Changes 12-24-18
+;	RZ
+;		Added:
+;			Doomfire: The Enkindled Towers [Solo]
+;			Doomfire: The Enkindled Towers [Heroic]
+;			Eryslai: The Bixel Hive [Solo]
+;			Eryslai: The Bixel Hive [Heroic]
+;			Awuidor: The Nebulous Deep [Solo]
+;			Awuidor: The Nebulous Deep [Heroic]
+;	RI
+;		Fixed a bug with clicking Ulteran Spire Portals
+;		Eryslai: The Bixel Hive 
+;			Modified
+;				Anzarion (RI Pull Anzarion)
+;					Modified pull position
+;					Now Lockspots toons in water
+;			Awuidor: The Nebulous Deep
+;				Following toons should now more reliably swim up out of Water Towers			
+
+;v5.87 Changes 12-28-18
+;	CB
+;		Bulwark of order will now insta cast while casting
+;	RI
+;		Doomfire: The Enkindled Towers
+;			Fixed pathing when porting to last named
+;			Morgelon (RI Pull Morgelon)
+;				Now auto targets a greater flame wilder
+;			Ra-Sekjet (RI Pull Rasekjet)
+;				Now auto targets: Jel-Ekset, Jek-Setek then Ra-Sekjet
+;				Changed lockspot
+;				Other toons no longer move behind
+
+;v5.88 Changes 12-28-18
+;	RI
+;		Doomfire: The Enkindled Towers
+;			Morgelon (RI Pull Morgelon)
+;				Changed lockspot
+;		Eryslai: The Bixel Hive
+;			Tweaked pathing
+;			Anzarion (RI Pull Anzarion)
+;				Now auto targets: Servitor then Anzarion
+;				Changed lockspot
+;				Other toons no longer move behind
+;			Bzzkill the Honeymonger (RI Pull Bzzkill)
+;				Other toons no longer move behind
+;			Aurorax (RI Pull Aurorax)
+;				Other toons no longer move behind
+
+;v5.89 Changes 12-28-18
+;	RI
+;		Awuidor: The Nebulous Deep (Not yet tweaked for Heroic)
+;			Modified Pathing through zone
+;			Pontis Aqueous (RI Pull Pontis)
+;				Changed lockspot
+;				Other toons no longer move behind				
+;			Oceanus the Titan (RI Pull Oceanus)
+;				Toons now walk and crouch
+
+;v5.90 Changes 1-1-19
+;;;;;;;;;;;; HAPPY NEW YEAR ;;;;;;;;;;;;
+;	CB
+;		Fixed a bug that was not casting Bulwark of order while casting other abilities
+;	RI
+;		Doomfire: The Enkindled Towers
+;			Modified pathing
+;			Morgelon (RI Pull Morgelon)
+;				Other toons no longer move behind
+;		Eryslai: The Bixel Hive
+;			Daishani (RI Pull Daishani)
+;				Changed Lockspot
+;		Awuidor: The Nebulous Deep
+;			Nehalenea Frostbringer (RI Pull Nehalenea)
+;				Now auto targets adds
+;			Aegaeon (RI Pull Aegaeon)
+;				Now auto targets adds
+;			Oceanus the Titan (RI Pull Oceanus)
+;				Now auto targets adds
+
+;v5.91 Changes 1-19-19
+;	RIMovement
+;		Lockspot will now work while flying
+;	RI
+;		Healers will no longer move behind unless strat specifically calls for it
+;		Added:
+;			Eryslai: The Midnight Aerie (Not Yet Tweaked For Heroic)
+;				Pathing through zone
+;				Added:
+;					Beaknik (RI Pull Beaknik)
+;						Moves to and harvests worm
+;						Auto targets adds
+;						Auto feeds Beaknik
+;					Skywing (RI Pull Skywing)
+;						Lockspots toons
+;						Moves in melee range of Aelero
+;					Xochéntula (RI Pull Xochéntula or RI Pull Xoch)
+;						Auto targets adds
+;					Prosperon (RI Pull Prosperon)
+;						Handles releasing of Aerieyal the Subjugated
+;						Moves to an gains buffs in order to damage prosperon
+;					Sterek Swiftwind (RI Pull Sterek)
+;						Auto targets adds
+;						Auto destroys appropriate eggs
+;	RQ
+;		Modified
+;			Elements of Destruction Shadow Casting in the Dark
+;				Now Turns on SkipLoot during slime
+;		Added
+;			Elements of Destruction: Flames of Order
+;			Elements of Destruction: Gusts of Order
+;	RZ
+;		Added
+;			Doomfire: Elements of Rage [Solo]
+;			Eryslai: The Midnight Aerie [Solo]
+
+;v5.92 Changes 1-25-19
+;	RI
+;		Modified:
+;			Eryslai: The Midnight Aerie
+;				Fixed a bug in pathing that would endlessly run a loop before final named
+;			Eryslai: The Bixel Hive
+;				Anzarion (RI Pull Anzarion)
+;					Fixed a spelling bug in SwimUp
+
+;v5.93 Changes 2-6-19
+;	RI
+;		Modified:
+;			Eryslai: The Midnight Aerie
+;				Beaknik
+;					Now only MainToon will get worm
+;				Prosperon
+;					Now turns off Ranged,Melee and Pets during Chaotic phase
+;			Awuidor: The Nebulous Deep
+;				Modified Pathing
+;				Oceanus the Titan (RI Pull Oceanus)
+;					Healers will now cast Group water breathing and Shamans will cancel after fight
+;					changed lockspot inside water tube		
+;			Eryslai: The Bixel Hive
+;				The Matron of Mists
+;					Will now joust out of the fog
+;					Now Auto Targets mist sprens
+;				Aurorax
+;					Changed pull position to on Ramp
+;					Targets adds and stops movement until ported
+
 ; HIDDEN UPDATE NOTES
 ;	CB
 ;		Added Cast Stack Items:
@@ -3351,7 +3695,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.82
+variable(global) float RI_Var_Float_Version=5.93
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -3409,6 +3753,9 @@ variable bool TradePending=FALSE
 variable bool TradeAccepted=FALSE
 variable bool IStartedTrade=FALSE
 variable(global) RILootObject RILootObj
+variable int Precision=2
+variable(global) int RI_Var_Int_ShinyMoveDistance=2
+variable(global) bool RI_Var_Bool_IgnoreShinyY=FALSE
 ;RIMovementUI by Herculezz v1
 ;
 ;for GuildStrategist use 10m distance2d
@@ -6389,7 +6736,7 @@ objectdef RIMovementObject
 				TempZ:Set[${Me.Z}]
 				wait 5
 				call This.follow
-				call This.Move ${Actor[${RI_Var_Int_ShinyID}].X} ${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+0.01]} ${Actor[${RI_Var_Int_ShinyID}].Z} ${Precision} 10 FALSE TRUE TRUE FALSE TRUE
+				call This.Move ${Actor[${RI_Var_Int_ShinyID}].X} ${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+0.01]} ${Actor[${RI_Var_Int_ShinyID}].Z} ${RI_Var_Int_ShinyMoveDistance} 10 FALSE TRUE TRUE FALSE TRUE
 				declare count int 0
 				for (count:Set[1];${count}<50;count:Inc)
 				{
@@ -6398,19 +6745,21 @@ objectdef RIMovementObject
 				}
 				
 				;check our shinys Y position vs ours
-				if ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1 && ${Actor[id,${RI_Var_Int_ShinyID}].Y}>${Me.Y}
+				if !${RI_Var_Bool_IgnoreShinyY}
 				{
-					Actor[id,${RI_Var_Int_ShinyID}]:DoFace
-					wait 1
-					relay ${RI_Var_String_RelayGroup} RIMUIObj:JumpUp[ALL,${Me.X},${Me.Y},${Me.Z},${Math.Calc[${Me.Y}+.2]},${Me.Heading},5]
-					wait 100 ${RIMObj.AllGroupWithinRange[1.2]}
-					for (count:Set[1];${count}<50;count:Inc)
+					if ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1 && ${Actor[id,${RI_Var_Int_ShinyID}].Y}>${Me.Y}
 					{
-						call This.CheckCombat
+						Actor[id,${RI_Var_Int_ShinyID}]:DoFace
 						wait 1
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:JumpUp[ALL,${Me.X},${Me.Y},${Me.Z},${Math.Calc[${Me.Y}+.2]},${Me.Heading},5]
+						wait 100 ${RIMObj.AllGroupWithinRange[1.2]}
+						for (count:Set[1];${count}<50;count:Inc)
+						{
+							call This.CheckCombat
+							wait 1
+						}
 					}
 				}
-				
 				;target shiney click it and lootall
 				if ${RI_Var_Bool_WaitForShinys}
 				{
@@ -6436,7 +6785,17 @@ objectdef RIMovementObject
 				wait 50
 				;
 				;;;;;
+				if ${EQ2UIPage[Journals,JournalsQuest].IsVisible} && ${EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].IsEnabled}
+				{	
+					wait 5
+					EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
+					wait 5
+					EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
+					wait 5
+					EQ2UIPage[Journals,JournalsQuest]:Close
+				}
 				call This.Move ${TempX} ${TempY} ${TempZ} ${Precision} 10 TRUE TRUE TRUE FALSE TRUE
+				
 			}
 			else
 			{
@@ -7345,7 +7704,7 @@ objectdef RIMUIObject
 		variable int _ItemCount=0
 		variable int _count2
 		_Items:Clear
-		Me:QueryInventory[_Items, Location=="Inventory" && Name=-"${_Item}"]
+		Me:QueryInventory[_Items, ( Location=="Inventory" || Location=="Unknown" ) && Name=-"${_Item}"]
 		;echo ${_Items.Used}
 		for(_count2:Set[1];${_count2}<=${_Items.Used};_count2:Inc)
 		{
@@ -7706,7 +8065,7 @@ objectdef RIMUIObject
 		;format zonename
 		variable string _FormattedZoneName
 		variable string _ZoneTier
-		if ${Zone.Name.Find["Shard of Hate: Utter Contempt [Heroic]"](exists)}
+		if ${Zone.Name.Find["Shard of Hate: Utter Contempt [Heroic]"](exists)} || ${Zone.Name.Find["Shard of Hate: Udder Contempt [Herd Mode]"](exists)}
 		{
 			_FormattedZoneName:Set["${Zone.Name}"]
 			_ZoneTier:Set["[Heroic]"]
@@ -8292,6 +8651,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[The City of Qeynos Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[The City of Qeynos Timeline]:SetTextColor[FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[The Mysteries of TikTok]
+				UIElement[QuestsListBox@RI]:AddItem[The Never Ending Mending of a Broken Land,Repeatable,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem[Tower of the Four Winds Timeline]
 				UIElement[QuestsListBox@RI].ItemByText[Tower of the Four Winds Timeline]:SetTextColor[FFE8E200]
 			
@@ -8315,7 +8675,6 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:ClearItems
 				UIElement[QuestsListBox@RI]:AddItem[Against the Elements for Qeynos]
 				UIElement[QuestsListBox@RI]:AddItem[Against the Elements for Freeport]
-				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part I: Security Measures"]
 				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part I: Security Measures"]
 				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part II: Lightning Strikes"]
 				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part III: From Birth to Tombs"]
@@ -8372,6 +8731,20 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - To Zek With It"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Feerrott Not, I Shall Find You"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Defrosting Everfrost"]
+				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Having Fun Storming Lavastorm"]
+			}
+			elseif ${_CatName.Equal[Chaos Descending]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Pursuit of Justice"]
+				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Visitation Day"]
+				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Starpyre's Flames"]
+				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Pure Adventure"]
+				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Planes of Disorder"]
+				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Shadow Casting in the Dark"]
+				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Flames of Order"]
+				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Gusts of Order"]
 			}
 		}
 	}
@@ -8393,17 +8766,19 @@ objectdef RIMUIObject
 			UIElement[RunButton@RI]:Show
 			UIElement[CategoryText@RI]:Show
 			UIElement[CategoryComboBox@RI]:Show
-			UIElement[CategoryComboBox@RI]:AddItem[Sokokar Crafting]
+			
 			UIElement[CategoryComboBox@RI]:AddItem[Artisan Epic]
-			UIElement[CategoryComboBox@RI]:AddItem[Terrors of Thalumbra Crafting]
+			UIElement[CategoryComboBox@RI]:AddItem[Chaos Descending]
+			UIElement[CategoryComboBox@RI]:AddItem[Epic 2.0 Pre Reqs]
+			UIElement[CategoryComboBox@RI]:AddItem[Greenmist Heritage]
+			UIElement[CategoryComboBox@RI]:AddItem[Heritage Quests]
 			UIElement[CategoryComboBox@RI]:AddItem[Kunark Ascending Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Kunark Ascending Adventure]
-			UIElement[CategoryComboBox@RI]:AddItem[Greenmist Heritage]
-			UIElement[CategoryComboBox@RI]:AddItem[Epic 2.0 Pre Reqs]
-			UIElement[CategoryComboBox@RI]:AddItem[Heritage Quests]
 			UIElement[CategoryComboBox@RI]:AddItem[Planes of Prophecy]
+			UIElement[CategoryComboBox@RI]:AddItem[Sokokar Crafting]
+			UIElement[CategoryComboBox@RI]:AddItem[Terrors of Thalumbra Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
-			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Planes of Prophecy].ID}]
+			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Chaos Descending].ID}]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FF5DA5CF]
@@ -9082,6 +9457,8 @@ objectdef RIMUIObject
 		RI_Atom_SetLockSpot ${ForWho} OFF
 		RI_Atom_SetRIFollow ${ForWho} OFF
 		press -release ${RI_Var_String_ForwardKey}
+		press -release ${RI_Var_String_FlyUpKey}
+		press -release ${RI_Var_String_FlyDownKey}
 		;if we are following in game, stop following
 		if ${Me.WhoFollowingID} != -1 && !${StopFollow}
 			eq2ex stopfollow
@@ -12402,6 +12779,24 @@ atom(global) ri(... args)
 				{
 					RILoot
 				}
+				case BULWARK
+				{
+					if ${args.Size}==2
+					{
+						if ${args[2].Equal[ON]} || ${Int[${args[2]}]}==1
+							RI_Var_Bool_Bulwark:Set[1];echo ISXRI: Turning ON Bulwark
+						elseif ${args[2].Equal[OFF]} || ${Int[${args[2]}]}==0
+							RI_Var_Bool_Bulwark:Set[0];echo ISXRI: Turning OFF Bulwark
+					}
+					else
+					{
+						if ${RI_Var_Bool_Bulwark}
+							RI_Var_Bool_Bulwark:Set[0];echo ISXRI: Turning OFF Bulwark
+						else
+							RI_Var_Bool_Bulwark:Set[1];echo ISXRI: Turning ON Bulwark
+					}
+					break
+				}
 				case SKIPLOOT
 				case SL
 				{
@@ -12414,7 +12809,7 @@ atom(global) ri(... args)
 					}
 					else
 					{
-						if ${RI_Var_Bool_WaitForLastNamedChest}
+						if ${RI_Var_Bool_SkipLoot}
 							RI_Var_Bool_SkipLoot:Set[0];echo ISXRI: Turning OFF SkipLoot
 						else
 							RI_Var_Bool_SkipLoot:Set[1];echo ISXRI: Turning ON SkipLoot
