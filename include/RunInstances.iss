@@ -1440,6 +1440,39 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 				istrMain:Insert[${EryslaiTheMidnightAerie[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
+		case Awuidor: Marr's Ascent [Solo]
+		case Awuidor: Marr's Ascent [Heroic]
+		case Awuidor: Marr's Ascent [Expert]
+		{
+			RI_CMD_Hidden_AddTLO AwuidorMarrsAscent
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[AwuidorMarrsAscent]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorMarrsAscent[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${AwuidorMarrsAscent[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Doomfire: Vengeance of Ro [Solo]
+		case Doomfire: Vengeance of Ro [Event Heroic]
+		case Doomfire: Vengeance of Ro [Expert Event]
+		{
+			RI_CMD_Hidden_AddTLO DoomfireVengeanceofRo
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[DoomfireVengeanceofRo]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${DoomfireVengeanceofRo[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${DoomfireVengeanceofRo[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Eryslai: Trials of Air [Solo]
+		case Eryslai: Trials of Air [Event Heroic]
+		case Eryslai: Trials of Air [Expert Event]
+		{
+			RI_CMD_Hidden_AddTLO EryslaiTrialsofAir
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[EryslaiTrialsofAir]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${EryslaiTrialsofAir[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${EryslaiTrialsofAir[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
 		default
 		{
 			if ${Zone.Name.Equal["Brackish Vaults [Solo]"]} || ${Zone.Name.Equal["Brackish Vaults [Duo]"]}
@@ -2819,6 +2852,15 @@ function Named(string Name, bool Lock, float LockMXN, float LockMYN, float LockM
 		;Script[Buffer:AggroControl].Variable[TrashTargeting]:Set[TRUE]
 	}
 }
+function LootChest()
+{
+	wait 5
+	eq2ex summon
+	wait 5
+	if !${RI_Var_Bool_SkipLoot}
+		call RIMObj.LootChest
+	wait 20
+}
 function MoveBehind(int _On, int _Dist=30, int _Health=99)
 {
 	if ${_On}>1
@@ -2973,6 +3015,7 @@ function POISTWaitForMobDeactivated(string _Mob, int _Distance=100, int ZLess=0)
 }
 function WaitForMob(string WMName, int WMDistance=100, bool Aggro=FALSE, bool CheckExists=FALSE, int _BreakTime=999999999999999999999999999999)
 {
+	echo ISXRI: Waiting for ${WMName} to exist
 	;set ID number of closest mob named WMName
 	;variable int WMID = ${Actor[Query, Name=-"${WMName}" && Distance<=${WMDistance}].ID}
 	;wait for mob to exist
@@ -3010,6 +3053,7 @@ function WaitForMob(string WMName, int WMDistance=100, bool Aggro=FALSE, bool Ch
 		}
 	}
 	relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
+	wait 5
 	;relay "${RI_Var_String_RelayGroup}" RI_Atom_SetLockSpot OFF
 }
 function WaitForMobAway(string WMName, int WMDistance=100)
@@ -24393,14 +24437,17 @@ function CastAbility(... args)
 }
 function SwimUp()
 {
+	if !${RI_Var_String_GlobalOthers}
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call SwimUp"]
 	relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
 	while ${Me.WaterDepth}>=2
 	{
 		relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
-		wait 5
+		wait 1
 	}
 	wait 50
 	relay ${RI_Var_String_RelayGroup} press -release ${RI_Var_String_FlyUpKey}
+	wait 50
 }
 function SwimDown(int _Wait)
 {
@@ -34690,8 +34737,12 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 		
 	echo ISXRI: Starting ${_NamedName}
 	
-	variable int _NamedID
-	_NamedID:Set[${Actor[Query, Name=-"${_NamedName}" && IsDead=FALSE && ( Type=="NamedNPC" || Type=="NamedNPC" )].ID}]
+	variable int _NamedID=0
+	_NamedID:Set[${Actor[Query, Name=-"${_NamedName}" && IsDead=FALSE && ( Type=="NamedNPC" || Type=="NPC" )].ID}]
+	wait 2
+	if ${_NamedID}==0
+		_NamedID:Set[${Actor[Query, Name=-"${_NamedName}" && IsDead=FALSE && ( Type=="NamedNPC" || Type=="NPC" )].ID}]
+
 	variable bool _CustomLoopCheck=FALSE
 	variable bool _AddsCheck=FALSE
 	if ${_CustomLoop.NotEqual[NONE]}
@@ -34722,16 +34773,27 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 		
 	while ${Actor[Query, ID=${_NamedID} && IsDead=FALSE](exists)}
 	{
-		if ${_CustomLoopCheck}
-			call ${_CustomLoop} ${_NamedID}
-		elseif ${_AddsCheck}
-			call RIObj.Target ${_Adds} ${_NamedID}
+		if ${_NamedID}==0
+		{
+			if ${_CustomLoopCheck}
+				call ${_CustomLoop} "${_NamedName}"
+			elseif ${_AddsCheck}
+				call RIObj.Target ${_Adds} "${_NamedName}"
+			else
+				call RIObj.Target "${_NamedName}"
+		}
 		else
-			call RIObj.Target ${_NamedID}
-			
+		{
+			if ${_CustomLoopCheck}
+				call ${_CustomLoop} ${_NamedID}
+			elseif ${_AddsCheck}
+				call RIObj.Target ${_Adds} ${_NamedID}
+			else
+				call RIObj.Target ${_NamedID}
+		}	
 		waitframe
 	}
-	
+	wait 50
 	echo ISXRI: Ending ${_NamedName}
 }
 ;;;;;;;; Start Doomfire: The Enkindled Towers
@@ -34810,9 +34872,12 @@ function Matroncustom(int _NamedID)
 }
 function Anzarion()
 {
-	Me.Ability[id,1571882540]:Use
-	wait 2
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,122.534416,-181.800980,-846.382935,1,1000]
+	if !${Zone.Name.Find["[Solo]"](exists)}
+	{
+		Me.Ability[id,1571882540]:Use
+		wait 2
+	}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Anzarion].Loc},20,1000]
 	Actor[Anzarion]:DoTarget
 	wait 600 ${Actor[Anzarion].Distance}<15
 	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,175.364059,-227.521606,-1042.660034,1,1000]
@@ -34833,21 +34898,37 @@ function Daishani()
 }
 function Bzzkill()
 {
-	call CustomNamed "Bzzkill the Honeymonger-NMB" "-655.700867,525.024841,-325.854614"
+	call CustomNamed "Bzzkill the Honeymonger-NMB" "-655.700867,525.024841,-325.854614" Bzzkillcustom
+}
+function Bzzkillcustom()
+{
+	noop
+	;Interrupts
+	;Beastlord: Sharpened Claws
+	;Monk: Challenge,
 }
 function Aurorax()
 {
 	echo ISXRI: Pulling Aurorax
-	RI_CMD_AbilityEnableDisable "Mantis Leap" 0
-	while ${Me.Distance[-554.813965,647.868713,-171.740997]}>10
+	if ${Zone.Name.Find["[Solo]"](exists)}
 	{
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,OFF]
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetRIFollow[ALL,OFF]
-		Actor["a hive queensguard elite"]:DoTarget
-		wait 1
+		call JumpOver -492.960205 640.662659 -173.889542 88 FALSE
+		wait 50
 	}
-	wait 5
-	RI_CMD_AbilityEnableDisable "Mantis Leap" 1
+	else
+	{
+		RI_CMD_AbilityEnableDisable "Mantis Leap" 0
+		while ${Me.Distance[-554.813965,647.868713,-171.740997]}>10
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,OFF]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetRIFollow[ALL,OFF]
+			Actor["a hive queensguard elite"]:DoTarget
+			wait 1
+		}
+		wait 5
+		RI_CMD_AbilityEnableDisable "Mantis Leap" 1
+	}
+
 	call CustomNamed "Aurorax-NMB" "-554.813965,647.868713,-171.740997"
 }
 function Erylsaisigcheck()
@@ -34873,28 +34954,40 @@ function Pontis()
 }
 function Oceanus()
 {
-	;press shift+r
-	;wait 2
-	;press ${RI_Var_String_CrouchKey}
-	if ${Me.Archetype.Equal[priest]}
+	if ${Zone.Name.Find["[Solo]"](exists)}
 	{
-		call Groupwaterbreathing 1
+		RIMUIObj:SetLockSpot[ALL,1343.879028,409.448853,21.939520]
+		Actor[Oceanus]:DoTarget
+		wait 600 ${Me.Distance[1343.879028,409.448853,21.939520]}<5
+		press shift+r
+		wait 2
+		press ${RI_Var_String_CrouchKey}
+		call CustomNamed "Oceanus the Titan-NMB" "1343.879028,409.448853,21.939520" NONE urchin
+		press shift+r
+		press ${RI_Var_String_JumpKey}
+		RIMUIObj:SetLockSpot[ALL,1358.145508,409.294739,22.402372]
+		wait 600 ${Me.Distance[1358.145508,409.294739,22.402372]}<5
 	}
 	else
 	{
-		wait 50
-	}
-	call PreHeal
-	call CustomNamed "Oceanus the Titan-NMB" "1358.145508,409.294739,22.402372" NONE urchin
-	;press shift+r
-	;press ${RI_Var_String_JumpKey}
-	if ${Me.Class.Equal[shaman]}
-	{
-		call Groupwaterbreathing 0
-	}
-	else
-	{
-		wait 50
+		if ${Me.Archetype.Equal[priest]}
+		{
+			call Groupwaterbreathing 1
+		}
+		else
+		{
+			wait 50
+		}
+		call PreHeal
+		call CustomNamed "Oceanus the Titan-NMB" "1358.145508,409.294739,22.402372" NONE urchin
+		if ${Me.Class.Equal[shaman]}
+		{
+			call Groupwaterbreathing 0
+		}
+		else
+		{
+			wait 50
+		}
 	}
 }
 function Aegaeon()
@@ -35293,6 +35386,83 @@ function EryslaiMidnightRainbowChecker(int _MAC)
 		MainArrayCounter:Set[${_MAC}]
 }
 ;;;;;;;; End Eryslai: The Midnight Aerie
+
+;;;;;;;; Start Awuidor: Marr's Ascent
+
+function Hirpo()
+{
+	call CustomNamed "Hirpo the Frosted Spine" "${Actor[Hirpo].Loc}"
+}
+function Torrent()
+{
+	call CustomNamed "Torrent" "-0.756965,668.388733,-161.621948"
+	call CustomNamed "Torrent" "-0.756965,668.388733,-161.621948"
+	call CustomNamed "Torrent" "-0.756965,668.388733,-161.621948"
+}
+function Etrigon()
+{
+	call CustomNamed "Etrigon Icefist" "203.853165,321.853821,137.280594"
+}
+function Grobnor()
+{
+	press shift+r
+	wait 2
+	press ${RI_Var_String_CrouchKey}
+	call CustomNamed "Grobnor the Elder Orb" "-140.428925,489.810120,138.207153"
+	press shift+r
+	press ${RI_Var_String_JumpKey}
+}
+function Tethys()
+{
+	call CustomNamed "Tethys All-Mother" "-0.916376,356.412415,3.662665" NONE Metis Clymene Idyia
+}
+
+;;;;;;;; End Awuidor: Marr's Ascent
+
+;;;;;;;; Start Doomfire: Vengeance of Ro
+function Wrath()
+{
+	call CustomNamed "Wrath of Ro" "434.563446,-20.431398,-387.754333"
+}
+function Retribution()
+{
+	call CustomNamed "Retribution of Ro" "434.563446,-20.431398,-387.754333"
+}
+function Vengeance()
+{
+	call CustomNamed "Vengeance of Ro" "405.688446,18.514368,-242.486176" NONE Krel-Ariak
+}
+;;;;;;;; End Doomfire: Vengeance of Ro
+;;;;;;;; Start Eryslai: Trials of Air
+function Cyclono()
+{
+	call CustomNamed "Cyclono-NMB" "434.563446,-20.431398,-387.754333" CyclonoCustom
+}
+function CyclonoCustom(int _NamedID)
+{
+	call RIObj.Target spren -Distance 30 ${_NamedID}
+	if ${Actor[id,${_NamedID}].Distance}>15
+		RIMUIObj:SetLockSpot[${Me.Name},${Actor[id,${_NamedID}].Loc},5,1000]
+}
+function Quarez()
+{
+	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
+	call CustomNamed "Quarez-NMB" "434.563446,-20.431398,-387.754333" QuarezCustom
+	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,1]
+}
+function QuarezCustom(int _NamedID)
+{
+	call RIObj.Target stormrider -Distance 30 ${_NamedID}
+	if ${Actor[an efreeti standard].Heading.Precision[0]}==144
+		RIMUIObj:SetLockSpot[${Me.Name},-310.025604,-490.865906,806.204102]
+	else
+		RIMUIObj:SetLockSpot[${Me.Name},-343.410645,-490.865936,781.803040]
+}
+function Kamara()
+{
+	call CustomNamed "Kamara Zar" "434.563446,-20.431398,-387.754333" NONE stormrider nilborien
+}
+;;;;;;;; End Eryslai: Trials of Air
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -5574,7 +5574,7 @@ atom Bulwark(string Text, string BadName, string noun)
 {
 	;echo BULWARK
 	if ${Me.Archetype.Find[Fighter](exists)}
-		CastBulwark:Set[TRUE]
+		TimedCommand 30 CastBulwark:Set[TRUE]
 }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6515,14 +6515,16 @@ function main()
 							LastValidTargetTime:Set[${Script.RunningTime}]
 							if ${UIElement[SettingsSendPetsCheckBox@SettingsFrame@CombatBotUI].Checked} && !${Me.FlyingUsingMount} && ${Me.Pet(exists)} && ( !${Me.Pet.InCombatMode} || ${Me.Pet.Target.ID}!=${KillTargetID} ) && ( ${Actor[id,${KillTargetID}].Distance}<15 || !${Actor[id,${KillTargetID}].InCombatMode} || !${Actor[id,${KillTargetID}].Target(exists)} )
 								eq2execute pet attack
-								;eq2execute merc attack
+							if ${UIElement[SettingsSendPetsCheckBox@SettingsFrame@CombatBotUI].Checked} && !${Me.FlyingUsingMount} && ${Actor[Query, Guild=-"${Me.Name}" && Guild=-"Mercenary"](exists)} && ( ( !${Actor[Query, Guild=-"${Me.Name}" && Guild=-"Mercenary"].InCombatMode} && !${Actor[Query, Guild=-"${Me.Name}" && Guild=-"Mercenary"].IsSwimming} ) || ${Actor[Query, Guild=-"${Me.Name}" && Guild=-"Mercenary"].Target.ID}!=${KillTargetID} ) && ( ${Actor[id,${KillTargetID}].Distance}<15 || !${Actor[id,${KillTargetID}].InCombatMode} || !${Actor[id,${KillTargetID}].Target(exists)} )
+								eq2execute merc attack
 							if ${Script.RunningTime}>${Math.Calc[${LastValidTargetTime}+5000]} && ${UIElement[SettingsSendPetsCheckBox@SettingsFrame@CombatBotUI].Checked} && ${Me.Pet(exists)} && ( !${Me.Pet.InCombatMode} || ${Me.Pet.Target.ID}!=${KillTargetID} || ${Me.Maintained[${RI_Obj_CB.ConvertAbility[Charm]}](exists)} ) && ( ${Actor[id,${KillTargetID}].Distance}<15 || !${Actor[id,${KillTargetID}].InCombatMode} || !${Actor[id,${KillTargetID}].Target(exists)} )
 								eq2ex pet attack
 								;eq2execute merc attack
 							;if our kill target is in combat and more than 15m away, pull pet back
 							if ${Actor[id,${KillTargetID}].Distance}>15 && ${Actor[id,${KillTargetID}].InCombatMode} && ${Actor[id,${KillTargetID}].Target(exists)} && ${Me.Pet.InCombatMode} && ${UIElement[SettingsRecallPetsCheckBox@SettingsFrame@CombatBotUI].Checked}
 								eq2ex pet backoff
-								;eq2ex merc backoff
+							if ${Actor[id,${KillTargetID}].Distance}>15 && ${Actor[id,${KillTargetID}].InCombatMode} && ${Actor[id,${KillTargetID}].Target(exists)} && ${Actor[Query, Guild=-"${Me.Name}" && Guild=-"Mercenary"].InCombatMode} && ${UIElement[SettingsRecallPetsCheckBox@SettingsFrame@CombatBotUI].Checked}
+								eq2ex merc backoff
 							if !${Me.Name.Find["Skyshrine "](exists)} && ( ${Actor[id,${KillTargetID}].Distance}>${Math.Calc[(${Actor[id,${KillTargetID}].CollisionRadius} * ${Actor[id,${KillTargetID}].CollisionScale}) + (${Actor[id,${Me.ID}].CollisionRadius} * ${Actor[id,${Me.ID}].CollisionScale}) + 6]} || !${UIElement[SettingsMeleeAutoCheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsRangedAutoCheckBox@SettingsFrame@CombatBotUI].Checked}
 							{
 								;echo Target is ranged: ${Target.Distance}>${Math.Calc[${Actor[${Target.ID}].CollisionRadius} * ${Actor[${Target.ID}].CollisionScale} + 6]}

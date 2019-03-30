@@ -3671,6 +3671,92 @@
 ;					Changed pull position to on Ramp
 ;					Targets adds and stops movement until ported
 
+;v5.94 Changes 2-10-19
+;	RQ
+;		A Stitch in Time, Part I: Security Measures
+;			Fixed a pathing bug 
+;	RI
+;		All Named fights will now wait 5s after nameds die before ending LockSpot
+;		Target function will not longer try to detarget when a Target ID of 0 is passed in
+;		Modified
+;			Awuidor: The Nebulous Deep
+;				Modified Pathing
+;				Oceanus
+;					Solo will no longer campspot in tube
+;					Solo will crouch and walk
+;			Doomfire: The Enkindled Towers
+;				Should now more reliably kill the steward
+;			Eryslai: The Bixel Hive
+;				Daishani
+;					Moved pull location closer to Named
+;				Aurorax
+;					Will now jump across before starting fight in Solo
+
+;v5.95 Changes 3-9-19
+;	CombatBot
+;		Added 3s Delay in casting Bulwark
+;	RI
+;		Added
+;			Awuidor: Marr's Ascent
+;				Pathing throughout zone
+;				Added:
+;					Hirpo the Frosted Spine (RI Pull Hirpo)
+;						Lockspots toons						
+;					Torrent of Awuidor (RI Pull Torrent)
+;						Lockspots toons
+;					Etrigon Icefist (RI Pull Etrigon)
+;						Lockspots toons
+;					Grobnor the Elder Orb (RI Pull Grobnor)
+;						Lockspots toons
+;					Tethys All-Mother (RI Pull Tethys)
+;						Lockspots toons
+;			Doomfire: Vengeance of Ro
+;				Pathing throughout zone
+;				Added:
+;					 Wrath of Ro (RI Pull Wrath)
+;						Lockspots toons						
+;					 Retribution of Ro (RI Pull Retribution)
+;						Lockspots toons
+;					 Krel-Ariak and Vengeance of Ro (RI Pull Vengeance)
+;						Lockspots toons
+;						Auto targets Krel then Vengeance
+;			Eryslai: Trials of Air
+;				Pathing throughout zone
+;				Added:
+;					 Cyclono (RI Pull Cyclono)
+;						Lockspots toons		
+;						Autotargets mist spren then Cyclono				
+;					 Quarez (RI Pull Quarez)
+;						Lockspots toons
+;						Turns off cures
+;						Auto Handles Flag
+;						Autotargets stormrider then Quarez
+;					 Kamara Zar (RI Pull Kamara)
+;						Lockspots toons
+;						Autotargets adds
+
+
+
+
+;			
+;				Pathing throughout zone
+;				Added:
+;					 (RI Pull )
+;						Lockspots toons						
+;					 (RI Pull )
+;						Lockspots toons
+;					 (RI Pull )
+;						Lockspots toons
+;			
+;				Pathing throughout zone
+;				Added:
+;					 (RI Pull )
+;						Lockspots toons						
+;					 (RI Pull )
+;						Lockspots toons
+;					 (RI Pull )
+;						Lockspots toons
+
 ; HIDDEN UPDATE NOTES
 ;	CB
 ;		Added Cast Stack Items:
@@ -3695,7 +3781,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.93
+variable(global) float RI_Var_Float_Version=5.95
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -7603,6 +7689,63 @@ objectdef RIConsoleObject
 }
 objectdef RIMUIObject
 {
+	member:int GroupDetrimentCount(string _Type)
+	{
+		variable int detcnt
+		variable int i
+		detcnt:Set[0]
+		if ${_Type.Equals[Trauma]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Trauma}>0
+				{
+					detcnt:Inc
+				}
+			}
+		}
+		elseif ${_Type.Equals[Noxious]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Noxious}>0
+				{
+					detcnt:Inc
+				}
+			}
+		}
+		elseif ${_Type.Equals[Arcane]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Arcane}>0
+				{
+					detcnt:Inc
+				}
+			}
+		}
+		elseif ${_Type.Equals[Elemental]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Elemental}>0
+				{
+					detcnt:Inc
+				}
+			}
+		}
+		elseif ${_Type.Equals[Cursed]} || ${_Type.Equals[Curse]}
+		{
+			for(i:Set[0];${i}<${Me.Group};i:Inc)
+			{
+				if ${Me.Group[${i}].Cursed}>0
+				{
+					detcnt:Inc
+				}
+			}
+		}
+		return ${detcnt}
+	}
 	member:string 3rdPointLine(float x1, float y1, float x2, float y2, float distance)
 	{
 		distance:Set[${Math.Calc[${Math.Distance[${x1},${y1},${x2},${y2}]}+${distance}]}]

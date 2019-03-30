@@ -1,4 +1,5 @@
-string PlaneofInnovationSecurityMeasuresTradeskill[] = {"Custom", 
+string PlaneofInnovationSecurityMeasuresTradeskill[] = {"0 0 0", 
+"Custom", 
 "CheckAndSet -NearLocation \"24.480000 21.154587 -297.500000\" 25 350", 
 "0 0 0", 
 "3.428152 -10.185196 149.694046", 
