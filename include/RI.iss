@@ -3735,7 +3735,14 @@
 ;						Lockspots toons
 ;						Autotargets adds
 
+;v5.96 Changes 4-30-19
+;	RI
+;		SwimUp Function should more reliably detect when at top of water
+;		Doomfire: Vengeance of Ro
+;			Should more reliably grab shinys
+;			Should more reliably use teleporter
 
+;;;; NEED TO ADD Unpack Item rimui command, eq2ex inventory unpack ${Me.Inventory[Query, Name=-"Item Name" && Location=="Inventory"].Index}
 
 
 ;			
@@ -3781,7 +3788,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.95
+variable(global) float RI_Var_Float_Version=5.96
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15

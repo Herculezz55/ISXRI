@@ -24440,7 +24440,7 @@ function SwimUp()
 	if !${RI_Var_String_GlobalOthers}
 		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call SwimUp"]
 	relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
-	while ${Me.WaterDepth}>=2
+	while ${Me.WaterDepth}>=3
 	{
 		relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
 		wait 1
@@ -34886,7 +34886,7 @@ function Anzarion()
 }
 function Anzarioncustom()
 {
-	if ${Me.WaterDepth}>=2
+	if ${Me.WaterDepth}>=3
 		call SwimUp
 	call RIObj.Target wind -Distance 30 air -Distance 30 servitor -Distance 30 flutterwasp -Distance 30 spren -Distance 30 nilborien -Distance 30 Anzarion
 }
