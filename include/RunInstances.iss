@@ -3550,6 +3550,8 @@ function ClickActor(... args)
 	variable string _LoopUntilQSE=~NONE~
 	variable bool _TintFlags=FALSE
 	variable int _acnt=0
+	variable bool _ExactName=FALSE
+	
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	{
 		;backwards compatibility
@@ -3581,6 +3583,11 @@ function ClickActor(... args)
 			case -LoopUntilNoHighlightOnMouseHover
 			{
 				_LoopUntilNoHighlightOnMouseHover:Set[1]
+				break
+			}
+			case -ExactName
+			{
+				_ExactName:Set[1]
 				break
 			}
 			case -HighlightOnMouseHover
@@ -3625,10 +3632,14 @@ function ClickActor(... args)
 		_ID:Set[${Actor[Query, TintFlags=${_Actor} && HighlightOnMouseHover=TRUE].ID}]
 	elseif ${_TintFlags}
 		_ID:Set[${Actor[Query, TintFlags=${_Actor}].ID}]
+	elseif ${_LoopUntilNoHighlightOnMouseHover} && ${_ExactName}
+		_ID:Set[${Actor[Query, Name=="${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
 	elseif ${_LoopUntilNoHighlightOnMouseHover}
 		_ID:Set[${Actor[Query, Name=-"${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
 	elseif ${_Actor.Find[Ulteran Spire Portal]} || ${_HighlightOnMouseHover}
 		_ID:Set[${Actor[Query, Name=-"${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
+	elseif ${_ExactName}
+		_ID:Set[${Actor[Query, Name=="${_Actor}"].ID}]
 	else
 		_ID:Set[${Actor[Query, Name=-"${_Actor}"].ID}]
 	;echo Moving to ${CustomLoc} and Clicking ${_Actor} with Actor ID: ${_ID}
@@ -16741,7 +16752,7 @@ function ExecuteCommand(string CommandName)
 }
 function Zone(float _X, float _Z,int _Wait=600)
 {
-	if !${RI_Var_String_GlobalOthers}
+	if !${RI_Var_Bool_GlobalOthers}
 		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Zone ${_X} ${_Z} ${_Wait}"]
 	wait 5
 	Face ${_X} ${_Z}
@@ -16766,7 +16777,7 @@ function Zone(float _X, float _Z,int _Wait=600)
 }
 function ZoneFly(float _X, float _Z,int _Wait=600)
 {
-	if !${RI_Var_String_GlobalOthers}
+	if !${RI_Var_Bool_GlobalOthers}
 		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Zone ${_X} ${_Z} ${_Wait}"]
 	wait 5
 	Face ${_X} ${_Z}
@@ -16908,7 +16919,7 @@ function ExecuteRIMUIObjMethod(... args)
 }
 function TravelMap(string _ZoneToZoneName, int _ZoneOption=0, int _BellWizardDruid=0)
 {
-	if !${RI_Var_String_GlobalOthers}
+	if !${RI_Var_Bool_GlobalOthers}
 		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call RIMObj.TravelMap \"${_ZoneToZoneName}\" ${_ZoneOption} ${_BellWizardDruid}"]
 	call RIMObj.TravelMap "${_ZoneToZoneName}" ${_ZoneOption} ${_BellWizardDruid}	
 }
@@ -17931,6 +17942,10 @@ function CheckQuest(... args)
 	;echo ${_HighestIndex}
 	if ${_HighestIndex}>0
 		MainArrayCounter:Set[${_HighestIndex}]
+}
+function FlushQueued()
+{
+	FlushQueued
 }
 function CheckActiveQuest(string _QuestName, int _Element=0, bool _Pause=FALSE, string _Message="We were unable to get the quest. Get it and resume")
 {
@@ -24437,13 +24452,13 @@ function CastAbility(... args)
 }
 function SwimUp()
 {
-	if !${RI_Var_String_GlobalOthers}
+	if !${RI_Var_Bool_GlobalOthers}
 		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call SwimUp"]
 	relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
 	while ${Me.WaterDepth}>=3
 	{
 		relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
-		wait 1
+		wait 2
 	}
 	wait 50
 	relay ${RI_Var_String_RelayGroup} press -release ${RI_Var_String_FlyUpKey}
@@ -35273,7 +35288,10 @@ function Beaknik()
 	IncomingText2:Clear
 	IncomingText:Insert["Beaknik's Hungry"]
 	IncomingText:Insert["gobbles up the worm"]
-	call CustomNamed "Beaknik-NMB" "1027.765625,281.807587,250.122375" BeaknikCustom
+	while ${Actor[Query, Name=-"a phoenix" && Distance<30](exists)} && ${Actor[Beaknik].Distance}>20
+		Actor[a phoenix]:DoTarget
+	;call CustomNamed "Beaknik-NMB" "1027.765625,281.807587,250.122375" BeaknikCustom
+	call CustomNamed "Beaknik-NMB" "1027.765625,281.807587,250.122375"
 }
 function BeaknikCustom(int _NamedID)
 {
@@ -35360,11 +35378,16 @@ function ProsperonCustom(int _NamedID)
 }
 function Sterek()
 {
+	RIMUIObj:SetLockSpot[ALL,1267.733032,295.146271,-182.974075]
+	while ${Actor[Query, Name=-"zephyren" && Distance<30](exists)} && ${Actor[sterek].Distance}>20
+		Actor[zephyren]:DoTarget
 	call CustomNamed "Sterek-NMB" "1267.733032,295.146271,-182.974075" SterekCustom
 }
 function SterekCustom(int _NamedID)
 {
-	call RIObj.Target swiftwind -Distance 30 ${_NamedID}
+	if ${_NamedID}==0
+		_NamedID:Set[${Actor[Sterek].ID}]
+	call RIObj.Target zephyren -Distance 20 ${_NamedID}
 	if ${RIMUIObj.MainIconIDExists[${_NamedID},153]}
 	{
 		if ${Actor[Query, Name=="a swiftwind egg" && Aura=="design_egg_shake_gold"](exists)}

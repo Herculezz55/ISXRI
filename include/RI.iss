@@ -3742,6 +3742,21 @@
 ;			Should more reliably grab shinys
 ;			Should more reliably use teleporter
 
+;v5.97 Changes 5-1-19
+;	RI
+;		Fixed a bug in the SwimUp function that would cause toons to run 
+;		off into the sunset whenever in groups after the function ended
+;		Doomfire: The Enkindled Towers
+;			Should more reliably spawn 2nd named
+;		Eryslai: Trials of Air
+;			Added a 5s wait before engaging each trial
+;		Eryslai: The Midnight Aerie
+;			Will now more reliably port back from Prosperon's Platform
+;			Beaknik
+;				Will now ignore the worms and feeding beaknik
+;			Sterek
+;				Will no longer keep clearing target
+
 ;;;; NEED TO ADD Unpack Item rimui command, eq2ex inventory unpack ${Me.Inventory[Query, Name=-"Item Name" && Location=="Inventory"].Index}
 
 
@@ -7166,7 +7181,7 @@ objectdef RIMovementObject
 				if ${Script.RunningTime}>${_LastChecksTime}
 				{
 					_LastChecksTime:Set[${Math.Calc[${Script.RunningTime}+500]}]
-					;echo ${Time}: move while
+					;echo ${Time}: move checks
 					if ${Zone.Name.Equal[The Frillik Tide]}
 						call This.FrillikCheck
 					;check toons
@@ -7199,6 +7214,7 @@ objectdef RIMovementObject
 					if !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && !${RI_Var_Bool_SkipLoot}
 						call This.LootChest
 				}
+				;echo after checks
 				;first check our height if farther than ${Precision} away press and hold space as long as we are flying
 				;we need to get to the correct height for current position we are ${Math.Distance[${Me.Y},${YHeight}]} away
 				;check if we are even flying at all, if not start flight
@@ -7209,28 +7225,28 @@ objectdef RIMovementObject
 					wait 1
 					press -release ${RI_Var_String_FlyUpKey}
 				}
-				;now check if we are above or below desired height
+				;echo now check if we are above or below desired height
 				if ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -hold ${RI_Var_String_FlyDownKey}
 					;wait 1
 				}
-				;above move up
+				;echo above move up
 				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyDownKey}
 					press -hold ${RI_Var_String_FlyUpKey}
 					;wait 1
 				}
-				;below move down
+				;echo below move down
 				elseif ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -release ${RI_Var_String_FlyDownKey}
 					;wait 1
 				}
-				;face x,y,z position and press autorun key if my heading is more than 1degree off of what its supposed to be  ${Math.Calc[${Me.Heading}-1]}<${Me.HeadingTo[${X1},${Me.Y},${Z1}]}<${Math.Calc[${Me.Heading}+1]}
+				;echo face x,y,z position and press autorun key if my heading is more than 1degree off of what its supposed to be  ${Math.Calc[${Me.Heading}-1]}<${Me.HeadingTo[${X1},${Me.Y},${Z1}]}<${Math.Calc[${Me.Heading}+1]}
 				if ( ${Script.RunningTime}>${_LastFaceTime} || ${Math.Distance[${Me.Heading},${Me.HeadingTo[${X1},${Me.Y},${Z1}]}]}>25 )
 				{
 					_LastFaceTime:Set[${Math.Calc[${Script.RunningTime}+250]}]
@@ -7245,6 +7261,7 @@ objectdef RIMovementObject
 				;	_LastFaceTime:Set[${Script.RunningTime}]
 				;	Face ${X1} ${Z1}
 				;}
+				
 				if !${Me.IsMoving} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 				{
 					;echo pressing autorun
@@ -7259,13 +7276,15 @@ objectdef RIMovementObject
 					press -release ${RI_Var_String_ForwardKey}
 				if ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 					press -release ${RI_Var_String_ForwardKey}
-				;execute queued commands
-				call This.ExecuteQueued
 				;wait 5 ( ${Math.Distance[${Me.Heading},${Me.HeadingTo[${X1},${Me.Y},${Z1}]}]}>1 || ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}<=${MPrecision} )
+				;echo execute queued commands
+				call This.ExecuteQueued
+				;echo after execute queued
 				if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 					wait 2
 				else
 					waitframe
+				;echo end while
 			}
 			if ${Math.Distance[${Me.Y},${Y1}]}>5 && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 			{

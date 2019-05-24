@@ -94,7 +94,7 @@ StopForCombat
 -320.241760 24.528629 -69.691193
 -327.685730 25.265652 -76.413567
 Custom
-Target "scorched factor"
+Target "scorched factor" 1
 -329.924591 25.055660 -78.309319
 Wait
 50
