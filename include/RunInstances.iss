@@ -1473,6 +1473,17 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 				istrMain:Insert[${EryslaiTrialsofAir[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
+		case Awuidor: The Veiled Precipice [Solo]
+		case Awuidor: The Veiled Precipice [Event Heroic]
+		case Awuidor: The Veiled Precipice [Expert Event]
+		{
+			RI_CMD_Hidden_AddTLO AwuidorTheVeiledPrecipice
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[AwuidorTheVeiledPrecipice]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorTheVeiledPrecipice[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${AwuidorTheVeiledPrecipice[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
 		default
 		{
 			if ${Zone.Name.Equal["Brackish Vaults [Solo]"]} || ${Zone.Name.Equal["Brackish Vaults [Duo]"]}
@@ -2145,7 +2156,7 @@ objectdef RunInstancesObject
 					;echo ${_cnt}: ${args[${_cnt}]}: ${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE]}: ${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE](exists)}  ${args[${Math.Calc[${_cnt}+1]}].Find["-Distance"](exists)} ${Int[${args[${Math.Calc[${_cnt}+2]}]}]} ${args[${Math.Calc[${_cnt}+2]}]}
 					if ${args[${Math.Calc[${_cnt}+1]}].Find["-Distance"](exists)}
 					{
-						if ${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE && Distance<=${Int[${args[${Math.Calc[${_cnt}+2]}]}]}](exists)}
+						if ${Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE && Distance<=${Int[${args[${Math.Calc[${_cnt}+2]}]}]}](exists)}
 						{
 							if ${LowestHealth}
 							{	
@@ -2165,15 +2176,15 @@ objectdef RunInstancesObject
 							}
 							else
 							{
-								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE].ID}
-									Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE]:DoTarget
+								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE].ID}
+									Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE]:DoTarget
 								return
 							}
 						}
 					}
 					else
 					{
-						if ${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE](exists)}
+						if ${Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE](exists)}
 						{
 							if ${LowestHealth}
 							{	
@@ -2193,8 +2204,8 @@ objectdef RunInstancesObject
 							}
 							else
 							{
-								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE].ID}
-									Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE]:DoTarget
+								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && Type!="Mercenary" && IsDead=FALSE].ID}
+									Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE]:DoTarget
 								return
 							}
 						}
@@ -2220,6 +2231,7 @@ objectdef RunInstancesObject
 			wait 150 ${Math.Distance[${Me.Loc},${_LockSpot}]}<3
 			wait 150 ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}<${_Distance}
 			RIMUIObj:SetLockSpot[OFF]
+			wait 20
 			call MoveBehind 1
 		}
 	}
@@ -35003,6 +35015,13 @@ function Oceanus()
 		{
 			wait 50
 		}
+		RIMUIObj:SetLockSpot[ALL,1343.195801,409.025757,22.282162]
+		wait 600 ${Me.Distance[1343.195801,409.025757,22.282162]}<5
+		wait 50 ${Me.IsMoving}
+		call RIMObj.LootChest
+		wait 50
+		RIMUIObj:SetLockSpot[ALL,1358.145508,409.294739,22.402372]
+		wait 600 ${Me.Distance[1358.145508,409.294739,22.402372]}<5
 	}
 }
 function Aegaeon()
@@ -35244,11 +35263,11 @@ function Vegarlsonnajena()
 ;;;;;;;; Start Doomfire: Elements of Rage
 function Spikesnot()
 {
-	call CustomNamed "Spikesnot the Gall" "114.089546,17.322762,201.016815"
+	call CustomNamed "Spikesnot the Gall" "114.089546,17.322762,201.016815" NONE flame
 }
 function Daedalus()
 {
-	call CustomNamed "Daedalus the Sunbird" "209.593353,57.295509,232.682251"
+	call CustomNamed "Daedalus the Sunbird-NMB" "209.593353,57.295509,232.682251" NONE fanatic 
 }
 
 function Manacrush()
@@ -35272,11 +35291,11 @@ function ManacrushCustom()
 }
 function Wrathflame()
 {
-	call CustomNamed "Wrathflame the Chosen" "232.470551,84.446480,343.481140" NONE Vel
+	call CustomNamed "Wrathflame the Chosen" "232.470551,84.446480,343.481140"
 }
 function Rosnarga()
 {
-	call CustomNamed "Firemonger Rosnarga" "372.106934,110.893745,425.317902" NONE fanatical agressive
+	call CustomNamed "Firemonger Rosnarga" "372.106934,110.893745,425.317902" NONE fanatical agressive needlescale
 }
 
 ;;;;;;;; End Doomfire: Elements of Rage
@@ -35437,7 +35456,8 @@ function Grobnor()
 }
 function Tethys()
 {
-	call CustomNamed "Tethys All-Mother" "-0.916376,356.412415,3.662665" NONE Metis Clymene Idyia
+	;call CustomNamed "Tethys All-Mother" "-0.916376,356.412415,3.662665" NONE Metis Clymene Idyia
+	call CustomNamed "Tethys All-Mother" "-0.916376,356.412415,3.662665"
 }
 
 ;;;;;;;; End Awuidor: Marr's Ascent
@@ -35459,18 +35479,32 @@ function Vengeance()
 ;;;;;;;; Start Eryslai: Trials of Air
 function Cyclono()
 {
-	call CustomNamed "Cyclono-NMB" "434.563446,-20.431398,-387.754333" CyclonoCustom
+	IncomingText:Insert["Might wanna duck"]
+	call CustomNamed "Cyclono-NMB" "-314.745544,-490.705994,777.626465" CyclonoCustom
 }
 function CyclonoCustom(int _NamedID)
 {
+	variable int _cnt=0
 	call RIObj.Target spren -Distance 30 ${_NamedID}
 	if ${Actor[id,${_NamedID}].Distance}>15
-		RIMUIObj:SetLockSpot[${Me.Name},${Actor[id,${_NamedID}].Loc},5,1000]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_NamedID}].Loc},5,1000]
+	if ${Trigger}
+	{
+		_cnt:Set[0]
+		while !${Me.IsCrouching} && ${_cnt:Inc}<10
+		{
+			press ${RI_Var_String_CrouchKey}
+			wait 2
+		}
+		TimedCommand 50 press ${RI_Var_String_JumpKey}
+		Trigger:Set[0]
+	}
+	
 }
 function Quarez()
 {
 	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
-	call CustomNamed "Quarez-NMB" "434.563446,-20.431398,-387.754333" QuarezCustom
+	call CustomNamed "Quarez-NMB" "-314.745544,-490.705994,777.626465" QuarezCustom
 	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,1]
 }
 function QuarezCustom(int _NamedID)
@@ -35483,9 +35517,35 @@ function QuarezCustom(int _NamedID)
 }
 function Kamara()
 {
-	call CustomNamed "Kamara Zar" "434.563446,-20.431398,-387.754333" NONE stormrider nilborien
+	call CustomNamed "Kamara Zar-NMB" "-314.745544,-490.705994,777.626465" Kamaracustom
+}
+function Kamaracustom(int _NamedID)
+{
+	call RIObj.Target stormrider -Distance 30 nilborien -Distance 30 ${_NamedID}
+	if ${RIMUIObj.MainIconIDExists[${Me.ID},584]}>0 
+		RIMUIObj:SetLockSpot[${Me.Name},-265.169281,-490.705994,708.171570]
+	else
+		RIMUIObj:SetLockSpot[${Me.Name},-314.745544,-490.705994,777.626465]
 }
 ;;;;;;;; End Eryslai: Trials of Air
+
+;;;;;;;; Start Awuidor: The Veiled Precipice
+
+function E'ci()
+{
+	call CustomNamed "Champion of E'ci" "-1.299617,668.386719,-77.198326"
+}
+function Marr()
+{
+	call CustomNamed "Champion of Marr" "-0.866707,668.387695,184.191467"
+}
+function Veiled()
+{
+	call CustomNamed "Champion of the Veiled One" "-0.866707,668.387695,184.191467"
+}
+
+;;;;;;;; End Awuidor: The Veiled Precipice
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

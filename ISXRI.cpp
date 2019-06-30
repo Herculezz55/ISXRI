@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "5.97 5-1-19"
-double EXTVER = 5.97;
+#define EXTENSION_VERSION "6.00 6-29-19"
+double EXTVER = 6.00;
 #include "ISXRI.h"
 
 
@@ -843,6 +843,7 @@ double EXTVER = 5.97;
 #include "AwuidorMarrsAscent.h"
 #include "DoomfireVengeanceofRo.h"
 #include "EryslaiTrialsofAir.h"
+#include "AwuidorTheVeiledPrecipice.h"
 
 // CD Quests
 
@@ -1773,6 +1774,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("AwuidorMarrsAscent");
 	pISInterface->RemoveTopLevelObject("DoomfireVengeanceofRo");
 	pISInterface->RemoveTopLevelObject("EryslaiTrialsofAir");
+	pISInterface->RemoveTopLevelObject("AwuidorTheVeiledPrecipice");
 
 	//CD Quests
 	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONPLANESOFDISORDER");
@@ -29950,6 +29952,42 @@ bool __cdecl TLO_EryslaiTrialsofAir(int argc, char *argv[], LSTYPEVAR &Dest)
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_AwuidorTheVeiledPrecipice(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(AwuidorTheVeiledPrecipice) / sizeof(AwuidorTheVeiledPrecipice[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = AwuidorTheVeiledPrecipice[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -29982,6 +30020,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("DoomfireVengeanceofRo", TLO_DoomfireVengeanceofRo);
 		if (tlo == "EryslaiTrialsofAir")
 			pISInterface->AddTopLevelObject("EryslaiTrialsofAir", TLO_EryslaiTrialsofAir);
+		if (tlo == "AwuidorTheVeiledPrecipice")
+			pISInterface->AddTopLevelObject("AwuidorTheVeiledPrecipice", TLO_AwuidorTheVeiledPrecipice);
 
 		//CD Quests
 

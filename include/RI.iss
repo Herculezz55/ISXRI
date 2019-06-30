@@ -3757,18 +3757,53 @@
 ;			Sterek
 ;				Will no longer keep clearing target
 
+
+;v5.98 Changes 5-24-19
+;	RI_Transmute
+;		Fixed a bug that was not determining the bags correctly
+;	RI
+;		Added:
+;			Awuidor: The Veiled Precipice
+;				Pathing throughout zone
+;				Added:
+;					 Champion of E'ci (RI Pull E'ci)
+;						Lockspots toons						
+;					 Champion of Marr (RI Pull Marr)
+;						Lockspots toons
+;					 Champion of the Veiled One (RI Pull Veiled)
+;						Lockspots toons
+
+;v5.99 Changes 6-20-19
+;	RI
+;		Fixed a bug in Target that would sometimes target PC's and Merc's
+;	RZ
+;		Added Expert Versions of Zones
+;		Added Awuidor: The Veiled Precipice
+
+;v6.00 Changes 6-29-19
+;	CombatBot
+;		Will now echo to Console whenever you loot Astral Medallions and when you hit your max
+;	RI
+;		Added 2s wait before engaging move behind on nameds
+;		Eryslai: Trials of Air
+;			Cyclono
+;				Now ducks when needed
+;				Entire group will move more uniformly
+;			Kamara Zar
+;				Now handles stifle
+;		Doomfire: The Enkindled Towers
+;			Added longer waits before nameds
+;		Doomfire: Elements of Rage
+;			Wrathflame
+;				Now kills wrathflame first then adds
+;		Awuidor: The Nebulous Deep
+;			Oceanus
+;				Now will exit water in heroic to loot chest
+;			
 ;;;; NEED TO ADD Unpack Item rimui command, eq2ex inventory unpack ${Me.Inventory[Query, Name=-"Item Name" && Location=="Inventory"].Index}
 
 
-;			
-;				Pathing throughout zone
-;				Added:
-;					 (RI Pull )
-;						Lockspots toons						
-;					 (RI Pull )
-;						Lockspots toons
-;					 (RI Pull )
-;						Lockspots toons
+
 ;			
 ;				Pathing throughout zone
 ;				Added:
@@ -3790,8 +3825,6 @@
 ;		Added @Tank,@Healer1,@Healer2,@DPS1,@DPS2,@Enchanter,@Bard - These will logically choose the toon in your group
 ;		Added InCombatTargeted to Phoenix Rising
 
-;NOTE: Topsir's Revenge is a Frontal and Loin's Reckoning is a Rear KB
-
 ;					
 
 ;		TODO: Added code to maintain Confront Fear (Will use a index:string and on cast add the CastTarget to the index:String then Timedcommand remove them after duration seconds, then on the checker for that particular ability check if they are in the index:string)
@@ -3803,7 +3836,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=5.96
+variable(global) float RI_Var_Float_Version=6.00
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15

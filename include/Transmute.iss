@@ -176,40 +176,40 @@ function main(... args)
     {
         do
         {
-			;echo ${BagsIterator.Value.Name}
+			;echo ${BagsIterator.Value.Slot}
 			switch ${BagsIterator.Value.Slot}
 			{	
-				case -0
+				case 0
 				{
 					Bag1:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 1 - ${Bag1}
 					break
 				}
-				case -1
+				case 1
 				{
 					Bag2:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 2 - ${Bag2}
 					break
 				}
-				case -2
+				case 2
 				{
 					Bag3:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 3 - ${Bag3}
 					break
 				}
-				case -3
+				case 3
 				{
 					Bag4:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 4 - ${Bag4}
 					break
 				}
-				case -4
+				case 4
 				{
 					Bag5:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 5 - ${Bag5}
 					break
 				}
-				case -5
+				case 5
 				{
 					Bag6:Set[${BagsIterator.Value.ContainerID}]
 					;echo Found Bag 6 - ${Bag6}

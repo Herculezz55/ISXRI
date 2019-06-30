@@ -416,6 +416,7 @@ variable(global) bool EthCastEthershadowAssassin=0
 variable(global) bool EthCastImplosion=0
 variable(global) bool RI_Var_Bool_Bulwark=1
 variable(global) bool CastBulwark=FALSE
+variable int DoCastingAttempts=0
 
 atom(global) RI_Atom_CB_SetUISetting(string _SettingName, string Value)
 {	
@@ -1753,6 +1754,7 @@ objectdef RI_Object_CB
 			boolItemCast:Set[FALSE]
 			boolAbilityCast:Set[FALSE]
 			strDoCastNameShort:Set["${CastName}"]
+			DoCastingAttempts:Set[0]
 			DoCasting:Set[TRUE]
 			DoCastingItem:Set[FALSE]
 			if ${CastNow}
@@ -1786,6 +1788,7 @@ objectdef RI_Object_CB
 			strDoCastNameShort:Set["${CastName}"]
 			boolItemCast:Set[FALSE]
 			boolAbilityCast:Set[FALSE]
+			DoCastingAttempts:Set[0]
 			DoCasting:Set[TRUE]
 			DoCastingItem:Set[TRUE]
 			strDoCastName:Set[${CastName.Right[-5]}]
@@ -1809,6 +1812,7 @@ objectdef RI_Object_CB
 			strDoCastNameShort:Set["${CastName}"]
 			boolItemCast:Set[FALSE]
 			boolAbilityCast:Set[FALSE]
+			DoCastingAttempts:Set[0]
 			DoCasting:Set[TRUE]
 			DoCastingItem:Set[FALSE]
 			if ${CastNow}
@@ -7308,38 +7312,45 @@ function main()
 					;echo CS: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items} TID: ${TargetIDs.Used} TN: ${TargetNames.Used}
 						
 					;noop !${CheckAbilitiesObj.CheckAll[${mainCount},${Math.Calc[${mainCount}+50]}]}
-					noop ${CheckAbilitiesObj.CheckAll[${mainCount},${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
-					; {
-						; wait 5
-						; mainCount:Set[1]
-					; }
-					if ${mainCount}>=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+					if !${Zone.Name.Find["Myrist, the Great Library"](exists)}
 					{
-						wait 3
-						mainCount:Set[1]
+						noop ${CheckAbilitiesObj.CheckAll[${mainCount},${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
+						; {
+							; wait 5
+							; mainCount:Set[1]
+						; }
+						if ${mainCount}>=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+						{
+							wait 3
+							mainCount:Set[1]
+						}
 					}
 					;continue
-					; while !${CheckAbilitiesObj.CheckAll[${mainCount},${mainCount}]} && ${mainCount}<=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
-					; {
-						; ; if ${CombatBotDebug}
-							; ; echo CombatBot: CheckAbilities Counter: ${mainCount}
-						; ; if ${SummonMount} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[The Frillik Tide]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual["Vaedenmoor, Realm of Despair"]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[Ceremony in The Wastes`]}
-						; ; {
-							; ; wait 5
-							; ; if !${Me.OnHorse} && !${Me.OnFlyingMount} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[The Frillik Tide]}
-							; ; {
-								; ; eq2ex summon_mount
-								; ; wait 5
-							; ; }
-							; ; SummonMount:Set[FALSE]
-						; ; }
-						; noop
-					; }
-					; if ${mainCount}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
-					; {
-						; mainCount:Set[1]
-						; wait 1
-					; }
+					else
+					{
+						while !${CheckAbilitiesObj.CheckAll[${mainCount},${mainCount}]} && ${mainCount}<=${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+						{
+							; if ${CombatBotDebug}
+								; echo CombatBot: CheckAbilities Counter: ${mainCount}
+							; if ${SummonMount} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[The Frillik Tide]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual["Vaedenmoor, Realm of Despair"]} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[Ceremony in The Wastes`]}
+							; {
+								; wait 5
+								; if !${Me.OnHorse} && !${Me.OnFlyingMount} && ${Me.GetGameData[Self.ZoneName].Label.NotEqual[The Frillik Tide]}
+								; {
+									; eq2ex summon_mount
+									; wait 5
+								; }
+								; SummonMount:Set[FALSE]
+							; }
+							waitframe
+							noop
+						}
+						if ${mainCount}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
+						{
+							mainCount:Set[1]
+							wait 1
+						}
+					}
 					;echo after that ${Script.RunningTime}
 					;if ${CheckAbilitiesObj.CheckAll[${mainCount},${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
 					;{
@@ -8422,6 +8433,15 @@ atom EQ2_onIncomingText(string Text)
 	{
 		relay all "RIConsole:Echo[${Time} ${Me.Name}'s ${Text.Right[-5].Left[-12]}]"
 	}
+	if ${Text.Find["You receive"](exists)} && ${Text.Find["Astral Gloom-Hardened Medallion"](exists)} && !${Text.Find["because you are a Member"](exists)}
+	{
+		relay all "RIConsole:Echo[${Time} ${Me.Name} Received ${Text.Right[-12].Left[-${Math.Calc[${Text.Length}-13]}]} Astral Gloom-Hardened Medallions]"
+	}
+	if ${Text.Find["You have received your maximum allotment of Ethereal Coins from"](exists)}
+	{
+		relay all "RIConsole:Echo[${Time} ${Me.Name} has received their maximum allotment of Ethereal Coins from ${Text.Right[-64].Left[-75]} Missions today.]"
+	}
+
 	;check for OnEvent
 	;echo OnInc
 	variable int i
@@ -13495,7 +13515,10 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 		
 		if ${DoCasting}
 		{
-			DoCasting:Set[FALSE]
+			if ${DoCastingAttempts}>3
+				DoCasting:Set[FALSE]
+			else
+				DoCastingAttempts:Inc
 			;echo ${Me.GetGameData[Spells.Casting].Label} // ${CastName}
 			do
 			{
