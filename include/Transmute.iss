@@ -446,6 +446,8 @@ function Transmute()
 		while ${InventoryIterator:Next(exists)}
 	}
 	UIElement[Start@RITransmute]:SetText[Start]
+	if ${Start} && !${Loop}
+		Script:End
 }
 atom(global) rit(string _what)
 {

@@ -417,6 +417,8 @@ variable(global) bool EthCastImplosion=0
 variable(global) bool RI_Var_Bool_Bulwark=1
 variable(global) bool CastBulwark=FALSE
 variable int DoCastingAttempts=0
+variable int Myrist=0
+variable bool boolCure=0
 
 atom(global) RI_Atom_CB_SetUISetting(string _SettingName, string Value)
 {	
@@ -1757,11 +1759,11 @@ objectdef RI_Object_CB
 			DoCastingAttempts:Set[0]
 			DoCasting:Set[TRUE]
 			DoCastingItem:Set[FALSE]
-			if ${CastNow}
-			{
-				eq2execute cancel_spellcast
-				eq2execute clearabilityqueue
-			}
+			; if ${CastNow}
+			; {
+				; eq2execute cancel_spellcast
+				; eq2execute clearabilityqueue
+			; }
 			;echo ${strDoCastID}
 			;echo casting ${CastName} as ${strDoCastName} with ID ${strDoCastID} On ${strDoCastTarget}
 		}
@@ -1815,11 +1817,11 @@ objectdef RI_Object_CB
 			DoCastingAttempts:Set[0]
 			DoCasting:Set[TRUE]
 			DoCastingItem:Set[FALSE]
-			if ${CastNow}
-			{
-				eq2execute cancel_spellcast
-				eq2execute clearabilityqueue
-			}
+			; if ${CastNow}
+			; {
+				; eq2execute cancel_spellcast
+				; eq2execute clearabilityqueue
+			; }
 			;echo casting ${CastName} as ${strDoCastName} with ID ${strDoCastID}
 		}
 		elseif ${_ExportPosition}==0 && ${CombatBotDebug}
@@ -5238,19 +5240,22 @@ objectdef RI_Object_CB
 		echo CombatBot Saving: ${_Profile}
 		LavishSettings[SaveFile]:Clear
 		LavishSettings:AddSet[SaveFile]
+		
 		if ${Me.Name.Find[Skyshrine Guardian](exists)}
 			LavishSettings[SaveFile]:Import["${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/Profiles/CBProfile-skyshrineguardian.xml"]
 		elseif ${Me.Name.Find[Skyshrine Infiltrator](exists)}
 			LavishSettings[SaveFile]:Export["${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/Profiles/CBProfile-skyshrineinfiltrator.xml"]
 		else
 			LavishSettings[SaveFile]:Import["${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/Profiles/CBProfile-${EQ2.ServerName}-${strMyName}.xml"]
+		
+		
 		LavishSettings[SaveFile]:AddSet[Profiles]
 		LavishSettings[SaveFile].FindSet[Profiles]:AddSet[${_Profile}]
 		;Settings
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[Settings]
-				
-		
+			
+	
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsRangedAutoCheckBox,${RI_Obj_CB.GetUISetting[SettingsRangedAutoCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsMeleeAutoCheckBox,${RI_Obj_CB.GetUISetting[SettingsMeleeAutoCheckBox]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsCancelAutoCheckBox,${RI_Obj_CB.GetUISetting[SettingsCancelAutoCheckBox]}]
@@ -5318,6 +5323,7 @@ objectdef RI_Object_CB
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsConfrontFearCallTextEntry,${RI_Obj_CB.GetUISetting[SettingsConfrontFearCallTextEntry]}]
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Settings]:AddSetting[SettingsShowRIConsoleCheckBox,${RI_Obj_CB.GetUISetting[SettingsShowRIConsoleCheckBox]}]
 		
+		
 		;Ascension
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Ascension]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[Ascension]
@@ -5382,6 +5388,7 @@ objectdef RI_Object_CB
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CastStack].FindSet[${count}]:AddSetting[CastStackAbilityMobHealthGreater,${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[22,|]}]
 			
 		}
+		
 		;Items
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Items]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[Items]
@@ -5394,6 +5401,7 @@ objectdef RI_Object_CB
 			;ItemEffect
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Items].FindSet[${count}]:AddSetting[ItemEffect,"${UIElement[ItemsAddedItemListBox@ItemsFrame@CombatBotUI].OrderedItem[${count}].Value}"]
 		}
+		
 		;Aliases
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Aliases]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[Aliases]
@@ -5412,6 +5420,7 @@ objectdef RI_Object_CB
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Aliases].FindSet[${count}]:AddSetting[AliasFor,${UIElement[AliasesAliasListBox@AliasesFrame@CombatBotUI].OrderedItem[${count}].Value}]
 			
 		}
+		
 		;Assist
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Assist]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[Assist]
@@ -5427,6 +5436,7 @@ objectdef RI_Object_CB
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Assist].FindSet[${count}]:AddSetting[AssistName,${UIElement[AssistAddedListBox@AssistFrame@CombatBotUI].OrderedItem[${count}].Text}]
 			
 		}
+		
 		;PrePostCast
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[PrePostCast]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[PrePostCast]
@@ -5448,6 +5458,7 @@ objectdef RI_Object_CB
 				LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[PrePostCast].FindSet[${count}]:AddSetting[PrePostCastAfter,${RI_Obj_CB.PrePostCastAbility2[${count}]}]
 			
 		}
+		
 		;InvisAbilities
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[InvisAbilities]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[InvisAbilities]
@@ -5464,6 +5475,7 @@ objectdef RI_Object_CB
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[InvisAbilities].FindSet[${count}]:AddSetting[InvisAbilityName,${UIElement[InvisAbilitiesAddedAbilitiesList@InvisAbilitiesFrame@CombatBotUI].OrderedItem[${count}].Text}]
 			
 		}
+		
 		;Announce
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Announce]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[Announce]
@@ -5484,6 +5496,7 @@ objectdef RI_Object_CB
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Announce].FindSet[${count}]:AddSetting[Announcement,"${UIElement[AnnounceAddedAnnounceListBox@AnnounceFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|]}"]
 			
 		}
+
 		;CharmSwap
 		if !${LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CharmSwap](exists)}
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[CharmSwap]
@@ -5492,7 +5505,7 @@ objectdef RI_Object_CB
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CharmSwap]:AddSetting[CharmSwapCharm1ComboBox,Item:${UIElement[CharmSwapCharm1ListBox@CharmSwapFrame@CombatBotUI].SelectedItem.Text}]
 		if ${UIElement[CharmSwapCharm2ListBox@CharmSwapFrame@CombatBotUI].SelectedItem(exists)}	
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[CharmSwap]:AddSetting[CharmSwapCharm2ComboBox,Item:${UIElement[CharmSwapCharm2ListBox@CharmSwapFrame@CombatBotUI].SelectedItem.Text}]
-			
+		
 		;OnEvents
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[OnEvents]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[OnEvents]
@@ -5508,11 +5521,13 @@ objectdef RI_Object_CB
 			;OnEventsEvent
 			LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[OnEvents].FindSet[${count}]:AddSetting[OnEventsEvent,${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}]
 			;OnEventsCommand
-			if ${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|](exists)}
+			;if ${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|](exists)}
+			if ${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Count[|]}>1
 				LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[OnEvents].FindSet[${count}]:AddSetting[OnEventsCommand,"\"${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|].Replace[\",""]}|${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Escape}"]
 			else
 				LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[OnEvents].FindSet[${count}]:AddSetting[OnEventsCommand,"${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|].Escape}"]
 		}
+
 		;Huds
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[Huds]:Clear
 		LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}]:AddSet[Huds]
@@ -6276,6 +6291,11 @@ function main()
 				{	
 					;echo checks
 					intTimeChecks:Set[${Script.RunningTime}]
+					
+					if ${Zone.Name.Find["Myrist, the Great Library"](exists)}
+						Myrist:Set[1]
+					else
+						Myrist:Set[0]
 					
 					; if !${RI_Var_Bool_AutoDeityDisabled} && ${Me.GetGameData["Achievement.AvailableDeityPoints"].Label}>${Int[${UIElement[SettingsDeitySpendTextEntry@SettingsFrame@CombatBotUI].Text}]}
 					; {	
@@ -7109,19 +7129,6 @@ function main()
 			;echo before do casting
 			if ${DoCasting}
 			{
-				if ${boolCancelCast}
-				{
-					;echo cancelling cast
-					variable int CancelCastCnt
-					while ${Me.CastingSpell} && ${CancelCastCnt:Inc}<=5
-					{
-						eq2execute cancel_spellcast
-						eq2execute clearabilityqueue
-						wait 2
-					}
-				}
-				else
-					wait 100 !${Me.CastingSpell} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 				;echo call CastAb "${strDoCastName}" ${strDoCastID} ${strDoCastTarget}
 				if ${DoCastingItem}
 					call CastItemFN "${strDoCastName}"
@@ -7136,7 +7143,8 @@ function main()
 				if ${Me.CastingSpell}
 				{
 					wait 100 !${Me.CastingSpell} || ${DoCasting} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
-					;wait 2
+					if ${boolBuff} || ${boolCure}
+						wait 5
 				}
 				if ${RI_Var_String_MySubClass.Equal[inquisitor]} && ${UIElement[SubClassInqVerdictCheckBox@SubClassFrame@CombatBotUI].Checked}
 				{
@@ -7181,7 +7189,8 @@ function main()
 					if ${Me.CastingSpell}
 					{
 						wait 100 !${Me.CastingSpell} || ${DoCasting}
-						
+						if ${boolBuff} || ${boolCure}
+							wait 5
 					}
 				}
 				;echo call CastAb "${strCastNameShort}" "${strCastName}" ${strCastID} ${strCastTarget}
@@ -7191,7 +7200,8 @@ function main()
 					if ${Me.CastingSpell}
 					{
 						wait 100 !${Me.CastingSpell} || ${DoCasting}
-						;wait 2
+						if ${boolBuff} || ${boolCure}
+							wait 5
 					}
 					if ${CombatBotDebug}
 						echo CombatBot: PostCasting ${strPreCastNameShort}
@@ -7312,7 +7322,7 @@ function main()
 					;echo CS: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items} TID: ${TargetIDs.Used} TN: ${TargetNames.Used}
 						
 					;noop !${CheckAbilitiesObj.CheckAll[${mainCount},${Math.Calc[${mainCount}+50]}]}
-					if !${Zone.Name.Find["Myrist, the Great Library"](exists)}
+					if ${Myrist}!=1
 					{
 						noop ${CheckAbilitiesObj.CheckAll[${mainCount},${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}]}
 						; {
@@ -7386,7 +7396,8 @@ function main()
 		if ${Me.CastingSpell}
 		{
 			wait 100 !${Me.CastingSpell} || ${DoCasting}
-			;wait 2
+			if ${boolBuff} || ${boolCure}
+				wait 5
 		}
 		;echo after casting check
 		;elseif ${mainCount}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
@@ -7394,7 +7405,7 @@ function main()
 			;echo ${mainCount}>${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].Items}
 		;	wait 5
 		;}
-		waitframe
+		;wait 3
 		;echo end while loop
 	}
 }
@@ -9584,6 +9595,10 @@ objectdef CheckAbilitiesObject
 				boolBuff:Set[TRUE]
 			else 
 				boolBuff:Set[FALSE]
+			if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Equal[Cure]}
+				boolCure:Set[TRUE]
+			else 
+				boolCure:Set[FALSE]
 			switch ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|]}
 			{
 				case Res
@@ -10329,7 +10344,7 @@ objectdef CheckAbilitiesObject
 							else
 							{
 								if ${CombatBotDebug}
-									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: ${MaxDist}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]} && ${MinDist}>${istrExportMinRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
+									echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[1,|]}, Range Error: ${MaxDist}<${istrExportMaxRange.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|]}]}
 								continue
 							}
 						}
@@ -13501,7 +13516,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 		}
 	}
 	if ${CombatBotCastingDebug}
-		echo Casting Ability ${CastNameShort} as ${CastName} ID: ${CastID} Target: ${Actor[id,${CastTarget}].Name}
+		echo Casting Ability ${CastNameShort} as ${CastName} ID: ${CastID} Target: ${If[${Actor[id,${CastTarget}].Name(exists)}&&${CastTarget.NotEqual[FALSE]},${Actor[id,${CastTarget}].Name},${CastTarget}]}
 
 	if ${CastTarget.Equal[FALSE]}
 	{	
@@ -13515,14 +13530,45 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 		
 		if ${DoCasting}
 		{
-			if ${DoCastingAttempts}>3
+			if ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal["${strDoCastName}"]}
+			{
+				;echo waitfordocastmainloop
+				wait 100 !${Me.CastingSpell} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
+				wait 5
+			}
+			;if ${boolCancelCast} && ${DoCastingAttempts}>0
+			;	wait 5 ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
+			if ${boolCancelCast} && ${Me.GetGameData[Spells.Casting].Label.NotEqual["${strDoCastName}"]}
+			{
+				;echo cancelling cast
+				variable int CancelCastCnt
+				while ${Me.CastingSpell} && ${CancelCastCnt:Inc}<=5 && ${Me.GetGameData[Spells.Casting].Label.NotEqual["${strDoCastName}"]}
+				{
+					wait 2 ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
+					if ${Me.GetGameData[Spells.Casting].Label.NotEqual["${strDoCastName}"]}
+					{
+						;echo cancelling
+						eq2execute cancel_spellcast
+						eq2execute clearabilityqueue
+					}
+				}
+			}
+			else
+				wait 100 !${Me.CastingSpell} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
+				
+			if ${DoCastingAttempts}>10 || ${Me.Ability[id,${CastID}].TimeUntilReady}>0 || ${Me.Maintained["${CastName}"](exists)}
 				DoCasting:Set[FALSE]
 			else
-				DoCastingAttempts:Inc
-			;echo ${Me.GetGameData[Spells.Casting].Label} // ${CastName}
-			do
 			{
-				;echo eq2execute useability ${CastName}
+				DoCastingAttempts:Inc
+				if ${DoCastingAttempts}>0
+					wait 5 !${Me.Ability[id,${CastID}].IsReady} && ( !${Me.CastingSpell} || ${Me.GetGameData[Spells.Casting].Label.NotEqual["${CastName}"]} )
+			}
+			;echo ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label} == ${CastName} // ${Me.GetGameData[Spells.Casting].Label.Equal["${CastName}"]}
+			;echo ${Me.GetGameData[Spells.Casting].Label} // ${CastName} // ${DoCastingAttempts}
+			while ${Me.Ability[id,${CastID}].IsReady} && !${Me.CastingSpell} && ${GiveUpCnt:Inc}<=5
+			{
+				;echo eq2execute useability ${CastName} ${GiveUpCnt}
 				;echo Me.Ability[id,${CastID}]:Use
 				;eq2execute useability ${CastName}
 				if !${Me.CastingSpell}
@@ -13538,7 +13584,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 					break
 				waitframe
 			}
-			while ${Me.Ability[id,${CastID}].IsReady} && !${Me.CastingSpell} && ${GiveUpCnt:Inc}<=5 && ${Me.GetGameData[Spells.Casting].Label.NotEqual[${CastName}]}
+			
 			; eq2execute clearabilityqueue
 			; wait 2 ${Me.CastingSpell}
 			; wait 100 !${Me.CastingSpell}
@@ -13577,6 +13623,8 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 			;wait 4 ${Me.CastingSpell} || ${DoCasting}
 			;echo bulwark test before wait in castab ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 			wait 100 !${Me.CastingSpell} || ${DoCasting} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
+			if ${boolBuff} || ${boolCure}
+				wait 5
 			;echo bulwark test after wait in castab ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 		;}
 		;wait 1
@@ -13728,6 +13776,8 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 			;eq2execute clearabilityqueue
 			;wait 2 ${Me.CastingSpell} || ${DoCasting}
 			wait 100 !${Me.CastingSpell} || ${DoCasting} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
+			if ${boolBuff} || ${boolCure}
+				wait 5
 		;}
 		;wait 2 ${Me.CastingSpell} || ${DoCasting}
 		;wait 100 !${Me.CastingSpell} || ${DoCasting}
@@ -13830,9 +13880,8 @@ function CastItemFN(string ItemName, string iCastTarget=FALSE)
 		}
 		wait 5 ${Me.CastingSpell} || ${DoCasting}
 		wait 100 !${Me.CastingSpell} || ${DoCasting}
-		if ${boolBuff}
+		if ${boolBuff} || ${boolCure}
 			wait 5
-		wait 3
 		eq2execute clearabilityqueue
 	}
 	else
@@ -13866,7 +13915,7 @@ function CastItemFN(string ItemName, string iCastTarget=FALSE)
 		}
 		wait 5 ${Me.CastingSpell} || ${DoCasting}
 		wait 100 !${Me.CastingSpell} || ${DoCasting}
-		if ${boolBuff}
+		if ${boolBuff} || ${boolCure}
 			wait 5
 		wait 2
 		eq2execute clearabilityqueue

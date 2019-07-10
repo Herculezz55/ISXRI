@@ -3799,7 +3799,40 @@
 ;		Awuidor: The Nebulous Deep
 ;			Oceanus
 ;				Now will exit water in heroic to loot chest
-;			
+;	
+
+
+;v6.01 Changes 7-4-19
+;	CB
+;		Fixed a bug that was crashing some profiles upon save
+;	RI
+;		Doomfire: Elements of Ragefire
+;			Modified Pathing
+;			Wrathflame
+;				Now balances the mobs
+;		Awuidor: Marr's Ascent
+;			Torrent of Awuidor
+;				Now balances the Torrents
+
+;v6.02 Changes 7-10-19
+;	RI
+;		Only scouts will movebehind with RI now
+;		Fixed a bug that would sometimes not turn off movebehind
+;		Doomfire: Vengeance of Ro
+;			Vengeance of Ro
+;				No longer moves behind
+;		Awuidor: The Veiled Precipice
+;			Champion of Marr
+;				No longer moves behind
+;				Now kills sea eels
+;		Eryslai: Trials of Air
+;			Cyclono
+;				Now jousts
+;	RIE (RI_Extract)
+;		Now works with all same command line options as RIT (RI_Transmute)
+;	RII (RI_Inventory), RIT (RI_Transmute), RIE (RI_Extract)
+;		when called with the -start flag, will automatically start and end script upon completion
+	
 ;;;; NEED TO ADD Unpack Item rimui command, eq2ex inventory unpack ${Me.Inventory[Query, Name=-"Item Name" && Location=="Inventory"].Index}
 
 
@@ -3836,7 +3869,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.00
+variable(global) float RI_Var_Float_Version=6.02
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -6566,7 +6599,7 @@ objectdef RIMovementObject
 			call This.stopfollow
 			;if set to lockforcombat, set it
 			if (${Me.InCombat} || ${Me.IsHated})
-				relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[ALL,${Me.X},${Me.Y},${Me.Z},${Precision},100]
+				relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[ALL,${Me.X},${Me.Y},${Me.Z},${Precision},1000]
 				;relay ${RI_Var_String_RelayGroup} -noredirect RI_Atom_SetLockSpot ALL ${Me.X} ${Me.Y} ${Me.Z} ${Precision} 100
 			;clear target incase we are targeting a ?
 			if ${Target.Name.Equal[?]}
@@ -9724,7 +9757,7 @@ objectdef RIMUIObject
 				RI_Atom_SetLockSpot OFF
 			elseif ${This.ForWhoCheck[${args[${_count}]}]}
 ;			&& ${args[${_count}].Upper.Equal[ALL]}
-				RI_Atom_SetLockSpot ALL ${If[${args[${Math.Calc[${_count}+1]}](exists)},${args[${Math.Calc[${_count}+1]}]},${Me.X}]} ${If[${args[${Math.Calc[${_count}+2]}](exists)},${args[${Math.Calc[${_count}+2]}]},${Me.Y}]} ${If[${args[${Math.Calc[${_count}+3]}](exists)},${args[${Math.Calc[${_count}+3]}]},${Me.Z}]} ${If[${args[${Math.Calc[${_count}+4]}](exists)},${args[${Math.Calc[${_count}+4]}]},1]} ${If[${args[${Math.Calc[${_count}+5]}](exists)},${args[${Math.Calc[${_count}+5]}]},100]}
+				RI_Atom_SetLockSpot ALL ${If[${args[${Math.Calc[${_count}+1]}](exists)},${args[${Math.Calc[${_count}+1]}]},${Me.X}]} ${If[${args[${Math.Calc[${_count}+2]}](exists)},${args[${Math.Calc[${_count}+2]}]},${Me.Y}]} ${If[${args[${Math.Calc[${_count}+3]}](exists)},${args[${Math.Calc[${_count}+3]}]},${Me.Z}]} ${If[${args[${Math.Calc[${_count}+4]}](exists)},${args[${Math.Calc[${_count}+4]}]},1]} ${If[${args[${Math.Calc[${_count}+5]}](exists)},${args[${Math.Calc[${_count}+5]}]},1000]}
 ;			elseif ${This.ForWhoCheck[${args[${_count}]}]}
 ;				RI_Atom_SetLockSpot ${Me.Name} ${If[${args[${Math.Calc[${_count}+1]}](exists)},${args[${Math.Calc[${_count}+1]}]},${Me.X}]} ${If[${args[${Math.Calc[${_count}+2]}](exists)},${args[${Math.Calc[${_count}+2]}]},${Me.Y}]} ${If[${args[${Math.Calc[${_count}+3]}](exists)},${args[${Math.Calc[${_count}+3]}]},${Me.Z}]} ${If[${args[${Math.Calc[${_count}+4]}](exists)},${args[${Math.Calc[${_count}+4]}]},1]} ${If[${args[${Math.Calc[${_count}+5]}](exists)},${args[${Math.Calc[${_count}+5]}]},100]}			
 			_count:Inc;_count:Inc;_count:Inc;_count:Inc;_count:Inc

@@ -165,7 +165,7 @@ function main()
 }
 ;RI_Atom_SetLockSpot ${Me.Name} ${Me.X} ${Me.Y} ${Me.Z} 1 100
 ;need to turn aX into a string and typecast it to float if it isnt OFF
-atom(global) RI_Atom_SetLockSpot(string aWho, string aX=${Me.X}, float aY=${Me.Y}, float aZ=${Me.Z}, int aPrecision=1, int aMax=500)
+atom(global) RI_Atom_SetLockSpot(string aWho, string aX=${Me.X}, float aY=${Me.Y}, float aZ=${Me.Z}, int aPrecision=1, int aMax=1000)
 {
 	if ${RI_Var_Bool_Debug}
 		echo ${aWho}  - ${aX} ${aY} ${aZ} - ${aPrecision}  -  ${aMax}

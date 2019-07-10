@@ -2226,7 +2226,7 @@ objectdef RunInstancesObject
 			wait 10
 			relay "other ${RI_Var_String_RelayGroup}" RI_Var_String_MoveBehindFallBackPCName:Set[${Me.ID}]
 		}
-		elseif ${_MoveBehind} && ${Me.Archetype.NotEqual[priest]}
+		elseif ${_MoveBehind} && ${Me.Archetype.Equal[scout]}
 		{
 			wait 150 ${Math.Distance[${Me.Loc},${_LockSpot}]}<3
 			wait 150 ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}<${_Distance}
@@ -34820,7 +34820,9 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 		}	
 		waitframe
 	}
+	call MoveBehind 0
 	wait 50
+	call MoveBehind 0
 	echo ISXRI: Ending ${_NamedName}
 }
 ;;;;;;;; Start Doomfire: The Enkindled Towers
@@ -35018,7 +35020,11 @@ function Oceanus()
 		RIMUIObj:SetLockSpot[ALL,1343.195801,409.025757,22.282162]
 		wait 600 ${Me.Distance[1343.195801,409.025757,22.282162]}<5
 		wait 50 ${Me.IsMoving}
+		eq2ex summon
+		wait 2
 		call RIMObj.LootChest
+		wait 2
+		eq2ex summon
 		wait 50
 		RIMUIObj:SetLockSpot[ALL,1358.145508,409.294739,22.402372]
 		wait 600 ${Me.Distance[1358.145508,409.294739,22.402372]}<5
@@ -35291,7 +35297,11 @@ function ManacrushCustom()
 }
 function Wrathflame()
 {
-	call CustomNamed "Wrathflame the Chosen" "232.470551,84.446480,343.481140"
+	call CustomNamed "Wrathflame the Chosen" "232.470551,84.446480,343.481140" WrathflameCustom
+}
+function WrathflameCustom(int _NamedID)
+{
+	RIObj:BalanceMobs["ALL"]
 }
 function Rosnarga()
 {
@@ -35438,8 +35448,11 @@ function Hirpo()
 function Torrent()
 {
 	call CustomNamed "Torrent" "-0.756965,668.388733,-161.621948"
-	call CustomNamed "Torrent" "-0.756965,668.388733,-161.621948"
-	call CustomNamed "Torrent" "-0.756965,668.388733,-161.621948"
+	call CustomNamed "Torrent" "-0.756965,668.388733,-161.621948" TorrentCustom
+}
+function TorrentCustom(int _NamedID)
+{
+	RIObj:BalanceMobs["Raging Torrent of Awuidor"]
 }
 function Etrigon()
 {
@@ -35473,13 +35486,14 @@ function Retribution()
 }
 function Vengeance()
 {
-	call CustomNamed "Vengeance of Ro" "405.688446,18.514368,-242.486176" NONE Krel-Ariak
+	call CustomNamed "Vengeance of Ro-NMB" "405.688446,18.514368,-242.486176" NONE Krel-Ariak
 }
 ;;;;;;;; End Doomfire: Vengeance of Ro
 ;;;;;;;; Start Eryslai: Trials of Air
 function Cyclono()
 {
 	IncomingText:Insert["Might wanna duck"]
+	AnnounceText:Insert["Cyclono dispenses with the pleasantries"]
 	call CustomNamed "Cyclono-NMB" "-314.745544,-490.705994,777.626465" CyclonoCustom
 }
 function CyclonoCustom(int _NamedID)
@@ -35487,16 +35501,37 @@ function CyclonoCustom(int _NamedID)
 	variable int _cnt=0
 	call RIObj.Target spren -Distance 30 ${_NamedID}
 	if ${Actor[id,${_NamedID}].Distance}>15
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_NamedID}].Loc},5,1000]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_NamedID}].Loc},6,1000]
+
 	if ${Trigger}
 	{
-		_cnt:Set[0]
-		while !${Me.IsCrouching} && ${_cnt:Inc}<10
+		if ${TriggerMessage.Find["Might wanna duck"](exists)}
 		{
-			press ${RI_Var_String_CrouchKey}
-			wait 2
+			_cnt:Set[0]
+			while !${Me.IsCrouching} && ${_cnt:Inc}<10
+			{
+				press ${RI_Var_String_CrouchKey}
+				wait 2
+			}
+			TimedCommand 50 press ${RI_Var_String_JumpKey}
 		}
-		TimedCommand 50 press ${RI_Var_String_JumpKey}
+		else
+		{
+			RIMUIObj:SetLockSpot[OFF]
+			RIMUIObj:SetRIFollow[OFF]
+			_cnt:Set[0]
+			RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+			RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+			while ${_cnt:Inc}<50
+			{
+				Actor[id,${_NamedID}]:DoFace
+				press -hold ${RI_Var_String_BackwardKey}
+				wait 1
+			}
+			RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+			RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+			press -release ${RI_Var_String_BackwardKey}
+		}
 		Trigger:Set[0]
 	}
 	
@@ -35537,7 +35572,7 @@ function E'ci()
 }
 function Marr()
 {
-	call CustomNamed "Champion of Marr" "-0.866707,668.387695,184.191467"
+	call CustomNamed "Champion of Marr-NMB" "-0.866707,668.387695,184.191467" NONE eel
 }
 function Veiled()
 {

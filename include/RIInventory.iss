@@ -264,6 +264,8 @@ objectdef RIInventoryObject
 				wait 5
 			}
 		}
+		if ${Start} && !${Loop}
+			Script:End
 	}
 	function Transmute(int _ItemID)
 	{
