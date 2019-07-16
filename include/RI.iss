@@ -3832,7 +3832,50 @@
 ;		Now works with all same command line options as RIT (RI_Transmute)
 ;	RII (RI_Inventory), RIT (RI_Transmute), RIE (RI_Extract)
 ;		when called with the -start flag, will automatically start and end script upon completion
-	
+
+;v6.03 Changes 7-15-19
+;;;;;;;;;;;;;;;; HAPPY BIRTHDAY HERCULEZZ ;;;;;;;;;;;;;;;;;;;;;
+;	CB
+;		Now reloads CB if called with CB ToonsName
+;	RZ
+;		Added:
+;			Vegarlson: The Terrene Rift [Solo], [Event Heroic] and [Expert Event]
+;	RI
+;		Modified
+;			Eryslai: Trials of Air
+;				Cyclono
+;					now doesnt joust quite as far
+;				Kamara Zar
+;					now jousts when you have Turbulent Being
+;			Awuidor: The Veiled Precipice
+;				Modified Pathing
+;				Champion of E'ci
+;					Changed Lockspot
+;				Champion of Marr
+;					Changed Lockspot
+;				Champion of the Veiled One
+;					Changed Lockspot
+;			Awuidor: Marr's Ascent [Heroic and Expert]
+;				Modified Pathing
+;				Grobnor
+;					Now Lockspots in Hallway to attempt to avoid charm
+;		Added:
+;			Vegarlson: The Terene Rift
+;				Pathing throughout zone
+;				Added:
+;					Krogrock the Earthcrusher
+;						Lockspots toons
+;						Disables Cures
+;						Moves behind and jousts when appropriate
+;					Izanahm the Uprooted
+;						Moves about killing Terene
+;						Lockspots toons
+;					Mudmartigan
+;						Lockspots toons
+
+;code for commision items
+;relay all EQ2UIPage[Inventory,CommissionedWork].Child[button,buttonAccept]:LeftClick;TimedCommand 2 relay all EQ2UIPage[Tradeskills,Tradeskills].Child[button,SummaryPage.BeginButton]:LeftClick
+
 ;;;; NEED TO ADD Unpack Item rimui command, eq2ex inventory unpack ${Me.Inventory[Query, Name=-"Item Name" && Location=="Inventory"].Index}
 
 
@@ -3869,7 +3912,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.02
+variable(global) float RI_Var_Float_Version=6.03
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15

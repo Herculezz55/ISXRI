@@ -419,6 +419,7 @@ variable(global) bool CastBulwark=FALSE
 variable int DoCastingAttempts=0
 variable int Myrist=0
 variable bool boolCure=0
+variable int DoCastingAttemptsMax=3
 
 atom(global) RI_Atom_CB_SetUISetting(string _SettingName, string Value)
 {	
@@ -6938,6 +6939,23 @@ function main()
 					CastBulwark:Set[0]
 				continue
 			}
+			
+			;echo before do casting
+			if ${DoCasting}
+			{
+				if ${strDoCastName.Equal[Balanced Synergy]}
+					DoCastingAttemptsMax:Set[10]
+				else
+					DoCastingAttemptsMax:Set[3]
+				;echo call CastAb "${strDoCastName}" ${strDoCastID} ${strDoCastTarget}
+				if ${DoCastingItem}
+					call CastItemFN "${strDoCastName}"
+				else
+					call CastAb "${strDoCastNameShort}" "${strDoCastName}" ${strDoCastID} ${strDoCastTarget}
+				;wait 200
+			}
+			;echo ${Script.RunningTime} After DoCasting
+			
 			;AscensionCombos
 			;Thaumaturgist
 			if ${ThauCastSepticStrike}
@@ -7125,18 +7143,6 @@ function main()
 				elseif ${Me.Ability[id,4182097011].TimeUntilReady}>0
 					EthCastImplosion:Set[0]
 			}
-			
-			;echo before do casting
-			if ${DoCasting}
-			{
-				;echo call CastAb "${strDoCastName}" ${strDoCastID} ${strDoCastTarget}
-				if ${DoCastingItem}
-					call CastItemFN "${strDoCastName}"
-				else
-					call CastAb "${strDoCastNameShort}" "${strDoCastName}" ${strDoCastID} ${strDoCastTarget}
-				;wait 200
-			}
-			;echo ${Script.RunningTime} After DoCasting
 			
 			if ${boolAbilityCast} 
 			{
@@ -13556,13 +13562,13 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 			else
 				wait 100 !${Me.CastingSpell} || ( ${CastBulwark} && ${RI_Var_Bool_Bulwark} )
 				
-			if ${DoCastingAttempts}>10 || ${Me.Ability[id,${CastID}].TimeUntilReady}>0 || ${Me.Maintained["${CastName}"](exists)}
+			if ${DoCastingAttempts}>${DoCastingAttemptsMax} || ${Me.Ability[id,${CastID}].TimeUntilReady}>0 || ${Me.Maintained["${CastName}"](exists)}
 				DoCasting:Set[FALSE]
 			else
 			{
 				DoCastingAttempts:Inc
 				if ${DoCastingAttempts}>0
-					wait 5 !${Me.Ability[id,${CastID}].IsReady} && ( !${Me.CastingSpell} || ${Me.GetGameData[Spells.Casting].Label.NotEqual["${CastName}"]} )
+					wait 2 !${Me.Ability[id,${CastID}].IsReady} && ( !${Me.CastingSpell} || ${Me.GetGameData[Spells.Casting].Label.NotEqual["${CastName}"]} )
 			}
 			;echo ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label} == ${CastName} // ${Me.GetGameData[Spells.Casting].Label.Equal["${CastName}"]}
 			;echo ${Me.GetGameData[Spells.Casting].Label} // ${CastName} // ${DoCastingAttempts}

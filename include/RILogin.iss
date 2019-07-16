@@ -67,6 +67,8 @@ function main(string ToonName=!Blank!, bool LoadCB=FALSE)
 	if ${ToonName.Equal[${Me.Name}]}
 	{
 		echo ISXRI: Already logged in to ${ToonName}
+		if ${LoadCB}
+			RI_CB
 		Script:End
 	}
 	

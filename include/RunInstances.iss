@@ -1441,14 +1441,22 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Awuidor: Marr's Ascent [Solo]
+		{
+			RI_CMD_Hidden_AddTLO AwuidorMarrsAscentExpert
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[AwuidorMarrsAscentExpert]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorMarrsAscentExpert[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${AwuidorMarrsAscentExpert[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
 		case Awuidor: Marr's Ascent [Heroic]
 		case Awuidor: Marr's Ascent [Expert]
 		{
-			RI_CMD_Hidden_AddTLO AwuidorMarrsAscent
+			RI_CMD_Hidden_AddTLO AwuidorMarrsAscentExpert
 			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[AwuidorMarrsAscent]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorMarrsAscent[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${AwuidorMarrsAscent[3rtZdjv7,${MainArrayCounter}]}]
+			LoadedTLOName:Set[AwuidorMarrsAscentExpert]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorMarrsAscentExpert[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${AwuidorMarrsAscentExpert[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
 		case Doomfire: Vengeance of Ro [Solo]
@@ -1482,6 +1490,17 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			LoadedTLOName:Set[AwuidorTheVeiledPrecipice]
 			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorTheVeiledPrecipice[3rtZdjv7,#]};MainArrayCounter:Inc)
 				istrMain:Insert[${AwuidorTheVeiledPrecipice[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Vegarlson: The Terrene Rift [Solo]
+		case Vegarlson: The Terrene Rift [Event Heroic]
+		case Vegarlson: The Terrene Rift [Expert Event]
+		{
+			RI_CMD_Hidden_AddTLO VegarlsonTheTerreneRift
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[VegarlsonTheTerreneRift]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${VegarlsonTheTerreneRift[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${VegarlsonTheTerreneRift[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
 		default
@@ -2220,7 +2239,13 @@ objectdef RunInstancesObject
 		if !${RI_Var_Bool_GlobalOthers}
 		{
 			Actor[Query, ID=${_ID} && IsDead=FALSE]:DoTarget
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_LockSpot},1,1000]
+			if ${_LockSpot.Find["|"](exists)}
+			{
+				RIMUIObj:SetLockSpot[${Me.Name},${_LockSpot.Token[1,|]},1,1000]
+				relay "other ${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[ALL,${_LockSpot.Token[2,|]},1,1000]
+			}
+			else
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_LockSpot},1,1000]
 			wait 150 ${Math.Distance[${Me.Loc},${_LockSpot}]}<3
 			wait 150 ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}<${_Distance}
 			wait 10
@@ -2228,7 +2253,10 @@ objectdef RunInstancesObject
 		}
 		elseif ${_MoveBehind} && ${Me.Archetype.Equal[scout]}
 		{
-			wait 150 ${Math.Distance[${Me.Loc},${_LockSpot}]}<3
+			if ${_LockSpot.Find["|"](exists)}
+				wait 150 ${Math.Distance[${Me.Loc},${_LockSpot.Token[2,|]}]}<3
+			else
+				wait 150 ${Math.Distance[${Me.Loc},${_LockSpot}]}<3
 			wait 150 ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}<${_Distance}
 			RIMUIObj:SetLockSpot[OFF]
 			wait 20
@@ -3085,21 +3113,28 @@ function WaitForMobAway(string WMName, int WMDistance=100)
 	}
 	relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[OFF]
 }
-function PreHeal(int _FighterStoneSkin)
+function PreHeal(int _FighterStoneSkin=0)
 {
 	if ( ${Me.Group}==1 || ( ${Me.Group}==2 && ${Me.Group[1].Type.NotEqual[PC]} ) ) && ( ${Me.Archetype.NotEqual[priest]} || ${Me.Archetype.NotEqual[fighter]} )
 		return
-	if ${Me.Archetype.NotEqual[fighter]}
+	if ${Me.Archetype.Equal[fighter]} && ${_FighterStoneSkin}>0
 	{
 		switch ${Me.SubClass}
 		{
 			case guardian
 			{
 				wait 60
-				RI_Obj_CB:Cast[${Me.Name},Unyielding Will,1]
+				RI_Obj_CB:Cast[Unyielding Will,1]
 				wait 5
-				RI_Obj_CB:Cast[${Me.Name},Last Man Standing,1]
-				TimerCommand 100 RI_Obj_CB:Cast[${Me.Name},Perfect Counter,1]
+				RI_Obj_CB:Cast[Last Man Standing,1]
+				TimerCommand 100 RI_Obj_CB:Cast[Perfect Counter,1]
+			}
+			case monk
+			{
+				wait 60
+				RI_Obj_CB:Cast[Tsunami,1]
+				wait 5
+				RI_Obj_CB:Cast[Brawler's Tenacity,1]
 			}
 		}
 	}
@@ -35463,7 +35498,10 @@ function Grobnor()
 	press shift+r
 	wait 2
 	press ${RI_Var_String_CrouchKey}
-	call CustomNamed "Grobnor the Elder Orb" "-140.428925,489.810120,138.207153"
+	if ${Zone.Name.Find["[Expert]"](exists)}
+		call CustomNamed "Grobnor the Elder Orb-NMB" "-18.262672,496.262787,136.627487"
+	else
+		call CustomNamed "Grobnor the Elder Orb-NMB" "-140.428925,489.810120,138.207153"
 	press shift+r
 	press ${RI_Var_String_JumpKey}
 }
@@ -35525,7 +35563,10 @@ function CyclonoCustom(int _NamedID)
 			while ${_cnt:Inc}<50
 			{
 				Actor[id,${_NamedID}]:DoFace
-				press -hold ${RI_Var_String_BackwardKey}
+				if ${Actor[id,${_NamedID}].Distance}<30
+					press -hold ${RI_Var_String_BackwardKey}
+				else
+					press -release ${RI_Var_String_BackwardKey}
 				wait 1
 			}
 			RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
@@ -35559,8 +35600,11 @@ function Kamaracustom(int _NamedID)
 	call RIObj.Target stormrider -Distance 30 nilborien -Distance 30 ${_NamedID}
 	if ${RIMUIObj.MainIconIDExists[${Me.ID},584]}>0 
 		RIMUIObj:SetLockSpot[${Me.Name},-265.169281,-490.705994,708.171570]
+	elseif ${RIMUIObj.MainIconIDExists[${Me.ID},622]}>0
+		RIMUIObj:SetLockSpot[${Me.Name},-291.427948,-490.705994,744.563110]
 	else
 		RIMUIObj:SetLockSpot[${Me.Name},-314.745544,-490.705994,777.626465]
+	
 }
 ;;;;;;;; End Eryslai: Trials of Air
 
@@ -35568,18 +35612,130 @@ function Kamaracustom(int _NamedID)
 
 function E'ci()
 {
-	call CustomNamed "Champion of E'ci" "-1.299617,668.386719,-77.198326"
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Name},-0.649287,668.388489,-84.589081]
+	Actor["Champion of E'ci"]:DoTarget
+	wait 600 ${Actor["Champion of E'ci"].Distance}<25
+	call CustomNamed "Champion of E'ci" "-0.609718,668.762573,-129.326080"
 }
 function Marr()
 {
-	call CustomNamed "Champion of Marr-NMB" "-0.866707,668.387695,184.191467" NONE eel
+	call CustomNamed "Champion of Marr-NMB" "-0.823767,668.762451,134.852585" NONE eel
 }
 function Veiled()
 {
-	call CustomNamed "Champion of the Veiled One" "-0.866707,668.387695,184.191467"
+	call CustomNamed "Champion of the Veiled One" "-0.943816,668.389954,177.706711"
 }
 
 ;;;;;;;; End Awuidor: The Veiled Precipice
+
+;;;;;;;; Start Vegarlson: The Terrene Rift
+function Krogrock()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["ack to spit rocks in front of hi"]
+	IncomingText:Insert["repares for lift of"]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,60.575142,163.967850,-33.032032,1,1000]
+	Actor[Krogrock]:DoTarget
+	wait 600 ${Actor[Krogrock].Distance}<15
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,90.483452,159.710510,-49.954582,1,1000]
+	wait 600 ${Me.Distance[90.483452,159.710510,-49.954582]}<5
+	call CustomNamed "Krogrock the Earthcrasher" "84.212471,159.710510,-82.138199" KrockrockCustom
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,1]
+}
+function KrockrockCustom(int _NamedID)
+{
+	echo custom
+	call RIObj.Target ${_NamedID}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,84.212471,159.710510,-82.138199,1,1000]
+	if ${Trigger}
+	{
+		;echo triggered ${TriggerMessage}
+		if ${TriggerMessage.Find[spit]}
+		{
+			RIMUIObj:SetLockSpot[OFF]
+			eq2ex cancel_spellcast
+			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[1]
+			eq2ex cancel_spellcast
+			call MoveBehind 1
+			eq2ex cancel_spellcast
+			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[1]
+			wait 50
+			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[0]
+			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[0]
+			call MoveBehind 0
+		}
+		else
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,100.247475,159.710510,-113.626884,1,1000]
+			wait 50
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,84.212471,159.710510,-82.138199,1,1000]			
+		}
+		Trigger:Set[0]
+	}
+}
+function Izanahm()
+{
+	variable index:string _Locs
+	
+	_Locs:Insert["172.023010,159.709747,-183.888855"]
+	_Locs:Insert["167.324036,160.817017,-171.117249"]
+	_Locs:Insert["167.379761,160.831238,-159.709686"]
+	_Locs:Insert["167.665985,160.756546,-148.307022"]
+	_Locs:Insert["167.302429,160.833755,-138.056595"]
+	_Locs:Insert["167.580536,160.694366,-125.749779"]
+	_Locs:Insert["167.573456,160.805130,-114.821472"]
+	_Locs:Insert["167.589676,160.752930,-103.510811"]
+	_Locs:Insert["167.854904,160.767151,-92.466629"]
+	_Locs:Insert["167.836899,160.821426,-82.227554"]
+	_Locs:Insert["167.962570,160.776108,-70.247673"]
+	_Locs:Insert["167.564911,160.822342,-59.221603"]
+	_Locs:Insert["167.746719,160.828232,-48.272148"]
+	_Locs:Insert["167.944397,160.828201,-37.522228"]
+	_Locs:Insert["168.130890,160.805206,-26.475103"]
+	_Locs:Insert["181.676117,159.710510,-12.304850"]
+	
+	variable int _acnt
+	variable int _cnt
+	for(_acnt:Set[1];${_acnt}<=${_Locs.Used};_acnt:Inc)
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_Locs.Get[${_acnt}]},1,1000]
+		wait 600 ${Me.Distance[${_Locs.Get[${_acnt}]}]}<3
+		wait 20
+		if ${_acnt}==1 || ${_acnt}==${_Locs.Used}
+		{
+			_cnt:Set[0]
+			while ${_cnt:Inc}<600 && ${Actor[Query, Name=-"Stone of Thudos" && Distance<=20 && IsDead=FALSE](exists)}
+			{
+				if !${RI_Var_Bool_GlobalOthers}
+					Actor[Query, Name=-"Stone of Thudos" && Distance<=20 && IsDead=FALSE]:DoTarget
+				wait 1
+			}
+		}
+		else
+		{
+			_cnt:Set[0]
+			while ${_cnt:Inc}<600 && ${Actor[Query, Name=-"terrene enforcer" && Distance<=10 && IsDead=FALSE](exists)}
+			{
+				if !${RI_Var_Bool_GlobalOthers}
+					Actor[Query, Name=-"terrene enforcer" && Distance<=10 && IsDead=FALSE]:DoTarget
+				wait 1
+			}
+		}
+		if ${Zone.Name.Find["[Solo]"]} && ${_acnt}==10
+			_acnt:Set[500]
+	}
+	wait 5
+	call CustomNamed "Izanahm the Uprooted" "152.681763,159.710510,-98.346939" NONE enforcer
+	
+}
+function Mudmartigan()
+{
+	call CustomNamed "Mudmartigan-NMB" "260.647461,227.344177,-98.289703|250.895309,227.344177,-98.653595" NONE mudflapper
+}
+;;;;;;;; End Vegarlson: The Terrene Rift
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
