@@ -1112,7 +1112,7 @@ atom BuildIndexes(string _Expac)
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[]
 			ZoneEntrance:Insert["zone_to_poe"]
-			ZoneEntranceLoc:Insert[768.675171 411.864899 -343.551697]
+			ZoneEntranceLoc:Insert[771.502502 412.079498 -339.997742]
 			ZonePathFile:Insert[0]
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]

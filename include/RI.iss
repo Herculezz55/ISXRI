@@ -3873,6 +3873,24 @@
 ;					Mudmartigan
 ;						Lockspots toons
 
+;v6.04 Changes 7-19-19
+;	RZ
+;		Modified
+;			Vegarlson: The Terene Rift
+;				Moved zone in spot closer
+;	RI
+;		Fixed a bug crash
+;		Modified
+;			Awuidor: The Veiled Precipice
+;				Both wait routines for E'ci and Marr have been adjusted
+;			Vegarlson: The Terene Rift
+;				Krogrock the Earthcrasher
+;					Fixed a few bugs
+;				Izanahm
+;					Moved LockSpot to under Platform on Stairs
+;				Mudmartigan
+;					Now jousts behind on MainToon
+
 ;code for commision items
 ;relay all EQ2UIPage[Inventory,CommissionedWork].Child[button,buttonAccept]:LeftClick;TimedCommand 2 relay all EQ2UIPage[Tradeskills,Tradeskills].Child[button,SummaryPage.BeginButton]:LeftClick
 
@@ -3912,7 +3930,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.03
+variable(global) float RI_Var_Float_Version=6.04
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15

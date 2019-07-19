@@ -3127,7 +3127,7 @@ function PreHeal(int _FighterStoneSkin=0)
 				RI_Obj_CB:Cast[Unyielding Will,1]
 				wait 5
 				RI_Obj_CB:Cast[Last Man Standing,1]
-				TimerCommand 100 RI_Obj_CB:Cast[Perfect Counter,1]
+				TimedCommand 100 RI_Obj_CB:Cast[Perfect Counter,1]
 			}
 			case monk
 			{
@@ -35635,6 +35635,7 @@ function Krogrock()
 	IncomingText2:Clear
 	IncomingText:Insert["ack to spit rocks in front of hi"]
 	IncomingText:Insert["repares for lift of"]
+	IncomingText:Insert["about to Rumble the earth"]
 	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
 	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,60.575142,163.967850,-33.032032,1,1000]
 	Actor[Krogrock]:DoTarget
@@ -35646,31 +35647,35 @@ function Krogrock()
 }
 function KrockrockCustom(int _NamedID)
 {
-	echo custom
 	call RIObj.Target ${_NamedID}
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,84.212471,159.710510,-82.138199,1,1000]
+	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
+	RIMUIObj:SetLockSpot[ALL,84.212471,159.710510,-82.138199,1,1000]
 	if ${Trigger}
 	{
-		;echo triggered ${TriggerMessage}
 		if ${TriggerMessage.Find[spit]}
 		{
 			RIMUIObj:SetLockSpot[OFF]
 			eq2ex cancel_spellcast
 			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[1]
 			eq2ex cancel_spellcast
-			call MoveBehind 1
+			call MoveBehind ${_NamedID} 100 100
 			eq2ex cancel_spellcast
 			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[1]
 			wait 50
 			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[0]
 			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[0]
 			call MoveBehind 0
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,84.212471,159.710510,-82.138199,1,1000]	
 		}
 		else
 		{
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,100.247475,159.710510,-113.626884,1,1000]
-			wait 50
+			if ${TriggerMessage.Find[Rumble]}
+				wait 20
+			if ${Actor[id,${_NamedID}].Distance[100.247475,159.710510,-113.626884]}>${Actor[id,${_NamedID}].Distance[96.230217,159.710510,-48.827625]}
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,100.247475,159.710510,-113.626884,1,1000]
+			else
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,96.230217,159.710510,-48.827625,1,1000]
+			wait 60
 			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,84.212471,159.710510,-82.138199,1,1000]			
 		}
 		Trigger:Set[0]
@@ -35727,13 +35732,32 @@ function Izanahm()
 		if ${Zone.Name.Find["[Solo]"]} && ${_acnt}==10
 			_acnt:Set[500]
 	}
-	wait 5
-	call CustomNamed "Izanahm the Uprooted" "152.681763,159.710510,-98.346939" NONE enforcer
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,152.681763,159.710510,-98.346939,1,1000]
+	wait 600 ${Me.Distance[152.681763,159.710510,-98.346939]}<5
+	wait 600 ${RIMObj.AllGroupWithinRange[5]}
+	call CustomNamed "Izanahm the Uprooted-NMB" "200.502991,189.185760,-94.214783" NONE enforcer
 	
 }
 function Mudmartigan()
 {
-	call CustomNamed "Mudmartigan-NMB" "260.647461,227.344177,-98.289703|250.895309,227.344177,-98.653595" NONE mudflapper
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["see ya!"]
+	call CustomNamed "Mudmartigan-NMB" "260.647461,227.344177,-98.289703|250.895309,227.344177,-98.653595" MudmartiganCustom
+}
+function MudmartiganCustom(int _NamedID)
+{
+	call RIObj.Target mudflapper -Distance 15 ${_NamedID}
+	if ${Trigger}
+	{
+		if !${RI_Var_Bool_GlobalOthers}
+		{
+			RIMUIObj:SetLockSpot[ALL,250.895309,227.344177,-98.6535955,1,1000]
+			wait 60
+			RIMUIObj:SetLockSpot[ALL,260.647461,227.344177,-98.289703,1,1000]			
+		}
+		Trigger:Set[0]
+	}
 }
 ;;;;;;;; End Vegarlson: The Terrene Rift
 
