@@ -91,7 +91,7 @@ function main(... args)
 	;load inventory list into listbox
 	RIInventoryObj:LoadInventoryList
 	
-	if ${Start} && ${Me.Name(exists)}
+	if ${Start}
 		RIInventoryObj:Execute
 	
 	if !${LoadUI}
@@ -103,7 +103,7 @@ function main(... args)
 	
 	while 1
 	{
-		if ${RIInventoryExecuteActions} && ${Me.Name(exists)}
+		if ${RIInventoryExecuteActions}
 			call RIInventoryObj.ExecuteActions
 		wait 1
 	}

@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.04 7-19-19"
-double EXTVER = 6.04;
+#define EXTENSION_VERSION "6.09 10-28-19"
+double EXTVER = 6.09;
 #include "ISXRI.h"
 
 
@@ -105,6 +105,7 @@ double EXTVER = 6.04;
 #include "RPG.h"
 #include "Anaheed.h"
 #include "RIInventory.h"
+#include "RIInfuse.h"
 
 //Zone Dat Files
 #include "Acadechism.h"
@@ -844,7 +845,7 @@ double EXTVER = 6.04;
 #include "DoomfireVengeanceofRo.h"
 #include "EryslaiTrialsofAir.h"
 #include "AwuidorTheVeiledPrecipice.h"
-#include "AwuidorMarrsAscentExpert.h"
+//#include "AwuidorMarrsAscentExpert.h"
 #include "VegarlsonTheTerreneRift.h"
 
 // CD Quests
@@ -857,6 +858,16 @@ double EXTVER = 6.04;
 #include "ElementsofDestructionVisitationDay.h"
 #include "ElementsofDestructionFlamesofOrder.h"
 #include "ElementsofDestructionGustsofOrder.h"
+
+#include "YetmoreTravelsofYunZiOnceAgainintheDesert.h"
+#include "YetmoreTravelsofYunZiDestinedforDestiny.h"
+#include "YetmoreTravelsofYunZiECHOECHoEChoEchoecho.h"
+#include "YetmoreTravelsofYunZiMoreMoors.h"
+#include "YetmoreTravelsofYunZiRisingtotheOccasion.h"
+#include "YetmoreTravelsofYunZiSkiestheLimit.h"
+#include "YetmoreTravelsofYunZiAlteringtheAltar.h"
+#include "YetmoreTravelsofYunZiEternallyEternity.h"
+#include "YetmoreTravelsofYunZiReturningtoTears.h"
 
 //#include ".h"
 //End Quest Dat Files
@@ -1777,7 +1788,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("DoomfireVengeanceofRo");
 	pISInterface->RemoveTopLevelObject("EryslaiTrialsofAir");
 	pISInterface->RemoveTopLevelObject("AwuidorTheVeiledPrecipice");
-	pISInterface->RemoveTopLevelObject("AwuidorMarrsAscentExpert");
+	//pISInterface->RemoveTopLevelObject("AwuidorMarrsAscentExpert");
 	pISInterface->RemoveTopLevelObject("VegarlsonTheTerreneRift");
 
 	//CD Quests
@@ -1791,6 +1802,16 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONGUSTSOFORDER");
 	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONFLAMESOFORDER");
 	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONGUSTSOFORDER");
+
+	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIONCEAGAININTHEDESERT");
+	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIDESTINEDFORDESTINY");
+	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIECHOECHOECHOECHOECHO");
+	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIMOREMOORS");
+	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIRISINGTOTHEOCCASION");
+	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZISKIESTHELIMIT");
+	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIALTERINGTHEALTAR");
+	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIETERNALLYETERNITY");
+	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIRETURNINGTOTEARS");
 }
 
 void ISXRIUnRegisterCommands()
@@ -1895,10 +1916,12 @@ void ISXRIUnRegisterCommands()
 	pISInterface->RemoveCommand("RGL");
 	pISInterface->RemoveCommand("RICharList");
 	pISInterface->RemoveCommand("RI_Inventory");
+	pISInterface->RemoveCommand("RI_Infuse");
 	pISInterface->RemoveCommand("RII");
 	pISInterface->RemoveCommand("RIT");
 	pISInterface->RemoveCommand("RIS");
 	pISInterface->RemoveCommand("RIE");
+	pISInterface->RemoveCommand("RIF");
 	
 	pISInterface->RemoveCommand("MD5");
 	pISInterface->RemoveCommand("RI_CMD_Hidden_AddTLO");
@@ -1973,6 +1996,7 @@ void updatefunction()
 	string ISXRIIXMLPath;
 	string ISXRIConsoleXMLPath;
 	string ISXRILootXMLPath;
+	string ISXRIInfuseXMLPath;
 	char InnerspacePath[512];
 	char InnerspaceScriptsPath[512];
 	pISInterface->GetInnerSpacePath(InnerspacePath, sizeof(InnerspacePath));
@@ -2005,6 +2029,7 @@ void updatefunction()
 	ISXRIIXMLPath = InnerspaceScriptsPath;
 	ISXRIConsoleXMLPath = InnerspaceScriptsPath;
 	ISXRILootXMLPath = InnerspaceScriptsPath;
+	ISXRIInfuseXMLPath = InnerspaceScriptsPath;
 	//strcat_s(ISXRIXMLPath, InnerspacePath);
 	//printf("XML: %s", ISXRIPath);
 	//strcat_s(ISXRIXMLPath, "\\Extensions\\ISXRI.xml");
@@ -2034,6 +2059,7 @@ void updatefunction()
 	ISXRICharListXMLPath += "\\RI\\RICharListUI.xml";
 	ISXRIConsoleXMLPath += "\\RI\\RIConsole.xml";
 	ISXRILootXMLPath += "\\RI\\RILoot.xml";
+	ISXRIInfuseXMLPath += "\\RI\\RIInfuse.xml";
 	ISXRIFolderPath += "\\RI";
 	ISXRICombatBotFolderPath += "\\RI\\CombatBot";
 	bool CreateISXRIFolder = CreateDirectory(ISXRIFolderPath.c_str(), 0);
@@ -2062,6 +2088,7 @@ void updatefunction()
 	remove(ISXRIIXMLPath.c_str());
 	remove(ISXRIConsoleXMLPath.c_str());
 	remove(ISXRILootXMLPath.c_str());
+	remove(ISXRIInfuseXMLPath.c_str());
 	Sleep(1000);
 	//printf("Folder: %s", InnerspacePath);
 	//printf("DLL: %s", ISXRIPath);
@@ -2099,6 +2126,7 @@ void updatefunction()
 	DeleteUrlCacheEntry("http://www.isxri.com/RIInventory.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RIConsole.xml");
 	DeleteUrlCacheEntry("http://www.isxri.com/RILoot.xml");
+	DeleteUrlCacheEntry("http://www.isxri.com/RIInfuse.xml");
 
 	//download new RI.xml
 	HRESULT hRez1 = URLDownloadToFile(NULL, "http://www.isxri.com/RI.xml", ISXRIXMLPath.c_str(), 0, NULL);
@@ -2148,6 +2176,8 @@ void updatefunction()
 	HRESULT hRez19 = URLDownloadToFile(NULL, "http://www.isxri.com/RIConsole.xml", ISXRIConsoleXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez20 = URLDownloadToFile(NULL, "http://www.isxri.com/RILoot.xml", ISXRILootXMLPath.c_str(), 0, NULL);
+	//download
+	HRESULT hRez21 = URLDownloadToFile(NULL, "http://www.isxri.com/RIInfuse.xml", ISXRIInfuseXMLPath.c_str(), 0, NULL);
 	//download
 	HRESULT hRez = URLDownloadToFile(NULL, "http://www.isxri.com/ISXRI.dll", ISX_Orig_Path.c_str(), 0, NULL);
 
@@ -29992,7 +30022,7 @@ bool __cdecl TLO_AwuidorTheVeiledPrecipice(int argc, char* argv[], LSTYPEVAR& De
 	}
 	return false;
 }
-//TLO to return string arrays
+/*/TLO to return string arrays
 bool __cdecl TLO_AwuidorMarrsAscentExpert(int argc, char* argv[], LSTYPEVAR& Dest)
 {
 	int numberofelements = sizeof(AwuidorMarrsAscentExpert) / sizeof(AwuidorMarrsAscentExpert[0]);
@@ -30027,7 +30057,7 @@ bool __cdecl TLO_AwuidorMarrsAscentExpert(int argc, char* argv[], LSTYPEVAR& Des
 		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
 	}
 	return false;
-}
+}*/
 //TLO to return string arrays
 bool __cdecl TLO_VegarlsonTheTerreneRift(int argc, char* argv[], LSTYPEVAR& Dest)
 {
@@ -30049,6 +30079,330 @@ bool __cdecl TLO_VegarlsonTheTerreneRift(int argc, char* argv[], LSTYPEVAR& Dest
 		else if (num < numberofelements)
 		{
 			Dest.ConstCharPtr = VegarlsonTheTerreneRift[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YetmoreTravelsofYunZiOnceAgainintheDesert(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YetmoreTravelsofYunZiOnceAgainintheDesert) / sizeof(YetmoreTravelsofYunZiOnceAgainintheDesert[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YetmoreTravelsofYunZiOnceAgainintheDesert[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YetmoreTravelsofYunZiDestinedforDestiny(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YetmoreTravelsofYunZiDestinedforDestiny) / sizeof(YetmoreTravelsofYunZiDestinedforDestiny[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YetmoreTravelsofYunZiDestinedforDestiny[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YetmoreTravelsofYunZiECHOECHoEChoEchoecho(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YetmoreTravelsofYunZiECHOECHoEChoEchoecho) / sizeof(YetmoreTravelsofYunZiECHOECHoEChoEchoecho[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YetmoreTravelsofYunZiECHOECHoEChoEchoecho[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YetmoreTravelsofYunZiMoreMoors(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YetmoreTravelsofYunZiMoreMoors) / sizeof(YetmoreTravelsofYunZiMoreMoors[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YetmoreTravelsofYunZiMoreMoors[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YetmoreTravelsofYunZiRisingtotheOccasion(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YetmoreTravelsofYunZiRisingtotheOccasion) / sizeof(YetmoreTravelsofYunZiRisingtotheOccasion[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YetmoreTravelsofYunZiRisingtotheOccasion[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YetmoreTravelsofYunZiSkiestheLimit(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YetmoreTravelsofYunZiSkiestheLimit) / sizeof(YetmoreTravelsofYunZiSkiestheLimit[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YetmoreTravelsofYunZiSkiestheLimit[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YetmoreTravelsofYunZiAlteringtheAltar(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YetmoreTravelsofYunZiAlteringtheAltar) / sizeof(YetmoreTravelsofYunZiAlteringtheAltar[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YetmoreTravelsofYunZiAlteringtheAltar[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YetmoreTravelsofYunZiEternallyEternity(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YetmoreTravelsofYunZiEternallyEternity) / sizeof(YetmoreTravelsofYunZiEternallyEternity[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YetmoreTravelsofYunZiEternallyEternity[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YetmoreTravelsofYunZiReturningtoTears(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YetmoreTravelsofYunZiReturningtoTears) / sizeof(YetmoreTravelsofYunZiReturningtoTears[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YetmoreTravelsofYunZiReturningtoTears[num].c_str();
 			Dest.Type = pStringType;
 			return true;
 		}
@@ -30099,8 +30453,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("EryslaiTrialsofAir", TLO_EryslaiTrialsofAir);
 		if (tlo == "AwuidorTheVeiledPrecipice")
 			pISInterface->AddTopLevelObject("AwuidorTheVeiledPrecipice", TLO_AwuidorTheVeiledPrecipice);
-		if (tlo == "AwuidorMarrsAscentExpert")
-			pISInterface->AddTopLevelObject("AwuidorMarrsAscentExpert", TLO_AwuidorMarrsAscentExpert);
+		//if (tlo == "AwuidorMarrsAscentExpert")
+			//pISInterface->AddTopLevelObject("AwuidorMarrsAscentExpert", TLO_AwuidorMarrsAscentExpert);
 		if (tlo == "VegarlsonTheTerreneRift")
 			pISInterface->AddTopLevelObject("VegarlsonTheTerreneRift", TLO_VegarlsonTheTerreneRift);
 
@@ -30122,6 +30476,25 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONFLAMESOFORDER", TLO_ElementsofDestructionFlamesofOrder);
 		if (tlo == "ELEMENTSOFDESTRUCTIONGUSTSOFORDER")
 			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONGUSTSOFORDER", TLO_ElementsofDestructionGustsofOrder);
+
+		if (tlo == "YETMORETRAVELSOFYUNZIONCEAGAININTHEDESERT")
+			pISInterface->AddTopLevelObject("YETMORETRAVELSOFYUNZIONCEAGAININTHEDESERT", TLO_YetmoreTravelsofYunZiOnceAgainintheDesert);
+		if (tlo == "YETMORETRAVELSOFYUNZIDESTINEDFORDESTINY")
+			pISInterface->AddTopLevelObject("YETMORETRAVELSOFYUNZIDESTINEDFORDESTINY", TLO_YetmoreTravelsofYunZiDestinedforDestiny);
+		if (tlo == "YETMORETRAVELSOFYUNZIECHOECHOECHOECHOECHO")
+			pISInterface->AddTopLevelObject("YETMORETRAVELSOFYUNZIECHOECHOECHOECHOECHO", TLO_YetmoreTravelsofYunZiECHOECHoEChoEchoecho);
+		if (tlo == "YETMORETRAVELSOFYUNZIMOREMOORS")
+			pISInterface->AddTopLevelObject("YETMORETRAVELSOFYUNZIMOREMOORS", TLO_YetmoreTravelsofYunZiMoreMoors);
+		if (tlo == "YETMORETRAVELSOFYUNZIRISINGTOTHEOCCASION")
+			pISInterface->AddTopLevelObject("YETMORETRAVELSOFYUNZIRISINGTOTHEOCCASION", TLO_YetmoreTravelsofYunZiRisingtotheOccasion);
+		if (tlo == "YETMORETRAVELSOFYUNZISKIESTHELIMIT")
+			pISInterface->AddTopLevelObject("YETMORETRAVELSOFYUNZISKIESTHELIMIT", TLO_YetmoreTravelsofYunZiSkiestheLimit);
+		if (tlo == "YETMORETRAVELSOFYUNZIALTERINGTHEALTAR")
+			pISInterface->AddTopLevelObject("YETMORETRAVELSOFYUNZIALTERINGTHEALTAR", TLO_YetmoreTravelsofYunZiAlteringtheAltar);
+		if (tlo == "YETMORETRAVELSOFYUNZIETERNALLYETERNITY")
+			pISInterface->AddTopLevelObject("YETMORETRAVELSOFYUNZIETERNALLYETERNITY", TLO_YetmoreTravelsofYunZiEternallyEternity);
+		if (tlo == "YETMORETRAVELSOFYUNZIRETURNINGTOTEARS")
+			pISInterface->AddTopLevelObject("YETMORETRAVELSOFYUNZIRETURNINGTOTEARS", TLO_YetmoreTravelsofYunZiReturningtoTears);
 
 		if (tlo == "Acadechism")
 			pISInterface->AddTopLevelObject("Acadechism", TLO_Acadechism);
@@ -33009,6 +33382,24 @@ int __cdecl CMD_RIInventory(int argc, char *argv[])
 	pISInterface->RunScriptFromBuffer("RIInventory", buffer, sizeof(RIInventory), argc, args);
 	return 0;
 }
+int __cdecl CMD_RIInfuse(int argc, char* argv[])
+{
+	char* args[1024];
+	/*if (argc > 1024)
+	{
+	printf("ISXRI: You have exceeded the max amount of arguments please enter less than 1024 arguments");
+	return 0;
+	}*/
+	//printf("ISXRI:Argument Count: %d", argc);
+	args[0] = "3rtZdjv7";
+	for (int i = 1; i < argc; i++)
+	{
+		args[i] = argv[i];
+	}
+	const char* buffer = (const char*)RIInfuse;
+	pISInterface->RunScriptFromBuffer("RIInfuse", buffer, sizeof(RIInfuse), argc, args);
+	return 0;
+}
 int __cdecl CMD_RPG(int argc, char *argv[])
 {
 	char* args[1024];
@@ -33870,7 +34261,9 @@ void RegisterCommandsAfterAuth()
 		pISInterface->AddCommand("RIT", CMD_Transmute, true, false);
 		pISInterface->AddCommand("RIS", CMD_Salvage, true, false);
 		pISInterface->AddCommand("RIE", CMD_Extract, true, false);
+		pISInterface->AddCommand("RIF", CMD_RIInfuse, true, false);
 		pISInterface->AddCommand("RI_Inventory", CMD_RIInventory, true, false);
+		pISInterface->AddCommand("RI_Infuse", CMD_RIInfuse, true, false);
 		pISInterface->AddCommand("RI_RunInstances", CMD_RunInstances, true, false);
 		pISInterface->AddCommand("RG", CMD_RelayGroup, true, false);
 		//pISInterface->AddCommand("RILooter", CMD_RILooter, true, false);

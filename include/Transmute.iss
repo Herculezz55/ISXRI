@@ -423,7 +423,7 @@ function Transmute()
 					wait 10 ${Me.CastingSpell}
 					wait 10 !${Me.CastingSpell}
 					wait 5
-					wait 10
+					;wait 10
 				}
 				if ${InventoryIterator.Value.Quantity}>0
 				{
@@ -435,7 +435,7 @@ function Transmute()
 					wait 10 ${Me.CastingSpell}
 					wait 10 !${Me.CastingSpell}
 					wait 5
-					wait 10
+					;wait 10
 				}
 			}
 			else

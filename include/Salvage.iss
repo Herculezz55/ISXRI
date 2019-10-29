@@ -10,7 +10,10 @@ variable bool OkToSalvage=FALSE
 variable int intQuery
 variable(global) string RI_Var_String_RISalvageScriptName=${Script.Filename}
 variable(global) bool Debug=FALSE
-function main()
+variable bool Start=FALSE
+variable bool Loop=FALSE
+
+function main(... args)
 {
 	;disable debugging
 	Script:DisableDebugging
@@ -34,6 +37,134 @@ function main()
 	
 	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RISalvage.xml"
+	
+	variable int ArgCount=0
+	variable bool LoadUI=TRUE
+	
+	while ${ArgCount:Inc} <= ${args.Used}
+	{
+		switch ${args[${ArgCount}]}
+		{
+			case -b1
+			case -bag1
+			{	
+				UIElement[Bag1@RISalvage]:SetChecked
+				break
+			}
+			case -b2
+			case -bag2
+			{
+				UIElement[Bag2@RISalvage]:SetChecked
+				break
+			}
+			case -b3
+			case -bag3
+			{
+				UIElement[Bag3@RISalvage]:SetChecked
+				break
+			}
+			case -b4
+			case -bag4
+			{
+				UIElement[Bag4@RISalvage]:SetChecked
+				break
+			}
+			case -b5
+			case -bag5
+			{
+				UIElement[Bag5@RISalvage]:SetChecked
+				break
+			}
+			case -b6
+			case -bag6
+			{
+				UIElement[Bag6@RISalvage]:SetChecked
+				break
+			}
+			case -l
+			case -leg
+			case -legendary
+			{
+				UIElement[Legendary@RISalvage]:SetChecked
+				break
+			}
+			case -f
+			case -fab
+			case -fabled
+			{
+				UIElement[Fabled@RISalvage]:SetChecked
+				break
+			}
+			case -myth
+			case -mythical
+			{
+				UIElement[Mythical@RISalvage]:SetChecked
+				break
+			}
+			case -eth
+			case -ethereal
+			{
+				UIElement[Ethereal@RISalvage]:SetChecked
+				break
+			}
+			case -mf
+			case -mcf
+			case -mcfab
+			case -mcfabled
+			{
+				UIElement[MCFabled@RISalvage]:SetChecked
+				break
+			}
+			case -ml
+			case -mcl
+			case -mcleg
+			case -mclegendary
+			{
+				UIElement[MCLegendary@RISalvage]:SetChecked
+				break
+			}
+			case -m
+			case -master
+			{
+				UIElement[Master@RISalvage]:SetChecked
+				break
+			}
+			case -a
+			case -adept
+			{
+				UIElement[Adept@RISalvage]:SetChecked
+				break
+			}
+			case -e
+			case -expert
+			{
+				UIElement[Expert@RISalvage]:SetChecked
+				break
+			}
+			case -noui
+			{
+				LoadUI:Set[FALSE]
+				break
+			}
+			case -loop
+			{
+				Loop:Set[TRUE]
+				Start:Set[1]
+				break
+			}
+			case -start
+			{
+				Start:Set[1]
+				break
+			}
+			default
+				break
+		}
+	}
+	
+	
+	if !${LoadUI}
+		UIElement[RISalvage]:Hide
 	
 	Event[EQ2_onRewardWindowAppeared]:AttachAtom[EQ2_onRewardWindowAppeared]
 	
@@ -90,8 +221,18 @@ function main()
 		while ${BagsIterator:Next(exists)}
 	}
 	
+	if ${Start}
+		call Salvage
 	while 1
 	{
+		if ${Loop}
+		{
+			if !${Me.IsMoving} && !${Me.InCombat} && !${Me.CastingSpell}
+			{
+				call Salvage
+				wait 50
+			}
+		}
 		call ExecuteQueued
 		wait 1
 	}
@@ -267,6 +408,8 @@ function Salvage()
 		while ${InventoryIterator:Next(exists)}
 	}
 	UIElement[Start@RISalvage]:SetText[Start]
+	if ${Start} && !${Loop}
+		Script:End
 }
 atom EQ2_onRewardWindowAppeared()
 {

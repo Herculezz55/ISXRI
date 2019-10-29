@@ -3891,19 +3891,16 @@
 ;				Mudmartigan
 ;					Now jousts behind on MainToon
 
-;v6.05 Changes 7-24-19
+;v6.05 Changes 7-21-19
 ;	RZ
 ;		Modified
 ;			Vegarlson: The Terene Rift
 ;				Moved zone in spot closer for Heroic and Expert as well
 ;	RI
-;		Added a workaround for ISXEQ2 Actor Member IsSwimming not functioning
 ;		Modified
 ;			Vegarlson: The Terene Rift
 ;				Krogrock
 ;					fixed a targeting bug
-;				Mudmartigan
-;					Added 5s wait after named is dead
 ;			Eryslai: Trials of Air
 ;				Kamara Zar
 ;					Moved joust spot for Turbulent Being a bit closer
@@ -3911,85 +3908,6 @@
 ;				Modified Pathing
 ;					Champion of Marr
 ;						Will now attempt to correct Cannot see target
-
-;v6.06 Changes 8-5-19
-;	Added:
-;		RI_Infuse or RIF
-;			Script to auto infuse your gear
-;	ForWhoCheck
-;		Added:
-;			~IGW~ToonName
-;				Checks if your in group with ToonName
-;			~NIGW~ToonName
-;				Checks if your not in group with ToonName
-;			~IRW~ToonName
-;				Checks if your in raid with ToonName
-;			~NIRW~ToonName
-;				Checks if your not in raid with ToonName
-;	CB
-;		***** 2019 CombatBot Revamp Stage #1 of Many *****
-;		Modified alot of internal code to increase efficiency, much more to come in later stages
-;		Added Cast Stack Items:
-;			ThreatToMe ><
-;			ThreatToNext ><
-;			Fervor ><
-;			MobHealth ><
-;		Fixed a bug that was not maintaining Clearwater Current
-;		Added @Tank,@Healer1,@Healer2,@DPS1,@DPS2,@Enchanter,@Bard - These will logically choose the toon in your group
-;		Added InCombatTargeted to Phoenix Rising
-;		Added Automated Handling of Balanced Synergy
-;			- Add this into the caststack on 1 toon in your group and it will manage it from there
-;				- you can add it to multiple toons cast stacks but will only attempt to cast on the first toon
-;					who encounters it in their stack after passing all checks
-;	RI
-;		Modified
-;			Vegarlson: The Terene Rift
-;				Now kills the 2 stone's in the first room
-;			Awuidor: Marr's Ascent
-;				Pathing tries to avoid Charming mobs now
-;			Awuidor: Veiled Precipice
-;				Moved LockSpots for Ring Events and Nameds out of water circle
-;			Doomfire: Elements of Ragefire
-;				Manacrush
-;					Will now joust entire group and jousts a little less
-;					Will kill embernauts if they add
-;				Wrathflame
-;					Only the MainToon will do the targeting now
-;	RIS (RI_Salvage)
-;		Now works with all same command line options as RIT (RI_Transmute) and RIE (RI_Extract)
-;		when called with the -start flag, will automatically start and end script upon completion
-
-;v6.07 Changes 8-28-19
-;	RQ
-;		Added:
-;			Yet more "Travels" of Yun Zi - Once Again in the Desert
-;				Please ensure you either have a Totem of Escape, Charm of Escape or an evac spell or this WILL fail
-;	RI
-;		Modified
-;			Eryslai: The Bixel Hive
-;				No longer attempts to retrieve shiny after last boss
-;			Awuidor: The Veiled Precipice
-;				Will now swim up if ever found in water
-;	CB
-;		***** 2019 CombatBot Revamp Stage #2 *****
-;		Modified alot more internal code to increase efficiency
-;		Fixed a bug that was not allowing to input Savagery on Beastlords
-
-;v6.08 Changes 10-2-19
-;	RQ
-;		Added:
-;			Yet more "Travels" of Yun Zi - Skies the Limit
-;			Yet more "Travels" of Yun Zi - ECHO ECHo ECho Echo echo
-;			Yet more "Travels" of Yun Zi - Rising to the Occasion
-;			Yet more "Travels" of Yun Zi - More Moors
-;			Yet more "Travels" of Yun Zi - Destined for Destiny
-
-;v6.09 Changes 10-28-19
-;	RQ
-;		Added:
-;			Yet more "Travels" of Yun Zi - Eternally Eternity 
-;			Yet more "Travels" of Yun Zi - Returning to Tears 
-;			Yet more "Travels" of Yun Zi - Altering the Altar
 
 ;code for commision items
 ;relay all EQ2UIPage[Inventory,CommissionedWork].Child[button,buttonAccept]:LeftClick;TimedCommand 2 relay all EQ2UIPage[Tradeskills,Tradeskills].Child[button,SummaryPage.BeginButton]:LeftClick
@@ -4008,6 +3926,19 @@
 ;					 (RI Pull )
 ;						Lockspots toons
 
+; HIDDEN UPDATE NOTES
+;	CB
+;		Added Cast Stack Items:
+;			ThreatToMe ><
+;			ThreatToNext ><
+;			Fervor ><
+;			MobHealth ><	
+;		Fixed a bug that was not maintaining Clearwater Current
+;		Added @Tank,@Healer1,@Healer2,@DPS1,@DPS2,@Enchanter,@Bard - These will logically choose the toon in your group
+;		Added InCombatTargeted to Phoenix Rising
+
+;					
+
 ;		TODO: Added code to maintain Confront Fear (Will use a index:string and on cast add the CastTarget to the index:String then Timedcommand remove them after duration seconds, then on the checker for that particular ability check if they are in the index:string)
 
 ;;;;;;;;;; IMPORTANT TODO: STUCK ROUTINE FOR MOVE FUNCTION, INCLUDING COLAB WITH SHINY FUNCTION (READ NOTES IN SHINY FUNCTION);;;;;;;;;
@@ -4017,7 +3948,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.09
+variable(global) float RI_Var_Float_Version=6.05
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -4076,7 +4007,6 @@ variable bool TradeAccepted=FALSE
 variable bool IStartedTrade=FALSE
 variable(global) RILootObject RILootObj
 variable int Precision=2
-variable(global) int RI_Var_Int_BSReadyCount=0
 variable(global) int RI_Var_Int_ShinyMoveDistance=2
 variable(global) bool RI_Var_Bool_IgnoreShinyY=FALSE
 ;RIMovementUI by Herculezz v1
@@ -6765,19 +6695,6 @@ objectdef RIMovementObject
 				RIObj:BalanceMobs[ALL]
 				
 				call This.ExecuteQueued
-				
-				if ${Zone.Name.Find[Ward of Chaos Elements](exists)}
-				{
-					if ${Me.Inventory["Icecrete Shield"].TimeUntilReady}==-1
-					{
-						RI_CMD_PauseCombatBots 1
-						eq2ex cancel_spellcast
-						wait 2
-						Me.Inventory["Icecrete Shield"]:Use
-						wait 10
-						RI_CMD_PauseCombatBots 0
-					}
-				}
 				wait 1
 			}
 			;end lockspot
@@ -6854,7 +6771,7 @@ objectdef RIMovementObject
 			return
 		if ${Actor["Gooey Hoard",radius,100].Name.EqualCS["Gooey Hoard"]} && ${Math.Distance[${Actor["Gooey Hoard Chest",radius,100].Loc},${Me.Loc}]}>5
 			return
-		if ${Actor[Chest,radius,100](exists)} && ${Me.WaterDepth}==0 && !${Me.FlyingUsingMount}
+		if ${Actor[Chest,radius,100](exists)} && !${Me.IsSwimming} && !${Me.FlyingUsingMount}
 		;&& !${Me.CheckCollision[${Actor[Chest].X},${Actor[Chest].Z}]}
 		{
 			;chest's id
@@ -7337,7 +7254,7 @@ objectdef RIMovementObject
 		variable int _LastFaceTime=0
 		variable int _LastChecksTime=0
 		RIMUIObj:SetLockSpot[OFF]
-		if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+		if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 			MPrecision:Set[${Math.Calc[${_Precision}+2]}]
 		else
 			MPrecision:Set[${_Precision}]
@@ -7374,14 +7291,14 @@ objectdef RIMovementObject
 				echo In If Statement
 			;pause a bit before each move
 			wait ${PauseLength}
-			if ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+			if ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 			{
 				;echo we are there lets stop flying up or down
 				press -release ${RI_Var_String_FlyUpKey}
 				press -release ${RI_Var_String_FlyDownKey}
 				;wait 1
 			}
-			if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+			if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 				MPrecision:Set[${Math.Calc[${_Precision}+1]}]
 			else
 				MPrecision:Set[${_Precision}]
@@ -7402,7 +7319,7 @@ objectdef RIMovementObject
 					wait 5
 					continue
 				}
-				if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+				if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 					MPrecision:Set[${Math.Calc[${_Precision}+1]}]
 				else
 					MPrecision:Set[${_Precision}]
@@ -7454,21 +7371,21 @@ objectdef RIMovementObject
 					press -release ${RI_Var_String_FlyUpKey}
 				}
 				;echo now check if we are above or below desired height
-				if ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && !${RI_Var_Bool_PauseMovement}
+				if ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -hold ${RI_Var_String_FlyDownKey}
 					;wait 1
 				}
 				;echo above move up
-				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && !${RI_Var_Bool_PauseMovement}
+				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyDownKey}
 					press -hold ${RI_Var_String_FlyUpKey}
 					;wait 1
 				}
 				;echo below move down
-				elseif ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+				elseif ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -release ${RI_Var_String_FlyDownKey}
@@ -7490,47 +7407,47 @@ objectdef RIMovementObject
 				;	Face ${X1} ${Z1}
 				;}
 				
-				if !${Me.IsMoving} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) )
+				if !${Me.IsMoving} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 				{
 					;echo pressing autorun
 					press ${RI_Var_String_AutoRunKey}
 					wait 2
 				}
-				; if ${Me.IsMoving} && ${Input.Button[${PauseMovementKey}].Pressed} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) )
+				; if ${Me.IsMoving} && ${Input.Button[${PauseMovementKey}].Pressed} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 					; call This.StopAutoRun
-				if ${UseRI_Var_String_ForwardKey} && !${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && ${Me.WaterDepth}==0
+				if ${UseRI_Var_String_ForwardKey} && !${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && !${Me.IsSwimming}
 					press -hold ${RI_Var_String_ForwardKey}
-				if ${UseRI_Var_String_ForwardKey} && ${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && ${Me.WaterDepth}==0
+				if ${UseRI_Var_String_ForwardKey} && ${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && !${Me.IsSwimming}
 					press -release ${RI_Var_String_ForwardKey}
-				if ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) )
+				if ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 					press -release ${RI_Var_String_ForwardKey}
 				;wait 5 ( ${Math.Distance[${Me.Heading},${Me.HeadingTo[${X1},${Me.Y},${Z1}]}]}>1 || ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}<=${MPrecision} )
 				;echo execute queued commands
 				call This.ExecuteQueued
 				;echo after execute queued
-				if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+				if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 					wait 2
 				else
 					waitframe
 				;echo end while
 			}
-			if ${Math.Distance[${Me.Y},${Y1}]}>5 && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) )
+			if ${Math.Distance[${Me.Y},${Y1}]}>5 && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) )
 			{
 				press ${RI_Var_String_BackwardKey}
 				press ${RI_Var_String_BackwardKey}
 				press ${RI_Var_String_BackwardKey}
 			}
-			if ${Math.Distance[${Me.Y},${Y1}]}>5 && !${UseRI_Var_String_ForwardKey} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+			if ${Math.Distance[${Me.Y},${Y1}]}>5 && !${UseRI_Var_String_ForwardKey} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 			{
 				press ${RI_Var_String_BackwardKey}
 				press ${RI_Var_String_BackwardKey}
 				press ${RI_Var_String_BackwardKey}
 			}
-			elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${UseRI_Var_String_ForwardKey} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+			elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${UseRI_Var_String_ForwardKey} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 				press -release ${RI_Var_String_ForwardKey}
 			
 			if ${RI_Var_Bool_Debug}
-				echo ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.Y}>${Y1} ) || ( ${Me.WaterDepth}>0 && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
+				echo ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ${Me.IsSwimming} && ${Me.Y}>${Y1} ) || ( ${Me.IsSwimming} && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
 				
 			if !${Me.FlyingUsingMount} && ${Me.Y}<${Y1} && ${Math.Distance[${Me.Y},${Y1}]}>25 && !${Me.InCombat} && !${RI_Var_Bool_PauseMovement}
 			{
@@ -7539,7 +7456,7 @@ objectdef RIMovementObject
 				press -release ${RI_Var_String_FlyUpKey}
 			}	
 				
-			while ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.Y}>${Y1} ) || ( ${Me.WaterDepth}>0 && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
+			while ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ${Me.IsSwimming} && ${Me.Y}>${Y1} ) || ( ${Me.IsSwimming} && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
 			{
 				if ${EQ2.Zoning}!=0
 				{
@@ -7565,21 +7482,21 @@ objectdef RIMovementObject
 					press -release ${RI_Var_String_FlyUpKey}
 				}
 				;now check if we are above or below desired height
-				if  ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && !${RI_Var_Bool_PauseMovement}
+				if  ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -hold ${RI_Var_String_FlyDownKey}
 					;wait 1
 				}
 				;above move up
-				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.WaterDepth}<1 ) ) && !${RI_Var_Bool_PauseMovement}
+				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ( ${Me.IsSwimming} && ${Me.WaterDepth}<1 ) ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyDownKey}
 					press -hold ${RI_Var_String_FlyUpKey}
 					;wait 1
 				}
 				;below move down
-				elseif ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && !${KeepMoving}
+				elseif ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && !${KeepMoving}
 				{
 					;echo we are there lets stop flying up or down
 					press -release ${RI_Var_String_FlyUpKey}
@@ -7587,7 +7504,7 @@ objectdef RIMovementObject
 					;wait 1
 				}
 				;wait 5 ${Math.Distance[${Me.Y},${Y1}]}<=5
-				if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+				if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 					wait 2
 				else
 					waitframe
@@ -7607,11 +7524,11 @@ objectdef RIMovementObject
 				}
 			}
 			;press autorun key (stop move)
-			; if ${UseRI_Var_String_ForwardKey} && !${Me.FlyingUsingMount} && ${Me.WaterDepth}==0
+			; if ${UseRI_Var_String_ForwardKey} && !${Me.FlyingUsingMount} && !${Me.IsSwimming}
 			; {
 				; if !${KeepMoving}
 					; press -release ${RI_Var_String_ForwardKey}
-				; elseif ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && ( ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}<${MPrecision} )
+				; elseif ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} ) && ( ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}<${MPrecision} )
 					; press -release ${RI_Var_String_ForwardKey}
 				; wait 1
 				; if ${Me.IsMoving} && !${KeepMoving}
@@ -7641,7 +7558,7 @@ objectdef RIMovementObject
 				echo ${Time}: We are ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]} away from ${X1} ${Y1} ${Z1} and our Collision Check is ${Me.CheckCollision[${Me.X},${Me.Y},${Me.Z},${X1},${Y1}${Z1}]}
 			; if ${Me.IsMoving} && !${UseRI_Var_String_ForwardKey}
 				; call This.StopAutoRun
-			; elseif ${UseRI_Var_String_ForwardKey} || ( !${Me.FlyingUsingMount} && ${Me.WaterDepth}==0 )
+			; elseif ${UseRI_Var_String_ForwardKey} || ( !${Me.FlyingUsingMount} && !${Me.IsSwimming} )
 				; press -release ${RI_Var_String_ForwardKey}
 			press -release ${RI_Var_String_FlyUpKey}
 			press -release ${RI_Var_String_FlyDownKey}
@@ -7797,7 +7714,7 @@ objectdef RIMovementObject
 		if ${_ZoneOption}==-1
 		{
 			wait 50 ${Me.IsMoving}
-			wait 6000 !${Me.IsMoving}
+			wait 600 !${Me.IsMoving}
 		}
 		else
 		{
@@ -9129,15 +9046,6 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Feerrott Not, I Shall Find You"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Defrosting Everfrost"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Having Fun Storming Lavastorm"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Once Again in the Desert"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Skies the Limit"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - ECHO ECHo ECho Echo echo"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Rising to the Occasion"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - More Moors"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Destined for Destiny"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Eternally Eternity"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Returning to Tears"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Altering the Altar"]
 			}
 			elseif ${_CatName.Equal[Chaos Descending]}
 			{
@@ -9184,7 +9092,7 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:AddItem[Sokokar Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Terrors of Thalumbra Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
-			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Yun Zi].ID}]
+			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Chaos Descending].ID}]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FF5DA5CF]
@@ -9771,32 +9679,6 @@ objectdef RIMUIObject
 		}
 		if !${_AlreadyExists}
 			GroupNames:Insert[${_Name}]
-	}
-	method RelayBalancedSynergy(string ForWho)
-	{
-		if ${This.ForWhoCheck[${ForWho}]} && ${Me.Name(exists)}
-		{
-			;echo RBS
-			RI_Var_Int_BSReadyCount:Set[0]
-			relay ALL RIMUIObj:BalancedSynergy[~IGW~${Me.Name}]
-		}
-	}
-	method BalancedSynergy(string ForWho)
-	{
-		;echo BS
-		if ${This.ForWhoCheck[${ForWho}]} && ${Me.Name(exists)}
-		{
-			relay ALL RIMUIObj:BalancedSynergyResponse[~IGW~${Me.Name},${Me.Ability[id,1643224411].IsReady}]
-		}
-	}
-	method BalancedSynergyResponse(string ForWho, bool _ISR=FALSE)
-	{
-		;echo BSR: ${ForWho} , ${_ISR}
-		if ${This.ForWhoCheck[${ForWho}]} && ${Me.Name(exists)}
-		{
-			if ${_ISR}
-				RI_Var_Int_BSReadyCount:Inc
-		}
 	}
 	method Invite(... argv)
 	{
@@ -10491,42 +10373,14 @@ objectdef RIMUIObject
 			
 		;echo ${ForWho}
 		variable bool GoodToGo=FALSE
-		if ${ForWho.Upper.Find[~IGW~](exists)}
-		{
-			if ${Me.Group[${ForWho.Right[-5]}](exists)} || ${Me.Name.Equal[${ForWho.Right[-5]}]}
-				GoodToGo:Set[TRUE]
-			else
-				GoodToGo:Set[FALSE]
-		}
-		elseif ${ForWho.Upper.Find[~NIGW~](exists)}
-		{
-			if ${Me.Group[${ForWho.Right[-6]}](exists)} || ${Me.Name.Equal[${ForWho.Right[-5]}]}
-				GoodToGo:Set[FALSE]
-			else
-				GoodToGo:Set[TRUE]
-		}
-		elseif ${ForWho.Upper.Find[~IRW~](exists)}
-		{
-			if ${Me.Raid[${ForWho.Right[-5]}](exists)} || ${Me.Name.Equal[${ForWho.Right[-5]}]}
-				GoodToGo:Set[TRUE]
-			else
-				GoodToGo:Set[FALSE]
-		}
-		elseif ${ForWho.Upper.Find[~NIRW~](exists)}
-		{
-			if ${Me.Raid[${ForWho.Right[-6]}](exists)} || ${Me.Name.Equal[${ForWho.Right[-5]}]}
-				GoodToGo:Set[FALSE]
-			else
-				GoodToGo:Set[TRUE]
-		}
-		elseif ${ForWho.Upper.Find[~NOT~](exists)}
+		if ${ForWho.Upper.Find[~Not~](exists)}
 		{
 			if ${ForWho.Upper.Find[${Me.Name}](exists)}
 				GoodToGo:Set[FALSE]
 			else
 				GoodToGo:Set[TRUE]
 		}
-		elseif ${ForWho.Upper.Find[~ALLBUT~](exists)}
+		elseif ${ForWho.Upper.Find[~AllBut~](exists)}
 		{
 			if ${ForWho.Upper.Find[${Me.Name}](exists)}
 				GoodToGo:Set[FALSE]

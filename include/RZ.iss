@@ -1112,7 +1112,7 @@ atom BuildIndexes(string _Expac)
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[]
 			ZoneEntrance:Insert["zone_to_poe"]
-			ZoneEntranceLoc:Insert[771.502502 412.079498 -339.997742]
+			ZoneEntranceLoc:Insert[773.789978 412.399994 -336.390015]
 			ZonePathFile:Insert[0]
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
@@ -1127,7 +1127,7 @@ atom BuildIndexes(string _Expac)
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[]
 			ZoneEntrance:Insert["zone_to_poe"]
-			ZoneEntranceLoc:Insert[768.675171 411.864899 -343.551697]
+			ZoneEntranceLoc:Insert[773.789978 412.399994 -336.390015]
 			ZonePathFile:Insert[0]
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
@@ -1142,7 +1142,7 @@ atom BuildIndexes(string _Expac)
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[]
 			ZoneEntrance:Insert["zone_to_poe"]
-			ZoneEntranceLoc:Insert[768.675171 411.864899 -343.551697]
+			ZoneEntranceLoc:Insert[773.789978 412.399994 -336.390015]
 			ZonePathFile:Insert[0]
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
@@ -1748,6 +1748,12 @@ objectdef RZObject
 		LavishSettings[RZ]:Clear
 		LavishSettings:AddSet[RZ]
 		LavishSettings[RZ]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RZ/RZSave.xml"]
+		LavishSettings[RZ]:AddSet[Loops]
+		LavishSettings[RZ].FindSet[Loops]:Clear
+		if ${UIElement[InfiniteLoopListCheckBox@RZ].Checked}
+			LavishSettings[RZ].FindSet[Loops]:AddSetting[Loops,"∞"]
+		else
+			LavishSettings[RZ].FindSet[Loops]:AddSetting[Loops,"${UIElement[LoopCountTextEntry@RZ].Text}"]
 		LavishSettings[RZ]:AddSet[${SetName}]
 		LavishSettings[RZ].FindSet[${SetName}]:Clear
 		variable int count=0
@@ -1767,7 +1773,26 @@ objectdef RZObject
 			LavishSettings:AddSet[Zones]
 			LavishSettings[Zones]:Import["${LavishScript.HomeDirectory}/Scripts/RI/RZ/RZSave.xml"]
 			RZSet:Set[${LavishSettings[Zones].GUID}]
-			variable settingsetref LoadListSet=${RZSet.FindSet[Zones].GUID}
+			variable settingsetref LoadListSet=${RZSet.FindSet[Loops].GUID}
+			LoadListSet:Set[${RZSet.FindSet[Loops].GUID}]
+			if ${RZSet.FindSet[Loops](exists)}
+			{
+				declare _Loops string
+				_Loops:Set["${LoadListSet.FindSetting[Loops]}"]
+				if ${_Loops.Equal["∞"]}
+				{
+					UIElement[LoopListCheckBox@RZ]:UnsetChecked
+					UIElement[InfiniteLoopListCheckBox@RZ]:SetChecked
+					UIElement[LoopCountTextEntry@RZ]:SetText[∞]
+				}
+				else
+				{
+					UIElement[InfiniteLoopListCheckBox@RZ]:UnsetChecked
+					UIElement[LoopListCheckBox@RZ]:SetChecked
+					UIElement[LoopCountTextEntry@RZ]:SetText[${_Loops}]
+				}
+			}
+			RZSet:Set[${LavishSettings[Zones].GUID}]
 			LoadListSet:Set[${RZSet.FindSet[Zones].GUID}]
 			
 			variable iterator SettingIterator

@@ -1441,14 +1441,22 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Awuidor: Marr's Ascent [Solo]
+		{
+			RI_CMD_Hidden_AddTLO AwuidorMarrsAscentExpert
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[AwuidorMarrsAscentExpert]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorMarrsAscentExpert[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${AwuidorMarrsAscentExpert[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
 		case Awuidor: Marr's Ascent [Heroic]
 		case Awuidor: Marr's Ascent [Expert]
 		{
-			RI_CMD_Hidden_AddTLO AwuidorMarrsAscent
+			RI_CMD_Hidden_AddTLO AwuidorMarrsAscentExpert
 			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[AwuidorMarrsAscent]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorMarrsAscent[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${AwuidorMarrsAscent[3rtZdjv7,${MainArrayCounter}]}]
+			LoadedTLOName:Set[AwuidorMarrsAscentExpert]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorMarrsAscentExpert[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${AwuidorMarrsAscentExpert[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
 		case Doomfire: Vengeance of Ro [Solo]
@@ -3318,29 +3326,11 @@ function HailActorMultiOption(string _Actor, ... args)
 		;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
 	}
 }
-function FastTravel(string _ZoneName, int _RelayToGroup=1)
-{	
-	if ${RIMUIObj.MainIconIDExists[${Me.ID},955,0]}==0
-	{
-		call MessageBox "You must be gold to use the FastTravel feature required for this quest Pausing RQ please resume in ${_ZoneName} at the location FastTravel would normally take you"
-	}
-	else
-	{
-		if ${_RelayToGroup}>0
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:FastTravel[ALL,"${_ZoneName}"]
-		else
-			RIMUIObj:FastTravel[${Me.Name},"${_ZoneName}"]
-		wait 600 ${EQ2.Zoning}==1
-		wait 600 ${EQ2.Zoning}==0
-	}
-}
 function HailActor(string _Actor, int _NumberOfResponses=1, int _ResponseNumber=1, bool _Hail=TRUE, bool _Follow=TRUE, bool _ExactName=FALSE, int _CameraTime=15)
 {
 	;echo HailActor(string _Actor=${_Actor}, int _NumberOfResponses=1=${_NumberOfResponses}, int _ResponseNumber=1=${_ResponseNumber}, bool _Hail=TRUE=${_Hail})
 	;move to HailActor location
 	;stop follow
-	if ${_Actor.Left[6].Upper.Equal[GUILD-]}
-		_Actor:Set["guild,${_Actor.Right[-6]}"]
 
 	;echo Moving to ${CustomLoc} and Hailing ${_Actor}
 	if ${CustomLoc.NotEqual[0 0 0]} && ${Math.Distance[${Me.Loc},${CustomLoc.Replace[" ",","]}]}>5
@@ -3441,10 +3431,6 @@ function HailActor(string _Actor, int _NumberOfResponses=1, int _ResponseNumber=
 	}
 	;echo end of function
 }
-function StayAfloat(int _OnOff)
-{
-	relay ${RI_Var_String_RelayGroup} RI_Var_Bool_StayAfloat:Set[${Int[${_OnOff}]}]
-}
 function HailActorGetQuest(... args)
 {
 	 ;string _QuestName, int _NumberOfResponses=1, int _ResponseNumber=1, bool _Hail=TRUE, bool _Follow=TRUE, bool _ExactName=FALSE
@@ -3465,10 +3451,7 @@ function HailActorGetQuest(... args)
 		{
 			case -Actor
 			{
-				if ${args[${Math.Calc[${_acnt}+1]}].Left[6].Upper.Equal[GUILD-]}
-					_Actor:Set["guild,${args[${Math.Calc[${_acnt}+1]}].Right[-6]}"]
-				else
-					_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
 				break
 			}
 			case -NumberOfResponses
@@ -4070,7 +4053,7 @@ function CheckChest()
 	wait 5
 	call LootOptions LO
 	wait 5
-	if ${Actor[Chest,radius,100](exists)} && ${Me.WaterDepth}==0 && !${Me.FlyingUsingMount}
+	if ${Actor[Chest,radius,100](exists)} && !${Me.IsSwimming} && !${Me.FlyingUsingMount}
 	{
 		;stop moving
 		press -release ${RI_Var_String_ForwardKey}
@@ -7210,7 +7193,7 @@ function Kavis()
 	echo ${Time}: Bubbles are here Moving to 149.47 -25.76
 	call _MoveC 145.17 -30.13
 	echo ${Time}: We are at 149.47 -25.76, waiting until we are swimming
-	while ${Me.WaterDepth}==0
+	while !${Me.IsSwimming}
 		wait 1
 	echo ${Time}: We are swimming, Holding space until we are less than 5m from 10y
 	while ${Math.Distance[${Me.Y},-10]}>5
@@ -7236,7 +7219,7 @@ function Kavis()
 	while !${Actor[Kavis,radius,3](exists)}
 		wait 1
 	call _MoveC 145.17 -30.13
-	while ${Me.WaterDepth}==0
+	while !${Me.IsSwimming}
 		wait 1
 	while ${Math.Distance[${Me.Y},-10]}>5
 	{
@@ -7257,7 +7240,7 @@ function Kavis()
 	while !${Actor[Kavis,radius,3](exists)}
 		wait 1
 	call _MoveC 183.23 -69.04
-	while ${Me.WaterDepth}==0
+	while !${Me.IsSwimming}
 		wait 1
 	while ${Math.Distance[${Me.Y},-10]}>5
 	{
@@ -17020,15 +17003,12 @@ function CallToGuildHall(bool _WaitTillReady=TRUE)
 {
 	call RIMObj.CallToGuildHall ${_WaitTillReady}
 }
-function FlyUp(float _HoldTime=1, bool HoldTimeIsYLoc=FALSE)
+function FlyUp(int _HoldTime=1)
 {
 	if !${Me.FlyingUsingMount}
 	{
 		press -hold ${RI_Var_String_FlyUpKey}
-		if ${HoldTimeIsYLoc}
-			wait 1200 ${Math.Distance[${Me.Y},${_HoldTime}]}<5
-		else
-			wait ${_HoldTime}
+		wait ${_HoldTime}
 		press -release ${RI_Var_String_FlyUpKey}
 	}
 }
@@ -18299,7 +18279,7 @@ function Path(... args)
 						if ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
 						{
 							_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-							if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+							if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 							{
 								if ${Me.FlyingUsingMount}
 									_IWasFlying:Set[TRUE]
@@ -18354,7 +18334,7 @@ function Path(... args)
 								wait 25
 							}
 							wait 25
-							if ${Me.WaterDepth}>0
+							if ${Me.IsSwimming}
 								call SwimUp
 							if ${_IWasFlying}
 							{
@@ -20044,7 +20024,7 @@ function PathHail(int _PathLines, int _Distance, bool _Loop, bool _GoReverseAfte
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -20155,7 +20135,7 @@ function PathHail(int _PathLines, int _Distance, bool _Loop, bool _GoReverseAfte
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -20318,7 +20298,7 @@ function PathHailCast(int _PathLines, int _Distance, bool _Loop, bool _GoReverse
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -20430,7 +20410,7 @@ function PathHailCast(int _PathLines, int _Distance, bool _Loop, bool _GoReverse
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -20599,7 +20579,7 @@ function PathHailExists(int _PathLines, int _Distance, bool _Loop, bool _GoRever
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -20704,7 +20684,7 @@ function PathHailExists(int _PathLines, int _Distance, bool _Loop, bool _GoRever
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -20865,7 +20845,7 @@ function PathHailDistance(int _PathLines, int _Distance, bool _Loop, bool _GoRev
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -20970,7 +20950,7 @@ function PathHailDistance(int _PathLines, int _Distance, bool _Loop, bool _GoRev
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -21155,7 +21135,7 @@ function PathKill(int _PathLines, int _Distance, int _Precision, bool _Loop, boo
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -21288,7 +21268,7 @@ function PathKill(int _PathLines, int _Distance, int _Precision, bool _Loop, boo
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -21472,7 +21452,7 @@ function PathApplyVerb(int _PathLines, int _Distance, int _Precision, bool _Loop
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -21562,7 +21542,7 @@ function PathApplyVerb(int _PathLines, int _Distance, int _Precision, bool _Loop
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -21733,7 +21713,7 @@ function PathKillClick(int _PathLines, int _Distance, int _Precision, bool _Loop
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -21869,7 +21849,7 @@ function PathKillClick(int _PathLines, int _Distance, int _Precision, bool _Loop
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -22062,7 +22042,7 @@ function PathItemHail(int _PathLines, int _Distance, int _Precision, bool _Loop,
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -22219,7 +22199,7 @@ function PathItemHail(int _PathLines, int _Distance, int _Precision, bool _Loop,
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -22448,7 +22428,7 @@ function PathItemKillApplyVerb(int _PathLines, int _Distance, int _Precision, bo
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -22581,7 +22561,7 @@ function PathItemKillApplyVerb(int _PathLines, int _Distance, int _Precision, bo
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -22792,7 +22772,7 @@ function PathItemKillClick(int _PathLines, int _Distance, int _Precision, bool _
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -22945,7 +22925,7 @@ function PathItemKillClick(int _PathLines, int _Distance, int _Precision, bool _
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -23170,7 +23150,7 @@ function PathItemKill(int _PathLines, int _Distance, int _Precision, bool _Loop,
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -23318,7 +23298,7 @@ function PathItemKill(int _PathLines, int _Distance, int _Precision, bool _Loop,
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -23525,7 +23505,7 @@ function PathItem(int _PathLines, int _Distance, int _Precision, bool _Loop, boo
 					;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -23650,7 +23630,7 @@ function PathItem(int _PathLines, int _Distance, int _Precision, bool _Loop, boo
 							;( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -23940,7 +23920,7 @@ function PathHarvest(int _PathLines, string _DistanceIN, bool _Loop, bool _GoRev
 					if ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} ) && ( !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]} || ${_IgnoreCC} )
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						{
 							if ${Me.FlyingUsingMount}
 								_IWasFlying:Set[TRUE]
@@ -24001,7 +23981,7 @@ function PathHarvest(int _PathLines, string _DistanceIN, bool _Loop, bool _GoRev
 							;echo ${Time}: After: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
 						}
 						wait 5
-						if ${Me.WaterDepth}>0
+						if ${Me.IsSwimming}
 							call SwimUp
 						if ${_IWasFlying}
 						{
@@ -24082,7 +24062,7 @@ function PathHarvest(int _PathLines, string _DistanceIN, bool _Loop, bool _GoRev
 							if ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -24134,7 +24114,7 @@ function PathHarvest(int _PathLines, string _DistanceIN, bool _Loop, bool _GoRev
 										call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_Precision} 0 FALSE FALSE TRUE FALSE TRUE TRUE
 								}
 								wait 5
-								if ${Me.WaterDepth}>0
+								if ${Me.IsSwimming}
 									call SwimUp
 								if ${_IWasFlying}
 								{
@@ -24297,7 +24277,7 @@ function PathFlyHarvest(int _PathLines, int _Distance, bool _Loop, bool _GoRever
 					if !${Actor[Query, ID=${_ID}].CheckCollision}
 					{
 						_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-						; if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+						; if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 						; {
 							; if ${Me.FlyingUsingMount}
 								; _IWasFlying:Set[TRUE]
@@ -24396,7 +24376,7 @@ function PathFlyHarvest(int _PathLines, int _Distance, bool _Loop, bool _GoRever
 							if !${Actor[Query, ID=${_ID}].CheckCollision}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								; if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								; if ( ${Me.FlyingUsingMount} || ${Me.IsSwimming} )
 								; {
 									; if ${Me.FlyingUsingMount}
 										; _IWasFlying:Set[TRUE]
@@ -24517,28 +24497,17 @@ function CastAbility(... args)
 	}
 	while ${Me.Ability[id,${_AbilityID}].IsReady} && !${Me.CastingSpell} && ${GiveUpCnt:Inc}<=5 && ${Me.GetGameData[Spells.Casting].Label.NotEqual[${_AbilityName}]}
 }
-function SwimUp(float YLoc=0)
+function SwimUp()
 {
 	if !${RI_Var_Bool_GlobalOthers}
 		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call SwimUp"]
 	relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
-	if ${YLoc}==0
+	while ${Me.WaterDepth}>=3
 	{
-		while ${Me.WaterDepth}>=3
-		{
-			relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
-			wait 2
-		}
-		wait 50
+		relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
+		wait 2
 	}
-	else
-	{
-		while ${Math.Distance[${Me.Y},${YLoc]}>5
-		{
-			relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
-			wait 2
-		}
-	}
+	wait 50
 	relay ${RI_Var_String_RelayGroup} press -release ${RI_Var_String_FlyUpKey}
 	wait 50
 }
@@ -25406,7 +25375,7 @@ function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlig
 		noop
 	else
 		call DoorOption "${_DoorOption}"
-	wait 50 ${EQ2.Zoning}==1
+	wait 50
 	if ${EQ2.Zoning}==0
 	{
 		if ${EQ2UIPage[popup,ZoneTeleporter].IsVisible}
@@ -34816,27 +34785,18 @@ function Ire()
 function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NONE, ... args)
 {	
 	variable bool _NMB
-	variable bool _NLP
 	variable string _NamedName
 	if ${_NamedsName.Right[4].Equal[-NMB]}
 	{
 		_NMB:Set[TRUE]
-		_NLP:Set[FALSE]
-		_NamedName:Set["${_NamedsName.Left[-4]}"]
-	}
-	elseif ${_NamedsName.Right[4].Equal[-NLP]}
-	{
-		_NLP:Set[TRUE]
-		_NMB:Set[FALSE]
 		_NamedName:Set["${_NamedsName.Left[-4]}"]
 	}
 	else
 	{
-		_NLP:Set[FALSE]
 		_NMB:Set[FALSE]
 		_NamedName:Set["${_NamedsName}"]
 	}
-
+		
 	echo ISXRI: Starting ${_NamedName}
 	
 	variable int _NamedID=0
@@ -34850,17 +34810,11 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 	if ${_CustomLoop.NotEqual[NONE]}
 		_CustomLoopCheck:Set[TRUE]
 	
-	if ${_NLP}
-	{
-		noop
-	}
+	if ${_NMB}
+		call RIObj.LockAndPull ${_NamedID} "${_LockSpot}" 10 FALSE
 	else
-	{
-		if ${_NMB}
-			call RIObj.LockAndPull ${_NamedID} "${_LockSpot}" 10 FALSE
-		else
-			call RIObj.LockAndPull ${_NamedID} "${_LockSpot}"
-	}	
+		call RIObj.LockAndPull ${_NamedID} "${_LockSpot}"
+		
 	if ${args.Used}>0
 	{
 		_AddsCheck:Set[TRUE]
@@ -34879,7 +34833,7 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 		}
 	}
 		
-	while ${Actor[Query, ID=${_NamedID} && IsDead=FALSE](exists)} || ${EQ2.Zoning} || ${Me.IsDead}
+	while ${Actor[Query, ID=${_NamedID} && IsDead=FALSE](exists)}
 	{
 		if ${_NamedID}==0
 		{
@@ -34902,17 +34856,7 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 		waitframe
 	}
 	call MoveBehind 0
-	wait 5
-	wait 45 !${Me.IsMoving}
-	if !${RI_Var_Bool_GlobalOthers} && ${Actor[Chest,radius,100](exists)} && ${Me.WaterDepth}==0 && !${Me.FlyingUsingMount} 
-	{
-		eq2ex summon
-		wait 2
-		call RIMObj.LootChest
-		wait 2
-		eq2ex summon
-	}
-	wait 50 !${Me.IsMoving}
+	wait 50
 	call MoveBehind 0
 	echo ISXRI: Ending ${_NamedName}
 }
@@ -35050,7 +34994,6 @@ function Aurorax()
 	}
 
 	call CustomNamed "Aurorax-NMB" "-554.813965,647.868713,-171.740997"
-	wait 50
 }
 function Erylsaisigcheck()
 {
@@ -35112,14 +35055,11 @@ function Oceanus()
 		RIMUIObj:SetLockSpot[ALL,1343.195801,409.025757,22.282162]
 		wait 600 ${Me.Distance[1343.195801,409.025757,22.282162]}<5
 		wait 50 ${Me.IsMoving}
-		if !${RI_Var_Bool_GlobalOthers} && ${Actor[Chest,radius,100](exists)} && ${Me.WaterDepth}==0 && !${Me.FlyingUsingMount} 
-		{
-			eq2ex summon
-			wait 2
-			call RIMObj.LootChest
-			wait 2
-			eq2ex summon
-		}
+		eq2ex summon
+		wait 2
+		call RIMObj.LootChest
+		wait 2
+		eq2ex summon
 		wait 50
 		RIMUIObj:SetLockSpot[ALL,1358.145508,409.294739,22.402372]
 		wait 600 ${Me.Distance[1358.145508,409.294739,22.402372]}<5
@@ -35215,121 +35155,6 @@ function Groupwaterbreathing(int OnOff=1)
 	
 }
 ;;;;;;;; End Awuidor: The Nebulous Deep
-;;;;;;;; Start Vegarlson: Council's Stronghold
-function VegarlsonPedestal1()
-{
-	call MessageBox "Finish this part and resume RI in the middle of the room"
-}
-function VegarlsonPedestal2()
-{
-	call MessageBox "Finish this part and resume RI in the middle of the room"
-}
-function VegarlsonPedestal3()
-{
-	call MessageBox "Finish this part and resume RI in the middle of the room"
-}
-function VegarlsonPedestal4()
-{
-	call MessageBox "Finish this part and resume RI in the middle of the room"
-}
-function Gravelly()
-{
-	call CustomNamed "The Great Gravelly One" "864.773010,62.538113,39.231789"
-}
-function Gravel()
-{
-	declare _Loc string script "${Actor["Guardian of Gravel"].Loc}"
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_Loc},1,1000]
-	wait 600 ${Me.Distance[${_Loc}]}<15
-	call CustomNamed "Guardian of Gravel-NMB" "0,0,0" GravelCustom
-	eq2ex apply_verb ${Actor[Guardian of Gravel].ID} Loot
-	eq2ex apply_verb ${Actor[corpse,radius,10].ID} Loot
-	Actor[Guardian of Gravel]:DoubleClick
-	Actor[corpse,radius,10]:DoubleClick
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,1837.585449,62.538094,-346.332428,1,1000]
-	wait 600 ${Me.Distance[1837.585449,62.538094,-346.332428]}<5
-	deletevariable _Loc
-}
-function GravelCustom()
-{
-	if ${Actor[Guardian of Gravel].Distance}>30
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor["Guardian of Gravel"].Loc},1,1000]
-}
-function Stones()
-{
-	declare _Loc string script "${Actor["Guardian of Stones"].Loc}"
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_Loc},1,1000]
-	wait 600 ${Me.Distance[${_Loc}]}<15	
-	call CustomNamed "Guardian of Stones-NMB" "0,0,0" GravelCustom
-	eq2ex apply_verb ${Actor[Guardian of Stones].ID} Loot
-	eq2ex apply_verb ${Actor[corpse,radius,10].ID} Loot
-	Actor[Guardian of Stones]:DoubleClick
-	Actor[corpse,radius,10]:DoubleClick
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,1745.791260,274.850769,-249.824219,1,1000]
-	wait 600 ${Me.Distance[1745.791260,274.850769,-249.824219]}<5
-	deletevariable _Loc
-}
-function StonesCustom()
-{
-	if ${Actor[Guardian of Stones].Distance}>30
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor["Guardian of Stones"].Loc},1,1000]
-}
-function Aggregahn()
-{
-	IncomingText:Insert["I can destroy as easily as I can build"]
-	call CustomNamed "Aggregahn-NMB" "1049.241089,274.857239,39.656723" AggregahnCustom
-}
-function AggregahnCustom()
-{
-	if ${Me.Inventory["Ethereal Stones"].TimeUntilReady}==-1 && ${Trigger}
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Ethereal Stones"]:Use
-		wait 10
-		RI_CMD_PauseCombatBots 0
-		Trigger:Set[0]
-	}
-}
-function Soil()
-{
-	call CustomNamed "Guardian of Soil-NMB" "737.025269,13.631195,-466.546753"
-}
-function Escargore()
-{
-	call CustomNamed "Escargore-NMB" "737.025269,13.631195,-466.546753"
-}
-function Lesha()
-{
-	call CustomNamed "Lesha Needleleaf-NMB" "1419.217285,635.438538,39.106037"
-}
-function Council()
-{
-	declare _Item string script "Severed Ethereal Gravel"
-	call CustomNamed "Council of Gravel-NMB" "1424.553345,784.928284,38.462822" CouncilCustom
-	_Item:Set["Severed Ethereal Stones"]
-	call CustomNamed "Council of Stone-NMB" "1424.553345,784.928284,38.462822" CouncilCustom
-	_Item:Set["Severed Ethereal Soil"]
-	call CustomNamed "Council of Soil-NMB" "1424.553345,784.928284,38.462822" CouncilCustom
-	_Item:Set["Severed Ethereal Leaves"]
-	call CustomNamed "Council of Leaves-NMB" "1424.553345,784.928284,38.462822" CouncilCustom
-	deletevariable _Item
-}
-function CouncilCustom()
-{
-	if ${Me.Inventory["${_Item}"].TimeUntilReady}==-1
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["${_Item}"]:Use
-		wait 15
-		RI_CMD_PauseCombatBots 0
-	}
-}
-
-;;;;;;;; End Vegarlson: Council's Stronghold
 ;;;;;;;; Start Vegarlson: Ruins of Rathe
 function Glimmerstone()
 {
@@ -35339,7 +35164,7 @@ function Glimmerstone()
 	Trigger:Set[TRUE]
 	declare GlimmerstoneTriggerCount int global 0
 	declare GlimmerstoneRunicID int global 0
-	call CustomNamed "Glimmerstone-NMB" "-290.706360,37.276058,-225.688644" GlimmerstoneCustom
+	call CustomNamed "Glimmerstone" "-290.706360,37.276058,-225.688644" GlimmerstoneCustom
 	call RIMObj.Move -337.707092 37.278160 -244.253540
 	call RIMObj.Move -296.475159 34.322292 -263.796967
 	call RIMObj.Move -285.583710 38.303368 -259.535370
@@ -35490,18 +35315,18 @@ function Manacrush()
 {
 	AnnounceText:Clear
 	AnnounceText:Insert["You feel the presence of an undeniable threat"]
-	call CustomNamed "Manacrush-NMB" "290.179779,67.949646,156.737747" ManacrushCustom
+	call CustomNamed "Manacrush" "266.065674,67.858749,141.152664" ManacrushCustom "mana cage"
 }
 function ManacrushCustom()
 {
-	call RIObj.Target cage -Distance 30 embernaut -Distance 15 "Manacrush"
+	call RIObj.Target "Manacrush"
 	
 	if ${Trigger}
 	{
-		if ${Me.Distance[290.179779,67.949646,156.737747]}<5
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,309.227448,68.038010,173.966522]
+		if ${Me.Distance[266.065674,67.858749,141.152664]}<5
+			RIMUIObj:SetLockSpot[ALL,309.227448,68.038010,173.966522]
 		else
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,290.179779,67.949646,156.737747]
+			RIMUIObj:SetLockSpot[ALL,266.065674,67.858749,141.152664]
 		Trigger:Set[FALSE]
 	}
 }
@@ -35511,10 +35336,7 @@ function Wrathflame()
 }
 function WrathflameCustom(int _NamedID)
 {
-	if !${RI_Var_Bool_GlobalOthers}
-		RIObj:BalanceMobs["ALL"]
-	else
-		noop
+	RIObj:BalanceMobs["ALL"]
 }
 function Rosnarga()
 {
@@ -35673,11 +35495,14 @@ function Etrigon()
 }
 function Grobnor()
 {
-	RIMUIObj:SetLockSpot[ALL,-181.501770,489.809723,137.585632]
-	wait 600 ${Me.Distance[-181.501770,489.809723,137.585632]}<3
+	press shift+r
+	wait 2
 	press ${RI_Var_String_CrouchKey}
-	call CustomNamed "Grobnor the Elder Orb-NMB" "-181.501770,489.809723,137.585632"
-	wait 50
+	if ${Zone.Name.Find["[Expert]"](exists)}
+		call CustomNamed "Grobnor the Elder Orb-NMB" "-18.262672,496.262787,136.627487"
+	else
+		call CustomNamed "Grobnor the Elder Orb-NMB" "-140.428925,489.810120,138.207153"
+	press shift+r
 	press ${RI_Var_String_JumpKey}
 }
 function Tethys()
@@ -35726,7 +35551,7 @@ function CyclonoCustom(int _NamedID)
 				press ${RI_Var_String_CrouchKey}
 				wait 2
 			}
-			TimedCommand 60 press ${RI_Var_String_JumpKey}
+			TimedCommand 50 press ${RI_Var_String_JumpKey}
 		}
 		else
 		{
@@ -35735,17 +35560,13 @@ function CyclonoCustom(int _NamedID)
 			_cnt:Set[0]
 			RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
 			RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
-			while ${_cnt:Inc}<100
+			while ${_cnt:Inc}<50
 			{
-				if !${RI_Var_Bool_GlobalOthers}
-				{
-					Actor[id,${_NamedID}]:DoFace
-					if ${Actor[id,${_NamedID}].Distance}<35
-						press -hold ${RI_Var_String_BackwardKey}
-					else
-						press -release ${RI_Var_String_BackwardKey}
-					relay "other ${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
-				}
+				Actor[id,${_NamedID}]:DoFace
+				if ${Actor[id,${_NamedID}].Distance}<30
+					press -hold ${RI_Var_String_BackwardKey}
+				else
+					press -release ${RI_Var_String_BackwardKey}
 				wait 1
 			}
 			RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
@@ -35764,7 +35585,7 @@ function Quarez()
 }
 function QuarezCustom(int _NamedID)
 {
-	call RIObj.Target electric -Distance 30 crackling -Distance 30 ${_NamedID}
+	call RIObj.Target stormrider -Distance 30 ${_NamedID}
 	if ${Actor[an efreeti standard].Heading.Precision[0]}==144
 		RIMUIObj:SetLockSpot[${Me.Name},-310.025604,-490.865906,806.204102]
 	else
@@ -35780,7 +35601,7 @@ function Kamaracustom(int _NamedID)
 	if ${RIMUIObj.MainIconIDExists[${Me.ID},584]}>0 
 		RIMUIObj:SetLockSpot[${Me.Name},-265.169281,-490.705994,708.171570]
 	elseif ${RIMUIObj.MainIconIDExists[${Me.ID},622]}>0
-		RIMUIObj:SetLockSpot[${Me.Name},-306.651398,-490.705994,765.479187]
+		RIMUIObj:SetLockSpot[${Me.Name},-300.374146,-490.705994,758.382568]
 	else
 		RIMUIObj:SetLockSpot[${Me.Name},-314.745544,-490.705994,777.626465]
 	
@@ -35794,29 +35615,28 @@ function E'ci()
 	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Name},-0.649287,668.388489,-84.589081]
 	Actor["Champion of E'ci"]:DoTarget
 	wait 600 ${Actor["Champion of E'ci"].Distance}<25
-	call CustomNamed "Champion of E'ci" "-0.812992,668.386841,-112.053894"
+	call CustomNamed "Champion of E'ci" "-0.609718,668.762573,-129.326080"
 }
 function Marr()
 {
-	;IncomingText:Clear
-	;IncomingText2:Clear
-	;IncomingText:Insert["can't see target"]
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Name},-0.841358,668.761292,148.532806]
-	Actor["Champion of Marr"]:DoTarget
-	wait 600 ${Actor["Champion of Marr"].Distance}<25
-	call CustomNamed "Champion of Marr-NMB" "-2.150011,668.387024,120.076904" NONE eel
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["can't see target"]
+	call CustomNamed "Champion of Marr-NMB" "-0.823767,668.762451,134.852585" MarrCustom eel
 }
-; function MarrCustom(int _NamedID)
-; {
-	; call RIObj.Target eel -Distance 30 ${_NamedID}
-	; if ${Trigger}
-	; {
-		; RIMUIObj:SetLockSpot[ALL,-0.455069,668.764160,123.773094,1,1000]
-		; wait 50
-		; RIMUIObj:SetLockSpot[ALL,-0.823767,668.762451,134.852585,1,1000]	
-		; Trigger:Set[0]
-	; }
-; }
+function MarrCustom(int _NamedID)
+{
+	call RIObj.Target eel -Distance 30 ${_NamedID}
+	if ${Trigger}
+	{
+		if !${RI_Var_Bool_GlobalOthers}
+		{
+			RIMUIObj:SetLockSpot[ALL,-0.455069,668.764160,123.773094,1,1000]
+			wait 20
+			RIMUIObj:SetLockSpot[ALL,-0.823767,668.762451,134.852585,1,1000]	
+		}
+	}
+}
 function Veiled()
 {
 	call CustomNamed "Champion of the Veiled One" "-0.943816,668.389954,177.706711"
@@ -35887,72 +35707,60 @@ function KrockrockCustom(int _NamedID)
 }
 function Izanahm()
 {
-	if !${Actor[Izanahm].Name.Find[Uprooted](exists)}
-	{
-		variable index:string _Locs
-		
-		_Locs:Insert["172.023010,159.709747,-183.888855"]
-		_Locs:Insert["167.324036,160.817017,-171.117249"]
-		_Locs:Insert["167.379761,160.831238,-159.709686"]
-		_Locs:Insert["167.665985,160.756546,-148.307022"]
-		_Locs:Insert["167.302429,160.833755,-138.056595"]
-		_Locs:Insert["167.580536,160.694366,-125.749779"]
-		_Locs:Insert["167.573456,160.805130,-114.821472"]
-		_Locs:Insert["167.589676,160.752930,-103.510811"]
-		_Locs:Insert["167.854904,160.767151,-92.466629"]
-		_Locs:Insert["167.836899,160.821426,-82.227554"]
-		_Locs:Insert["167.962570,160.776108,-70.247673"]
-		_Locs:Insert["167.564911,160.822342,-59.221603"]
-		_Locs:Insert["167.746719,160.828232,-48.272148"]
-		_Locs:Insert["167.944397,160.828201,-37.522228"]
-		_Locs:Insert["168.130890,160.805206,-26.475103"]
-		_Locs:Insert["181.676117,159.710510,-12.304850"]
-		
-		variable int _acnt
-		variable int _cnt
-		for(_acnt:Set[1];${_acnt}<=${_Locs.Used};_acnt:Inc)
-		{
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_Locs.Get[${_acnt}]},1,1000]
-			wait 600 ${Me.Distance[${_Locs.Get[${_acnt}]}]}<3
-			wait 20
-			if ${_acnt}==1 || ${_acnt}==${_Locs.Used}
-			{
-				_cnt:Set[0]
-				while ${_cnt:Inc}<600 && ${Actor[Query, Name=-"Stone of Thudos" && Distance<=20 && IsDead=FALSE](exists)}
-				{
-					if !${RI_Var_Bool_GlobalOthers}
-						Actor[Query, Name=-"Stone of Thudos" && Distance<=20 && IsDead=FALSE]:DoTarget
-					wait 1
-					;need to add code to look for the actor of the knock up item when see, subtract 20 from X position of current loc
-				}
-			}
-			else
-			{
-				_cnt:Set[0]
-				while ${_cnt:Inc}<600 && ${Actor[Query, Name=-"terrene enforcer" && Distance<=10 && IsDead=FALSE](exists)}
-				{
-					if !${RI_Var_Bool_GlobalOthers}
-						Actor[Query, Name=-"terrene enforcer" && Distance<=10 && IsDead=FALSE]:DoTarget
-					wait 1
-				}
-			}
-			if ${Zone.Name.Find["[Solo]"]} && ${_acnt}==10
-				_acnt:Set[500]
-		}
-	}
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,150.355911,159.710510,-99.970276,1,1000]
-	;wait 600 ${Me.Distance[152.681763,159.710510,-98.346939]}<5
-	;wait 600 ${RIMObj.AllGroupWithinRange[5]}
-	call CustomNamed "Izanahm the Uprooted-NMB" "150.355911,159.710510,-99.970276" IzanahmCustom
+	variable index:string _Locs
 	
-}
-function IzanahmCustom(int _NamedID)
-{
-	call RIObj.Target terrene -Distance 25 ${_NamedID}
-	if ${Actor[a conjuring of earth](exists)}
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,150.365295,159.710510,-87.869179,1,1000]
-	else
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,150.355911,159.710510,-99.970276,1,1000]
+	_Locs:Insert["172.023010,159.709747,-183.888855"]
+	_Locs:Insert["167.324036,160.817017,-171.117249"]
+	_Locs:Insert["167.379761,160.831238,-159.709686"]
+	_Locs:Insert["167.665985,160.756546,-148.307022"]
+	_Locs:Insert["167.302429,160.833755,-138.056595"]
+	_Locs:Insert["167.580536,160.694366,-125.749779"]
+	_Locs:Insert["167.573456,160.805130,-114.821472"]
+	_Locs:Insert["167.589676,160.752930,-103.510811"]
+	_Locs:Insert["167.854904,160.767151,-92.466629"]
+	_Locs:Insert["167.836899,160.821426,-82.227554"]
+	_Locs:Insert["167.962570,160.776108,-70.247673"]
+	_Locs:Insert["167.564911,160.822342,-59.221603"]
+	_Locs:Insert["167.746719,160.828232,-48.272148"]
+	_Locs:Insert["167.944397,160.828201,-37.522228"]
+	_Locs:Insert["168.130890,160.805206,-26.475103"]
+	_Locs:Insert["181.676117,159.710510,-12.304850"]
+	
+	variable int _acnt
+	variable int _cnt
+	for(_acnt:Set[1];${_acnt}<=${_Locs.Used};_acnt:Inc)
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_Locs.Get[${_acnt}]},1,1000]
+		wait 600 ${Me.Distance[${_Locs.Get[${_acnt}]}]}<3
+		wait 20
+		if ${_acnt}==1 || ${_acnt}==${_Locs.Used}
+		{
+			_cnt:Set[0]
+			while ${_cnt:Inc}<600 && ${Actor[Query, Name=-"Stone of Thudos" && Distance<=20 && IsDead=FALSE](exists)}
+			{
+				if !${RI_Var_Bool_GlobalOthers}
+					Actor[Query, Name=-"Stone of Thudos" && Distance<=20 && IsDead=FALSE]:DoTarget
+				wait 1
+			}
+		}
+		else
+		{
+			_cnt:Set[0]
+			while ${_cnt:Inc}<600 && ${Actor[Query, Name=-"terrene enforcer" && Distance<=10 && IsDead=FALSE](exists)}
+			{
+				if !${RI_Var_Bool_GlobalOthers}
+					Actor[Query, Name=-"terrene enforcer" && Distance<=10 && IsDead=FALSE]:DoTarget
+				wait 1
+			}
+		}
+		if ${Zone.Name.Find["[Solo]"]} && ${_acnt}==10
+			_acnt:Set[500]
+	}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,152.681763,159.710510,-98.346939,1,1000]
+	wait 600 ${Me.Distance[152.681763,159.710510,-98.346939]}<5
+	wait 600 ${RIMObj.AllGroupWithinRange[5]}
+	call CustomNamed "Izanahm the Uprooted-NMB" "200.502991,189.185760,-94.214783" NONE enforcer
+	
 }
 function Mudmartigan()
 {
@@ -35960,7 +35768,6 @@ function Mudmartigan()
 	IncomingText2:Clear
 	IncomingText:Insert["see ya!"]
 	call CustomNamed "Mudmartigan-NMB" "260.647461,227.344177,-98.289703|250.895309,227.344177,-98.653595" MudmartiganCustom
-	wait 50
 }
 function MudmartiganCustom(int _NamedID)
 {
@@ -35977,188 +35784,7 @@ function MudmartiganCustom(int _NamedID)
 	}
 }
 ;;;;;;;; End Vegarlson: The Terrene Rift
-;;;;;;;; Start Ward of Chaos Elements
-function WOCEChillsoot()
-{
-	;for now just messagebox but eventually we will set the trigger and go until we hit 4 triggers
-	call MessageBox "Do this part and resume when done"
-}
-function WOCERumbles()
-{
-	call MessageBox "Do this part and resume by the river when named is spawned"
-}
-function WOCEClickEle()
-{
-	call MessageBox "click the elevator then resume"
-}
-function Glimmerghast()
-{
-	while !${Actor[Glimmerghast].IsAggro}
-	{
-		Actor[Glimmerghast]:DoubleClick
-	}
-	call CustomNamed "Glimmerghast" "-89.803322,-354.685974,95.597313" GlimmerghastCustom
-}
-function GlimmerghastCustom()
-{
-	if ${Me.Inventory["Icecrete Shield"].TimeUntilReady}==-1
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Icecrete Shield"]:Use
-		wait 10
-		RI_CMD_PauseCombatBots 0
-	}
-}
-function Cursemuck()
-{
-	call CustomNamed "Cursemuck" "-113.605904,-327.897339,163.699036" CursemuckCustom
-}
-function CursemuckCustom()
-{
-	if ${Me.Inventory["Icecrete Shield"].TimeUntilReady}==-1
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Icecrete Shield"]:Use
-		wait 10
-		RI_CMD_PauseCombatBots 0
-	}
-	if ${Me.Inventory["Fulgurite Strike"].TimeUntilReady}==-1
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Fulgurite Strike"]:Use
-		wait 10
-		RI_CMD_PauseCombatBots 0
-	}
-}
-function Blazeanger()
-{
-	declare CastedWellstone bool script FALSE
-	call CustomNamed "Blazeanger" "-277.853424,-440.003082,-76.585915" BlazeangerCustom
-	deletevariable CastedWellstone
-}
-function BlazeangerCustom()
-{
-	if ${Me.Inventory["Icecrete Shield"].TimeUntilReady}==-1
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Icecrete Shield"]:Use
-		wait 10
-		RI_CMD_PauseCombatBots 0
-	}
-	if ${Me.Inventory["Wellstone Spout"].TimeUntilReady}==-1 && !${CastedWellstone}
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Wellstone Spout"]:Use
-		wait 15
-		RI_CMD_PauseCombatBots 0
-	}
-	if ${Me.Inventory["Wellstone Spout"].TimeUntilReady}>0
-		CastedWellstone:Set[1]
-}
-function Cinderstench()
-{
-	call CustomNamed "Cinderstench" "-401.413971,-402.284363,65.191833" CinderstenchCustom
-}
-function CinderstenchCustom()
-{
-	if ${Me.Inventory["Icecrete Shield"].TimeUntilReady}==-1
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Icecrete Shield"]:Use
-		wait 10
-		RI_CMD_PauseCombatBots 0
-	}
-	if ${Me.Noxious}>0
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Filtered Breath"]:Use
-		wait 20
-		RI_CMD_PauseCombatBots 0
-	}
-}
-function Najena()
-{
-	RIMUIObj:SetLockSpot[ALL,-499.918518,-179.369812,111.915359]
-	declare CastedWellstone bool script FALSE
-	wait 600 ${Actor[najena].IsAggro}
-	call CustomNamed "Najena-NLP" "-501.176758,-179.369812,110.361961" NajenaCustom
-	deletevariable CastedWellstone
-}
-function NajenaCustom()
-{
-	if ${Me.Inventory["Wellstone Spout"].TimeUntilReady}>0
-		CastedWellstone:Set[1]
-	if ${Me.Inventory["Icecrete Shield"].TimeUntilReady}==-1
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Icecrete Shield"]:Use
-		wait 10
-		RI_CMD_PauseCombatBots 0
-	}
-	if ${Me.Noxious}>0
-	{
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory["Filtered Breath"]:Use
-		wait 20
-		RI_CMD_PauseCombatBots 0
-	}
-	if ${Actor[Query, Name=-"blazeanger" && IsDead=FALSE](exists)}
-	{
-		Actor[blazeanger]:DoTarget
-		
-		if ${Me.Inventory["Wellstone Spout"].TimeUntilReady}==-1 && !${CastedWellstone}
-		{
-			RI_CMD_PauseCombatBots 1
-			eq2ex cancel_spellcast
-			wait 2
-			Me.Inventory["Wellstone Spout"]:Use
-			wait 15
-			RI_CMD_PauseCombatBots 0
-		}
-	}
-	elseif ${Actor[Query, Name=-"Cursemuck" && IsDead=FALSE](exists)}
-	{
-		Actor[Cursemuck]:DoTarget
-		if ${Me.Inventory["Fulgurite Strike"].TimeUntilReady}==-1
-		{
-			RI_CMD_PauseCombatBots 1
-			eq2ex cancel_spellcast
-			wait 2
-			Me.Inventory["Fulgurite Strike"]:Use
-			wait 10
-			RI_CMD_PauseCombatBots 0
-		}
-	}
-	elseif ${Actor[Query, Name=-"Cinderstench" && IsDead=FALSE](exists)}
-	{
-		Actor[Cinderstench]:DoTarget
-	}
-	elseif ${Actor[Query, Name=-"Glimmerghast" && IsDead=FALSE](exists)}
-	{
-		Actor[Glimmerghast]:DoTarget
-	}
-	else
-		Actor[Najena]:DoTarget
-}
-;;;;;;;; End Ward of Chaos Elements
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
