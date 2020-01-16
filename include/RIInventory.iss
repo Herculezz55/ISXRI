@@ -16,7 +16,8 @@ variable bool UseBag6=FALSE
 variable bool DepositToDepot=FALSE
 variable bool Start=FALSE
 variable index:string Inventory
-
+variable(global) bool RII_Var_Bool_SkipThisItem=0
+variable(global) string RII_Var_String_ItemName
 function main(... args)
 {
 	;disable Debugging
@@ -49,6 +50,7 @@ function main(... args)
 	
 	variable int ArgCount=1
 	variable bool LoadUI=TRUE
+	Event[EQ2_onIncomingText]:AttachAtom[RIIEQ2_onIncomingText]
 	
 	while ${ArgCount} <= ${args.Used}
 	{
@@ -84,6 +86,7 @@ function main(... args)
 	UIElement[AddDestroyButton@RIInventory].Font:SetColor[FFFF0000]
 	UIElement[AddSalvageButton@RIInventory].Font:SetColor[FF33CC33]
 	UIElement[AddTransmuteButton@RIInventory].Font:SetColor[FFCC33FF]
+	UIElement[AddExtractButton@RIInventory].Font:SetColor[FFFFFF00]
 
 	;load saved items list
 	RIInventoryObj:Load
@@ -207,26 +210,26 @@ objectdef RIInventoryObject
 		}
 		RI_CMD_Assist 0
 		variable int counter
-		variable bool _SkipThisItem=0
 		for(counter:Set[1];${counter}<=${Items.Used};counter:Inc)
 		{
 			while ${Me.InCombat}
 				wait 1
 			;echo ${counter}: ${Items.Get[${counter}]} // ${Items.Get[${counter}].Token[1,|]} // ${Items.Get[${counter}].Token[2,|]}
-			_SkipThisItem:Set[0]
-			if ${Items.Get[${counter}].Token[2,|].Equal[Transmute]} || ${Items.Get[${counter}].Token[2,|].Equal[Sell]} || ${Items.Get[${counter}].Token[2,|].Equal[Destroy]} || ${Items.Get[${counter}].Token[2,|].Equal[Salvage]}
+			RII_Var_Bool_SkipThisItem:Set[0]
+			if ${Items.Get[${counter}].Token[2,|].Equal[Transmute]} || ${Items.Get[${counter}].Token[2,|].Equal[Sell]} || ${Items.Get[${counter}].Token[2,|].Equal[Destroy]} || ${Items.Get[${counter}].Token[2,|].Equal[Salvage]} || ${Items.Get[${counter}].Token[2,|].Equal[Extract]}
 			{
 				;while loop while the item exists after building the inventory query
-				while ${Me.Inventory[Query,Location=="Inventory"&&Name=="${Items.Get[${counter}].Token[1,|]}"&&${BagQuery}](exists)} && !${_SkipThisItem}
+				while ${Me.Inventory[Query,Location=="Inventory"&&Name=="${Items.Get[${counter}].Token[1,|]}"&&${BagQuery}](exists)} && !${RII_Var_Bool_SkipThisItem}
 				{
 					while ${Me.InCombat}
 						wait 1
+					RII_Var_String_ItemName:Set["${Items.Get[${counter}].Token[1,|]}"]
 					if ${Items.Get[${counter}].Token[2,|].Equal[Sell]} && ( ${Actor[guild,Guild Commodities Exporter].Distance}>12 || !${Actor[guild,Guild Commodities Exporter](exists)} )
-						echo ISXRI: Skipping ${Items.Get[${counter}].Token[1,|]} we are not near a vendor;_SkipThisItem:Set[1]
+						echo ISXRI: Skipping ${Items.Get[${counter}].Token[1,|]} we are not near a vendor;RII_Var_Bool_SkipThisItem:Set[1]
 					if ${Items.Get[${counter}].Token[2,|].Equal[Salvage]} && !${Me.Ability[id,2266640201](exists)}
-						echo ISXRI: Skipping ${Items.Get[${counter}].Token[1,|]} we do not have salvage ability;_SkipThisItem:Set[1]
+						echo ISXRI: Skipping ${Items.Get[${counter}].Token[1,|]} we do not have salvage ability;RII_Var_Bool_SkipThisItem:Set[1]
 					if ${Items.Get[${counter}].Token[2,|].Equal[Transmute]} && !${Me.Ability[id,2266640201](exists)}
-						echo ISXRI: Skipping ${Items.Get[${counter}].Token[1,|]} we do not have transmute ability;_SkipThisItem:Set[1]
+						echo ISXRI: Skipping ${Items.Get[${counter}].Token[1,|]} we do not have transmute ability;RII_Var_Bool_SkipThisItem:Set[1]
 					call This.${Items.Get[${counter}].Token[2,|]} ${Me.Inventory[Query,Location=="Inventory"&&Name=="${Items.Get[${counter}].Token[1,|]}"&&${BagQuery}].ID}
 				}
 			}
@@ -288,6 +291,18 @@ objectdef RIInventoryObject
 		eq2ex usea Salvage
 		wait 10 ${EQ2.ReadyToRefineTransmuteOrSalvage}
 		Me.Inventory[id,${_ItemID}]:Salvage
+		wait 10 ${Me.CastingSpell}
+		wait 10 !${Me.CastingSpell}
+		wait 5
+		wait 10
+	}
+	function Extract(int _ItemID)
+	{
+		echo ISXRI: Extracting "${Me.Inventory[id,${_ItemID}]}"
+		eq2ex usea 406528868
+		wait 20 ${EQ2.ReadyToRefineTransmuteOrSalvage}
+		wait 10
+		Me.Inventory[id,${_ItemID}]:Transmute
 		wait 10 ${Me.CastingSpell}
 		wait 10 !${Me.CastingSpell}
 		wait 5
@@ -462,6 +477,25 @@ objectdef RIInventoryObject
 			This:Save
 		}
 	}
+	method AddExtract(string _ItemName)
+	{
+		;echo ${_ItemName}
+		if ${_ItemName.NotEqual[NULL]} && ${_ItemName.NotEqual[""]}
+		{
+			variable int i=0
+			for(i:Set[1];${i}<=${UIElement[AddedItemsListbox@RIInventory].Items};i:Inc)
+			{
+				if ${UIElement[AddedItemsListbox@RIInventory].Item[${i}].Text.Equal["${_ItemName}"]}
+					UIElement[AddedItemsListbox@RIInventory]:RemoveItem[${UIElement[AddedItemsListbox@RIInventory].Item[${i}].ID}]
+			}
+			UIElement[AddedItemsListbox@RIInventory]:AddItem["${_ItemName}","${_ItemName}",FFFFFF00]
+			;change color
+			;UIElement[AddedItemsListbox@RIInventory].OrderedItem[${UIElement[AddedItemsListbox@RIInventory].Items}]:SetTextColor[FFFFFF00]
+			UIElement[InventoryListbox@RIInventory]:RemoveItem[${UIElement[InventoryListbox@RIInventory].SelectedItem.ID}]
+			UIElement[InventoryListbox@RIInventory]:ClearSelection
+			This:Save
+		}
+	}
 	method Load(bool _PopulateListBox=TRUE)
 	{
 		Items:Clear
@@ -559,6 +593,8 @@ objectdef RIInventoryObject
 						_Color:Set[FF33CC33];_Action:Set[Salvage]
 					elseif ${Iterator.Value.FindSetting[Action].String.Find[Destroy](exists)}
 						_Color:Set[FFFF0000];_Action:Set[Destroy]
+					elseif ${Iterator.Value.FindSetting[Action].String.Find[Extract](exists)}
+						_Color:Set[FFFFFF00];_Action:Set[Extract]
 					if ${UIElement[RIInventory](exists)} && ${_PopulateListBox}
 					{
 						UIElement[AddedItemsListbox@RIInventory]:AddItem["${Iterator.Key}","${Iterator.Key}",${_Color}]
@@ -637,6 +673,8 @@ objectdef RIInventoryObject
 					_Action:Set[Salvage]
 				elseif ${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].TextColor}==-65536
 					_Action:Set[Destroy]
+				elseif ${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].TextColor}==-256
+					_Action:Set[Extract]
 				LavishSettings[RIInventorySaveFile].FindSet[${SetName}]:AddSet["${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].Text}"]
 				LavishSettings[RIInventorySaveFile].FindSet[${SetName}].FindSet["${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].Text}"]:AddSetting[Action,${_Action}]
 				Items:Insert["${UIElement[AddedItemsListbox@RIInventory].OrderedItem[${count}].Text}"|${_Action}]
@@ -647,6 +685,30 @@ objectdef RIInventoryObject
 		;}
 	}
 }
+;atom triggered when incommingtext is detected
+atom RIIEQ2_onIncomingText(string Text)
+{
+	if ${Text.Find["is missing the required classification"]}
+	{
+		RII_Var_Bool_SkipThisItem:Set[1]
+		echo ISXRI: Skipping ${RII_Var_String_ItemName} it cannot be extracted
+	}
+	if ${Text.Find["cannot be transmuted"]}
+	{
+		RII_Var_Bool_SkipThisItem:Set[1]
+		echo ISXRI: Skipping ${RII_Var_String_ItemName} it cannot be transmuted
+	}
+	if ${Text.Find["You need at least"]} && ${Text.Find["Transmuting skill to transmute"]}
+	{
+		RII_Var_Bool_SkipThisItem:Set[1]
+		echo ISXRI: Skipping ${RII_Var_String_ItemName} your transmuting skill is too low for this item
+	}
+	if ${Text.Find["cannot be salvaged"]}
+	{
+		RII_Var_Bool_SkipThisItem:Set[1]
+		echo ISXRI: Skipping ${RII_Var_String_ItemName} it cannot be salvaged/extracted
+	}
+}
 atom EQ2_onRewardWindowAppeared()
 {
 	RewardWindow:Receive
@@ -655,4 +717,5 @@ function atexit()
 {
 	ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIInventory.xml"
 	echo ISXRI: Ending RI Inventory
+	Event[EQ2_onIncomingText]:DetachAtom[RIIEQ2_onIncomingText]
 }

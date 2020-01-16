@@ -1165,6 +1165,55 @@ atom BuildIndexes(string _Expac)
 			
 			break
 		}
+		case Blood of Luclin
+		{
+			;Zone
+			_Zone:Insert["Aurelian Coast: Sambata Village [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Sambata Village [Solo]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Zone exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[]
+			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
+			ZoneEntranceLoc:Insert[]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Aurelian Coast: Reishi Rumble [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Reishi Rumble [Solo]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Zone exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[]
+			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
+			ZoneEntranceLoc:Insert[]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Aurelian Coast: Maiden's Eye [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Maiden's Eye [Solo]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Zone exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[]
+			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
+			ZoneEntranceLoc:Insert[]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			break
+		}
 	}
 	
 }
@@ -1249,10 +1298,11 @@ function main(... args)
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml"
 	RZObj:Maximize
 	RZObj:LoadSave
+	UIElement[ExpacComboBox@RZ]:AddItem["Blood of Luclin"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Chaos Descending"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Planes of Prophecy"]
 	UIElement[ExpacComboBox@RZ]:SelectItem[1]
-	BuildIndexes "Chaos Descending"
+	BuildIndexes "Blood of Luclin"
 	
 	;start RIMovement if it is not running
 	relay all -noredirect ${If[!${Script[Buffer:RIMovement](exists)},RIMovement,noop]}
@@ -1783,7 +1833,7 @@ objectdef RZObject
 				{
 					UIElement[LoopListCheckBox@RZ]:UnsetChecked
 					UIElement[InfiniteLoopListCheckBox@RZ]:SetChecked
-					UIElement[LoopCountTextEntry@RZ]:SetText[∞]
+					UIElement[LoopCountTextEntry@RZ]:SetText[0]
 				}
 				else
 				{

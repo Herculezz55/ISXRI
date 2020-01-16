@@ -3991,6 +3991,98 @@
 ;			Yet more "Travels" of Yun Zi - Returning to Tears 
 ;			Yet more "Travels" of Yun Zi - Altering the Altar
 
+;v6.10 Changes 11-20-19
+;	RQ
+;		Added:
+;			Light Amongst Shadows: The Vault of Omens 
+;			Light Amongst Shadows: Spires of Mythic Passage 
+;	RI
+;		Added:
+;			Deep Chelsith: Vault of Omens (Not optimized for heroic)
+;				Pathing throughout zone
+;				Added:
+;					 Aldez the Mighty (RI Pull Aldez)
+;						Lockspots toons						
+;					 Erskellish Bloodarmor (RI Pull Erskellish)
+;						Lockspots toons
+;					 Lucrezzia Mindrazer (RI Pull Lucrezzia)
+;						Lockspots toons
+;					 Zun'Liako'Va (RI Pull Zun'Liako'Va)
+;						Lockspots toons
+;					 Eom'Tek'Zen (RI Pull Eom'Tek'Zen )
+;						Lockspots toons
+
+;v6.11 Changes 1-13-20
+;	RI_AbilityCheck
+;		Increased Ability Level Cap to 120
+;			AbilityCheck will no longer ignore abilities above 110
+;	RZ
+;		Added:
+;			Blood of Luclin Expac
+;				Aurelian Coast: Sambata Village [Solo]		
+;				Aurelian Coast: Reishi Rumble [Solo]
+;	RI
+;		Added:
+;			Aurelian Coast: Sambata Village
+;				Pathing throughout zone
+;				Added:
+;					 Ercel Bloodpaw (RI Pull Ercel)
+;						Lockspots toons						
+;					 Grugnop, the Guard (RI Pull Grugnop)
+;						Lockspots toons
+;					 Grrrunk the Trunk (RI Pull Grrrunk)
+;						Lockspots toons
+;					 Ryryrd of the Wind (RI Pull Ryryrd)
+;						Lockspots toons
+;					 Mrokor, the Smartist and Purpyron the Massive (RI Pull Mrokor)
+;						Lockspots toons
+;			Aurelian Coast: Reishi Rumble
+;				Pathing throughout zone
+;				Added:
+;					 Nerobahan (RI Pull Nerobahan)
+;						Lockspots toons						
+;					 Ghest Roppep (RI Pull Ghest)
+;						Lockspots toons
+;					 Ropscion Mindeye (RI Pull Ropscion)
+;						Lockspots toons
+
+;v6.12 Changes 1-15-20
+;	RZ
+;		Will no longer add ∞ to the loops field when set to infinitely loop
+;			you will still see the symbol in your save file, that is fine
+;		Added:
+;			Aurelian Coast: Maiden's Eye [Solo]
+;	RII
+;		Will now skip item if it cannot be transmuted/salvaged/extracted
+;		Added Extract
+;	RI
+;		Modified:
+;			Aurelian Coast: Sambata Village
+;				Modified pathing throughout zone (should miss last shiny less)
+;				Modified:
+;					 Ryryrd of the Wind (RI Pull Ryryrd)
+;						Modified Lockspot and pulling
+;			Aurelian Coast: Reishi Rumble
+;				Modified pathing throughout zone (should miss last shiny less)
+;				Modified:
+;					 Ropscion Mindeye (RI Pull Ropscion)
+;						Modified Lockspot and pulling
+;		Added:
+;			Aurelian Coast: Maiden's Eye
+;				Pathing throughout zone
+;				Added:
+;					 The Drudge Lord (RI Pull Drudge)
+;						Lockspots toons						
+;					 Xylox the Poisonous (RI Pull Xylox)
+;						Lockspots toons
+;					 Shadowed Abomination (RI Pull Shadowed)
+;						Lockspots toons
+;					 Va Dyn Kar (RI Pull Va)
+;						Lockspots toons
+;					 The Shadow Overlord (RI Pull Shadow)
+;						Lockspots toons
+;						Autotargets
+
 ;code for commision items
 ;relay all EQ2UIPage[Inventory,CommissionedWork].Child[button,buttonAccept]:LeftClick;TimedCommand 2 relay all EQ2UIPage[Tradeskills,Tradeskills].Child[button,SummaryPage.BeginButton]:LeftClick
 
@@ -4017,7 +4109,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.09
+variable(global) float RI_Var_Float_Version=6.12
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -9152,6 +9244,12 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Flames of Order"]
 				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Gusts of Order"]
 			}
+			elseif ${_CatName.Equal[Blood of Luclin]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: The Vault of Omens"]
+				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: Spires of Mythic Passage"]
+			}
 		}
 	}
 	method RQ(string _QuestName=!NONE!)
@@ -9174,6 +9272,7 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:Show
 			
 			UIElement[CategoryComboBox@RI]:AddItem[Artisan Epic]
+			UIElement[CategoryComboBox@RI]:AddItem[Blood of Luclin]
 			UIElement[CategoryComboBox@RI]:AddItem[Chaos Descending]
 			UIElement[CategoryComboBox@RI]:AddItem[Epic 2.0 Pre Reqs]
 			UIElement[CategoryComboBox@RI]:AddItem[Greenmist Heritage]
@@ -9184,7 +9283,7 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:AddItem[Sokokar Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Terrors of Thalumbra Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
-			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Yun Zi].ID}]
+			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Blood of Luclin].ID}]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FF5DA5CF]

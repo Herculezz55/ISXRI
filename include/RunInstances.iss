@@ -77,7 +77,7 @@ variable bool Developer=FALSE
 variable bool Consuming=FALSE
 variable bool RecentlyCheckedGatherRemains=FALSE
 variable bool LockSpottingWasOff=FALSE
-variable int ShinyScanDistance=50
+variable int ShinyScanDistance=100
 ;ArrayCounter variable
 variable(global) int MainArrayCounter=0
 variable int MyGroupSize
@@ -1493,6 +1493,46 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			LoadedTLOName:Set[VegarlsonTheTerreneRift]
 			for(MainArrayCounter:Set[0];${MainArrayCounter}<${VegarlsonTheTerreneRift[3rtZdjv7,#]};MainArrayCounter:Inc)
 				istrMain:Insert[${VegarlsonTheTerreneRift[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Deep Chelsith: Vault of Omens [Solo]
+		case Deep Chelsith: Vault of Omens [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO DeepChelsithVaultofOmens
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[DeepChelsithVaultofOmens]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${DeepChelsithVaultofOmens[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${DeepChelsithVaultofOmens[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Aurelian Coast: Sambata Village [Solo]
+		case Aurelian Coast: Sambata Village [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO AurelianCoastSambataVillage
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[AurelianCoastSambataVillage]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AurelianCoastSambataVillage[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${AurelianCoastSambataVillage[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Aurelian Coast: Reishi Rumble [Solo]
+		case Aurelian Coast: Reishi Rumble [Event Heroic]
+		{
+			RI_CMD_Hidden_AddTLO AurelianCoastReishiRumble
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[AurelianCoastReishiRumble]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AurelianCoastReishiRumble[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${AurelianCoastReishiRumble[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Aurelian Coast: Maiden's Eye [Solo]
+		case Aurelian Coast: Maiden's Eye [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO AurelianCoastMaidensEye
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[AurelianCoastMaidensEye]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AurelianCoastMaidensEye[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${AurelianCoastMaidensEye[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
 		default
@@ -24533,7 +24573,7 @@ function SwimUp(float YLoc=0)
 	}
 	else
 	{
-		while ${Math.Distance[${Me.Y},${YLoc]}>5
+		while ${Math.Distance[${Me.Y},${YLoc}]}>5
 		{
 			relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
 			wait 2
@@ -36159,6 +36199,29 @@ function NajenaCustom()
 		Actor[Najena]:DoTarget
 }
 ;;;;;;;; End Ward of Chaos Elements
+
+function Aldez()
+{
+	call CustomNamed "Aldez the Mighty" "138.556091,-14.350210,-358.204254"
+}
+
+function Erskellish()
+{
+	call CustomNamed "Erskellish Bloodarmor" "480.458740,-19.174274,-416.181854"
+}
+function Lucrezzia()
+{
+	call CustomNamed "Lucrezzia Mindrazer" "577.611816,-15.957007,82.284470"
+}
+function Zun'Liako'Va()
+{
+	call CustomNamed "Zun'Liako'Va" "206.646652,-50.505955,318.518585"
+}
+function Eom'Tek'Zen()
+{
+	call CustomNamed "Eom'Tek'Zen" "746.657654,-100.353165,-976.660522"
+}
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -36170,3 +36233,110 @@ function NajenaCustom()
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;; Start of BoL Zone CODING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;; Start Aurelian Coast: Sambata Village
+function Ercel()
+{
+	call CustomNamed "Ercel Bloodpaw" "99.220032,73.917030,-279.420074"
+}
+function Grugnop()
+{
+	call CustomNamed "Grugnop, the Guard" "36.442844,69.369949,-420.705627"
+}
+function Grrrunk()
+{
+	call CustomNamed "Grrrunk the Trunk" "49.395649,78.396690,-577.618896"
+}
+function Ryryrd()
+{
+	call PreHeal
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,4.242581,89.169662,-613.572937,1,1000]
+	wait 600 ${Me.Distance[4.242581,89.169662,-613.572937]}<5
+	wait 20
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-17.612984,88.564384,-614.753967,1,1000]
+	wait 600 ${Me.Distance[-17.612984,88.564384,-614.753967]}<5
+	wait 20
+	call PullNamed Ryryrd
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,4.242581,89.169662,-613.572937,1,1000]
+	wait 600 ${Me.Distance[4.242581,89.169662,-613.572937]}<5
+	wait 20
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,13.449534,88.419991,-595.657227,1,1000]
+	wait 600 ${Me.Distance[13.449534,88.419991,-595.657227]}<5
+	wait 20
+	call CustomNamed "Ryryrd of the Wind-NMB" "13.449534,88.419991,-595.657227"
+}
+function Mrokor()
+{
+	call CustomNamed "Mrokor, the Smartist" "-91.563019,81.940346,-701.779480"
+	call CustomNamed "Purpyron the Massive" "-91.563019,81.940346,-701.779480"
+}
+;;;;;;;; End Aurelian Coast: Sambata Village
+
+;;;;;;;; Start Aurelian Coast: Reishi Rumble
+
+function Nerobahan()
+{
+	call CustomNamed "Nerobahan" "639.571472,23.426392,564.551025"
+}
+function Ghest()
+{
+	call CustomNamed "Ghest Roppep" "371.037506,35.760571,569.124878"
+}
+function Ropscion()
+{
+	call PreHeal
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,481.981323,30.217960,578.265015,1,1000]
+	call PullNamed Ropscion
+	call CustomNamed "Ropscion Mindeye-NMB" "451.018616,18.688366,539.470093"
+}
+
+;;;;;;;; End Aurelian Coast: Reishi Rumble
+;;;;;;;; Start Aurelian Coast: Maiden's Eye
+
+function Drudge()
+{
+	call CustomNamed "The Drudge Lord" "-301.253815,4.138566,-214.555313"
+}
+function Xylox()
+{
+	call CustomNamed "Xylox the Poisonous" "-498.070923,31.269993,-148.6769873"
+}
+function Shadowed()
+{
+	call CustomNamed "Shadowed Abomination" "-567.794739,59.946609,30.354818"
+}
+function Va()
+{
+	call CustomNamed "Va Dyn Kar" "-677.951355,58.746983,-101.430580"
+}
+function Shadow()
+{
+	call CustomNamed "The Shadow Overlord-NMB" "-660.178040,76.891739,70.412712" NONE Shadowed
+}
+
+
+;;;;;;;; End Aurelian Coast: Maiden's Eye
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;; End of BoL Zone CODING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+

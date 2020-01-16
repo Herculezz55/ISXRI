@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.09 10-28-19"
-double EXTVER = 6.09;
+#define EXTENSION_VERSION "6.12 1-15-20"
+double EXTVER = 6.12;
 #include "ISXRI.h"
 
 
@@ -868,6 +868,19 @@ double EXTVER = 6.09;
 #include "YetmoreTravelsofYunZiAlteringtheAltar.h"
 #include "YetmoreTravelsofYunZiEternallyEternity.h"
 #include "YetmoreTravelsofYunZiReturningtoTears.h"
+
+//BoL Instances
+#include "DeepChelsithVaultofOmens.h"
+#include "AurelianCoastReishiRumble.h"
+#include "AurelianCoastSambataVillage.h"
+#include "AurelianCoastMaidensEye.h"
+
+//BoL Quests
+
+#include "LightAmongstShadowsSpiresofMythicPassage.h"
+#include "LightAmongstShadowsTheVaultofOmens.h"
+
+
 
 //#include ".h"
 //End Quest Dat Files
@@ -1812,6 +1825,15 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIALTERINGTHEALTAR");
 	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIETERNALLYETERNITY");
 	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIRETURNINGTOTEARS");
+
+	//BoL
+	pISInterface->RemoveTopLevelObject("DeepChelsithVaultofOmens");
+	pISInterface->RemoveTopLevelObject("AurelianCoastReishiRumble");
+	pISInterface->RemoveTopLevelObject("AurelianCoastSambataVillage");
+	pISInterface->RemoveTopLevelObject("AurelianCoastMaidensEye");
+
+	pISInterface->RemoveTopLevelObject("LIGHTAMONGSTSHADOWSSPIRESOFMYTHICPASSAGE");
+	pISInterface->RemoveTopLevelObject("LIGHTAMONGSTSHADOWSTHEVAULTOFOMENS");
 }
 
 void ISXRIUnRegisterCommands()
@@ -30418,7 +30440,222 @@ bool __cdecl TLO_YetmoreTravelsofYunZiReturningtoTears(int argc, char* argv[], L
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_LightAmongstShadowsSpiresofMythicPassage(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(LightAmongstShadowsSpiresofMythicPassage) / sizeof(LightAmongstShadowsSpiresofMythicPassage[0]);
 
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = LightAmongstShadowsSpiresofMythicPassage[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_LightAmongstShadowsTheVaultofOmens(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(LightAmongstShadowsTheVaultofOmens) / sizeof(LightAmongstShadowsTheVaultofOmens[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = LightAmongstShadowsTheVaultofOmens[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_DeepChelsithVaultofOmens(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(DeepChelsithVaultofOmens) / sizeof(DeepChelsithVaultofOmens[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = DeepChelsithVaultofOmens[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AurelianCoastReishiRumble(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(AurelianCoastReishiRumble) / sizeof(AurelianCoastReishiRumble[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = AurelianCoastReishiRumble[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AurelianCoastSambataVillage(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(AurelianCoastSambataVillage) / sizeof(AurelianCoastSambataVillage[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = AurelianCoastSambataVillage[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AurelianCoastMaidensEye(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(AurelianCoastMaidensEye) / sizeof(AurelianCoastMaidensEye[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = AurelianCoastMaidensEye[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -30430,6 +30667,21 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 		pISInterface->AddTopLevelObject(argv[1], fLSTopLevelObject(argv[2]));*/
 
 		string tlo = argv[1];
+		//BoL
+
+		if (tlo == "DeepChelsithVaultofOmens")
+			pISInterface->AddTopLevelObject("DeepChelsithVaultofOmens", TLO_DeepChelsithVaultofOmens);
+		if (tlo == "AurelianCoastReishiRumble")
+			pISInterface->AddTopLevelObject("AurelianCoastReishiRumble", TLO_AurelianCoastReishiRumble);
+		if (tlo == "AurelianCoastSambataVillage")
+			pISInterface->AddTopLevelObject("AurelianCoastSambataVillage", TLO_AurelianCoastSambataVillage);
+		if (tlo == "AurelianCoastMaidensEye")
+			pISInterface->AddTopLevelObject("AurelianCoastMaidensEye", TLO_AurelianCoastMaidensEye);
+
+		if (tlo == "LIGHTAMONGSTSHADOWSSPIRESOFMYTHICPASSAGE")
+			pISInterface->AddTopLevelObject("LIGHTAMONGSTSHADOWSSPIRESOFMYTHICPASSAGE", TLO_LightAmongstShadowsSpiresofMythicPassage);
+		if (tlo == "LIGHTAMONGSTSHADOWSTHEVAULTOFOMENS")
+			pISInterface->AddTopLevelObject("LIGHTAMONGSTSHADOWSTHEVAULTOFOMENS", TLO_LightAmongstShadowsTheVaultofOmens);
 
 		//CD Instances
 

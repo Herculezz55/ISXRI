@@ -10,7 +10,7 @@ function main(... args)
 	variable index:string AbilityName
 	variable index:int Level
 	variable int LevelGreaterThan=0
-	variable int LevelLessThan=110
+	variable int LevelLessThan=120
 	variable index:string Tier
 	
 	variable int _acnt=0
