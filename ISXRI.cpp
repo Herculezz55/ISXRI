@@ -11,15 +11,17 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.12 1-15-20"
-double EXTVER = 6.12;
+#define EXTENSION_VERSION "6.25 7-3-20"
+double EXTVER = 6.25;
 #include "ISXRI.h"
 
 
 ///THIS IS THE START OF THE AUTOUPDATER FIX FOR XML FILES TO CHECK MD5 AND DOWNLOAD IF NO MATCH FINISH LATER TOO TIRED
 /// Also write a PHP or Whatever script that will check these files serverside and spit the md5 out to use so we can check against it
 /// Already have PHP Script on Server, http://www.isxri.com/MD5.php?f=filename.xml
-/// EX. http://www.isxri.com/MD5.php?f=RISalvage.xml   and in here we check using CMD MD5
+/// EX. http://www.isxri.com/MD5.php?f=RISalvage.xml   and in here we check using CMD MD5 // 
+/// only problem is keeping the updater from updating my files in particular so as to not overwrite WIP
+/// need either an ignore list system or just hardcode my account into here for not updating xmls, 
 
 //
 //
@@ -874,11 +876,24 @@ double EXTVER = 6.12;
 #include "AurelianCoastReishiRumble.h"
 #include "AurelianCoastSambataVillage.h"
 #include "AurelianCoastMaidensEye.h"
+#include "SanctusSeruEchelonofOrder.h"
+#include "SanctusSeruEchelonofDivinity.h"
+#include "SanctusSeruArxAeturnus.h"
+#include "FordelMidstTheListlessSpires.h"
 
 //BoL Quests
 
 #include "LightAmongstShadowsSpiresofMythicPassage.h"
 #include "LightAmongstShadowsTheVaultofOmens.h"
+#include "BloodofLuclinTimeline.h"
+#include "ShatteredDawnBattleoftheNexus.h"
+#include "ShatteredDawnBehindtheWallsofSeru.h"
+#include "ShatteredDawnBurntheMidnightOil.h"
+#include "ShatteredDawnCastaLongShadow.h"
+#include "ShatteredDawnExecutionofOrder.h"
+#include "ShatteredDawnExtinguishtheCorruptedLight.h"
+#include "ShatteredDawnMythicPassageArranged.h"
+#include "ShatteredDawnQuerentofRuin.h"
 
 
 
@@ -1062,6 +1077,28 @@ void CheckForAndLoadISXEQ2()
 }
 void ISXRIUnRegisterTLOs()
 {
+	//BoL
+	pISInterface->RemoveTopLevelObject("DeepChelsithVaultofOmens");
+	pISInterface->RemoveTopLevelObject("AurelianCoastReishiRumble");
+	pISInterface->RemoveTopLevelObject("AurelianCoastSambataVillage");
+	pISInterface->RemoveTopLevelObject("AurelianCoastMaidensEye");
+	pISInterface->RemoveTopLevelObject("SanctusSeruEchelonofOrder");
+	pISInterface->RemoveTopLevelObject("SanctusSeruEchelonofDivinity");
+	pISInterface->RemoveTopLevelObject("SanctusSeruArxAeturnus");
+	pISInterface->RemoveTopLevelObject("FordelMidstTheListlessSpires");
+
+	pISInterface->RemoveTopLevelObject("LIGHTAMONGSTSHADOWSSPIRESOFMYTHICPASSAGE");
+	pISInterface->RemoveTopLevelObject("LIGHTAMONGSTSHADOWSTHEVAULTOFOMENS");
+	pISInterface->RemoveTopLevelObject("BLOODOFLUCLINTIMELINE");
+	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNBATTLEOFTHENEXUS");
+	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNBEHINDTHEWALLSOFSERU");
+	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNBURNTHEMIDNIGHTOIL");
+	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNCASTALONGSHADOW");
+	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNEXECUTIONOFORDER");
+	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNEXTINGUISHTHECORRUPTEDLIGHT");
+	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNMYTHICPASSAGEARRANGED");
+	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNQUERENTOFRUIN");
+
 	pISInterface->RemoveTopLevelObject("Devel");
 	pISInterface->RemoveTopLevelObject("PaidMem");
 	//pISInterface->RemoveTopLevelObject("Paid");
@@ -1826,14 +1863,6 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIETERNALLYETERNITY");
 	pISInterface->RemoveTopLevelObject("YETMORETRAVELSOFYUNZIRETURNINGTOTEARS");
 
-	//BoL
-	pISInterface->RemoveTopLevelObject("DeepChelsithVaultofOmens");
-	pISInterface->RemoveTopLevelObject("AurelianCoastReishiRumble");
-	pISInterface->RemoveTopLevelObject("AurelianCoastSambataVillage");
-	pISInterface->RemoveTopLevelObject("AurelianCoastMaidensEye");
-
-	pISInterface->RemoveTopLevelObject("LIGHTAMONGSTSHADOWSSPIRESOFMYTHICPASSAGE");
-	pISInterface->RemoveTopLevelObject("LIGHTAMONGSTSHADOWSTHEVAULTOFOMENS");
 }
 
 void ISXRIUnRegisterCommands()
@@ -1894,6 +1923,7 @@ void ISXRIUnRegisterCommands()
 	pISInterface->RemoveCommand("RIMobHud");
 	pISInterface->RemoveCommand("RI_CMD_PauseCombatBots");
 	pISInterface->RemoveCommand("RI_CMD_PauseRIMovement");
+	pISInterface->RemoveCommand("RI_CMD_PauseRI");
 	pISInterface->RemoveCommand("RI_CMD_ReloadBots"); 
 	pISInterface->RemoveCommand("RI_CMD_EndBots");
 	pISInterface->RemoveCommand("RI_CMD_AbilityEnableDisable");
@@ -30656,6 +30686,474 @@ bool __cdecl TLO_AurelianCoastMaidensEye(int argc, char* argv[], LSTYPEVAR& Dest
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_SanctusSeruEchelonofOrder(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(SanctusSeruEchelonofOrder) / sizeof(SanctusSeruEchelonofOrder[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = SanctusSeruEchelonofOrder[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_SanctusSeruEchelonofDivinity(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(SanctusSeruEchelonofDivinity) / sizeof(SanctusSeruEchelonofDivinity[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = SanctusSeruEchelonofDivinity[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_SanctusSeruArxAeturnus(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(SanctusSeruArxAeturnus) / sizeof(SanctusSeruArxAeturnus[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = SanctusSeruArxAeturnus[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_FordelMidstTheListlessSpires(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(FordelMidstTheListlessSpires) / sizeof(FordelMidstTheListlessSpires[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = FordelMidstTheListlessSpires[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BloodofLuclinTimeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BloodofLuclinTimeline) / sizeof(BloodofLuclinTimeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BloodofLuclinTimeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShatteredDawnBattleoftheNexus(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ShatteredDawnBattleoftheNexus) / sizeof(ShatteredDawnBattleoftheNexus[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ShatteredDawnBattleoftheNexus[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShatteredDawnBehindtheWallsofSeru(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ShatteredDawnBehindtheWallsofSeru) / sizeof(ShatteredDawnBehindtheWallsofSeru[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ShatteredDawnBehindtheWallsofSeru[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShatteredDawnBurntheMidnightOil(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ShatteredDawnBurntheMidnightOil) / sizeof(ShatteredDawnBurntheMidnightOil[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ShatteredDawnBurntheMidnightOil[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShatteredDawnCastaLongShadow(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ShatteredDawnCastaLongShadow) / sizeof(ShatteredDawnCastaLongShadow[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ShatteredDawnCastaLongShadow[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShatteredDawnExecutionofOrder(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ShatteredDawnExecutionofOrder) / sizeof(ShatteredDawnExecutionofOrder[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ShatteredDawnExecutionofOrder[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShatteredDawnExtinguishtheCorruptedLight(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ShatteredDawnExtinguishtheCorruptedLight) / sizeof(ShatteredDawnExtinguishtheCorruptedLight[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ShatteredDawnExtinguishtheCorruptedLight[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShatteredDawnMythicPassageArranged(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ShatteredDawnMythicPassageArranged) / sizeof(ShatteredDawnMythicPassageArranged[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ShatteredDawnMythicPassageArranged[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ShatteredDawnQuerentofRuin(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ShatteredDawnQuerentofRuin) / sizeof(ShatteredDawnQuerentofRuin[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ShatteredDawnQuerentofRuin[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -30677,12 +31175,37 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("AurelianCoastSambataVillage", TLO_AurelianCoastSambataVillage);
 		if (tlo == "AurelianCoastMaidensEye")
 			pISInterface->AddTopLevelObject("AurelianCoastMaidensEye", TLO_AurelianCoastMaidensEye);
+		if (tlo == "SanctusSeruEchelonofOrder")
+			pISInterface->AddTopLevelObject("SanctusSeruEchelonofOrder", TLO_SanctusSeruEchelonofOrder);
+		if (tlo == "SanctusSeruEchelonofDivinity")
+			pISInterface->AddTopLevelObject("SanctusSeruEchelonofDivinity", TLO_SanctusSeruEchelonofDivinity);
+		if (tlo == "SanctusSeruArxAeturnus")
+			pISInterface->AddTopLevelObject("SanctusSeruArxAeturnus", TLO_SanctusSeruArxAeturnus);
+		if (tlo == "FordelMidstTheListlessSpires")
+			pISInterface->AddTopLevelObject("FordelMidstTheListlessSpires", TLO_FordelMidstTheListlessSpires);
 
 		if (tlo == "LIGHTAMONGSTSHADOWSSPIRESOFMYTHICPASSAGE")
 			pISInterface->AddTopLevelObject("LIGHTAMONGSTSHADOWSSPIRESOFMYTHICPASSAGE", TLO_LightAmongstShadowsSpiresofMythicPassage);
 		if (tlo == "LIGHTAMONGSTSHADOWSTHEVAULTOFOMENS")
 			pISInterface->AddTopLevelObject("LIGHTAMONGSTSHADOWSTHEVAULTOFOMENS", TLO_LightAmongstShadowsTheVaultofOmens);
-
+		if (tlo == "BLOODOFLUCLINTIMELINE")
+			pISInterface->AddTopLevelObject("BLOODOFLUCLINTIMELINE", TLO_BloodofLuclinTimeline);
+		if (tlo == "SHATTEREDDAWNBATTLEOFTHENEXUS")
+			pISInterface->AddTopLevelObject("SHATTEREDDAWNBATTLEOFTHENEXUS", TLO_ShatteredDawnBattleoftheNexus);
+		if (tlo == "SHATTEREDDAWNBEHINDTHEWALLSOFSERU")
+			pISInterface->AddTopLevelObject("SHATTEREDDAWNBEHINDTHEWALLSOFSERU", TLO_ShatteredDawnBehindtheWallsofSeru);
+		if (tlo == "SHATTEREDDAWNBURNTHEMIDNIGHTOIL")
+			pISInterface->AddTopLevelObject("SHATTEREDDAWNBURNTHEMIDNIGHTOIL", TLO_ShatteredDawnBurntheMidnightOil);
+		if (tlo == "SHATTEREDDAWNCASTALONGSHADOW")
+			pISInterface->AddTopLevelObject("SHATTEREDDAWNCASTALONGSHADOW", TLO_ShatteredDawnCastaLongShadow);
+		if (tlo == "SHATTEREDDAWNEXECUTIONOFORDER")
+			pISInterface->AddTopLevelObject("SHATTEREDDAWNEXECUTIONOFORDER", TLO_ShatteredDawnExecutionofOrder);
+		if (tlo == "SHATTEREDDAWNEXTINGUISHTHECORRUPTEDLIGHT")
+			pISInterface->AddTopLevelObject("SHATTEREDDAWNEXTINGUISHTHECORRUPTEDLIGHT", TLO_ShatteredDawnExtinguishtheCorruptedLight);
+		if (tlo == "SHATTEREDDAWNMYTHICPASSAGEARRANGED")
+			pISInterface->AddTopLevelObject("SHATTEREDDAWNMYTHICPASSAGEARRANGED", TLO_ShatteredDawnMythicPassageArranged);
+		if (tlo == "SHATTEREDDAWNQUERENTOFRUIN")
+			pISInterface->AddTopLevelObject("SHATTEREDDAWNQUERENTOFRUIN", TLO_ShatteredDawnQuerentofRuin);
 		//CD Instances
 
 		if (tlo == "AwuidorTheNebulousDeep")
@@ -33163,6 +33686,43 @@ int __cdecl CMD_PauseRIMovement(int argc, char *argv[])
 		printf("ISXRI: No Args, Usage : RI_CMD_PauseRIMovement int PauseUnPause  1 == Pause 0 = UnPause");
 	return 1;
 }
+int __cdecl CMD_PauseRI(int argc, char* argv[])
+{
+	//if we have more than 1 arg
+	if (argc > 1)
+	{
+		//cast argv[1] to an int for checking
+		int intArg = atoi(argv[1]);
+
+		//if intArg is 1 pause whichever bot is running
+		if (intArg == 1)
+		{
+			pISInterface->ExecuteTimedCommand(1, "RI_Var_Bool_Paused:Set[TRUE]");
+			pISInterface->ExecuteTimedCommand(2, "UIElement[Start@RI]:SetText[Resume]");
+			pISInterface->ExecuteTimedCommand(3, "Script[Buffer:RunInstances]:Pause");
+			pISInterface->ExecuteTimedCommand(3, "press ${RI_Var_String_BackwardKey}");
+			//stop holding any commonly held buttons
+			pISInterface->ExecuteTimedCommand(4, "press -release ${RI_Var_String_ForwardKey}");
+			pISInterface->ExecuteTimedCommand(4, "press -release ${RI_Var_String_BackwardKey}");
+			pISInterface->ExecuteTimedCommand(4, "press -release ${RI_Var_String_SwimUpKey}");
+			pISInterface->ExecuteTimedCommand(4, "press -release ${RI_Var_String_JumpKey}");
+			pISInterface->ExecuteTimedCommand(4, "press -release ${RI_Var_String_FlyUpKey}");
+			pISInterface->ExecuteTimedCommand(4, "press -release ${RI_Var_String_FlyDownKey}");
+		}
+		//else if intArg is 0 unpause whichever bot is running
+		else if (intArg == 0)
+		{
+			pISInterface->ExecuteTimedCommand(1, "RI_Var_Bool_Paused:Set[FALSE]");
+			pISInterface->ExecuteTimedCommand(2, "UIElement[Start@RI]:SetText[Pause]");
+			pISInterface->ExecuteTimedCommand(3, "Script[Buffer:RunInstances]:Resume");
+		}
+		else
+			printf("ISXRI: Wrong Arg, %s Usage : RI_CMD_PauseRI int PauseUnPause  1 == Pause 0 = UnPause", argv[1]);
+	}
+	else
+		printf("ISXRI: No Args, Usage : RI_CMD_PauseRI int PauseUnPause  1 == Pause 0 = UnPause");
+	return 1;
+}
 int __cdecl CMD_ChangeFaceNPC(int argc, char *argv[])
 {
 	//first find which bot is running and save to str
@@ -33745,14 +34305,23 @@ int __cdecl CMD_CombatBot(int argc, char *argv[])
 	pISInterface->RunScriptFromBuffer("CombatBot", c, sizeof(CombatBot), 1, k);
 	return 1;
 }
-int __cdecl CMD_AbilityCheck(int argc, char *argv[])
+int __cdecl CMD_AbilityCheck(int argc, char* argv[])
 {
-	char *k[] = { "3rtZdjv7" };
-	const unsigned char * p = AbilityCheck;
-	const char * c = (const char *)p;
-
-	pISInterface->RunScriptFromBuffer("AbilityCheck", c, sizeof(AbilityCheck), 1, k);
-	return 1;
+	char* args[1024];
+	/*if (argc > 1024)
+	{
+	printf("ISXRI: You have exceeded the max amount of arguments please enter less than 1024 arguments");
+	return 0;
+	}*/
+	//printf("ISXRI:Argument Count: %d", argc);
+	args[0] = "3rtZdjv7";
+	for (int i = 1; i < argc; i++)
+	{
+		args[i] = argv[i];
+	}
+	const char* buffer = (const char*)AbilityCheck;
+	pISInterface->RunScriptFromBuffer("AbilityCheck", buffer, sizeof(AbilityCheck), argc, args);
+	return 0;
 }
 int __cdecl CMD_CloseRI(int argc, char *argv[])
 {
@@ -34466,6 +35035,7 @@ void RegisterCommandsAfterAuth()
 	pISInterface->AddCommand("RIMobHud", CMD_RIMobHud, true, false);
 	pISInterface->AddCommand("RI_CMD_PauseCombatBots", CMD_PauseCombatBots, true, false);
 	pISInterface->AddCommand("RI_CMD_PauseRIMovement", CMD_PauseRIMovement, true, false);
+	pISInterface->AddCommand("RI_CMD_PauseRI", CMD_PauseRI, true, false);
 	pISInterface->AddCommand("RI_CMD_ReloadBots", CMD_ReloadBots, true, false);
 	pISInterface->AddCommand("RI_CMD_EndBots", CMD_EndBots, true, false);
 	pISInterface->AddCommand("RI_CMD_AbilityEnableDisable", CMD_AbilityEnableDisable, true, false);

@@ -327,7 +327,8 @@ objectdef RIInventoryObject
 			wait 2
 			echo ISXRI: Selling "${Me.Inventory[id,${_ItemID}]}"
 			;return
-			Me.Merchandise["${Me.Inventory[id,${_ItemID}]}"]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=="${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
+			;old way Me.Merchandise["${Me.Inventory[id,${_ItemID}]}"]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=="${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
+			MerchantWindow.MyInventory[${Me.Inventory[id,${_ItemID}].Name}]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=="${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
 		}
 		wait 8
 	}
@@ -711,7 +712,7 @@ atom RIIEQ2_onIncomingText(string Text)
 }
 atom EQ2_onRewardWindowAppeared()
 {
-	RewardWindow:Receive
+	RewardWindow:AcceptReward
 }
 function atexit()
 {

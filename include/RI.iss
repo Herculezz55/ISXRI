@@ -4083,6 +4083,241 @@
 ;						Lockspots toons
 ;						Autotargets
 
+;v6.13 Changes 1-19-20
+;	RI
+;		Fixed a bug that was not enacting Wait for Last Named Chest
+;			It's still recommended to use RILoot instead as it will auto
+;			hand out what needs to go where, you can remove and add items on the
+;			Left as needed
+;		Modified:
+;			Aurelian Coast: Maiden's Eye
+;				Modified Pathing throughout zone (avoids all skeles)
+;					 Xylox the Poisonous (RI Pull Xylox)
+;						Now jousts poison
+;						Smart targeting
+;		Modified:
+;			Aurelian Coast: Sambata Village
+;				Modified:
+;					 Ryryrd of the Wind (RI Pull Ryryrd)
+;						Modified Lockspot and pulling again
+
+
+;v6.14 Changes 1-30-20
+;	RI
+;		RI will no longer auto accept rezes or invites when CombatBot is not running.
+;	RI_AbilityCheck
+;		Fixed a bug where AbilityCheck would recreate the file instead of appending to it
+;		(This is already live but somehow missed the patch notes)
+;		Now accepts unlimited arguments in the form of
+;			-AbilityID 123456
+;				will only add the ability with this ID
+;			-AbilityName "Name of Ability"
+;				will only add the ability by this name
+;			-Level ##
+;				will only add abilities of set level
+;			-LevelGreaterThan ##
+;				will only add abilities greater than set level
+;			-LevelLessThan ##
+;				will only add abilities less than set level
+;			-Tier (Journeyman/Apprentice/Adept/Expert/Master/Grandmaster/Ancient/Celestial)
+;				will only add abilities of set tier
+;	RZ
+;		Fixed a bug that would cause RZ to crash with the Dev Version of Innerspace
+;	CombatBot
+;		Fixed a few little syntax errors that the Dev Version of Innerspace did not like
+;	AbilityCheck
+;		Fixed a syntax error that the Dev Version of Innerspace did not like
+
+;v6.15 Changes 2-17-20
+;	RZ
+;		RZ will move between Sanctus Seru [City] and Aurelian Coast Instance Locations as needed
+;		Added:
+;			Sanctus Seru: Echelon of Order [Solo]
+;			Sanctus Seru: Echelon of Divinity [Solo]
+;			Sanctus Seru: Arx Aeturnus [Solo]
+;		you can now pass in a MoveTo location and RZ will try to get you there
+;		there are some caveats, you must be at one of the predetermined starting locs
+;		or your guild hall spell must be up and your wizard portal must be within 
+;		non collision of the call to guild hall location in your guild hall
+;			Starting Locs:
+;				Aurelian Coast by the Instances (113.153946,66.675789,-622.250977)
+;					includes the doors of either Aurelian Coast set of instances
+;				Sanctus Seru [City] by the Instances (-239.133438,179.756027,-1.253709)
+;					includes the doors of either Sanctus Seru [City] set of instances
+;				Guild Hall
+;				Anywhere else (will call to guild hall then move from there)
+;			Passable Arguments
+;				Sanctus Seru [City] or SSC
+;				Aurelian Coast or AC
+;			for Example typing RZ AC will move you to Aurelian Coast
+;	RI
+;		Added:
+;			Sanctus Seru: Echelon of Order (Not Optimized for Heroic)
+;				Pathing throughout zone
+;				Added: 
+;					 Moggtu the Mad (RI Pull Moggtu)
+;						Lockspots toons						
+;					 Cerio Vallain (RI Pull Cerio)
+;						Lockspots toons
+;					 Raizyl Pajdu (RI Pull Raizyl)
+;						Lockspots toons
+;					 Dichromanus (RI Pull Dichromanus)
+;						Lockspots toons
+;					 Lady Warglave (RI Pull Warglave)
+;						Lockspots toons
+;						Autotargets
+;		Added:
+;			Sanctus Seru: Echelon of Divinity (Not Optimized for Heroic)
+;				Pathing throughout zone
+;				Added: 
+;					 Divine Prophet Buffo II (RI Pull Buffo)
+;						Lockspots toons						
+;					 Grand Cruciator Typhenon (RI Pull Typhenon)
+;						Lockspots toons
+;						Autotargets
+;					 Unhilynd (RI Pull Unhilynd)
+;						Lockspots toons
+;					 Prysmerah, Arx Patrona (RI Pull Prysmerah)
+;						Lockspots toons
+;						Autojousts
+;					 Lord Triskian Seru (RI Pull Triskian)
+;						Lockspots toons
+;						Autotargets
+;		Added:
+;			Sanctus Seru: Arx Aeturnus (Not Optimized for Heroic)
+;				Pathing throughout zone
+;				Added:
+;					 Archon of Life (RI Pull Life)
+;						Lockspots toons						
+;						Moves to correct column determined previously
+;					 Archon of Death (RI Pull Death)
+;						Lockspots toons
+;						Moves between columns as needed
+;					 Sanctus Eternus (RI Pull Eternus)
+;						Lockspots toons
+
+;v6.16 Changes 2-18-20
+;	RI
+;		Modified:
+;			Sanctus Seru: Echelon of Order
+;				Modified pathing throughout zone
+
+;v6.17 Changes 2-19-20
+;	RZ
+;		Fixed a bug in detecting where you are
+;		Will now use Will of Seru or Will of the Coast to move to the respective Instance locations if you have them in your inventory
+;	RunInstances
+;		Modified LockAndPull function to be a little more reliable at Pulling
+;	RI
+;		Modified:
+;			Sanctus Seru: Echelon of Divinity
+;				Modified: 
+;					 Unhilynd (RI Pull Unhilynd)
+;						Now waits until he is aggro or 30s before engaging or moving on
+;					 Prysmerah, Arx Patrona (RI Pull Prysmerah)
+;						Now waits until he is aggro or 60s before engaging or moving on
+
+;v6.18 Changes 3-18-20
+;	CB
+;		Will no longer cast Fount of Power
+;	RI
+;		Will ask merc to backoff upon starting 
+;			(this will help prevent the merc from standing 30+m away and keeping the mobs out of range)
+;		Modified:
+;			Sanctus Seru: Echelon of Order
+;				Modified pathing to help with LoS (please report if and where issues still exist)
+;		Modified:
+;			Sanctus Seru: Echelon of Divinity
+;				Modified pathing to help with LoS (please report if and where issues still exist)
+
+;v6.19 Changes 4-16-20
+;	RI
+;		Fixed a bug in the following commands that broke their functionality:
+;		RIMUIObj:PauseRI[ForWho]
+;		RIMUIObj:ResumeRI[ForWho]
+;		RI_CMD_PauseRI 1/0
+;		Added:
+;			Fordel Midst: The Listless Spires (Not Optimized for Heroic)
+;				Pathing throughout zone
+;				Added:
+;					 Old Witherby (RI Pull Witherby)
+;						Lockspots toons						
+;					 War Master Ryzon (RI Pull Ryzon)
+;						Lockspots toons
+;						Targets mount when appropriate
+;					 Fire Monger Baltar (RI Pull Baltar)
+;						Lockspots toons
+;	RZ
+;		Added:
+;			Fordel Midst: The Listless Spires (Solo)		
+;	RQ
+;		RQ will now load eq2craft instead of the defunct craft command
+;	RIW (Used to create Zone Files)
+;		Revamped RIW and exposed all Custom Functions built into RI to the UI, click the Custom button
+
+;v6.20 Changes 4-17-20
+;	RI
+;		Fixed a syntax bug that was giving out a illegal calculation error
+
+;v6.21 Changes 4-17-20
+;	RZ
+;		Fixed a bug getting stuck moving from AC Zones to FM Zones
+
+;v6.22 Changes 4-17-20
+;	RZ
+;		Fixed a bug that was only moving MainToon between AC and SSC
+
+;v6.23 Changes 4-25-20
+;	RIMUIObj
+;		Modified QuestStepExists(string QuestStep, bool isChecked)
+;			Added isChecked boolean to determine if the queststep is checked
+;	RI
+;		Modified BuyFromVendor function to utilize new MerchantWindow tlo
+;		Modified
+;			Sanctus Seru: Echelon of Order
+;				Turned off balance trash
+;		Added
+;			Fordel Midst: The Listless Spires
+;				Pathing throughout zone
+;				Added:
+;					Old Witherby (RI Pull Witherby)
+;						Lockspots toons
+;					War Master Ryzon (RI Pull Ryzon)
+;						Lockspots toons
+;						Targets diretusk
+;					War Master Ryzon (RI Pull Ryzon)
+;						Lockspots toons
+;	RI_Inventory or RII
+;		Modified Sell functionality to utilize new MerchantWindow tlo
+;	RI_WriteLocs or RIW
+;		Modified Path and ZoneDoor Custom Functions Description
+;	RQ
+;		Added:
+;			Blood of Luclin Timeline
+;				Shattered Dawn: Mythic Passage Arranged
+;				Shattered Dawn: Querent of Ruin
+;				Shattered Dawn: Behind the Walls of Seru
+;				Shattered Dawn: Execution of Order
+;				Shattered Dawn: Extinguish the Corrupted Light
+;				Shattered Dawn: Cast a Long Shadow
+;				Shattered Dawn: Burn the Midnight Oil
+;				Shattered Dawn: Battle of the Nexus
+;
+;v6.24 Changes 4-26-20
+;	RI
+;		Fixed a crashing bug in the ShinyCollection function
+
+;v6.25 Changes 7-3-20
+;	RI
+;		Fixed RewardWindow modifications
+;	RII
+;		Fixed RewardWindow modifications
+;	CombatBot
+;		Fixed RewardWindow modifications
+;	Salvage / Transmute / Extract
+;		Fixed RewardWindow modifications
+
+
 ;code for commision items
 ;relay all EQ2UIPage[Inventory,CommissionedWork].Child[button,buttonAccept]:LeftClick;TimedCommand 2 relay all EQ2UIPage[Tradeskills,Tradeskills].Child[button,SummaryPage.BeginButton]:LeftClick
 
@@ -4109,7 +4344,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.12
+variable(global) float RI_Var_Float_Version=6.25
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -6317,12 +6552,14 @@ atom EQ2_onIncomingText(string Text)
 ;atom triggered when ChoiceWindow is detected
 atom(script) EQ2_onChoiceWindowAppeared()
 {
-	if ${ChoiceWindow.Text.GetProperty[Text].Find[cast]} && ${Me.Health}<1 && ( !${Script[Buffer:CombatBot](exists)} || ${UIElement[SettingsAcceptRessesCheckBox@SettingsFrame@CombatBotUI].Checked} )
+	if ${ChoiceWindow.Text.GetProperty[Text].Find[cast]} && ${Me.Health}<1 && ${UIElement[SettingsAcceptRessesCheckBox@SettingsFrame@CombatBotUI].Checked}
+	;( !${Script[Buffer:CombatBot](exists)} ||  )
 	{
 		ChoiceWindow:DoChoice1
 	}
 	;put code in here to search through richarlist.xml
-	if ${EQ2.ServerName.NotEqual[Battlegrounds]} && ${ChoiceWindow.Text.GetProperty[Text].Find["has invited you to join a"]} && ( !${Script[Buffer:CombatBot](exists)} || ${UIElement[SettingsAcceptInvitesCheckBox@SettingsFrame@CombatBotUI].Checked} )
+	if ${EQ2.ServerName.NotEqual[Battlegrounds]} && ${ChoiceWindow.Text.GetProperty[Text].Find["has invited you to join a"]} && ${UIElement[SettingsAcceptInvitesCheckBox@SettingsFrame@CombatBotUI].Checked}
+	;( !${Script[Buffer:CombatBot](exists)} || ${UIElement[SettingsAcceptInvitesCheckBox@SettingsFrame@CombatBotUI].Checked} )
 	{
 		ChoiceWindow:DoChoice1
 	}
@@ -6339,7 +6576,7 @@ atom EQ2_onQuestOffered(string Name, string Description, int Level, int StatusRe
 {
 	if ${Script[${RI_Var_String_CombatBotScriptName}](exists)} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 	{
-		TimedCommand 3 RewardWindow:Receive
+		TimedCommand 3 RewardWindow:AcceptReward
 		;TimedCommand 3 RewardWindow:Accept
 		TimedCommand 5 EQ2:AcceptPendingQuest
 	}
@@ -7421,6 +7658,21 @@ objectdef RIMovementObject
 		{
 			if ${RI_Var_Bool_Debug}
 				echo ISXRI: ${Time}: Moving : Unable to Move Our Distance to ${X1},${Y1},${Z1} is ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]} which is greater than our max move distance: ${RI_Var_Int_MoveMaxDistance}
+			if !${KeepMoving}
+			{
+				if ${RI_Var_Bool_Debug}
+					echo ISXRI: Stoping Move since KeepMoving: ${KeepMoving}
+				press -release ${RI_Var_String_FlyUpKey}
+				press -release ${RI_Var_String_FlyDownKey}
+				press -release ${RI_Var_String_ForwardKey}
+				wait 1
+				if ${Me.IsMoving}
+				{
+					press ${RI_Var_String_BackwardKey}
+					press ${RI_Var_String_BackwardKey}
+					press ${RI_Var_String_BackwardKey}
+				}
+			}
 			wait 1
 			return
 		}
@@ -7687,6 +7939,8 @@ objectdef RIMovementObject
 			;stop flying up or down
 			if !${KeepMoving}
 			{
+				if ${RI_Var_Bool_Debug}
+					echo ISXRI: Stoping Move since KeepMoving: ${KeepMoving}
 				press -release ${RI_Var_String_FlyUpKey}
 				press -release ${RI_Var_String_FlyDownKey}
 				press -release ${RI_Var_String_ForwardKey}
@@ -8035,6 +8289,57 @@ objectdef RIConsoleObject
 }
 objectdef RIMUIObject
 {
+	member(bool) QuestStepExists(string _QuestStep, bool _isChecked=FALSE)
+	{
+		variable index:collection:string Details    
+		variable iterator DetailsIterator
+		variable int DetailsCounter = 0
+		variable bool _FoundIt = FALSE
+		variable bool _Checked = FALSE
+	;    echo "Journal Current Quest:"
+	;    echo "- Name: ${QuestJournalWindow.CurrentQuest.Name.GetProperty["LocalText"]}"
+	;    echo "- Level: ${QuestJournalWindow.CurrentQuest.Level.GetProperty["LocalText"]}"
+	;    echo "- Category: ${QuestJournalWindow.CurrentQuest.Category.GetProperty["LocalText"]}"
+	;    echo "- CurrentZone: ${QuestJournalWindow.CurrentQuest.CurrentZone.GetProperty["LocalText"]}"
+	;    echo "- TimeStamp: ${QuestJournalWindow.CurrentQuest.TimeStamp.GetProperty["LocalText"]}"
+	;    echo "- MissionGroup: ${QuestJournalWindow.CurrentQuest.MissionGroup.GetProperty["LocalText"]}"
+	;    echo "- Status: ${QuestJournalWindow.CurrentQuest.Status.GetProperty["LocalText"]}"
+	;    echo "- ExpirationTime: ${QuestJournalWindow.CurrentQuest.ExpirationTime.GetProperty["LocalText"]}"
+	;    echo "- Body: ${QuestJournalWindow.CurrentQuest.Body.GetProperty["LocalText"]}"
+		
+		QuestJournalWindow.CurrentQuest:GetDetails[Details]
+		Details:GetIterator[DetailsIterator]
+	;    echo "- Details:"
+		if (${DetailsIterator:First(exists)})
+		{
+			do
+			{
+				if (${DetailsIterator.Value.FirstKey(exists)})
+				{
+					do
+					{
+						;echo "-- ${DetailsCounter}::  '${DetailsIterator.Value.CurrentKey}' => '${DetailsIterator.Value.CurrentValue}'"
+						;echo ${DetailsIterator.Value.CurrentValue.Find[${_QuestStep}](exists)} // ${DetailsIterator.Value.CurrentValue}
+						if ${DetailsIterator.Value.CurrentKey.Equal[Check]} && ${DetailsIterator.Value.CurrentValue.Find[true](exists)}
+							_Checked:Set[TRUE]
+						if ${DetailsIterator.Value.CurrentKey.Equal[Check]} && ${DetailsIterator.Value.CurrentValue.Find[false](exists)}
+							_Checked:Set[FALSE]
+						if ${DetailsIterator.Value.CurrentKey.Equal[Text]} && ${DetailsIterator.Value.CurrentValue.Find[${_QuestStep}](exists)}
+							_FoundIt:Set[TRUE]
+					}
+					while ${DetailsIterator.Value.NextKey(exists)}
+					 ;echo "------"
+				}
+				DetailsCounter:Inc
+			}
+			while ${DetailsIterator:Next(exists)} && !${_FoundIt}
+		}
+		;echo FoundIt: ${_FoundIt} isChecked: ${_isChecked} Checked: ${_Checked}
+		if ( ${_FoundIt} && !${_isChecked} && !${_Checked} ) || ( ${_FoundIt} && ${_isChecked} && ${_Checked} )
+			return TRUE
+		else
+			return FALSE
+	}
 	member:int GroupDetrimentCount(string _Type)
 	{
 		variable int detcnt
@@ -9249,6 +9554,15 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:ClearItems
 				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: The Vault of Omens"]
 				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: Spires of Mythic Passage"]
+				UIElement[QuestsListBox@RI]:AddItem[Blood of Luclin Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Mythic Passage Arranged]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Querent of Ruin]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Behind the Walls of Seru]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Execution of Order]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Extinguish the Corrupted Light]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Cast a Long Shadow]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Burn the Midnight Oil]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Battle of the Nexus]
 			}
 		}
 	}
@@ -10196,7 +10510,7 @@ objectdef RIMUIObject
 	method AcceptReward(string ForWho)
 	{
 		if ${This.ForWhoCheck[${ForWho}]}
-			RewardWindow:Receive
+			RewardWindow:AcceptReward
 	}
 	method AutoRun(string ForWho)
 	{

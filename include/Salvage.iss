@@ -413,7 +413,7 @@ function Salvage()
 }
 atom EQ2_onRewardWindowAppeared()
 {
-	RewardWindow:Receive
+	RewardWindow:AcceptReward
 }
 function atexit()
 {

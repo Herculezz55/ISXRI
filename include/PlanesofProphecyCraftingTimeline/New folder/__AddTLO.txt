@@ -1,6 +1,0 @@
-"""if (tlo == "ASTITCHINTIMEPARTIIIFROMBIRTHTOTOMBS.DAT")"""
-"""  pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTIIIFROMBIRTHTOTOMBS.DAT", TLO_AStitchinTimePartIIIFromBirthtoTombs);"""
-"""if (tlo == "ASTITCHINTIMEPARTIVAFAVOROFLOVE.DAT")"""
-"""  pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTIVAFAVOROFLOVE.DAT", TLO_AStitchinTimePartIVAFavorofLove);"""
-"""if (tlo == "ASTITCHINTIMEPARTVSEALEDWITHHATE.DAT")"""
-"""  pISInterface->AddTopLevelObject("ASTITCHINTIMEPARTVSEALEDWITHHATE.DAT", TLO_AStitchinTimePartVSealedwithHate);"""

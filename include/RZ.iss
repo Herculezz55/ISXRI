@@ -59,7 +59,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poi"]
 			ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 			ZonePathFile:Insert[0]
@@ -74,7 +74,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poi"]
 			ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 			ZonePathFile:Insert[0]
@@ -89,7 +89,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poi"]
 			ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 			ZonePathFile:Insert[0]
@@ -104,7 +104,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poi"]
 			ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 			ZonePathFile:Insert[0]
@@ -119,7 +119,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poi"]
 			ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 			ZonePathFile:Insert[0]
@@ -134,7 +134,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poi"]
 			ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 			ZonePathFile:Insert[0]
@@ -149,7 +149,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poi"]
 			ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 			ZonePathFile:Insert[0]
@@ -164,7 +164,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poi"]
 			ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 			ZonePathFile:Insert[0]
@@ -179,7 +179,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poi"]
 			ZoneEntranceLoc:Insert[-94.540001 2.940000 163.660004]
 			ZonePathFile:Insert[0]
@@ -194,7 +194,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pod"]
 			ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
 			ZonePathFile:Insert[0]
@@ -209,7 +209,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pod"]
 			ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
 			ZonePathFile:Insert[0]
@@ -224,7 +224,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pod"]
 			ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
 			ZonePathFile:Insert[0]
@@ -239,7 +239,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pod"]
 			ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
 			ZonePathFile:Insert[0]
@@ -254,7 +254,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pod"]
 			ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
 			ZonePathFile:Insert[0]
@@ -269,7 +269,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pod"]
 			ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
 			ZonePathFile:Insert[0]
@@ -284,7 +284,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Zone Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pod"]
 			ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
 			ZonePathFile:Insert[0]
@@ -299,7 +299,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Zone Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pod"]
 			ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
 			ZonePathFile:Insert[0]
@@ -314,7 +314,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Zone Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pod"]
 			ZoneEntranceLoc:Insert[-190.139999 2.940000 0.0900004]
 			ZonePathFile:Insert[0]
@@ -329,7 +329,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_bot"]
 			ZoneEntranceLoc:Insert[-94.660004 2.940000 -164.080002]
 			ZonePathFile:Insert[0]
@@ -344,7 +344,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_bot"]
 			ZoneEntranceLoc:Insert[-94.660004 2.940000 -164.080002]
 			ZonePathFile:Insert[0]
@@ -359,7 +359,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_bot"]
 			ZoneEntranceLoc:Insert[-94.660004 2.940000 -164.080002]
 			ZonePathFile:Insert[0]
@@ -374,7 +374,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_bot"]
 			ZoneEntranceLoc:Insert[-94.660004 2.940000 -164.080002]
 			ZonePathFile:Insert[0]
@@ -389,7 +389,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_bot"]
 			ZoneEntranceLoc:Insert[-94.660004 2.940000 -164.080002]
 			ZonePathFile:Insert[0]
@@ -404,7 +404,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_bot"]
 			ZoneEntranceLoc:Insert[-94.660004 2.940000 -164.080002]
 			ZonePathFile:Insert[0]
@@ -418,7 +418,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_ro_tower"]
 			ZoneEntranceLoc:Insert[94.830002 2.940000 -164.320007]
 			ZonePathFile:Insert[0]
@@ -432,7 +432,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_ro_tower"]
 			ZoneEntranceLoc:Insert[94.830002 2.940000 -164.320007]
 			ZonePathFile:Insert[0]
@@ -446,7 +446,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_ro_tower"]
 			ZoneEntranceLoc:Insert[94.830002 2.940000 -164.320007]
 			ZonePathFile:Insert[0]
@@ -460,7 +460,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_ro_tower"]
 			ZoneEntranceLoc:Insert[94.830002 2.940000 -164.320007]
 			ZonePathFile:Insert[0]
@@ -475,7 +475,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_ro_tower"]
 			ZoneEntranceLoc:Insert[94.830002 2.940000 -164.320007]
 			ZonePathFile:Insert[0]
@@ -489,7 +489,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["zone_to_valor"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_ro_tower"]
 			ZoneEntranceLoc:Insert[94.830002 2.940000 -164.320007]
 			ZonePathFile:Insert[0]
@@ -503,7 +503,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["Shard of Hate Portal"]
 			ZoneEntranceLoc:Insert[-763.766663 347.377350 1048.609009]
@@ -518,7 +518,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["Shard of Hate Portal"]
 			ZoneEntranceLoc:Insert[-763.766663 347.377350 1048.609009]
@@ -533,7 +533,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["Shard of Hate Portal"]
 			ZoneEntranceLoc:Insert[-763.766663 347.377350 1048.609009]
@@ -550,7 +550,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -565,7 +565,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -580,7 +580,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -595,7 +595,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -610,7 +610,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -625,7 +625,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -640,7 +640,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -655,7 +655,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -671,7 +671,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -686,7 +686,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -701,7 +701,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -716,7 +716,7 @@ atom BuildIndexes(string _Expac)
 			ZoneFrom:Insert["Plane of Magic"]
 			ZoneTimer:Insert[1080]
 			ZoneExit:Insert[Exit]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneEntrance:Insert["GUKPORTALCHANGE"]
 			ZoneEntranceLoc:Insert[-812.901123 343.110931 1083.182495]
@@ -735,7 +735,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pof"]
 			ZoneEntranceLoc:Insert[729.217346 412.283264 -338.457703]
 			ZonePathFile:Insert[0]
@@ -750,7 +750,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pof"]
 			ZoneEntranceLoc:Insert[729.217346 412.283264 -338.457703]
 			ZonePathFile:Insert[0]
@@ -765,7 +765,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pof"]
 			ZoneEntranceLoc:Insert[729.217346 412.283264 -338.457703]
 			ZonePathFile:Insert[0]
@@ -780,7 +780,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pof"]
 			ZoneEntranceLoc:Insert[729.217346 412.283264 -338.457703]
 			ZonePathFile:Insert[0]
@@ -795,7 +795,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pof"]
 			ZoneEntranceLoc:Insert[729.217346 412.283264 -338.457703]
 			ZonePathFile:Insert[0]
@@ -810,7 +810,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pof"]
 			ZoneEntranceLoc:Insert[729.217346 412.283264 -338.457703]
 			ZonePathFile:Insert[0]
@@ -825,7 +825,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pof"]
 			ZoneEntranceLoc:Insert[729.217346 412.283264 -338.457703]
 			ZonePathFile:Insert[0]
@@ -840,7 +840,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pof"]
 			ZoneEntranceLoc:Insert[729.217346 412.283264 -338.457703]
 			ZonePathFile:Insert[0]
@@ -855,7 +855,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pof"]
 			ZoneEntranceLoc:Insert[729.217346 412.283264 -338.457703]
 			ZonePathFile:Insert[0]
@@ -870,7 +870,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poa"]
 			ZoneEntranceLoc:Insert[715.467041 412.379913 -379.292023]
 			ZonePathFile:Insert[0]
@@ -885,7 +885,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poa"]
 			ZoneEntranceLoc:Insert[715.467041 412.379913 -379.292023]
 			ZonePathFile:Insert[0]
@@ -900,7 +900,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poa"]
 			ZoneEntranceLoc:Insert[715.467041 412.379913 -379.292023]
 			ZonePathFile:Insert[0]
@@ -915,7 +915,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poa"]
 			ZoneEntranceLoc:Insert[715.467041 412.379913 -379.292023]
 			ZonePathFile:Insert[0]
@@ -930,7 +930,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poa"]
 			ZoneEntranceLoc:Insert[715.467041 412.379913 -379.292023]
 			ZonePathFile:Insert[0]
@@ -945,7 +945,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poa"]
 			ZoneEntranceLoc:Insert[715.467041 412.379913 -379.292023]
 			ZonePathFile:Insert[0]
@@ -960,7 +960,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poa"]
 			ZoneEntranceLoc:Insert[715.467041 412.379913 -379.292023]
 			ZonePathFile:Insert[0]
@@ -975,7 +975,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pow"]
 			ZoneEntranceLoc:Insert[785.015198 412.282745 -379.708893]
 			ZonePathFile:Insert[0]
@@ -990,7 +990,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pow"]
 			ZoneEntranceLoc:Insert[785.015198 412.282745 -379.708893]
 			ZonePathFile:Insert[0]
@@ -1005,7 +1005,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pow"]
 			ZoneEntranceLoc:Insert[785.015198 412.282745 -379.708893]
 			ZonePathFile:Insert[0]
@@ -1020,7 +1020,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pow"]
 			ZoneEntranceLoc:Insert[785.015198 412.282745 -379.708893]
 			ZonePathFile:Insert[0]
@@ -1035,7 +1035,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pow"]
 			ZoneEntranceLoc:Insert[785.015198 412.282745 -379.708893]
 			ZonePathFile:Insert[0]
@@ -1050,7 +1050,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pow"]
 			ZoneEntranceLoc:Insert[785.015198 412.282745 -379.708893]
 			ZonePathFile:Insert[0]
@@ -1065,7 +1065,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pow"]
 			ZoneEntranceLoc:Insert[785.015198 412.282745 -379.708893]
 			ZonePathFile:Insert[0]
@@ -1080,7 +1080,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pow"]
 			ZoneEntranceLoc:Insert[785.015198 412.282745 -379.708893]
 			ZonePathFile:Insert[0]
@@ -1095,7 +1095,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_pow"]
 			ZoneEntranceLoc:Insert[785.015198 412.282745 -379.708893]
 			ZonePathFile:Insert[0]
@@ -1110,7 +1110,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poe"]
 			ZoneEntranceLoc:Insert[773.789978 412.399994 -336.390015]
 			ZonePathFile:Insert[0]
@@ -1125,7 +1125,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poe"]
 			ZoneEntranceLoc:Insert[773.789978 412.399994 -336.390015]
 			ZonePathFile:Insert[0]
@@ -1140,7 +1140,7 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_poe"]
 			ZoneEntranceLoc:Insert[773.789978 412.399994 -336.390015]
 			ZonePathFile:Insert[0]
@@ -1154,9 +1154,9 @@ atom BuildIndexes(string _Expac)
 			;ZoneTimer:Insert[90]
 			;ZoneExit:Insert[""]
 			;ZoneExitPopupSelection:Insert[0]
-			;ZoneExitLoc:Insert[]
+			;ZoneExitLoc:Insert[""]
 			;ZoneEntrance:Insert[""]
-			;ZoneEntranceLoc:Insert[]
+			;ZoneEntranceLoc:Insert[""]
 			;ZonePathFile:Insert[0]
 			;ZoneUnlocked:Insert[TRUE]
 			;ZoneSetTime:Insert[0]
@@ -1174,9 +1174,9 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Zone exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
-			ZoneEntranceLoc:Insert[]
+			ZoneEntranceLoc:Insert["113.527733 66.510788 -622.734680|113.730003 57.369999 -657.119995"]
 			ZonePathFile:Insert[0]
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
@@ -1189,9 +1189,9 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Zone exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
-			ZoneEntranceLoc:Insert[]
+			ZoneEntranceLoc:Insert["113.527733 66.510788 -622.734680|113.730003 57.369999 -657.119995"]
 			ZonePathFile:Insert[0]
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
@@ -1204,9 +1204,70 @@ atom BuildIndexes(string _Expac)
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Zone exit"]
 			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[]
+			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
-			ZoneEntranceLoc:Insert[]
+			ZoneEntranceLoc:Insert["113.527733 66.510788 -622.734680|113.730003 57.369999 -657.119995"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Sanctus Seru: Echelon of Order [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Solo]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+	
+			;Zone
+			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Solo]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Sanctus Seru: Arx Aeturnus [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Arx Aeturnus [Solo]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Arx Seru"]
+			ZoneEntranceLoc:Insert[-193.214371 188.161240 -0.116349]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Fordel Midst: The Listless Spires [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: The Listless Spires [Solo]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_to_fordel_midst"]
+			ZoneEntranceLoc:Insert["156.307556 62.435265 -628.752502|168.404755 62.078152 -642.211670|188.893372 62.086693 -663.790283|169.061646 61.921852 -682.376831"]
 			ZonePathFile:Insert[0]
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
@@ -1231,7 +1292,20 @@ function main(... args)
 	; variable bool JustZone=0
 	; variable string ZoneName
 	; variable string ZoneExitActorName
-	
+	if ${args.Used}>0
+	{
+		variable string _argss
+		variable int _acnt
+		for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
+		{
+			;echo args ${_acnt} : ${args[${_acnt}]}
+			if ${_acnt}>1
+				_argss:Concat[" "]
+			_argss:Concat["${args[${_acnt}]}"]
+		}
+		call Goto "${_argss}"
+		return
+	}
 	; for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	; {
 		; ;echo args ${_acnt} : ${args[${_acnt}]}
@@ -1431,7 +1505,7 @@ atom(global) displayindexes()
 	;go through our index and find the zone that was just locked
 	for(_count:Set[1];${_count}<=${_Zone.Used};_count:Inc)
 	{
-		echo ${_Zone.Get[${_count}]} // ${ZoneUnlocked.Get[${_count}]} // ${ZoneSetTime.Get[${_count}]} // ${ZoneUnlockTime.Get[${_count}]}
+		echo ${_Zone.Get[${_count}]} // ${ZoneUnlocked.Get[${_count}]} // ${ZoneSetTime.Get[${_count}]} // ${ZoneUnlockTime.Get[${_count}]} // Unlocks in ${Math.Calc[((${ZoneSetTime.Get[${_count}]}+${ZoneUnlockTime.Get[${_count}]})-${Time.SecondsSinceMidnight})/60]} mins
 	}
 }
 ;atom triggered when incommingtext is detected
@@ -1483,11 +1557,553 @@ atom EQ2_onIncomingText(string Text)
 		InstanceExpired:Set[TRUE]
 	}
 }
+function Goto(string _WhereToGo)
+{
+	if ${_WhereToGo.Upper.Equal[AC]}
+		_WhereToGo:Set["Aurelian Coast"]
+	if ${_WhereToGo.Upper.Equal[SSC]}
+		_WhereToGo:Set["Sanctus Seru [City]"]
+	variable string _WhereToGoShort
+	_WhereToGoShort:Set["${_WhereToGo.Replace[" ",""].Replace["[",""].Replace["]",""]}"]
+	
+	if ( ${_WhereToGoShort.NotEqual[AurelianCoast]} && ${_WhereToGoShort.NotEqual[SanctusSeruCity]})
+	{
+		;echo ${_WhereToGoShort}
+		echo ISXRI: ${_WhereToGo} is not a Predetermined Goto Location
+		return
+	}
+	variable string _WhereFrom=NONE
+	;first determine where we are at 
+	if ${Zone.Name.Find[Aurelian Coast]} && ${Me.Distance[113.730003,57.369999,-657.119995]}<20
+	{
+		;we are at Sambata Entrance, Move from here
+		_WhereFrom:Set["Aurelian Coast"]
+	}
+	elseif ${Zone.Name.Find[Aurelian Coast]} && ${Me.Distance[169.061646,61.921852,-682.376831]}<20
+	{
+		;we are at Foredel Mist Entrance, Move from here
+		call RIMObj.Move 187.207016 61.893368 -662.309143  2 0 0 0 1 1 1 1
+		call RIMObj.Move 164.109650 61.839806 -637.346558  2 0 0 0 1 1 1 1
+		_WhereFrom:Set["Aurelian Coast"]
+	}
+	elseif ${Zone.Name.Find[Aurelian Coast]} && ${Me.Distance[113.153946,66.675789,-622.250977]}<20
+	{
+		;we are at Aurelian Coast, Move from here
+		_WhereFrom:Set["Aurelian Coast"]
+	}
+	; elseif ${Zone.Name.Find[The Blinding]} && ${Me.Distance[591.000000,428.598633,-581.580017]}<40
+	; {
+		; ;we are at The Blinding Zone Entrance, Move from here
+	; }
+	; elseif ${Zone.Name.Find[The Blinding]} && ${Me.Distance[-584.000000,33.517941,358.359985]}<40
+	; {
+		; ;we are at The Blinding at the 2nd drone, Move from here
+	; }
+	; elseif ${Zone.Name.Find[The Blinding]} && ${Me.Distance[578.640015,48.419998,580.030029]}<40
+	; {
+		; ;we are at The Blinding at the serus drone, Move from here
+	; }
+	elseif ${Zone.Name.Find["Sanctus Seru [City]"]} && ${Me.Distance[-239.133438,179.756027,-1.253709]}<50
+	{
+		;we are at Sanctus Seru City, Move from here
+		_WhereFrom:Set["Sanctus Seru [City]"]
+	}
+	else
+	{
+		_WhereFrom:Set["Guild Hall"]
+	}
+	if ${_WhereFrom.Equal[NONE]}
+		return
+	
+	variable string _WhereFromShort
+	_WhereFromShort:Set["${_WhereFrom.Replace[" ",""].Replace["[",""].Replace["]",""]}"]
+	
+	if ${_WhereFromShort.Equal["${_WhereToGoShort}"]}
+	{
+		echo ISXRI: We are already at ${_WhereToGo}
+		return
+	}
+	;echo ${_WhereFromShort.Equal["${_WhereToGoShort}"]} // ${_WhereFromShort} // ${_WhereToGoShort}
+	
+	
+	if ${_WhereToGoShort.Equal[SanctusSeruCity]} && ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of Seru"](exists)}
+	{
+		echo ISXRI: Moving to ${_WhereToGo} with Will of Seru
+		;pause bots
+		RI_CMD_PauseCombatBots 1
+		eq2ex cancel_spellcast
+		wait 2
+		Me.Inventory[Query, Name=-"Will of Seru" && Location=="Inventory"]:Use
+		wait 5
+		Me.Inventory[Query, Name=-"Will of Seru" && Location=="Inventory"]:Use
+		wait 50 ${EQ2.Zoning}
+		wait 600 !${EQ2.Zoning}
+		wait 50 ${Zone.Name.Equal["Sanctus Seru [City]"]}
+		;unpause bots
+		RI_CMD_PauseCombatBots 0
+		call WillofSeruToSanctusSeruCity
+	}
+	elseif ${_WhereToGoShort.Equal[AurelianCoast]} && ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of the Coast"](exists)}
+	{
+		echo ISXRI: Moving to ${_WhereToGo} with Will of the Coast
+		;pause bots
+		RI_CMD_PauseCombatBots 1
+		eq2ex cancel_spellcast
+		wait 2
+		Me.Inventory[Query, Name=-"Will of the Coast" && Location=="Inventory"]:Use
+		wait 5
+		Me.Inventory[Query, Name=-"Will of the Coast" && Location=="Inventory"]:Use
+		wait 50 ${EQ2.Zoning}
+		wait 600 !${EQ2.Zoning}
+		wait 50 ${Zone.Name.Equal["Aurelian Coast"]}
+		;unpause bots
+		RI_CMD_PauseCombatBots 0
+		call WilloftheCoastToAurelianCoast
+	}
+	else
+	{	
+		;could not detect where we are, calling to guild hall and determining if we can go from there, unless we are in the guildhall
+		if !${Zone.ShortName.Find[guildhall]} && ${_WhereFrom.Equal["Guild Hall"]}
+		{
+			echo ISXRI: We are not at any of the predetermined move from locations, calling to the guild hall please ensure your Wizard portal is in direct line of sight and directly passable to the guild hall call location
+			;call to guild hall
+			call RIMObj.CallToGuildHall 1
+		}
+		echo ISXRI: Moving from ${_WhereFrom} to ${_WhereToGo}
+		call ${_WhereFromShort}${_WhereToGoShort}
+	}
+	
+}
+function WilloftheCoastToAurelianCoast()
+{
+	call RIMObj.Move -88.336327 95.554268 217.260971 2 0 0 0 1 1 1 1
+	call RIMObj.Move 23.183502 99.545540 181.425552 2 0 0 0 1 1 1 1
+	call RIMObj.Move 97.923958 104.492455 157.408554 2 0 0 0 1 1 1 1
+	call RIMObj.Move 152.982285 130.261215 125.503883 2 0 0 0 1 1 1 1
+	call RIMObj.Move 238.407227 129.175766 49.113701 2 0 0 0 1 1 1 1
+	call RIMObj.Move 298.495422 129.175766 -5.484939 2 0 0 0 1 1 1 1
+	call RIMObj.Move 351.464233 148.175980 -53.614754 2 0 0 0 1 1 1 1
+	call RIMObj.Move 342.320221 148.186462 -127.683662 2 0 0 0 1 1 1 1
+	call RIMObj.Move 322.955475 148.186462 -204.256775 2 0 0 0 1 1 1 1
+	call RIMObj.Move 274.576050 148.541229 -266.962311 2 0 0 0 1 1 1 1
+	call RIMObj.Move 227.319550 148.541229 -322.917053 2 0 0 0 1 1 1 1
+	call RIMObj.Move 189.335068 148.541229 -367.893463 2 0 0 0 1 1 1 1
+	call RIMObj.Move 161.486145 130.201385 -422.714386 2 0 0 0 1 1 1 1
+	call RIMObj.Move 147.588562 98.298042 -473.792023
+	call RIMObj.FlyDown
+	call RIMObj.Move 120.431206 85.212440 -528.233398 2 0 0 0 1 1 1 1
+	call RIMObj.Move 124.675194 81.743469 -549.212830 2 0 0 0 1 1 1 1
+	call RIMObj.Move 97.506111 76.690018 -575.213135 2 0 0 0 1 1 1 1
+	call RIMObj.Move 99.035454 70.420067 -604.811768 2 0 0 0 1 1 1 1
+	call RIMObj.Move 113.527733 66.510788 -622.734680
+}
+function WillofSeruToSanctusSeruCity()
+{
+	;below is the path from using the Will of Seru to the instance spot
+	call RIMObj.Move 7.583822 180.673737 186.406372 2 0 0 0 1 1 1 1
+	Actor[door priest quarter]:DoubleClick
+	wait 2
+	Actor[door priest quarter]:DoubleClick
+	wait 2
+	Actor[door priest quarter]:DoubleClick
+	wait 2
+	call RIMObj.Move 7.395301 179.858307 204.182999 2 0 0 0 1 1 1 1
+	call RIMObj.Move -44.583488 179.785202 215.647934 2 0 0 0 1 1 1 1
+	call RIMObj.Move -97.825813 175.767746 183.810455 2 0 0 0 1 1 1 1
+	call RIMObj.Move -114.170265 175.680008 161.893539 2 0 0 0 1 1 1 1
+	call RIMObj.Move -179.659607 179.771317 135.396118 2 0 0 0 1 1 1 1
+	call RIMObj.Move -199.586517 179.903748 65.752113 2 0 0 0 1 1 1 1
+	call RIMObj.Move -221.159775 179.768036 25.405567 2 0 0 0 1 1 1 1
+	call RIMObj.Move -239.133438 179.756027 -1.253709 2 0 0 0 1 0 1 1
+}
+function GuildHallSanctusSeruCity()
+{
+	call GuildHallTheBlinding
+	call TheBlindingZoneEntranceTheBlinding2ndDrone
+	call TheBlinding2ndDroneTheBlindingSeruAscent
+	call TheBlindingSeruAscentSanctusSeruCityEntrance
+	call SanctusSeruCityEntranceSanctusSeruCity
+}
+function GuildHallAurelianCoast()
+{
+	call GuildHallTheBlinding
+	call TheBlindingZoneEntranceTheBlinding2ndDrone
+	call TheBlinding2ndDroneTheBlindingSeruAscent
+	call TheBlindingSeruAscentAurelianCoastEntrance
+	call AurelianCoastEntranceAurelianCoast
+}
+function TheBlindingSeruAscentAurelianCoastEntrance()
+{
+	call RIMObj.Move 675.924377 40.866390 597.894592 2 0 0 0 1 1 1 1
+	call RIMObj.Move 766.428162 35.288147 632.565186
+	call ZoneTO 777.793335 626.449219
+}
+function SanctusSeruCityAurelianCoast()
+{
+	call SanctusSeruCitySanctusSeruCityEntrance
+	call SanctusSeruCityEntranceAurelianCoastEntrance
+	call AurelianCoastEntranceAurelianCoast
+}
+function AurelianCoastSanctusSeruCity()
+{
+	call AurelianCoastAurelianCoastEntrance
+	call AurelianCoastEntranceSancrusSeruCityEntrance
+	call SanctusSeruCityEntranceSanctusSeruCity
+}
+function AurelianCoastAurelianCoastEntrance()
+{
+	call RIMObj.Move 113.527733 66.510788 -622.734680 2 0 0 0 1 1 1 1
+	call RIMObj.Move 93.623772 72.564613 -594.214966 2 0 0 0 1 1 1 1
+	call RIMObj.Move 124.006676 84.969048 -537.790039 2 0 0 0 1 1 1 1
+	call RIMObj.Move 121.377472 85.108917 -522.920349 2 0 0 0 1 1 1 1
+	call RIMObj.Move 147.423431 84.373482 -482.249329 2 0 0 0 1 1 1 1
+	call RIMObj.Move 151.453857 110.809380 -454.130249 2 0 0 0 1 1 1 1
+	call RIMObj.Move 165.971420 156.971466 -396.901886 2 0 0 0 1 1 1 1
+	call RIMObj.Move 218.984192 165.090775 -276.445953 2 0 0 0 1 1 1 1
+	call RIMObj.Move 272.906860 176.708344 -234.567139 2 0 0 0 1 1 1 1
+	call RIMObj.Move 346.316650 176.709625 -245.695465 2 0 0 0 1 1 1 1
+	call RIMObj.Move 439.036987 176.709625 -280.044098 2 0 0 0 1 1 1 1
+	call RIMObj.Move 494.501343 176.709625 -300.591125 2 0 0 0 1 1 1 1
+	call RIMObj.Move 568.473999 176.659012 -345.703522 2 0 0 0 1 1 1 1
+	call RIMObj.Move 652.481995 172.956558 -385.621460 2 0 0 0 1 1 1 1
+	call RIMObj.Move 608.215515 172.508743 -444.370361 2 0 0 0 1 1 1 1
+	call RIMObj.Move 602.422668 159.225983 -483.307281 2 0 0 0 1 1 1 1
+	call RIMObj.Move 575.660767 157.386658 -536.023193
+	call RIMObj.FlyDown
+}
+function AurelianCoastEntranceSancrusSeruCityEntrance()
+{
+	call RIMObj.Move 524.416809 131.779938 -509.067474 2 0 0 0 1 1 1 1
+	call RIMObj.Move 500.280029 134.175934 -485.524780 2 0 0 0 1 1 1 1
+	call RIMObj.Move 455.336761 132.322754 -483.121429
+	call ZoneDoor "Zone to Sanctus Seru"
+}
+function SanctusSeruCitySanctusSeruCityEntrance()
+{
+	call RIMObj.Move -239.145325 179.756012 -1.491324 2 0 0 0 1 1 1 1
+	call RIMObj.Move -238.240143 179.763000 -72.316628
+	call Teleporter -240.826004 179.763000 -79.639267
+	call RIMObj.Move -317.546478 89.616943 -54.728264 2 0 0 0 1 1 1 1
+	call RIMObj.Move -323.931274 89.616943 -27.757401 2 0 0 0 1 1 1 1
+	call RIMObj.Move -404.602600 87.997009 -2.327293
+	call ZoneDoor "Zone from Sanctus Seru" 1 0 50 0
+}
+function SanctusSeruCityEntranceAurelianCoastEntrance()
+{
+	call RIMObj.Move 519.844299 132.766464 -501.667328 2 0 0 0 1 1 1 1
+	call RIMObj.Move 575.162231 120.341393 -537.281006 2 0 0 0 1 0 1 1
+}
+function AurelianCoastEntranceAurelianCoast()
+{
+	call RIMObj.Move 578.941284 168.162369 -535.075500 2 0 0 0 1 1 1 1
+	call RIMObj.Move 614.191162 166.027878 -468.702057 2 0 0 0 1 1 1 1
+	call RIMObj.Move 564.862000 164.759354 -410.595825 2 0 0 0 1 1 1 1
+	call RIMObj.Move 505.270111 182.090652 -334.451996 2 0 0 0 1 1 1 1
+	call RIMObj.Move 470.472015 182.090652 -288.354492 2 0 0 0 1 1 1 1
+	call RIMObj.Move 401.111206 182.090652 -261.585693 2 0 0 0 1 1 1 1
+	call RIMObj.Move 337.050385 182.090652 -248.277252 2 0 0 0 1 1 1 1
+	call RIMObj.Move 278.243958 182.090652 -236.059982 2 0 0 0 1 1 1 1
+	call RIMObj.Move 221.443237 160.222961 -319.707642 2 0 0 0 1 1 1 1
+	call RIMObj.Move 181.324677 136.416992 -398.983032 2 0 0 0 1 1 1 1
+	call RIMObj.Move 152.117996 102.369553 -466.107971 2 0 0 0 1 1 1 1
+	call RIMObj.Move 146.067078 95.078445 -480.567047 2 0 0 0 1 0 1 1
+	call RIMObj.FlyDown
+	call RIMObj.Move 120.431206 85.212440 -528.233398 2 0 0 0 1 1 1 1
+	call RIMObj.Move 124.675194 81.743469 -549.212830 2 0 0 0 1 1 1 1
+	call RIMObj.Move 97.506111 76.690018 -575.213135 2 0 0 0 1 1 1 1
+	call RIMObj.Move 99.035454 70.420067 -604.811768 2 0 0 0 1 1 1 1
+	call RIMObj.Move 113.527733 66.510788 -622.734680
+}
+function TheBlindingSeruAscentSanctusSeruCityEntrance()
+{
+	call RIMObj.Move 616.171082 42.813335 599.893982 2 0 0 0 1 1 1 1
+	call RIMObj.Move 666.435181 45.223640 648.547729 2 0 0 0 1 1 1 1
+	call RIMObj.Move 722.108215 57.757050 710.868530 5 0 0 0 1 0 1 1
+	call ZoneDoor zone_to_sanctus_seru
+}
+function SanctusSeruCityEntranceSanctusSeruCity()
+{
+	call RIMObj.Move -323.697144 89.616943 -27.782698 2 0 0 0 1 1 1 1
+	call RIMObj.Move -314.674561 87.660339 -87.339867 2 0 0 0 1 1 1 1
+	call RIMObj.Move -329.257263 87.660339 -161.775116
+	call Teleporter -332.244385 87.660339 -169.578201
+	call RIMObj.Move -239.133438 179.756027 -1.253709 2 0 0 0 1 0 1 1
+}
+function TheBlindingZoneEntranceTheBlinding2ndDrone()
+{
+	call RIMObj.Move 591.000000 428.598633 -581.580017 5
+	wait 5
+	Actor[a tamed Shik'Nar drone]:DoubleClick
+	wait 2
+	Actor[a tamed Shik'Nar drone]:DoubleClick
+	wait 10
+	while ${Me.IsMoving}
+		wait 10
+	wait 10
+}
+function TheBlinding2ndDroneTheBlindingSeruAscent()
+{
+	call RIMObj.Move -584.000000 33.517941 358.359985 5
+	wait 5
+	Actor[a tamed Shik'Nar drone]:DoubleClick
+	wait 2
+	Actor[a tamed Shik'Nar drone]:DoubleClick
+	wait 10
+	RIMUIObj:HailOption[ALL,2]
+	wait 2
+	RIMUIObj:HailOption[ALL,2]
+	wait 10
+	while ${Me.IsMoving}
+		wait 10
+	wait 10
+}
+function GuildHallTheBlinding()
+{
+	if !${Zone.ShortName.Find[guildhall]}
+	{
+		echo ISXRI: We attempted to call to the guild hall but failed, please call to the guild hall are run Goto again
+		return
+	}
+	if ( !${Actor[Query, Guild=="Guild Portal Wizard"](exists)} && !${Actor[Query, Name=-"Ulteran Spire"](exists)} )
+	{
+		echo ISXRI: We are at guild hall but did not detect a Wizard Portal
+		return
+	}
+	if ( ${Actor[Query, Guild=="Guild Portal Wizard"].CheckCollision} || ${Actor[Query, Name=-"Ulteran Spire"].CheckCollision} )
+	{
+		echo ISXRI: We are at guild hall and detected a collision to the wizard portal, please move your wizard portal to line of sight of the call to guild hall location
+		return
+	}
+	variable string _PortalLoc
+	if ${Actor[Query, Guild=="Guild Portal Wizard"](exists)}
+	{
+		_PortalLoc:Set["${Actor[Query, Guild=="Guild Portal Wizard"].Loc}"]
+		_PortalLoc:Set["${_PortalLoc.Replace[","," "]}"]
+		call RIMObj.Move ${_PortalLoc} 5
+		wait 5
+		RIMUIObj:Hail[ALL,"${Actor[Query, Guild=="Guild Portal Wizard"].Name}"]
+		wait 10
+		RIMUIObj:HailOption[ALL,1]
+		wait 2
+		RIMUIObj:HailOption[ALL,1]
+		wait 10
+		Actor[Translocator Spires]:DoubleClick
+		wait 2
+		Actor[Translocator Spires]:DoubleClick
+		wait 5
+		call RIMObj.TravelMap Blinding
+		wait 5
+	}
+	else
+	{
+		_PortalLoc:Set["${Actor[Query, Name=-"Ulteran Spire"].Loc}"]
+		_PortalLoc:Set["${_PortalLoc.Replace[","," "]}"]
+		call RIMObj.Move ${_PortalLoc} 5
+		wait 10
+		Actor[Ulteran Spire:DoubleClick
+		wait 2
+		Actor[Ulteran Spire]:DoubleClick
+		wait 5
+		call RIMObj.TravelMap Blinding
+		wait 5
+	}
+}
+function ZoneTO(float _X, float _Z,int _Wait=600)
+{
+	;if !${RI_Var_Bool_GlobalOthers}
+	;	relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Zone ${_X} ${_Z} ${_Wait}"]
+	wait 5
+	Face ${_X} ${_Z}
+	wait 2
+	press -hold ${RI_Var_String_ForwardKey}
+	timedcommand 150 press -release ${RI_Var_String_ForwardKey}
+	
+	variable int _Counter
+	_Counter:Set[0]
+	while ${EQ2.Zoning}==0 && ${_Counter:Inc}<${_Wait}
+	{
+		if ${EQ2UIPage[popup,ZoneTeleporter].IsVisible}
+		{
+			press -release ${RI_Var_String_ForwardKey}
+			RIMUIObj:Door[ALL,0]
+		}
+		wait 1
+	}
+	press -release ${RI_Var_String_ForwardKey}
+	wait ${_Wait} ${EQ2.Zoning}==0
+	press -release ${RI_Var_String_ForwardKey}
+}
+function Teleporter(float _x, float _y, float _z, int _precision=1, int _maxdistance=10)
+{
+	if ${Script[Buffer:CoT]}
+		endscript Buffer:CoT
+	;echo Teleporter(float _x=${_x}, float _y=${_y}, float _z=${_z}, int _precision=1=${_precision}, int _maxdistance=10=${_maxdistance})
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		wait 20
+		call RIMObj.stopfollow
+	}
+	if !${RI_Var_Bool_GlobalOthers}
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RZScriptName}]:QueueCommand["call Teleporter ${_x} ${_y} ${_z} ${_precision} ${_maxdistance}"]
+	RIMUIObj:SetLockSpot[ALL,${_x},${_y},${_z},${_precision},${_maxdistance}]
+	wait 100 ${Math.Distance[${Me.Loc},${_x},${_y},${_z}]}<=${_precision}
+	;echo before while ${Math.Distance[${Me.Loc},${_x},${_y},${_z}]}<=${_maxdistance} && !${EQ2.Zoning}
+	while ${Math.Distance[${Me.Loc},${_x},${_y},${_z}]}<=${_maxdistance} && !${EQ2.Zoning}
+	{
+		wait 5
+		;echo in while
+		press -hold ${RI_Var_String_ForwardKey}
+	}
+	;echo after while ${Math.Distance[${Me.Loc},${_x},${_y},${_z}]}<=${_precision} && !${EQ2.Zoning}
+	press -release ${RI_Var_String_ForwardKey}
+	RIMUIObj:SetLockSpot[OFF]
+	press -release ${RI_Var_String_ForwardKey}
+	wait 600 ${RIMObj.AllGroupWithinRange[10]}
+	wait 20
+	if !${Script[Buffer:CoT]}
+		RI_CoT
+}
+function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlightOnMouseHover=0, int _GiveUpCNT=50, bool _ExactName=1)
+{
+	;echo ZoneDoor(string _Actor=${_Actor}, string _DoorOption=-1=${_DoorOption}, int _LoopUntilNoHighlightOnMouseHover=0=${_LoopUntilNoHighlightOnMouseHover}, int _GiveUpCNT=50=${_GiveUpCNT})
+	variable int _Cnt=0
+	variable int _ID
 
+	call RIMObj.stopfollow
+	;make sure _Actor exists so we do not go through the motions for nothign
+	;echo \${Actor[Query, Name=-"${_Actor}"](exists)}  //  ${Actor[Query, Name=-"${_Actor}"](exists)}
+	if ${_LoopUntilNoHighlightOnMouseHover}
+	{
+		if ${Actor[Query, Name=-"${_Actor}" && HighlightOnMouseHover=TRUE](exists)} || ${Actor[Query, Name=="${_Actor}"](exists)}
+		{
+			if ${_ExactName}
+				_ID:Set[${Actor[Query, Name=="${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
+			else
+				_ID:Set[${Actor[Query, Name=-"${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
+			;wait until we are out of combat
+			if !${DontStopForCombat}
+				call RIMObj.CheckCombat
+			wait 10
+			;pause bots
+			
+			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
+			wait 5
+			
+			if ${_LoopUntilNoHighlightOnMouseHover}
+			{
+				while ${Actor[${_ID}].HighlightOnMouseHover} && ${_Cnt:Inc} <= ${_GiveUpCNT}
+				{
+					;echo relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+					relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+					wait 5 ${Me.CastingSpell}
+					wait 50 !${Me.CastingSpell}
+					wait 5
+				}
+			}
+			else
+			{
+				wait 5
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+				wait 5
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+				wait 5
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+			}
+		}
+	}
+	else
+	{
+		if ${Actor[Query, Name=-"${_Actor}"](exists)} || ${Actor[Query, Name=="${_Actor}"](exists)}
+		{
+			if ${_ExactName}
+				_ID:Set[${Actor[Query, Name=="${_Actor}"].ID}]
+			else
+				_ID:Set[${Actor[Query, Name=-"${_Actor}"].ID}]
+			;wait until we are out of combat
+			if !${DontStopForCombat}
+				call RIMObj.CheckCombat
+			wait 10
+			;pause bots
+			;echo ${_ID}
+			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
+			wait 5
+			
+			if ${_LoopUntilNoHighlightOnMouseHover}
+			{
+				while ${Actor[${_ID}].HighlightOnMouseHover} && ${_Cnt:Inc} <= ${_GiveUpCNT}
+				{
+					relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+					wait 5 ${Me.CastingSpell}
+					wait 50 !${Me.CastingSpell}
+				}
+			}
+			else
+			{
+				wait 5
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+				wait 5
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+				wait 5
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+			}
+		}
+
+	}
+	relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
+	
+	if ${Int[{_DoorOption}]}==-1
+		noop
+	else
+		call DoorOption "${_DoorOption}"
+	wait 50 ${EQ2.Zoning}==1
+	if ${EQ2.Zoning}==0
+	{
+		if ${EQ2UIPage[popup,ZoneTeleporter].IsVisible}
+			call DoorOption 0;wait 10
+		if ${ChoiceWindow(Exists)}
+			ChoiceWindow:DoChoice1
+	}
+	wait 600 ${EQ2.Zoning}==1
+	wait 600 ${EQ2.Zoning}==0
+}
+function DoorOption(string _Door)
+{
+	;echo DoorOption(string _Door=${_Door})
+	if ${Int[${_Door}]}==0 && ${_Door.NotEqual[0]} && ${EQ2.Zoning}==0
+	{
+		;echo Name
+		RIObj:GetZoneLists
+		wait 5
+		if ${RIObj.RowByName["${_Door}"]}==0
+		{
+			echo ISXRI: Can't find that zone in the Destination list
+			return
+		}
+		wait 5
+		relay ${RI_Var_String_RelayGroup} -noredirect RIMUIObj:Door[ALL,${RIObj.RowByName["${_Door}"]}]
+		wait 5
+	}
+	else
+	{
+		;echo Number
+		relay "${RI_Var_String_RelayGroup}" RIMUIObj:Door[ALL,${Int[${_Door}]}]
+		wait 5
+		relay "${RI_Var_String_RelayGroup}" RIMUIObj:Door[ALL,${Int[${_Door}]}]
+		;EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${Int[${_Door}]}]
+		wait 5
+		;TimedCommand 5 EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
+		;wait 5
+	}
+}
 ;Zone function
 function Zone(int _IndexPosition)
 {
-	;echo Zone Function
+	wait 60 !${EQ2.Zoning}
+	wait 5
+	wait 60 !${EQ2.Zoning}
+	wait 5
+	wait 60 ${Zone.Name(exists)}
+	wait 5
 	;if we are more than 10 away from EntranceLoc move closer, but check collision and not more than 200 else, call to guild hall and run path to zonein - UM NOPE
 	;${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]}
 	;${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]}
@@ -1617,8 +2233,29 @@ function Zone(int _IndexPosition)
 		echo ISXRI: We must be in Myrist, the Great Library at the Elemental Portal Gallery in order for RZ to Function for Chaos Descending
 		Script:End
 	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find[Aurelian Coast](exists)} && ( !${Zone.Name.Find[Aurelian Coast](exists)} || ( ${Me.Distance[113.730003,57.369999,-657.119995]}>45 && ${Me.Distance[161.188644,62.000786,-631.729248]}>45 )
+	{
+		echo ISXRI: We are not in Aurelian Coast we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		relay "other ${RI_Var_String_RelayGroup}" rz AC
+		call Goto AC
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Sanctus Seru [City]"](exists)} && ( !${Zone.Name.Find["Sanctus Seru [City]"](exists)} || ${Me.Distance[-239.133438,179.756027,-1.253709]}>55 )
+	{
+		echo ISXRI: We are not in Sanctus Seru [City] we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		relay "other ${RI_Var_String_RelayGroup}" rz SSC
+		call Goto SSC
+	}
 	
-	call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}]} 7 0 0 1 1 0 1 1
+	wait 6000 ${RIMObj.AllGroupWithinRange[10]}
+	wait 20
+	
+	variable int _cnt=0
+	for(_cnt:Set[1];${_cnt}<=${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Count[|]}+1]};_cnt:Inc)
+	{
+		call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}].Token[${_cnt},|]} 5 0 0 1 1 0 1 1
+	}
+	
+	
 	wait 20
 
 	echo ${Time}: Zoning into ${_Zone.Get[${_IndexPosition}]}
@@ -1730,9 +2367,11 @@ function Zone(int _IndexPosition)
 	}
 	
 	;if we are more than // away from zone exit
-	if ${Math.Distance[${Me.Loc},${ZoneExitLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>
-		call RIMObj.Move ${ZoneExitLoc.Get[${_IndexPosition}]} 1 0 0 1 1 0 1 1
-	
+	if ${ZoneExitLoc.Get[${_IndexPosition}].Replace[" ",","].Count}>0
+	{
+		if ${Math.Distance[${Me.Loc},${ZoneExitLoc.Get[${_IndexPosition}].Replace[" ",","]}]}>
+			call RIMObj.Move ${ZoneExitLoc.Get[${_IndexPosition}]} 1 0 0 1 1 0 1 1
+	}
 	wait 20
 	
 	;zoneout
@@ -1782,6 +2421,9 @@ function ZoneOut(string ZoneExit, string ZoneName)
 	wait 6000 !${EQ2.Zoning}
 	;wait until all the group is in the zone
 	call RZObj.CheckAllHere
+	
+	if ${ZoneName.Find[Aurelian Coast:](exists)}
+		call RIMObj.Move 115.025063 63.876396 -632.220154 1 0 0 1 1 0 1 1
 }
 
 ;RZObj object

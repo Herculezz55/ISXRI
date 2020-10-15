@@ -459,7 +459,7 @@ atom(global) rit(string _what)
 
 atom EQ2_onRewardWindowAppeared()
 {
-	RewardWindow:Receive
+	RewardWindow:AcceptReward
 }
 function atexit()
 {

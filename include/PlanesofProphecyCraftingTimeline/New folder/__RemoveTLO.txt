@@ -1,3 +1,0 @@
-"""pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTIIIFROMBIRTHTOTOMBS.DAT");""" 
-"""pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTIVAFAVOROFLOVE.DAT");""" 
-"""pISInterface->RemoveTopLevelObject("ASTITCHINTIMEPARTVSEALEDWITHHATE.DAT");""" 

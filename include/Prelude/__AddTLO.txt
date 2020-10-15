@@ -1,4 +1,0 @@
-"""if (tlo == "AGAINSTTHEELEMENTSFORFREEPORT.DAT")"""
-"""  pISInterface->AddTopLevelObject("AGAINSTTHEELEMENTSFORFREEPORT.DAT", TLO_AgainsttheElementsforFreeport);"""
-"""if (tlo == "AGAINSTTHEELEMENTSFORQEYNOS.DAT")"""
-"""  pISInterface->AddTopLevelObject("AGAINSTTHEELEMENTSFORQEYNOS.DAT", TLO_AgainsttheElementsforQeynos);"""

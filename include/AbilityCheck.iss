@@ -8,10 +8,12 @@ function main(... args)
 	echo ISXRI: Starting AbilityCheck v1
 	
 	variable index:string AbilityName
+	variable index:string AbilityID
 	variable index:int Level
 	variable int LevelGreaterThan=0
 	variable int LevelLessThan=120
 	variable index:string Tier
+	variable string MSC
 	
 	variable int _acnt=0
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
@@ -22,6 +24,11 @@ function main(... args)
 			case -AbilityName
 			{
 				AbilityName:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -AbilityID
+			{
+				AbilityID:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
 				break
 			}
 			case -Level
@@ -53,11 +60,33 @@ function main(... args)
 	variable string CurrentAbilityName
 	variable settingsetref AbilitySet
 
-	;clear and addset for lavishsettings
-	LavishSettings[AbilityCheck]:Clear
-	LavishSettings:AddSet[AbilityCheck]
-	LavishSettings[AbilityCheck]:AddSet[${Me.SubClass}]
+	declare FP filepath "${LavishScript.HomeDirectory}/"
+	declare ImportFile string ""
+	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/AbilityCheck/"]
+	
+	if ${Me.Name.Find[Skyshrine Guardian](exists)}
+		MSC:Set[skyshrineguardian]
+	if ${Me.Name.Find[Skyshrine Infiltrator](exists)}
+		MSC:Set[skyshrineinfiltrator]
+	else
+		MSC:Set[${Me.SubClass}]
+	
+	;IF our abilitycheckfile exists, load it else create new
+	if ${FP.FileExists["${MSC}-AbilityCheck.xml"]}
+	{
+		LavishSettings[AbilityCheck]:Clear
+		LavishSettings:AddSet[AbilityCheck]
+		LavishSettings[AbilityCheck]:Import["${LavishScript.HomeDirectory}/scripts/RI/CombatBot/AbilityCheck/${MSC}-AbilityCheck.xml"]
+	}
+	else
+	{
+		;clear and addset for lavishsettings
+		LavishSettings[AbilityCheck]:Clear
+		LavishSettings:AddSet[AbilityCheck]
+		LavishSettings[AbilityCheck]:AddSet[${Me.SubClass}]
+	}
 	AbilitySet:Set[${LavishSettings[AbilityCheck].FindSet[${Me.SubClass}]}]
+	
 	
 	;cancel Negative Void
 	if ${Me.SubClass.Equal[warlock]} && ${Me.Maintained[Negative Void](exists)}
@@ -90,6 +119,22 @@ function main(... args)
     {
         do
         {
+			AbilityCounter:Inc
+			if ${AbilityID.Used}>0
+			{
+				;echo test
+				_FoundAbility:Set[FALSE]
+				for(_cnt:Set[0];${_cnt}<=${AbilityID.Used};_cnt:Inc)
+				{
+					if ${AbilitiesIterator.Value.ID}==${AbilityID.Get[${_cnt}]}
+						_FoundAbility:Set[1]
+				}
+				if !${_FoundAbility}
+				{
+					echo ISXRI: ${Time}: Skipping Not Passed In Ability ${AbilityCounter} of ${Me.NumAbilities}: w/ ID #: ${AbilitiesIterator.Value.ID}
+					continue
+				}
+			}
             ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
             ;; This routine is echoing the ability's "Name", so we must ensure that the abilityinfo 
             ;; datatype is available.
@@ -106,7 +151,7 @@ function main(... args)
                     ;; FALSE while the details acquisition thread is still running.   In other words, it 
                     ;; will not spam the server, or anything like that.
                 }
-                while (!${AbilitiesIterator.Value.IsAbilityInfoAvailable} && ${Timer:Inc} < 1500) || 
+                while (!${AbilitiesIterator.Value.IsAbilityInfoAvailable} && ${Timer:Inc} < 1500)
             }
             ;;
             ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -114,7 +159,7 @@ function main(... args)
             ;; remain available until the cache is cleared/reset (which is not very often.)
  
             ;echo "- ${Counter}. ${AbilitiesIterator.Value.ToAbilityInfo.Name} (ID: ${AbilitiesIterator.Value.ID}, IsReady: ${AbilitiesIterator.Value.IsReady})"
-            AbilityCounter:Inc
+            
 			CurrentAbilityID:Set[${AbilitiesIterator.Value.ID}]
 			CurrentAbilityName:Set[${AbilitiesIterator.Value.ToAbilityInfo.Name}]
 			
@@ -521,14 +566,7 @@ function main(... args)
         }
         while ${AbilitiesIterator:Next(exists)}
     }
-	variable string MSC
 	
-	if ${Me.Name.Find[Skyshrine Guardian](exists)}
-		MSC:Set[skyshrineguardian]
-	if ${Me.Name.Find[Skyshrine Infiltrator](exists)}
-		MSC:Set[skyshrineinfiltrator]
-	else
-		MSC:Set[${Me.SubClass}]
 	LavishSettings[AbilityCheck]:Export["${LavishScript.HomeDirectory}/scripts/RI/CombatBot/AbilityCheck/${MSC}-AbilityCheck.xml"]
 	LavishSettings[AbilityCheck]:Clear
 	echo ISXRI: ${Time}: Saved file: "${LavishScript.HomeDirectory}/scripts/RI/CombatBot/AbilityCheck/${MSC}-AbilityCheck.xml"
