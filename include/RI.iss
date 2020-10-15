@@ -4317,6 +4317,15 @@
 ;	Salvage / Transmute / Extract
 ;		Fixed RewardWindow modifications
 
+;v6.26 Changes 10-15-20
+;	RQ
+;		Added:
+;			YunZi
+;				Traveler's Feast - Coldwind Clam Chowder
+;				Traveler's Feast – Darklight Beetle Omelets
+;				Traveler's Feast – Rivervale Ratatouille
+;				Traveler's Feast – Butcherblock Pumpkin Bread
+
 
 ;code for commision items
 ;relay all EQ2UIPage[Inventory,CommissionedWork].Child[button,buttonAccept]:LeftClick;TimedCommand 2 relay all EQ2UIPage[Tradeskills,Tradeskills].Child[button,SummaryPage.BeginButton]:LeftClick
@@ -4344,7 +4353,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.25
+variable(global) float RI_Var_Float_Version=6.26
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -9535,6 +9544,10 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Eternally Eternity"]
 				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Returning to Tears"]
 				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Altering the Altar"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Coldwind Clam Chowder"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Darklight Beetle Omelets"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Rivervale Ratatouille"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Butcherblock Pumpkin Bread"]
 			}
 			elseif ${_CatName.Equal[Chaos Descending]}
 			{

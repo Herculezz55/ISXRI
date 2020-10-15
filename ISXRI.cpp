@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.25 7-3-20"
-double EXTVER = 6.25;
+#define EXTENSION_VERSION "6.26 10-15-20"
+double EXTVER = 6.26;
 #include "ISXRI.h"
 
 
@@ -895,6 +895,10 @@ double EXTVER = 6.25;
 #include "ShatteredDawnMythicPassageArranged.h"
 #include "ShatteredDawnQuerentofRuin.h"
 
+#include "TravelersFeastColdwindClamChowder.h"
+#include "TravelersFeastButcherblockPumpkinBread.h"
+#include "TravelersFeastDarklightBeetleOmelets.h"
+#include "TravelersFeastRivervaleRatatouille.h"
 
 
 //#include ".h"
@@ -1098,6 +1102,11 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNEXTINGUISHTHECORRUPTEDLIGHT");
 	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNMYTHICPASSAGEARRANGED");
 	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNQUERENTOFRUIN");
+
+	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTCOLDWINDCLAMCHOWDER");
+	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTBUTCHERBLOCKPUMPKINBREAD");
+	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTDARKLIGHTBEETLEOMELETS");
+	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTRIVERVALERATATOUILLE");
 
 	pISInterface->RemoveTopLevelObject("Devel");
 	pISInterface->RemoveTopLevelObject("PaidMem");
@@ -31154,6 +31163,150 @@ bool __cdecl TLO_ShatteredDawnQuerentofRuin(int argc, char* argv[], LSTYPEVAR& D
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_TravelersFeastColdwindClamChowder(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TravelersFeastColdwindClamChowder) / sizeof(TravelersFeastColdwindClamChowder[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersFeastColdwindClamChowder[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TravelersFeastButcherblockPumpkinBread(int argc, char* argv[], LSTYPEVAR & Dest)
+{
+	int numberofelements = sizeof(TravelersFeastButcherblockPumpkinBread) / sizeof(TravelersFeastButcherblockPumpkinBread[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersFeastButcherblockPumpkinBread[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TravelersFeastDarklightBeetleOmelets(int argc, char* argv[], LSTYPEVAR & Dest)
+{
+	int numberofelements = sizeof(TravelersFeastDarklightBeetleOmelets) / sizeof(TravelersFeastDarklightBeetleOmelets[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersFeastDarklightBeetleOmelets[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TravelersFeastRivervaleRatatouille(int argc, char* argv[], LSTYPEVAR & Dest)
+{
+	int numberofelements = sizeof(TravelersFeastRivervaleRatatouille) / sizeof(TravelersFeastRivervaleRatatouille[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersFeastRivervaleRatatouille[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -31166,6 +31319,14 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 
 		string tlo = argv[1];
 		//BoL
+		if (tlo == "TRAVELERSFEASTCOLDWINDCLAMCHOWDER")
+			pISInterface->AddTopLevelObject("TRAVELERSFEASTCOLDWINDCLAMCHOWDER", TLO_TravelersFeastColdwindClamChowder);
+		if (tlo == "TRAVELERSFEASTBUTCHERBLOCKPUMPKINBREAD")
+			pISInterface->AddTopLevelObject("TRAVELERSFEASTBUTCHERBLOCKPUMPKINBREAD", TLO_TravelersFeastButcherblockPumpkinBread);
+		if (tlo == "TRAVELERSFEASTDARKLIGHTBEETLEOMELETS")
+			pISInterface->AddTopLevelObject("TRAVELERSFEASTDARKLIGHTBEETLEOMELETS", TLO_TravelersFeastDarklightBeetleOmelets);
+		if (tlo == "TRAVELERSFEASTRIVERVALERATATOUILLE")
+			pISInterface->AddTopLevelObject("TRAVELERSFEASTRIVERVALERATATOUILLE", TLO_TravelersFeastRivervaleRatatouille);
 
 		if (tlo == "DeepChelsithVaultofOmens")
 			pISInterface->AddTopLevelObject("DeepChelsithVaultofOmens", TLO_DeepChelsithVaultofOmens);
