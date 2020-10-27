@@ -146,16 +146,10 @@ HailActorGetQuest -Actor "Ph'utha"
 -796.239685 -64.650833 -766.787354
 -805.757019 -64.650833 -770.650696
 -814.904968 -64.650833 -775.209656
--820.259705 -56.763474 -778.273193
--820.259705 -46.643719 -778.273193
--820.259705 -36.078445 -778.273193
--820.259705 -26.049604 -778.273193
--820.259705 -36.641304 -778.273193
--820.259705 -48.862411 -778.273193
--820.259705 -59.995064 -778.273193
+-820.259705 -64.650833 -778.273193
 -828.209045 -62.686302 -784.237732
 Custom
-Path -PathLines 17 -Reverse -Loop -QueryActor "-ActorName|Firegard Shrine Oil Pot|-Trigger|QuestStepExists:Attempt to light Maiden's Torch|-Events|Harvest"
+Path -PathLines 17 -Reverse -Loop -QueryActor "-ActorName|Firegard Shrine Oil Pot|-Trigger|AnnounceText:Obtain Firegard Shrine oil (4/4)|-Events|Harvest"
 -828.127197 -62.651684 -787.755066
 -837.676819 -62.651684 -790.814514
 -847.403076 -62.651684 -794.389893

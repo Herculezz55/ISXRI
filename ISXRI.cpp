@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.26 10-15-20"
-double EXTVER = 6.26;
+#define EXTENSION_VERSION "6.30 10-25-20"
+double EXTVER = 6.30;
 #include "ISXRI.h"
 
 
@@ -894,12 +894,34 @@ double EXTVER = 6.26;
 #include "ShatteredDawnExtinguishtheCorruptedLight.h"
 #include "ShatteredDawnMythicPassageArranged.h"
 #include "ShatteredDawnQuerentofRuin.h"
+#include "BloodofLuclinTradeskillTimeline.h"
+#include "PiercingtheDarknessAVeryFortunateTurnofEventsPartI.h"
+#include "PiercingtheDarknessAVeryFortunateTurnofEventsPartII.h"
+#include "PiercingtheDarknessAVeryFortunateTurnofEventsPartIII.h"
+#include "PiercingtheDarknessCarvingaLegacy.h"
+#include "PiercingtheDarknessChasingMoonbeams.h"
+#include "PiercingtheDarknessGiftsfromtheGreatBeyondPartI.h"
+#include "PiercingtheDarknessGiftsfromtheGreatBeyondPartII.h"
+#include "PiercingtheDarknessGiftsfromtheGreatBeyondPartIII.h"
+#include "PiercingtheDarknessMonumentsofMythicPassage.h"
+#include "PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartI.h"
+#include "PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartII.h"
+#include "PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartIII.h"
+#include "PiercingtheDarknessMarketplaceofHorrorsPartI.h"
+#include "PiercingtheDarknessMarketplaceofHorrorsPartII.h"
+#include "PiercingtheDarknessMarketplaceofHorrorsPartIII.h"
+#include "PiercingtheDarknessMessageinaShadowedBottlePartI.h"
+#include "PiercingtheDarknessMessageinaShadowedBottlePartII.h"
+#include "PiercingtheDarknessMessageinaShadowedBottlePartIII.h"
+#include "PiercingtheDarknessThreeLittleTegiPartI.h"
+#include "PiercingtheDarknessThreeLittleTegiPartII.h"
+#include "PiercingtheDarknessThreeLittleTegiPartIII.h"
 
 #include "TravelersFeastColdwindClamChowder.h"
 #include "TravelersFeastButcherblockPumpkinBread.h"
 #include "TravelersFeastDarklightBeetleOmelets.h"
 #include "TravelersFeastRivervaleRatatouille.h"
-
+#include "TravelersFeastDervishSquashCurry.h"
 
 //#include ".h"
 //End Quest Dat Files
@@ -1102,11 +1124,34 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNEXTINGUISHTHECORRUPTEDLIGHT");
 	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNMYTHICPASSAGEARRANGED");
 	pISInterface->RemoveTopLevelObject("SHATTEREDDAWNQUERENTOFRUIN");
+	pISInterface->RemoveTopLevelObject("BLOODOFLUCLINTRADESKILLTIMELINE");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSAVERYFORTUNATETURNOFEVENTSPARTI");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSAVERYFORTUNATETURNOFEVENTSPARTII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSAVERYFORTUNATETURNOFEVENTSPARTIII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSCARVINGALEGACY");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSCHASINGMOONBEAMS");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSGIFTSFROMTHEGREATBEYONDPARTI");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSGIFTSFROMTHEGREATBEYONDPARTII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSGIFTSFROMTHEGREATBEYONDPARTIII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSMONUMENTSOFMYTHICPASSAGE");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSTHESADTALEOFBENOSCHIRONSPROCKETPARTI");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSTHESADTALEOFBENOSCHIRONSPROCKETPARTII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSTHESADTALEOFBENOSCHIRONSPROCKETPARTIII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSMARKETPLACEOFHORRORSPARTI");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSMARKETPLACEOFHORRORSPARTII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSMARKETPLACEOFHORRORSPARTIII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSMESSAGEINASHADOWEDBOTTLEPARTI");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSMESSAGEINASHADOWEDBOTTLEPARTII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSMESSAGEINASHADOWEDBOTTLEPARTIII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSTHREELITTLETEGIPARTI");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSTHREELITTLETEGIPARTII");
+	pISInterface->RemoveTopLevelObject("PIERCINGTHEDARKNESSTHREELITTLETEGIPARTIII");
 
 	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTCOLDWINDCLAMCHOWDER");
 	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTBUTCHERBLOCKPUMPKINBREAD");
 	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTDARKLIGHTBEETLEOMELETS");
 	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTRIVERVALERATATOUILLE");
+	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTDERVISHSQUASHCURRY");
 
 	pISInterface->RemoveTopLevelObject("Devel");
 	pISInterface->RemoveTopLevelObject("PaidMem");
@@ -31307,6 +31352,834 @@ bool __cdecl TLO_TravelersFeastRivervaleRatatouille(int argc, char* argv[], LSTY
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_BloodofLuclinTradeskillTimeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BloodofLuclinTradeskillTimeline) / sizeof(BloodofLuclinTradeskillTimeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BloodofLuclinTradeskillTimeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessAVeryFortunateTurnofEventsPartI(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessAVeryFortunateTurnofEventsPartI) / sizeof(PiercingtheDarknessAVeryFortunateTurnofEventsPartI[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessAVeryFortunateTurnofEventsPartI[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessAVeryFortunateTurnofEventsPartII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessAVeryFortunateTurnofEventsPartII) / sizeof(PiercingtheDarknessAVeryFortunateTurnofEventsPartII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessAVeryFortunateTurnofEventsPartII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessAVeryFortunateTurnofEventsPartIII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessAVeryFortunateTurnofEventsPartIII) / sizeof(PiercingtheDarknessAVeryFortunateTurnofEventsPartIII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessAVeryFortunateTurnofEventsPartIII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessCarvingaLegacy(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessCarvingaLegacy) / sizeof(PiercingtheDarknessCarvingaLegacy[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessCarvingaLegacy[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessChasingMoonbeams(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessChasingMoonbeams) / sizeof(PiercingtheDarknessChasingMoonbeams[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessChasingMoonbeams[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessGiftsfromtheGreatBeyondPartI(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessGiftsfromtheGreatBeyondPartI) / sizeof(PiercingtheDarknessGiftsfromtheGreatBeyondPartI[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessGiftsfromtheGreatBeyondPartI[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessGiftsfromtheGreatBeyondPartII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessGiftsfromtheGreatBeyondPartII) / sizeof(PiercingtheDarknessGiftsfromtheGreatBeyondPartII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessGiftsfromtheGreatBeyondPartII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessGiftsfromtheGreatBeyondPartIII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessGiftsfromtheGreatBeyondPartIII) / sizeof(PiercingtheDarknessGiftsfromtheGreatBeyondPartIII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessGiftsfromtheGreatBeyondPartIII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessMonumentsofMythicPassage(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessMonumentsofMythicPassage) / sizeof(PiercingtheDarknessMonumentsofMythicPassage[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessMonumentsofMythicPassage[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartI(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartI) / sizeof(PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartI[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartI[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartII) / sizeof(PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartIII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartIII) / sizeof(PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartIII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartIII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TravelersFeastDervishSquashCurry(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TravelersFeastDervishSquashCurry) / sizeof(TravelersFeastDervishSquashCurry[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersFeastDervishSquashCurry[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessMarketplaceofHorrorsPartI(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessMarketplaceofHorrorsPartI) / sizeof(PiercingtheDarknessMarketplaceofHorrorsPartI[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessMarketplaceofHorrorsPartI[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessMarketplaceofHorrorsPartII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessMarketplaceofHorrorsPartII) / sizeof(PiercingtheDarknessMarketplaceofHorrorsPartII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessMarketplaceofHorrorsPartII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessMarketplaceofHorrorsPartIII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessMarketplaceofHorrorsPartIII) / sizeof(PiercingtheDarknessMarketplaceofHorrorsPartIII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessMarketplaceofHorrorsPartIII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessMessageinaShadowedBottlePartI(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessMessageinaShadowedBottlePartI) / sizeof(PiercingtheDarknessMessageinaShadowedBottlePartI[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessMessageinaShadowedBottlePartI[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessMessageinaShadowedBottlePartII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessMessageinaShadowedBottlePartII) / sizeof(PiercingtheDarknessMessageinaShadowedBottlePartII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessMessageinaShadowedBottlePartII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessMessageinaShadowedBottlePartIII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessMessageinaShadowedBottlePartIII) / sizeof(PiercingtheDarknessMessageinaShadowedBottlePartIII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessMessageinaShadowedBottlePartIII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessThreeLittleTegiPartI(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessThreeLittleTegiPartI) / sizeof(PiercingtheDarknessThreeLittleTegiPartI[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessThreeLittleTegiPartI[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessThreeLittleTegiPartII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessThreeLittleTegiPartII) / sizeof(PiercingtheDarknessThreeLittleTegiPartII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessThreeLittleTegiPartII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_PiercingtheDarknessThreeLittleTegiPartIII(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(PiercingtheDarknessThreeLittleTegiPartIII) / sizeof(PiercingtheDarknessThreeLittleTegiPartIII[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = PiercingtheDarknessThreeLittleTegiPartIII[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -31327,6 +32200,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("TRAVELERSFEASTDARKLIGHTBEETLEOMELETS", TLO_TravelersFeastDarklightBeetleOmelets);
 		if (tlo == "TRAVELERSFEASTRIVERVALERATATOUILLE")
 			pISInterface->AddTopLevelObject("TRAVELERSFEASTRIVERVALERATATOUILLE", TLO_TravelersFeastRivervaleRatatouille);
+		if (tlo == "TRAVELERSFEASTDERVISHSQUASHCURRY")
+			pISInterface->AddTopLevelObject("TRAVELERSFEASTDERVISHSQUASHCURRY", TLO_TravelersFeastDervishSquashCurry);
 
 		if (tlo == "DeepChelsithVaultofOmens")
 			pISInterface->AddTopLevelObject("DeepChelsithVaultofOmens", TLO_DeepChelsithVaultofOmens);
@@ -31367,6 +32242,52 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("SHATTEREDDAWNMYTHICPASSAGEARRANGED", TLO_ShatteredDawnMythicPassageArranged);
 		if (tlo == "SHATTEREDDAWNQUERENTOFRUIN")
 			pISInterface->AddTopLevelObject("SHATTEREDDAWNQUERENTOFRUIN", TLO_ShatteredDawnQuerentofRuin);
+		if (tlo == "BLOODOFLUCLINTRADESKILLTIMELINE")
+			pISInterface->AddTopLevelObject("BLOODOFLUCLINTRADESKILLTIMELINE", TLO_BloodofLuclinTradeskillTimeline);
+		if (tlo == "PIERCINGTHEDARKNESSAVERYFORTUNATETURNOFEVENTSPARTI")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSAVERYFORTUNATETURNOFEVENTSPARTI", TLO_PiercingtheDarknessAVeryFortunateTurnofEventsPartI);
+		if (tlo == "PIERCINGTHEDARKNESSAVERYFORTUNATETURNOFEVENTSPARTII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSAVERYFORTUNATETURNOFEVENTSPARTII", TLO_PiercingtheDarknessAVeryFortunateTurnofEventsPartII);
+		if (tlo == "PIERCINGTHEDARKNESSAVERYFORTUNATETURNOFEVENTSPARTIII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSAVERYFORTUNATETURNOFEVENTSPARTIII", TLO_PiercingtheDarknessAVeryFortunateTurnofEventsPartIII);
+		if (tlo == "PIERCINGTHEDARKNESSCARVINGALEGACY")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSCARVINGALEGACY", TLO_PiercingtheDarknessCarvingaLegacy);
+		if (tlo == "PIERCINGTHEDARKNESSCHASINGMOONBEAMS")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSCHASINGMOONBEAMS", TLO_PiercingtheDarknessChasingMoonbeams);
+		if (tlo == "PIERCINGTHEDARKNESSGIFTSFROMTHEGREATBEYONDPARTI")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSGIFTSFROMTHEGREATBEYONDPARTI", TLO_PiercingtheDarknessGiftsfromtheGreatBeyondPartI);
+		if (tlo == "PIERCINGTHEDARKNESSGIFTSFROMTHEGREATBEYONDPARTII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSGIFTSFROMTHEGREATBEYONDPARTII", TLO_PiercingtheDarknessGiftsfromtheGreatBeyondPartII);
+		if (tlo == "PIERCINGTHEDARKNESSGIFTSFROMTHEGREATBEYONDPARTIII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSGIFTSFROMTHEGREATBEYONDPARTIII", TLO_PiercingtheDarknessGiftsfromtheGreatBeyondPartIII);
+		if (tlo == "PIERCINGTHEDARKNESSMONUMENTSOFMYTHICPASSAGE")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSMONUMENTSOFMYTHICPASSAGE", TLO_PiercingtheDarknessMonumentsofMythicPassage);
+		if (tlo == "PIERCINGTHEDARKNESSTHESADTALEOFBENOSCHIRONSPROCKETPARTI")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSTHESADTALEOFBENOSCHIRONSPROCKETPARTI", TLO_PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartI);
+		if (tlo == "PIERCINGTHEDARKNESSTHESADTALEOFBENOSCHIRONSPROCKETPARTII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSTHESADTALEOFBENOSCHIRONSPROCKETPARTII", TLO_PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartII);
+		if (tlo == "PIERCINGTHEDARKNESSTHESADTALEOFBENOSCHIRONSPROCKETPARTIII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSTHESADTALEOFBENOSCHIRONSPROCKETPARTIII", TLO_PiercingtheDarknessTheSadTaleofBenoschIronsprocketPartIII);
+		if (tlo == "PIERCINGTHEDARKNESSMARKETPLACEOFHORRORSPARTI")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSMARKETPLACEOFHORRORSPARTI", TLO_PiercingtheDarknessMarketplaceofHorrorsPartI);
+		if (tlo == "PIERCINGTHEDARKNESSMARKETPLACEOFHORRORSPARTII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSMARKETPLACEOFHORRORSPARTII", TLO_PiercingtheDarknessMarketplaceofHorrorsPartII);
+		if (tlo == "PIERCINGTHEDARKNESSMARKETPLACEOFHORRORSPARTIII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSMARKETPLACEOFHORRORSPARTIII", TLO_PiercingtheDarknessMarketplaceofHorrorsPartIII);
+		if (tlo == "PIERCINGTHEDARKNESSMESSAGEINASHADOWEDBOTTLEPARTI")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSMESSAGEINASHADOWEDBOTTLEPARTI", TLO_PiercingtheDarknessMessageinaShadowedBottlePartI);
+		if (tlo == "PIERCINGTHEDARKNESSMESSAGEINASHADOWEDBOTTLEPARTII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSMESSAGEINASHADOWEDBOTTLEPARTII", TLO_PiercingtheDarknessMessageinaShadowedBottlePartII);
+		if (tlo == "PIERCINGTHEDARKNESSMESSAGEINASHADOWEDBOTTLEPARTIII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSMESSAGEINASHADOWEDBOTTLEPARTIII", TLO_PiercingtheDarknessMessageinaShadowedBottlePartIII);
+		if (tlo == "PIERCINGTHEDARKNESSTHREELITTLETEGIPARTI")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSTHREELITTLETEGIPARTI", TLO_PiercingtheDarknessThreeLittleTegiPartI);
+		if (tlo == "PIERCINGTHEDARKNESSTHREELITTLETEGIPARTII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSTHREELITTLETEGIPARTII", TLO_PiercingtheDarknessThreeLittleTegiPartII);
+		if (tlo == "PIERCINGTHEDARKNESSTHREELITTLETEGIPARTIII")
+			pISInterface->AddTopLevelObject("PIERCINGTHEDARKNESSTHREELITTLETEGIPARTIII", TLO_PiercingtheDarknessThreeLittleTegiPartIII);
+
+
 		//CD Instances
 
 		if (tlo == "AwuidorTheNebulousDeep")

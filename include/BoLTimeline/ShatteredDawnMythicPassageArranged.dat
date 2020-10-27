@@ -5,8 +5,14 @@ HailActorGetQuest -Actor "Taith McJarun"
 Custom
 HailActor nokillnpc 8
 1973.125366 480.005920 -873.351135
+Wait
+20
+1973.125366 480.005920 -873.351135
 Custom
 HailActor nokillnpc 2
+1973.125366 480.005920 -873.351135
+Wait
+20
 1973.125366 480.005920 -873.351135
 Custom
 HailActor nokillnpc 5

@@ -1,4 +1,0 @@
-"""#include "TravelersFeastColdwindClamChowder.h""""
-"""#include "TravelersFeast-ButcherblockPumpkinBread.h""""
-"""#include "TravelersFeast-DarklightBeetleOmelets.h""""
-"""#include "TravelersFeast-RivervaleRatatouille.h""""

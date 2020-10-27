@@ -608,7 +608,7 @@ atom EQ2_ReplyDialogAppeared(string ID)
 atom EQ2_onRewardWindowAppeared()
 {
 	if ${EQ2.PendingQuestName.Equal[None]} && ${RewardWindow.NumRewards}<2 && ${RI_Var_Bool_AcceptRewards}
-		relay ${RI_Var_String_RelayGroup} RewardWindow:AcceptReward
+		RewardWindow:AcceptReward
 	;relay ${RI_Var_String_RelayGroup} -noredirect 
 }
 function ShinyCollection()
@@ -1565,7 +1565,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Sanctus Seru: Arx Aeturnus [Solo]
-		case Sanctus Seru: Arx Aeturnus [Heroic]
+		case Sanctus Seru: Arx Aeturnus [Event Heroic]
 		{
 			RI_CMD_Hidden_AddTLO SanctusSeruArxAeturnus 
 			LoadedTLO:Set[TRUE]
@@ -1604,7 +1604,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 		}
 	}
 }
-atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace[",",""]}", bool _Verbose=TRUE)
+atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}", bool _Verbose=TRUE)
 {
 	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
 	;check if ZineFileName exists, if not end
@@ -3429,8 +3429,16 @@ function HailActorMultiOption(string _Actor, ... args)
 		;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
 	}
 }
-function FastTravel(string _ZoneName, int _RelayToGroup=1)
+function ChoiceWindow(int _Choice)
+{
+	wait 5
+	if ${ChoiceWindow(exists)}
+		relay ${RI_Var_String_RelayGroup} ChoiceWindow:DoChoice${_Choice}
+	wait 5
+}
+function FastTravel(string _ZoneName, int _RelayToGroup=1, string _DoorOption=0)
 {	
+	;echo FastTravel(string _ZoneName=${_ZoneName}, int _RelayToGroup=${_RelayToGroup}, string _DoorOption=${_DoorOption})
 	if ${RIMUIObj.MainIconIDExists[${Me.ID},955,0]}==0
 	{
 		call MessageBox "You must be gold to use the FastTravel feature required for this quest Pausing RQ please resume in ${_ZoneName} at the location FastTravel would normally take you"
@@ -3438,9 +3446,9 @@ function FastTravel(string _ZoneName, int _RelayToGroup=1)
 	else
 	{
 		if ${_RelayToGroup}>0
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:FastTravel[ALL,"${_ZoneName}"]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:FastTravel[ALL,"${_ZoneName}","${_DoorOption}"]
 		else
-			RIMUIObj:FastTravel[${Me.Name},"${_ZoneName}"]
+			RIMUIObj:FastTravel[${Me.Name},"${_ZoneName}","${_DoorOption}"]
 		wait 600 ${EQ2.Zoning}==1
 		wait 600 ${EQ2.Zoning}==0
 	}
@@ -3916,6 +3924,222 @@ function ClickActor(... args)
 			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
 			wait 5
 			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+			wait 5 ${Me.CastingSpell}
+			wait 50 !${Me.CastingSpell}
+		}
+
+	}
+	relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
+	;follow
+	;if ${_Follow}
+		call RIMObj.follow
+}
+function RightClickActor(... args)
+{
+	;string _Actor, bool _LoopUntilNoHighlightOnMouseHover=0, bool _LoopUntilDNE=0, int _GiveUpCNT=50
+	;echo ClickActor(string _Actor=${_Actor}, int _LoopUntilNoHighlightOnMouseHover=0=${_LoopUntilNoHighlightOnMouseHover}, int _GiveUpCNT=50=${_GiveUpCNT})
+	;move to ClickActor location
+	;stop follow
+	
+	variable string _Actor
+	variable int _LoopUntilNoHighlightOnMouseHover=0
+	variable int _LoopUntilDNE=0
+	variable int _HighlightOnMouseHover=0
+	variable int _GiveUpCNT=50
+	variable string _LoopUntilQSE=~NONE~
+	variable bool _TintFlags=FALSE
+	variable int _acnt=0
+	variable bool _ExactName=FALSE
+	
+	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
+	{
+		;backwards compatibility
+		if ${_acnt}<5 && ${args[1].Left[1].NotEqual[-]}
+		{
+			_Actor:Set["${args[1]}"]
+			if ${args[2].Left[1].NotEqual[-]}
+			{
+				_LoopUntilNoHighlightOnMouseHover:Set[${Int[${args[2]}]}]
+				if ${args[3].Left[1].NotEqual[-]}
+				{
+					_LoopUntilDNE:Set[${Int[${args[3]}]}]
+					if ${args[4].Left[1].NotEqual[-]}
+					{
+						_GiveUpCNT:Set[${Int[${args[4]}]}]
+					}
+				}
+			}
+		}
+		
+		;echo args ${_acnt} : ${args[${_acnt}]}
+		switch ${args[${_acnt}]}
+		{
+			case -Actor
+			{
+				_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -LoopUntilNoHighlightOnMouseHover
+			{
+				_LoopUntilNoHighlightOnMouseHover:Set[1]
+				break
+			}
+			case -ExactName
+			{
+				_ExactName:Set[1]
+				break
+			}
+			case -HighlightOnMouseHover
+			{
+				_HighlightOnMouseHover:Set[1]
+				break
+			}
+			case -LoopUntilDNE
+			{
+				_LoopUntilDNE:Set[1]
+				break
+			}
+			case -GiveUpCNT
+			{
+				_GiveUpCNT:Set[${args[${Math.Calc[${_acnt}+1]}]}]
+				break
+			}
+			case -LoopUntilQSE
+			{
+				_LoopUntilQSE:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -TintFlags
+			{
+				_TintFlags:Set[1]
+				break
+			}
+		}
+	}
+	
+	variable int _Cnt=0
+	variable int _ID
+	if  ${_Actor.Left[5].Equal[ByLoc]} && ${_LoopUntilNoHighlightOnMouseHover}
+		_ID:Set[${Actor[Query, X=${_Actor.Token[2,|]} && Y=${_Actor.Token[3,|]} && Z=${_Actor.Token[4,|]} && HighlightOnMouseHover=TRUE].ID}]
+	elseif ${_Actor.Left[5].Equal[ByLoc]}
+		_ID:Set[${Actor[Query, X=${_Actor.Token[2,|]} && Y=${_Actor.Token[3,|]} && Z=${_Actor.Token[4,|]}].ID}]
+	elseif ${_Actor.Left[10].Equal[TintFlags-]} && ${_LoopUntilNoHighlightOnMouseHover}
+		_ID:Set[${Actor[Query, TintFlags=${_Actor.Right[-10]} && HighlightOnMouseHover=TRUE].ID}]
+	elseif ${_Actor.Left[10].Equal[TintFlags-]}
+		_ID:Set[${Actor[Query, TintFlags=${_Actor.Right[-10]}].ID}]
+	elseif ${_TintFlags} && ${_LoopUntilNoHighlightOnMouseHover}
+		_ID:Set[${Actor[Query, TintFlags=${_Actor} && HighlightOnMouseHover=TRUE].ID}]
+	elseif ${_TintFlags}
+		_ID:Set[${Actor[Query, TintFlags=${_Actor}].ID}]
+	elseif ${_LoopUntilNoHighlightOnMouseHover} && ${_ExactName}
+		_ID:Set[${Actor[Query, Name=="${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
+	elseif ${_LoopUntilNoHighlightOnMouseHover}
+		_ID:Set[${Actor[Query, Name=-"${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
+	elseif ${_Actor.Find[Ulteran Spire Portal]} || ${_HighlightOnMouseHover}
+		_ID:Set[${Actor[Query, Name=-"${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
+	elseif ${_ExactName}
+		_ID:Set[${Actor[Query, Name=="${_Actor}"].ID}]
+	else
+		_ID:Set[${Actor[Query, Name=-"${_Actor}"].ID}]
+	;echo Moving to ${CustomLoc} and Clicking ${_Actor} with Actor ID: ${_ID}
+	
+	if ${CustomLoc.NotEqual[0 0 0]}
+	{	
+		;call RIMObj.follow
+		call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE"]
+		wait 20
+	}
+	;call RIMObj.stopfollow
+	;wait until we are out of combat
+	if !${DontStopForCombat}
+		call RIMObj.CheckCombat
+	;make sure _Actor exists so we do not go through the motions for nothign
+	;echo \${Actor[Query, Name=-"${_Actor}"](exists)}  //  ${Actor[Query, Name=-"${_Actor}"](exists)}
+	if ${_LoopUntilNoHighlightOnMouseHover}
+	{
+		if ${Actor[id,${_ID}](exists)}
+		{
+			;wait until we are out of combat
+			if !${DontStopForCombat}
+				call RIMObj.CheckCombat
+			wait 10
+			;pause bots
+			
+			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
+			wait 5
+			eq2ex cancel_spellcast
+			wait 2
+			while ${Actor[${_ID}].HighlightOnMouseHover} && ${_Cnt:Inc} <= ${_GiveUpCNT}
+			{
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:RightClick
+				wait 5 ${Me.CastingSpell}
+				wait 50 !${Me.CastingSpell}
+				wait 5
+			}
+		}
+	}
+	elseif ${_LoopUntilDNE}
+	{
+		if ${Actor[id,${_ID}](exists)}
+		{
+			;wait until we are out of combat
+			if !${DontStopForCombat}
+				call RIMObj.CheckCombat
+			wait 10
+			;pause bots
+			
+			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
+			wait 5
+			
+			while ${Actor[${_ID}](exists)} && ${_Cnt:Inc} <= ${_GiveUpCNT}
+			{
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:RightClick
+				wait 5 ${Me.CastingSpell}
+				wait 50 !${Me.CastingSpell}
+			}
+		}
+	}
+	elseif ${_LoopUntilQSE.NotEqual[~NONE~]}
+	{
+		if ${Actor[id,${_ID}](exists)}
+		{
+			;wait until we are out of combat
+			if !${DontStopForCombat}
+				call RIMObj.CheckCombat
+			wait 10
+			;pause bots
+			
+			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
+			wait 5
+			
+			while ${Actor[${_ID}](exists)} && ${_Cnt:Inc} <= ${_GiveUpCNT} && !${RIObj.QuestStepExists[${_LoopUntilQSE}]}
+			{
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:RightClick
+				wait 5 ${Me.CastingSpell}
+				wait 50 !${Me.CastingSpell}
+			}
+		}
+	}
+	else
+	{
+		if ${Actor[id,${_ID}](exists)}
+		{
+			;wait until we are out of combat
+			if !${DontStopForCombat}
+				call RIMObj.CheckCombat
+			wait 10
+			;pause bots
+			
+			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
+			wait 5
+			
+			wait 5
+			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:RightClick
+			wait 5
+			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:RightClick
+			wait 5
+			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:RightClick
 			wait 5 ${Me.CastingSpell}
 			wait 50 !${Me.CastingSpell}
 		}
@@ -12208,7 +12432,11 @@ function UseItem(string _ItemName, int _Repeats=2)
 	if !${RI_Var_Bool_GlobalOthers}
 		relay "other ${RI_Var_String_RelayGroup}" Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call UseItem \"${_ItemName}\" ${_Repeats}"]
 	;pause bots
-	RI_CMD_PauseCombatBots 1
+	variable bool _Botwaspaused=0
+	if ${CombatBotPaused}
+		_Botwaspaused:Set[1]
+	if !${_Botwaspaused}
+		RI_CMD_PauseCombatBots 1
 	eq2ex cancel_spellcast
 	wait 2
 	Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"]:Use
@@ -12217,7 +12445,8 @@ function UseItem(string _ItemName, int _Repeats=2)
 		Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"]:Use
 	wait 20
 	;unpause bots
-	RI_CMD_PauseCombatBots 0
+	if !${_Botwaspaused}
+		RI_CMD_PauseCombatBots 0
 }
 
 ;;;;;;;;;;;;;;;; Start Crypt of Dalnir: Ritual Chamber [Heroic] ;;;;;;;;;;;;;;;;;;;;;;
@@ -17013,7 +17242,7 @@ function ExamineItem(string _ItemName, ... args)
 {
 	wait 5
 	Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"]:Examine
-	wait 5
+	wait 10
 	; if ${Int[${_ReplyOption}]}!=-1
 	; {
 		; wait 20 ${ReplyDialog(exists)}
@@ -17970,6 +18199,8 @@ function CheckAndSet(... args)
 	variable index:int _NearDistance
 	variable index:int _NotNearDistance
 	variable index:int _Index
+	variable index:string _InZoneName
+	variable index:string _NotInZoneName
 	variable int _HighestIndex=0
 	variable bool _Expert
 	variable int _acnt=0
@@ -18010,6 +18241,18 @@ function CheckAndSet(... args)
 				_Index:Insert[${Int[${args[${Math.Calc[${_acnt}+3]}]}]}]
 				break
 			}
+			case -InZone
+			{
+				_InZoneName:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
+				_Index:Insert[${Int[${args[${Math.Calc[${_acnt}+2]}]}]}]
+				break
+			}
+			case -NotInZone
+			{
+				_NotInZoneName:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
+				_Index:Insert[${Int[${args[${Math.Calc[${_acnt}+2]}]}]}]
+				break
+			}
 		}
 	}
 	if ${_Expert} && ${Zone.Name.Find["[Expert]"](exists)}
@@ -18037,6 +18280,18 @@ function CheckAndSet(... args)
 	for(_acnt:Set[1];${_acnt}<=${_NotNearLocation.Used};_acnt:Inc)
 	{
 		if ${Me.Distance[${_NotNearLocation.Get[${_acnt}].Replace[" ",","]}]}>${_NotNearDistance.Get[${_acnt}]} && ${Int[${_Index.Get[${_acnt}]}]}>${_HighestIndex}
+			_HighestIndex:Set[${Int[${_Index.Get[${_acnt}]}]}]
+	}
+	;echo ${_InZoneName.Used} // ${_InZoneName.Used}
+	for(_acnt:Set[1];${_acnt}<=${_InZoneName.Used};_acnt:Inc)
+	{
+		if ${Me.GetGameData[Self.ZoneName].Label.Find["${_InZoneName.Get[${_acnt}]}"](exists)} && ${Int[${_Index.Get[${_acnt}]}]}>${_HighestIndex}
+			_HighestIndex:Set[${Int[${_Index.Get[${_acnt}]}]}]
+	}
+	;echo ${_NotInZoneName.Used} // ${_NotInZoneName.Used}
+	for(_acnt:Set[1];${_acnt}<=${_NotInZoneName.Used};_acnt:Inc)
+	{
+		if !${Me.GetGameData[Self.ZoneName].Label.Find["${_NotInZoneName.Get[${_acnt}]}"](exists)} && ${Int[${_Index.Get[${_acnt}]}]}>${_HighestIndex}
 			_HighestIndex:Set[${Int[${_Index.Get[${_acnt}]}]}]
 	}
 	;echo ${_HighestIndex}
@@ -18235,6 +18490,9 @@ function Path(... args)
 	variable bool _ReversePath=FALSE
 	variable bool _ReversePathLoopOnly=FALSE
 	variable bool _IWasFlying=FALSE
+	variable bool _CheckItemQty=FALSE
+	variable int _ItemQty
+	variable string _ItemName
 	variable int _ID
 	variable string _args=""
 	variable string _tempName
@@ -18409,6 +18667,9 @@ function Path(... args)
 						_MoveToDistance:Set[5]
 						_ActorName:Set[""]
 						_QuestStep:Set[""]
+						_CheckItemQty:Set[FALSE]
+						_ItemQty:Set[""]
+						_ItemName:Set[""]
 						_QuestStepExists:Set[FALSE]
 						_IWasFlying:Set[0]
 					
@@ -18440,6 +18701,7 @@ function Path(... args)
 								case -Trigger
 								{
 									;echo ${_QueryActor.Get[${_cnt}]} // ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:]} // ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[AnnounceText]}
+									
 									if ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[AnnounceText]}
 										AnnounceText:Insert["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:]}"]
 									elseif ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[IncomingText]}
@@ -18459,6 +18721,12 @@ function Path(... args)
 										_QuestStepExists:Set[0]
 										_QuestStep:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:]}"]
 									}
+									elseif ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[ItemQty]}
+									{
+										_CheckItemQty:Set[TRUE]
+										_ItemName:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:].Token[1,-]}"]
+										_ItemQty:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:].Token[2,-]}"]
+									}
 									break
 								}
 								case -Events
@@ -18469,7 +18737,7 @@ function Path(... args)
 							}
 						}
 						
-						if ${_ActorName.Find[|](exists)}
+						if ${_ActorName.Find[:](exists)}
 						{
 							_Query:Set["( "]
 							for(_countor:Set[1];${_countor}<=${Math.Calc[${_ActorName.Count[:]}+1]};_countor:Inc)
@@ -18527,6 +18795,12 @@ function Path(... args)
 												wait 5 ${Me.CastingSpell}
 												wait 50 !${Me.CastingSpell}
 												wait 2
+												if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+												{
+													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+													echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
+													Trigger:Set[FALSE]
+												}
 												if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
@@ -18589,6 +18863,12 @@ function Path(... args)
 													eq2ex target_none
 													break
 												}
+												if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+												{
+													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+													echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
+													Trigger:Set[FALSE]
+												}
 												if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
@@ -18633,6 +18913,12 @@ function Path(... args)
 												if ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance}
 													call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
 												;echo ${Time}: After: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
+												if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+												{
+													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+													echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
+													Trigger:Set[FALSE]
+												}
 												if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
@@ -25002,7 +25288,7 @@ function CheckPreReqs(... args)
 		if ${args[${_count}].Upper.Equal[-ITEMQTY]}
 		{
 			;echo ${args[${_count}]} // ${args[${Math.Calc[${_count}+1]}]} // ${args[${Math.Calc[${_count}+2]}]}
-			if ${_ItemCount}<${Int[${args[${Math.Calc[${_count}+2]}]}]}
+			if ${RIMUIObj.InventoryQuantity["${args[${Math.Calc[${_count}+1]}]}"]}<${Int[${args[${Math.Calc[${_count}+2]}]}]}
 			{
 				_Failed:Set[TRUE]
 				_Fails:Insert["You must have at least ${args[${Math.Calc[${_count}+2]}]} of ${args[${Math.Calc[${_count}+1]}]} and you have ${_ItemCount}"]
@@ -25132,8 +25418,10 @@ function ReplyDialog(... args)
 						do
 						{
 							if ${OptionsIterator.Value.CurrentValue.Find["${args[${_CNT}]}"]}
-								relay ${RI_Var_String_RelayGroup} ReplyDialog:Choose[${OptionCounter}]
-							 ;echo "Option #${OptionCounter}::  '${OptionsIterator.Value.CurrentKey}' => '${OptionsIterator.Value.CurrentValue}'"
+							{
+								relay ${RI_Var_String_RelayGroup} ReplyDialog:Choose[${Math.Calc[${OptionCounter}+1]}]
+							}
+							;echo "Option #${OptionCounter}::  '${OptionsIterator.Value.CurrentKey}' => '${OptionsIterator.Value.CurrentValue}' // ${args[${_CNT}]} // ${OptionsIterator.Value.CurrentValue.Find["${args[${_CNT}]}"]}"
 						}
 						while ${OptionsIterator.Value.NextKey(exists)}
 						;echo "------"
@@ -25232,6 +25520,7 @@ function ApplyVerb(... args)
 	}
 	if ${_TintFlags}
 	{
+		;echo \${Actor[Query, TintFlags=${_Actor}](exists)} // ${Actor[Query, TintFlags=${_Actor}](exists)}
 		if ${Actor[Query, TintFlags=${_Actor}](exists)}
 		{
 			if ${_RelayToGroup}
@@ -25332,7 +25621,7 @@ function TargetUntilQuestStepExists(string _TargetName, int _Distance, string _Q
 	}
 }
 
-function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace[",",""]}")
+function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}")
 {
 	variable string _ConvertedQuestName
 	variable string _QuestName
@@ -25610,7 +25899,7 @@ function TimeStampEcho(string _Message)
 {
 	echo ISXRI: ${Time} ${_Message}
 }
-function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlightOnMouseHover=0, int _GiveUpCNT=50, bool _ExactName=1)
+function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlightOnMouseHover=0, int _GiveUpCNT=50, bool _ExactName=0)
 {
 	;echo ZoneDoor(string _Actor=${_Actor}, string _DoorOption=-1=${_DoorOption}, int _LoopUntilNoHighlightOnMouseHover=0=${_LoopUntilNoHighlightOnMouseHover}, int _GiveUpCNT=50=${_GiveUpCNT})
 	;move to ZoneDoor location
@@ -25658,6 +25947,7 @@ function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlig
 			}
 			else
 			{
+				;echo relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
 				wait 5
 				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
 				wait 5
@@ -25688,6 +25978,7 @@ function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlig
 			{
 				while ${Actor[${_ID}].HighlightOnMouseHover} && ${_Cnt:Inc} <= ${_GiveUpCNT}
 				{
+					;echo relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
 					relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
 					wait 5 ${Me.CastingSpell}
 					wait 50 !${Me.CastingSpell}
@@ -25695,6 +25986,7 @@ function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlig
 			}
 			else
 			{
+				;echo relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
 				wait 5
 				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
 				wait 5
@@ -25716,7 +26008,7 @@ function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlig
 	{
 		if ${EQ2UIPage[popup,ZoneTeleporter].IsVisible}
 			call DoorOption 0;wait 10
-		if ${ChoiceWindow(Exists)}
+		if ${ChoiceWindow(exists)}
 			ChoiceWindow:DoChoice1
 	}
 	wait 600 ${EQ2.Zoning}==1

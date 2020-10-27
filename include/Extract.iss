@@ -239,7 +239,7 @@ function ExecuteQueued()
 }
 function Extract()
 {
-	UIElement[Start@RISalvage]:SetText[Stop]
+	UIElement[Start@RIExtract]:SetText[Stop]
 	;return
 	Me:QueryInventory[InventoryIndex, Location == "Inventory" && IsContainer=FALSE && Quantity=1 && IsFoodOrDrink=FALSE]
 	;echo ${InventoryIndex.Used}

@@ -4326,6 +4326,87 @@
 ;				Traveler's Feast – Rivervale Ratatouille
 ;				Traveler's Feast – Butcherblock Pumpkin Bread
 
+;v6.27 Changes 10-23-20
+;	RI
+;		Fixed a bug in the Instance Function which was causing RQ not to run coded instances during questing
+;		Fixed a bug in the ImportZoneFile funtions which would not load any DAT files
+;		Sanctus Seru: Arx Aeturnus [Event Heroic]
+;			Fixed a bug that was not loading the ZoneFile from the extension
+;	RQ
+;		Shattered Dawn: Casting a Long Shadow
+;			Fixed a bug
+;		Shattered Dawn: Burn the Midnight Oil
+;			Fixed a bug
+;		Shattered Dawn: Battle of the Nexus
+;			Fixed a bug
+;	RI_Extract
+;		Fixed a bug
+;	RQ
+;		Added: 
+;			Blood of Luclin Tradeskill Timeline (All the following are EARLY Alpha, and have not been tested)
+;				If started in your guild hall near your harvesting depot
+;				it will remove all the needed resources if you have them
+;			Piercing the Darkness: Carving a Legacy
+;				If started in your guild hall near your harvesting depot
+;				it will remove all the needed resources if you have them
+;				then will use a Vigilant Sanctum Key to goto the sanctum 
+;				and start quest, please make sure this item is in your inventory
+;				and you have the resources needed either on you or in your depot
+;			Piercing the Darkness: Monuments of Mythic Passage
+;			Piercing the Darkness: Chasing Moonbeams
+;			Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part I
+;			Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part II
+;			Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part III
+;			Piercing the Darkness: A Very Fortunate Turn of Events Part I
+;			Piercing the Darkness: A Very Fortunate Turn of Events Part II
+;			Piercing the Darkness: A Very Fortunate Turn of Events Part III
+;			Piercing the Darkness: Gifts from the Great Beyond Part I
+;			Piercing the Darkness: Gifts from the Great Beyond Part II
+;			Piercing the Darkness: Gifts from the Great Beyond Part III
+
+;v6.28 Changes 10-25-20
+;	RI
+;		Fixed a bug in the Path function in regards to checking Quantity of items in inventory when in multiple stacks
+;		Fixed a bug in the CheckPreReqs function that was not detecting items in your inventory
+;		Fixed a bug in the ReplayDialog function using Text instead of Option # to choose options
+;		Fixed a bug in the ZoneDoor function that would cause some ZoneDoors to not be clicked 
+;			(this may break some older quests if so please report them to Herculezz)
+;	RQ
+;		Piercing the Darkness: Carving a Legacy
+;			fixed a bug that was not harvesting the sublime pulverulence
+;		Piercing the Darkness: Chasing Moonbeams
+;			fixed a bug that was not clicking the Ulteran Portal in Kylong Plains
+;		Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part I
+;			fixed a pathing bug
+;		Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part I
+;			fixed a bug that was not waiting for the cast of the Insectoid Communication Jammer
+;		Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part I
+;			fixed a bug that was not waiting for the cast of the Insectoid Communication Jammer
+;			fixed a bug that was not waiting for the cast of the Advanced Lightning Tracker Mach I
+;			fixed a bug that was not clicking the Ulteran Portal in Plane of Magic
+;		Piercing the Darkness: A Very Fortunate Turn of Events Part I
+;			fixed a bug that was not waiting for the 2nd fly over to sanctus seru
+;			fixed a bug messing up conversation with Hulda
+;			fixed a bug that was not answering the questions
+;		Piercing the Darkness: A Very Fortunate Turn of Events Part III
+;			fixed a bug that was not checking the first book
+
+;v6.29 Changes 10-25-20
+;	RI
+;		Version Mismatch Fix
+
+;v6.30 Changes 10-25-20
+;	RQ
+;		Added
+;			Piercing the Darkness: Marketplace of Horrors Part I
+;			Piercing the Darkness: Marketplace of Horrors Part II
+;			Piercing the Darkness: Marketplace of Horrors Part III
+;			Piercing the Darkness: Three Little Tegi Part I
+;			Piercing the Darkness: Three Little Tegi Part II
+;			Piercing the Darkness: Three Little Tegi Part III
+;			Piercing the Darkness: Message in a Shadowed Bottle Part I
+;			Piercing the Darkness: Message in a Shadowed Bottle Part II
+;			Piercing the Darkness: Message in a Shadowed Bottle Part III
 
 ;code for commision items
 ;relay all EQ2UIPage[Inventory,CommissionedWork].Child[button,buttonAccept]:LeftClick;TimedCommand 2 relay all EQ2UIPage[Tradeskills,Tradeskills].Child[button,SummaryPage.BeginButton]:LeftClick
@@ -4353,7 +4434,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.26
+variable(global) float RI_Var_Float_Version=6.30
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -9548,6 +9629,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Darklight Beetle Omelets"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Rivervale Ratatouille"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Butcherblock Pumpkin Bread"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Dervish Squash Curry"]
 			}
 			elseif ${_CatName.Equal[Chaos Descending]}
 			{
@@ -9576,6 +9658,28 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Cast a Long Shadow]
 				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Burn the Midnight Oil]
 				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Battle of the Nexus]
+				UIElement[QuestsListBox@RI]:AddItem[Blood of Luclin Tradeskill Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Carving a Legacy]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Monuments of Mythic Passage]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Chasing Moonbeams]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part I]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part II]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part III]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: A Very Fortunate Turn of Events Part I]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: A Very Fortunate Turn of Events Part II]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: A Very Fortunate Turn of Events Part III]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Gifts from the Great Beyond Part I]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Gifts from the Great Beyond Part II]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Gifts from the Great Beyond Part III]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Marketplace of Horrors Part I]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Marketplace of Horrors Part II]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Marketplace of Horrors Part III]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Three Little Tegi Part I]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Three Little Tegi Part II]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Three Little Tegi Part III]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Message in a Shadowed Bottle Part I]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Message in a Shadowed Bottle Part II]
+				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Message in a Shadowed Bottle Part III]
 			}
 		}
 	}
@@ -9690,12 +9794,13 @@ objectdef RIMUIObject
 				Me.Inventory[Query, Location=="Inventory" && Name=-"${BookName}"]:Scribe
 		}
 	}
-	method FastTravel(string ForWho=ALL, string ZoneName=~NONE~)
+	method FastTravel(string ForWho=ALL, string ZoneName=~NONE~, string _DoorOption=0)
 	{
+		;echo FastTravel(string ForWho=${ForWho}, string ZoneName=${ZoneName}, string _DoorOption=${_DoorOption})
 		if !${EQ2UIPage[Popup,TravelMap].IsVisible}
 		{
 			eq2ex /smp pon pon_teleport
-			TimedCommand 5 RIMUIObj:FastTravel[${Me.Name},${ZoneName}]
+			TimedCommand 5 RIMUIObj:FastTravel[${Me.Name},${ZoneName},${_DoorOption}]
 		 	return
 			; Actor[mariners_bell]:DoubleClick
 			; Actor[mariner_bell_city_travel_qeynos]:DoubleClick
@@ -9719,7 +9824,11 @@ objectdef RIMUIObject
 				{
 					EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}]:LeftClick
 					TimedCommand 5 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[1]:LeftClick
-					TimedCommand 10 ChoiceWindow:DoChoice1
+					if ${Int[${_DoorOption}]}>0 || ${_DoorOption.NotEqual[0]}
+					{
+						TimedCommand 10 RIMUIObj:Door[ALL,${_DoorOption}]
+					}
+					TimedCommand 20 ChoiceWindow:DoChoice1
 					;click zone option if it exists
 					;if ${ZoneOption}>-1
 					;	TimedCommand 30 RIMUIObj:Door[${Me.Name},${ZoneOption}]
