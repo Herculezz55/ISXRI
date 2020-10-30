@@ -368,7 +368,7 @@ function Extract()
 				wait 20 ${EQ2.ReadyToRefineTransmuteOrSalvage}
 				;echo 1
 				wait 10
-				InventoryIterator.Value:Transmute
+				InventoryIterator.Value:Extract
 				;echo ${Me.Inventory[id,${InventoryIterator.Value.ID}]:Transmute}
 				;echo 2
 				wait 10 ${Me.CastingSpell}

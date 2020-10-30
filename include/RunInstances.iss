@@ -608,7 +608,7 @@ atom EQ2_ReplyDialogAppeared(string ID)
 atom EQ2_onRewardWindowAppeared()
 {
 	if ${EQ2.PendingQuestName.Equal[None]} && ${RewardWindow.NumRewards}<2 && ${RI_Var_Bool_AcceptRewards}
-		RewardWindow:AcceptReward
+		TimedCommand 5 RewardWindow:AcceptReward
 	;relay ${RI_Var_String_RelayGroup} -noredirect 
 }
 function ShinyCollection()
@@ -3390,7 +3390,10 @@ function HailActorFast(string _Actor, int _NumberOfResponses=1, int _ResponseNum
 			relay ${RI_Var_String_RelayGroup} -noredirect Actor["${_Actor}"]:DoTarget
 			wait 2
 			relay ${RI_Var_String_RelayGroup} -noredirect eq2execute hail
-			wait 5
+			wait 2
+			relay ${RI_Var_String_RelayGroup} -noredirect eq2execute hail
+			if ${_NumberOfResponses}>0
+				wait 5
 		}
 		variable int count
 		variable string _tempbtntxt
@@ -4179,7 +4182,7 @@ function Klyreject()
 		Me:DoTarget
 		wait 1
 	}
-	eq2ex clear_target
+	eq2ex target_none
 	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
 	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
 }
@@ -9819,7 +9822,7 @@ function ClearFervor()
 	call _MoveC 47.132492 219.655853
 	;unpause bots
 	RI_CMD_PauseCombatBots 0
-	eq2ex clear_target
+	eq2ex target_none
 }
 
 function Bailey()
@@ -25389,6 +25392,70 @@ function RemoveFromDepot(string _DepotName,... args)
 	else
 		echo ISXRI: We are not in a guild hall, skipping Remove From Depot
 }
+function CheckZoneVersion(string _ActorName)
+{
+	;echo CheckZoneVersion(string _ActorName=${_ActorName})
+	variable int _ID 
+	_ID:Set[${Actor[Query, Name=-"${_ActorName}"].ID}]
+	wait 2
+	if ${Actor[id,${_ID}](exists)}
+	{
+		;echo exists: ${_ID}
+		;wait until we are out of combat
+		if !${DontStopForCombat}
+			call RIMObj.CheckCombat
+		wait 10
+		;pause bots
+		RI_CMD_PauseCombatBots 1
+		wait 5
+		Actor[${_ID}]:DoubleClick
+		wait 5
+		Actor[${_ID}]:DoubleClick
+		wait 5
+		Actor[${_ID}]:DoubleClick
+		wait 5 ${Me.CastingSpell}
+		wait 50 !${Me.CastingSpell}
+	}
+	wait 5
+	RI_CMD_PauseCombatBots 0
+
+	call RIMObj.follow
+	
+	if ${Zone.Name.Find["[Solo]"](exists)}
+		return
+	
+	if ${Script[Buffer:RZ](exists)}
+	{
+		;echo RZ Exists // ${RZ_Var_String_ZoneVersion}
+		switch ${RZ_Var_String_ZoneVersion}
+		{
+			case Expert
+			{	
+				;echo exprt
+				RIMUIObj:ReplyDialog[ALL,Expert]
+				break
+			}
+			case Heroic
+			{
+				;echo heroic
+				RIMUIObj:ReplyDialog[ALL,Normal]
+				break
+			}
+			case Challenge
+			{
+				;echo chlg
+				RIMUIObj:ReplyDialog[ALL,Challenge]
+				break
+			}
+		}
+	}
+	else
+	{
+		RIMUIObj:ReplyDialog[ALL,Normal]
+	}
+	wait 10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:ZoneVersion[ALL]
+}
 function ReplyDialog(... args)
 {
 	if (!${ReplyDialog.Replies(exists)}	|| ${args.Used}<1)
@@ -36880,45 +36947,53 @@ function Xylox()
 	IncomingText2:Clear
 	IncomingText:Insert["his should help clear the air.."]
 	AnnounceText:Clear
-	AnnounceText:Insert["Xylox begins to cast a powerful shield around him"]
-	AnnounceText:Insert["The shield dissipates"]
+	AnnounceText:Insert["Xylox summons poisonous waves"]
+	;AnnounceText:Insert["The shield dissipates"]
 	call CustomNamed "Xylox the Poisonous-NMB" "-498.070923,31.269993,-148.6769873" XyloxCustom
 }
 function XyloxCustom(int _NamedID)
 {
 	if ${Trigger}
 	{
-		if ${TriggerMessage.Find["Xylox begins to cast a powerful shield around him"]}
+		if !${RI_Var_Bool_GlobalOthers}
 		{
-			if !${RI_Var_Bool_GlobalOthers}
-			{
-				Actor[id,${Me.ID}]:DoTarget
-			}
-		}
-		elseif ${TriggerMessage.Find["The shield dissipates"]}
-		{
-			Trigger:Set[FALSE]
+			; if ${TriggerMessage.Find["Xylox begins to cast a powerful shield around him"]}
+			; {
+				; if !${RI_Var_Bool_GlobalOthers}
+				; {
+					; Actor[id,${Me.ID}]:DoTarget
+				; }
+			; }
+			; elseif ${TriggerMessage.Find["The shield dissipates"]}
+			; {
+				; Trigger:Set[FALSE]
+			; }
+			; else
+			; {
+				if ${Actor[id, ${_NamedID}].Distance}<30
+				{
+					if ${Me.Distance[-498.070923,31.269993,-148.6769873]}<10
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-451.647095,28.741383,-236.845184]
+					;elseif ${Actor[id,${_NamedID}].Distance[-498.070923,31.269993,-148.6769873]}<30
+					;	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-457.382080,30.019697,-237.328156]
+					else
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-498.070923,31.269993,-148.6769873]
+					Actor[id,${Me.ID}]:DoTarget
+				}
+				wait 50 ${Me.IsMoving}
+				wait 100 !${Me.IsMoving}
+				Trigger:Set[FALSE]
+				eq2ex target_none
+			; }
 		}
 		else
-		{
-			if ${Actor[id, ${_NamedID}].Distance}<30
-			{
-				if ${Me.Distance[-498.070923,31.269993,-148.6769873]}<5
-					relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-481.280060,32.733105,-186.185715]
-				elseif ${Actor[id,${_NamedID}].Distance[-498.070923,31.269993,-148.6769873]}<30
-					relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-465.602539,31.492161,-223.060745]
-				else
-					relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-498.070923,31.269993,-148.6769873]
-			}
-			wait 50
 			Trigger:Set[FALSE]
-		}
 	}
 	else
 	{
 		if !${RI_Var_Bool_GlobalOthers}
 		{
-			if ${Actor[id,${_NamedID}].Distance}>10
+			if ${Actor[id,${_NamedID}].Distance}>50
 				Actor[id,${Me.ID}]:DoTarget
 			else
 				call RIObj.Target "Xylox the Poisonous"

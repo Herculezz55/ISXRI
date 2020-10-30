@@ -1,6 +1,6 @@
 string SanctusSeruEchelonofDivinity[] = {"7.279079 180.673920 184.078308", 
 "Custom", 
-"ClickActor \"door entrance\"", 
+"CheckZoneVersion \"door entrance\"", 
 "7.278978 180.673798 187.646744", 
 "7.764279 179.777527 198.833771", 
 "-1.964563 179.779144 201.807709", 

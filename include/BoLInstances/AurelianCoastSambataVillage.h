@@ -1,6 +1,6 @@
 string AurelianCoastSambataVillage[] = {"268.691315 61.475975 -294.099365", 
 "Custom", 
-"ClickActor \"starting circle\"", 
+"CheckZoneVersion \"starting circle\"", 
 "268.691315 61.475975 -294.099365", 
 "Wait", 
 "20", 

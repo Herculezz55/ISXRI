@@ -251,7 +251,7 @@ function Salvage()
 	UIElement[Start@RISalvage]:SetText[Stop]
 	
 	Me:QueryInventory[InventoryIndex, Location == "Inventory" && IsContainer=FALSE && Quantity=1 && IsFoodOrDrink=FALSE]
-	echo ${InventoryIndex.Used}
+	;echo ${InventoryIndex.Used}
 	
     if !${UIElement[Bag1@RISalvage].Checked}
 	{

@@ -5605,7 +5605,7 @@ atom Bulwark(string Text, string BadName, string noun)
 {
 	;echo BULWARK
 	if ${Me.Archetype.Find[Fighter](exists)}
-		TimedCommand 30 CastBulwark:Set[TRUE]
+		TimedCommand 25 CastBulwark:Set[TRUE]
 }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5635,7 +5635,10 @@ function main()
 	
 	;bulwark
 	if ${Me.Archetype.Find[Fighter](exists)}
+	{
 		AddTrigger Bulwark "\\#FF00FF@BadName@ looks for @noun@ most hated target\."
+		AddTrigger Bulwark "\\#FF00FF@BadName@ prepares to strike with Lunar Barrage\!"
+	}
 	
 	RI_CMD_Hidden_RIS
 	

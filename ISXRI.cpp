@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.30 10-25-20"
-double EXTVER = 6.30;
+#define EXTENSION_VERSION "6.33 10-29-20"
+double EXTVER = 6.33;
 #include "ISXRI.h"
 
 
@@ -922,6 +922,7 @@ double EXTVER = 6.30;
 #include "TravelersFeastDarklightBeetleOmelets.h"
 #include "TravelersFeastRivervaleRatatouille.h"
 #include "TravelersFeastDervishSquashCurry.h"
+#include "TravelersFeastSkyCake.h"
 
 //#include ".h"
 //End Quest Dat Files
@@ -1152,6 +1153,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTDARKLIGHTBEETLEOMELETS");
 	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTRIVERVALERATATOUILLE");
 	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTDERVISHSQUASHCURRY");
+	pISInterface->RemoveTopLevelObject("TRAVELERSFEASTSKYCAKE");
 
 	pISInterface->RemoveTopLevelObject("Devel");
 	pISInterface->RemoveTopLevelObject("PaidMem");
@@ -32180,6 +32182,42 @@ bool __cdecl TLO_PiercingtheDarknessThreeLittleTegiPartIII(int argc, char* argv[
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_TravelersFeastSkyCake(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TravelersFeastSkyCake) / sizeof(TravelersFeastSkyCake[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersFeastSkyCake[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -32202,6 +32240,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("TRAVELERSFEASTRIVERVALERATATOUILLE", TLO_TravelersFeastRivervaleRatatouille);
 		if (tlo == "TRAVELERSFEASTDERVISHSQUASHCURRY")
 			pISInterface->AddTopLevelObject("TRAVELERSFEASTDERVISHSQUASHCURRY", TLO_TravelersFeastDervishSquashCurry);
+		if (tlo == "TRAVELERSFEASTSKYCAKE")
+			pISInterface->AddTopLevelObject("TRAVELERSFEASTSKYCAKE", TLO_TravelersFeastSkyCake);
 
 		if (tlo == "DeepChelsithVaultofOmens")
 			pISInterface->AddTopLevelObject("DeepChelsithVaultofOmens", TLO_DeepChelsithVaultofOmens);

@@ -824,7 +824,8 @@
 
 ;when CombatBot goes Beta we will start doing all Update notes here in RI.iss so they can include all Updates from RunInstances and all updates from CombatBot
 
-; noop ${If[${Math.Distance[${Me.Loc},-90,-110,50]}<5,RIMUIObj:SetLockSpot[${Me.Name},-110,-110,50],RIMUIObj:SetLockSpot[${Me.Name},-90,-110,50]]}
+; noop 
+;${If[${Math.Distance[${Me.Loc},-90,-110,50]}<5,RIMUIObj:SetLockSpot[${Me.Name},-110,-110,50],RIMUIObj:SetLockSpot[${Me.Name},-90,-110,50]]}
 ; ${Math.Distance[${Me.Loc},-90,-110,50]}<5
 ; ${RIMUIObj:SetLockSpot[${Me.Name},-110,-110,50]}
 ; ${RIMUIObj:SetLockSpot[${Me.Name},-90,-110,50]}
@@ -4396,6 +4397,13 @@
 ;		Version Mismatch Fix
 
 ;v6.30 Changes 10-25-20
+;	RIMUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			*method ZoneVersion(string ForWho=ALL)
+;				Accepts zone version window
+;		Modified RIMUIObj Method's, Member's and *Button's
+;			*method ReplyDialog(string ForWho, ... args)
+;				now accepts and unlimited amount of arguments as numbers or string
 ;	RQ
 ;		Added
 ;			Piercing the Darkness: Marketplace of Horrors Part I
@@ -4407,6 +4415,68 @@
 ;			Piercing the Darkness: Message in a Shadowed Bottle Part I
 ;			Piercing the Darkness: Message in a Shadowed Bottle Part II
 ;			Piercing the Darkness: Message in a Shadowed Bottle Part III
+
+;v6.31 Changes 10-27-20
+;	RQ
+;		Added
+;			Traveler's Feast - Sky Cake
+;	CombatBot
+;		Added Lunar Barrage for Bulwark on tanks
+;	RZ
+;		Added Heroic and Expert for all currently coded zones
+;	RI
+;		Added ZoneVersion selection for all currently coded zones
+;		Modified
+;			Fordel Midst: The Listless Spires
+;				Sped up the hailing of the spirits quite a bit
+;			Aurelian Coast: Maiden's Eye
+;				Xylox
+;					no longer targets self
+;					increased joust distance
+;			Aurelian Coast: Reishi Rumble
+;				Added preheal before last named
+
+;v6.32 Changes 10-27-20
+;	RQ
+;		Added (For Real This Time)
+;			Traveler's Feast - Sky Cake
+
+;v6.33 Changes 10-29-20
+;	RII
+;		Added Loop check box to allow Looping in the UI
+;		Added Hide Button to hide the ui 
+;			you can unhide by typing RII in the console or hitting your RI_Inventory RIMUI Button
+;		Added Add Agents check box to add any agents in the selected bags to your collection
+;		Added Convert Agents check box to convert any agents you already have added
+;		Added Add Familiars check box to add any familiars in the selected bags to your collection
+;		Added Delete Leftovers check box to delete any Agents/Familiars that were not added/converted
+;		Added the following to the top of the inventory list box
+;			*All Treasured Items*
+;			*All Legendary Items*
+;			*All MC Legendary Items*
+;			*All Fabled Items*
+;			*All MC Fabled Items*
+;			*All Ethereal Items*
+;			*All Mythical Items*
+;			*All Adepts*
+;			*All Experts*
+;			*All Masters*
+;				These are all used in Conjunction with Salvage, Extract and Transmute
+;				When added to the Added Items list, RII will do the respective actions
+;				to All the respective items in the selected bags
+;				*Note these will be added to the beggining of the Added Items List
+;				*But will not be done until RII has exhausted the full Added Items List
+;				*In other words they are done last in order of how they appear with other
+;				*All items
+;	RI
+;			Aurelian Coast: Maiden's Eye
+;				Xylox
+;					Fixed a jousting bug	
+;			Sanctus Seru: Echelon of Order
+;				Fixed 2 pathing bugs that would get you stuck on the ramps
+;				Sped up the hailing of the seekers quite a bit
+;				Fixed a bug that was not skipping the first set of rangers
+;				when not on sig quest
 
 ;code for commision items
 ;relay all EQ2UIPage[Inventory,CommissionedWork].Child[button,buttonAccept]:LeftClick;TimedCommand 2 relay all EQ2UIPage[Tradeskills,Tradeskills].Child[button,SummaryPage.BeginButton]:LeftClick
@@ -4434,7 +4504,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.30
+variable(global) float RI_Var_Float_Version=6.33
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -4444,13 +4514,13 @@ variable(global) RIConsoleObject RIConsole
 variable(global) RIMovementObject RIMObj
 variable string MySubClass=${Me.SubClass}
 variable(global) string RI_Var_Int_RIConsoleID
-variable(global) string RI_Var_String_LookDownKey=\"Page Down\"
-variable(global) string RI_Var_String_LookUpKey=\"Page Up\"
+variable(global) string RI_Var_String_LookDownKey="\"Page Down\""
+variable(global) string RI_Var_String_LookUpKey="\"Page Up\""
 variable(global) string RI_Var_String_FlyUpKey=Home
 variable(global) string RI_Var_String_FlyDownKey=End
 variable(global) string RI_Var_String_StrafeLeftKey=q
 variable(global) string RI_Var_String_StrafeRightKey=e
-variable(global) string RI_Var_String_AutoRunKey=\"Num Lock\"
+variable(global) string RI_Var_String_AutoRunKey="\"Num Lock\""
 variable(global) string RI_Var_String_ForwardKey=w
 variable(global) string RI_Var_String_BackwardKey=s
 variable(global) string RI_Var_String_SwimUpKey=Home
@@ -6074,7 +6144,7 @@ function main()
 	RI_Index_String_AvailableRIMUICommands:Insert[Repair]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Repair - Repairs your gear at the nearest repair actor\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[ReplyDialog]
-	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ReplyDialog - Chooses option from a reply dialog window\n\nArgument 1: For Who\nArgument 2: Option]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ReplyDialog - Chooses option's from a reply dialog window\n\nArgument 1: For Who\nArgument 2-Unlimited: Option as # or String]
 	RI_Index_String_AvailableRIMUICommands:Insert[ResetZone]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ResetZone - Resets zone's\n\nArgument 1: For Who\n\nArgument 2+: Zone or Zone's to Reset\n]
 	RI_Index_String_AvailableRIMUICommands:Insert[ResetAllZones]
@@ -6145,6 +6215,8 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[UseItem - Uses an item from your Inventory or Equipment\n\nArgument 1: For Who\nArgument 2: Item Name]
 	RI_Index_String_AvailableRIMUICommands:Insert[Zone]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[Zone - Clicks closest KNOWN zone door\n\nArgument 1: For Who]
+	RI_Index_String_AvailableRIMUICommands:Insert[ZoneVersion]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[ZoneVersion - Accepts zone version window\n\nArgument 1: For Who]
 	RI_Index_String_AvailableRIMUICommands:Insert[JumpUp]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[JumpUp - Jumps toons on top of things\n\nArgument 1: For Who\n\nArgument 2: X\nArgument 3: Y\nArgument 4: Z\n(Args 2,3,4 Defaults to your LOC)\nArgument 5: Y_Target (Default: Your Y+2)\nArgument 6: Heading (Default: Your Heading)\nArgument 7: Fail Timer(s) (Default: 5s) ]
 	;(string _ForWho=ALL, float _X=${Me.X}, float _Y=${Me.Y}, float _Z=${Me.Z}, float _YTarget=${Math.Calc[${Me.Y}+2]}, int _FaceDegree=${Me.Heading}, int _GiveUpCNT=10)
@@ -9630,6 +9702,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Rivervale Ratatouille"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Butcherblock Pumpkin Bread"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Dervish Squash Curry"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Sky Cake"]
 			}
 			elseif ${_CatName.Equal[Chaos Descending]}
 			{
@@ -10870,10 +10943,53 @@ objectdef RIMUIObject
 		if ${This.ForWhoCheck[${ForWho}]}
 			Squelch ChoiceWindow:DoChoice${Choice}
 	}
-	method ReplyDialog(string ForWho, int _Option)
+	method ReplyDialog(string ForWho, ... args)
 	{
-		if ${This.ForWhoCheck[${ForWho}]} && ${ReplyDialog(exists)}
-			Squelch ReplyDialog:Choose[${_Option}]
+		if ${This.ForWhoCheck[${ForWho}]}
+		{
+			if (!${ReplyDialog.Replies(exists)}	|| ${args.Used}<1)
+					return
+				
+				variable index:collection:string Options
+				variable iterator OptionsIterator
+				variable int OptionCounter = 0
+				variable int _CNT
+				for(_CNT:Set[1];${_CNT}<=${args.Used};_CNT:Inc)
+				{
+					if ${Int[${args[${_CNT}]}]}>0
+						relay ${RI_Var_String_RelayGroup} ReplyDialog:Choose[${Int[${args[${_CNT}]}]}]
+					else
+					{
+						ReplyDialog.Replies:GetOptions[Options]
+						Options:GetIterator[OptionsIterator]
+						
+						;echo "The current reply dialog window has ${Options.Used} reply options available"
+						
+						if (${OptionsIterator:First(exists)})
+						{
+							do
+							{
+								if (${OptionsIterator.Value.FirstKey(exists)})
+								{
+									do
+									{
+										if ${OptionsIterator.Value.CurrentValue.Find["${args[${_CNT}]}"]}
+										{
+											relay ${RI_Var_String_RelayGroup} ReplyDialog:Choose[${Math.Calc[${OptionCounter}+1]}]
+										}
+										;echo "Option #${OptionCounter}::  '${OptionsIterator.Value.CurrentKey}' => '${OptionsIterator.Value.CurrentValue}' // ${args[${_CNT}]} // ${OptionsIterator.Value.CurrentValue.Find["${args[${_CNT}]}"]}"
+									}
+									while ${OptionsIterator.Value.NextKey(exists)}
+									;echo "------"
+								}
+								OptionCounter:Inc
+							}
+							while ${OptionsIterator:Next(exists)}
+						}
+					}
+				}		
+		TimedCommand 5 Squelch ReplyDialog:Choose[${_Option}]
+		}
 	}
 	method PotionConsume(string ForWho, int OnOff)
 	{
@@ -10902,6 +11018,13 @@ objectdef RIMUIObject
 			;eventually put checks in here for if in GH
 			if !${Zone.ShortName.Find[guildhall](exists)}
 				eq2ex usea "Call to Guild Hall"
+		}
+	}
+	method ZoneVersion(string ForWho)
+	{
+		if ${This.ForWhoCheck[${ForWho}]}
+		{
+			EQ2UIPage[popup,Select].Child[button,Select.Footer.OK]:LeftClick
 		}
 	}
 	method Zone(string ForWho)

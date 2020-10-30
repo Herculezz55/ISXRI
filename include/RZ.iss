@@ -15,6 +15,7 @@ variable index:int ZoneSetTime
 variable index:int ZoneUnlockTime
 variable(global) bool RZ_Var_Bool_Start=FALSE
 variable(global) bool RZ_Var_Bool_Paused=FALSE
+variable(global) string RZ_Var_String_ZoneVersion=FALSE
 variable(global) string RI_Var_String_RZScriptName=${Script.Filename}
 variable int RZ_Var_Int_Loops=1
 variable bool ResetConfirmation=FALSE
@@ -1181,10 +1182,66 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
 			ZoneUnlockTime:Insert[5400]
-
+			
+			_Zone:Insert["Aurelian Coast: Sambata Village [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Sambata Village [Heroic]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Zone exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
+			ZoneEntranceLoc:Insert["113.527733 66.510788 -622.734680|113.730003 57.369999 -657.119995"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Aurelian Coast: Sambata Village [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Sambata Village [Expert]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Zone exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
+			ZoneEntranceLoc:Insert["113.527733 66.510788 -622.734680|113.730003 57.369999 -657.119995"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
 			;Zone
 			_Zone:Insert["Aurelian Coast: Reishi Rumble [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Reishi Rumble [Solo]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Zone exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
+			ZoneEntranceLoc:Insert["113.527733 66.510788 -622.734680|113.730003 57.369999 -657.119995"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Aurelian Coast: Reishi Rumble [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Reishi Rumble [Heroic]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Zone exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
+			ZoneEntranceLoc:Insert["113.527733 66.510788 -622.734680|113.730003 57.369999 -657.119995"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Aurelian Coast: Reishi Rumble [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Reishi Rumble [Expert]"]
 			ZoneFrom:Insert["Aurelian Coast"]
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Zone exit"]
@@ -1213,6 +1270,36 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlockTime:Insert[5400]
 			
 			;Zone
+			_Zone:Insert["Aurelian Coast: Maiden's Eye [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Maiden's Eye [Heroic]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Zone exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
+			ZoneEntranceLoc:Insert["113.527733 66.510788 -622.734680|113.730003 57.369999 -657.119995"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Aurelian Coast: Maiden's Eye [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Maiden's Eye [Expert]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Zone exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Aurelian Coast dungeons"]
+			ZoneEntranceLoc:Insert["113.527733 66.510788 -622.734680|113.730003 57.369999 -657.119995"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
 			_Zone:Insert["Sanctus Seru: Echelon of Order [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Solo]"]
 			ZoneFrom:Insert["Sanctus Seru [City]"]
@@ -1227,10 +1314,65 @@ atom BuildIndexes(string _Expac)
 			ZoneSetTime:Insert[0]
 			ZoneUnlockTime:Insert[5400]
 			
-	
+			_Zone:Insert["Sanctus Seru: Echelon of Order [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Heroic]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Echelon of Order [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Expert]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
 			;Zone
 			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Solo]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Heroic]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Expert]"]
 			ZoneFrom:Insert["Sanctus Seru [City]"]
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
@@ -1258,9 +1400,65 @@ atom BuildIndexes(string _Expac)
 			ZoneSetTime:Insert[0]
 			ZoneUnlockTime:Insert[5400]
 			
+			_Zone:Insert["Sanctus Seru: Arx Aeturnus [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Arx Aeturnus [Heroic]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Arx Seru"]
+			ZoneEntranceLoc:Insert[-193.214371 188.161240 -0.116349]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Arx Aeturnus [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Arx Aeturnus [Expert]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Arx Seru"]
+			ZoneEntranceLoc:Insert[-193.214371 188.161240 -0.116349]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
 			;Zone
 			_Zone:Insert["Fordel Midst: The Listless Spires [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: The Listless Spires [Solo]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_to_fordel_midst"]
+			ZoneEntranceLoc:Insert["156.307556 62.435265 -628.752502|168.404755 62.078152 -642.211670|188.893372 62.086693 -663.790283|169.061646 61.921852 -682.376831"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Fordel Midst: The Listless Spires [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: The Listless Spires [Heroic]"]
+			ZoneFrom:Insert["Aurelian Coast"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_to_fordel_midst"]
+			ZoneEntranceLoc:Insert["156.307556 62.435265 -628.752502|168.404755 62.078152 -642.211670|188.893372 62.086693 -663.790283|169.061646 61.921852 -682.376831"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Fordel Midst: The Listless Spires [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: The Listless Spires [Expert]"]
 			ZoneFrom:Insert["Aurelian Coast"]
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
@@ -1288,6 +1486,7 @@ function main(... args)
 	Developer:Set[TRUE]
 	
 	variable int Count=1
+	variable string _ZoneNameFormatter
 	; variable int _acnt=1
 	; variable bool JustZone=0
 	; variable string ZoneName
@@ -1440,18 +1639,25 @@ function main(... args)
 			;if Zone is unlocked run it
 			for(RZ_Var_Int_Count:Set[1];${RZ_Var_Int_Count}<=${UIElement[AddedZoneList@RZ].Items};RZ_Var_Int_Count:Inc)
 			{
-				echo Reseting: ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}
-				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				
+				if ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}].Text.Find["[Expert]"]}
+					_ZoneNameFormatter:Set["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}].Text.ReplaceSubstring["[Expert]","[Heroic]"]}"]
+				elseif ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}].Text.Find["[Challenge]"]}
+					_ZoneNameFormatter:Set["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}].Text.ReplaceSubstring["[Challenge]","[Heroic]"]}"]
+				else
+					_ZoneNameFormatter:Set["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				echo Reseting: ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]} as ${_ZoneNameFormatter}
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${_ZoneNameFormatter}"]
 				wait 3
-				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${_ZoneNameFormatter}"]
 				wait 3
-				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${_ZoneNameFormatter}"]
 				wait 3
-				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${_ZoneNameFormatter}"]
 				wait 3
-				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${_ZoneNameFormatter}"]
 				wait 3
-				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
+				relay "${RI_Var_String_RelayGroup}" Me:ResetZoneTimer["${_ZoneNameFormatter}"]
 				wait 5
 			}
 			ZonesReset:Set[1]
@@ -1486,6 +1692,7 @@ function main(... args)
 						continue
 					}
 				}
+				
 				;call CheckZones function
 				call RZObj.CheckZones
 				;echo checking if ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]} at ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]} is unlocked: ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]}]}
@@ -2104,6 +2311,27 @@ function Zone(int _IndexPosition)
 	wait 5
 	wait 60 ${Zone.Name(exists)}
 	wait 5
+	variable string _ZoneNameFormatter
+	if ${_Zone.Get[${_IndexPosition}].Find["[Expert]"]}
+	{
+		RZ_Var_String_ZoneVersion:Set["Expert"]
+		_ZoneNameFormatter:Set["${_Zone.Get[${_IndexPosition}].ReplaceSubstring["[Expert]","[Heroic]"]}"]
+	}
+	elseif ${_Zone.Get[${_IndexPosition}].Find["[Challenge]"]}
+	{
+		RZ_Var_String_ZoneVersion:Set["Challenge"]
+		_ZoneNameFormatter:Set["${_Zone.Get[${_IndexPosition}].ReplaceSubstring["[Challenge]","[Heroic]"]}"]
+	}
+	elseif ${_Zone.Get[${_IndexPosition}].Find["[Heroic]"]}
+	{
+		RZ_Var_String_ZoneVersion:Set["Heroic"]
+		_ZoneNameFormatter:Set["${_Zone.Get[${_IndexPosition}]}"]
+	}
+	else
+	{
+		RZ_Var_String_ZoneVersion:Set["FALSE"]
+		_ZoneNameFormatter:Set["${_Zone.Get[${_IndexPosition}]}"]
+	}
 	;if we are more than 10 away from EntranceLoc move closer, but check collision and not more than 200 else, call to guild hall and run path to zonein - UM NOPE
 	;${ZoneEntranceLoc.Get[${_IndexPosition}].Token[1," "]}
 	;${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Token[2," "]}+2]}
@@ -2258,7 +2486,7 @@ function Zone(int _IndexPosition)
 	
 	wait 20
 
-	echo ${Time}: Zoning into ${_Zone.Get[${_IndexPosition}]}
+	echo ${Time}: Zoning into ${_Zone.Get[${_IndexPosition}]} as ${_ZoneNameFormatter}
 	
 	;click Zone1 Zone in
 	Actor["${ZoneEntrance.Get[${_IndexPosition}]}"]:DoubleClick
@@ -2268,18 +2496,18 @@ function Zone(int _IndexPosition)
 	RZObj:GetZoneLists
 	wait 20
 	variable int _ZCNT=0
-	while ${RZObj.RowByName["${_Zone.Get[${_IndexPosition}]}"]}==0 && ${_ZCNT:Inc}<10
+	while ${RZObj.RowByName["${_ZoneNameFormatter}"]}==0 && ${_ZCNT:Inc}<10
 	{
 		RZObj:GetZoneLists
 		wait 5
 	}
-	if ${RZObj.RowByName["${_Zone.Get[${_IndexPosition}]}"]}==0
+	if ${RZObj.RowByName["${_ZoneNameFormatter}"]}==0
 	{
 		echo ISXRI: Can't find that zone in the Destination list
 		Script:End
 	}
 	wait 10
-	EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${RZObj.RowByName["${_Zone.Get[${_IndexPosition}]}"]}]
+	EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${RZObj.RowByName["${_ZoneNameFormatter}"]}]
 	wait 10
 	
 	;confirm selection and zone
@@ -2325,7 +2553,7 @@ function Zone(int _IndexPosition)
 	wait 50
 	
 	;if we are not in the correct zone, exit function
-	if ${Me.GetGameData[Self.ZoneName].Label.NotEqual["${_Zone.Get[${_IndexPosition}]}"]}
+	if ${Me.GetGameData[Self.ZoneName].Label.NotEqual["${_ZoneNameFormatter}"]}
 		return
 		
 	;run runinstances started
@@ -2376,7 +2604,7 @@ function Zone(int _IndexPosition)
 	
 	;zoneout
 	;relay "other ${RI_Var_String_RelayGroup}" -noredirect RZ 0 0 TRUE "${Zone1Exit}" "${Zone1}"
-	call ZoneOut "${ZoneExit.Get[${_IndexPosition}]}" "${_Zone.Get[${_IndexPosition}]}"
+	call ZoneOut "${ZoneExit.Get[${_IndexPosition}]}" "${_ZoneNameFormatter}"
 }
 
 function ZoneOut(string ZoneExit, string ZoneName)
@@ -2580,6 +2808,7 @@ objectdef RZObject
 						;echo ISXRI: ${Time}: ${UIElement[AddedZoneList@RZ].OrderedItem[${_count}]}, Unlocked: ${RZObj.Unlocked[${ZoneUnlockTime.Get[${_count2}]},${ZoneSetTime.Get[${_count2}]}]}
 						if ${RZObj.Unlocked[${ZoneSetTime.Get[${_count2}]},${ZoneUnlockTime.Get[${_count2}]}]}
 							call RZObj.Unlock "${_Zone.Get[${_count2}]}"
+						
 					}
 				}
 			}
@@ -2722,12 +2951,19 @@ objectdef RZObject
 	;wait 5 seconds or until confirmation is seen
 	function Unlock(string ZoneName)
 	{	
+		variable string _ZoneNameFormatter
+		if ${ZoneName.Find["[Expert]"]}
+			_ZoneNameFormatter:Set["${ZoneName.ReplaceSubstring["[Expert]","[Heroic]"]}"]
+		elseif ${ZoneName.Find["[Challenge]"]}
+			_ZoneNameFormatter:Set["${ZoneName.ReplaceSubstring["[Challenge]","[Heroic]"]}"]
+		else
+			_ZoneNameFormatter:Set["${ZoneName}"]
 		echo ${Time}: Unlocking ${ZoneName}
 		relay ${RI_Var_String_RelayGroup} eq2ex togglezonereuse
 		wait 5
 		relay ${RI_Var_String_RelayGroup} eq2ex togglezonereuse
 		wait 5
-		relay ${RI_Var_String_RelayGroup} Me:ResetZoneTimer["${ZoneName}"]
+		relay ${RI_Var_String_RelayGroup} Me:ResetZoneTimer["${_ZoneNameFormatter}"]
 		wait 50 ${ResetConfirmation}
 		ResetConfirmation:Set[FALSE]
 	}

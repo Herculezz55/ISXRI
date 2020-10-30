@@ -1,6 +1,6 @@
 string AurelianCoastMaidensEye[] = {"-189.865982 4.191965 33.892067", 
 "Custom", 
-"ClickActor \"starting circle\"", 
+"CheckZoneVersion \"starting circle\"", 
 "-189.865982 4.191965 33.892067", 
 "Wait", 
 "20", 
