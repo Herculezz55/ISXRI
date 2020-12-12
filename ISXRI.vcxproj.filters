@@ -1645,6 +1645,9 @@
     <ClInclude Include="include\CityofQeynosTimeline\UndeadUprising.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Overseer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\OrderofRimeFactionTimeline\FishingforFaction.dat">

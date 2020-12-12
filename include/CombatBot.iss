@@ -248,6 +248,7 @@ variable index:string istrExportISPCCure
 variable index:string istrExportIsABuff
 variable index:string istrExportIsASingleTargetBeneficial
 variable index:string istrExportIsASingleTargetHostile
+variable index:string istrExportIsAMultiTargetHostile
 variable index:string istrExportIsOtherGroupAbility
 variable index:string istrExportIsPCCureCurse
 variable index:string istrExportIsRes
@@ -270,6 +271,7 @@ variable(global) index:string istrCastStackAbiltiesListBoxOriginalColor
 variable string strMyName=${Me.Name}
 variable(global) string RI_Var_String_MySubClass=${Me.SubClass.Left[1].Upper}${Me.SubClass.Right[-1]}
 variable(global) bool RI_Var_Bool_CurseCallDebug=FALSE
+variable(global) string RI_Var_String_CurseName=FALSE
 variable int intMyLevel=${Me.Level}
 variable settingsetref setProfile
 variable settingsetref setExport
@@ -1022,6 +1024,7 @@ objectdef RI_Object_CB
 									case NonNamedCA
 									case Debuff
 									case CA
+									case Custom
 									{
 										_istrAbilityType:Insert[Hostile]
 										break
@@ -1726,7 +1729,7 @@ objectdef RI_Object_CB
 	method CastOn(string _CastName, string coCastTarget=FALSE, bool CastNow=FALSE)
 	{
 		variable string CastName
-		CastName:Set[${_CastName.Replace[\",""]}]
+		CastName:Set[${_CastName.Replace["\"",""]}]
 		;echo CombatBot: Cast called for ${CastName} Target: ${coCastTarget} CastNow: ${CastNow}
 		;ConvertAbility "${CastName}"
 		variable int _ExportPosition
@@ -1778,7 +1781,7 @@ objectdef RI_Object_CB
 	method Cast(string _CastName, bool CastNow=FALSE)
 	{
 		variable string CastName
-		CastName:Set[${_CastName.Replace[\",""]}]
+		CastName:Set[${_CastName.Replace["\"",""]}]
 		;echo ${CastName}
 		;echo CombatBot: Cast called for ${CastName} CastNow: ${CastNow}
 		;ConvertAbility "${CastName}"
@@ -2791,7 +2794,7 @@ objectdef RI_Object_CB
 				{
 					UIElement[CastStackSkipEncounterCheckBox@CastStackFrame@CombatBotUI]:Hide
 				}
-				if ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}].Equal[TRUE]} && ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}].Equal[FALSE]} && ${istrExportIsSelfAbility.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}].Equal[TRUE]}
+				if ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}].Equal[TRUE]} && ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}].Equal[FALSE]} && ( ${istrExportIsSelfAbility.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}].Equal[TRUE]} || ${istrExportIsAMultiTargetHostile.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[2,|]}].Equal[TRUE]} )
 				{
 					UIElement[CastStackSkipAECheckBox@CastStackFrame@CombatBotUI]:Show
 					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| SAE"](exists)}
@@ -4583,6 +4586,7 @@ objectdef RI_Object_CB
 				}
 				if ${istrExportIsASingleTargetHostile.Get[${ExportPosition}].Equal[TRUE]}
 				{
+
 					if ${CombatBotCSCDebug}
 						echo ISXRI: CombatBot: IsASingleTargetHostile
 					UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:ClearItems
@@ -4884,7 +4888,7 @@ objectdef RI_Object_CB
 						UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI]:Hide
 					}
 				}
-				if ${istrExportIsAE.Get[${ExportPosition}].Equal[TRUE]} && ${istrExportIsBeneficial.Get[${ExportPosition}].Equal[FALSE]} && ${istrExportIsSelfAbility.Get[${ExportPosition}].Equal[TRUE]}
+				if ${istrExportIsAE.Get[${ExportPosition}].Equal[TRUE]} && ${istrExportIsBeneficial.Get[${ExportPosition}].Equal[FALSE]} && ( ${istrExportIsSelfAbility.Get[${ExportPosition}].Equal[TRUE]} || ${istrExportIsAMultiTargetHostile.Get[${ExportPosition}].Equal[TRUE]} )
 				{
 					if ${CombatBotCSCDebug}
 						echo ISXRI: CombatBot: IsAE
@@ -5535,7 +5539,7 @@ objectdef RI_Object_CB
 			;OnEventsCommand
 			;if ${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|](exists)}
 			if ${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Count[|]}>1
-				LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[OnEvents].FindSet[${count}]:AddSetting[OnEventsCommand,"\"${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|].Replace[\",""]}|${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Escape}"]
+				LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[OnEvents].FindSet[${count}]:AddSetting[OnEventsCommand,"\"${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|].Replace["\"",""]}|${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[3,|].Escape}"]
 			else
 				LavishSettings[SaveFile].FindSet[Profiles].FindSet[${_Profile}].FindSet[OnEvents].FindSet[${count}]:AddSetting[OnEventsCommand,"${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${count}].Value.Token[2,|].Escape}"]
 		}
@@ -5638,6 +5642,7 @@ function main()
 	{
 		AddTrigger Bulwark "\\#FF00FF@BadName@ looks for @noun@ most hated target\."
 		AddTrigger Bulwark "\\#FF00FF@BadName@ prepares to strike with Lunar Barrage\!"
+		AddTrigger Bulwark "\\#FF00FF@BadName@ prepares to unleash a mighty barrage in your group's direction\! You may want to protect them somehow\!"
 	}
 	
 	RI_CMD_Hidden_RIS
@@ -7219,6 +7224,7 @@ function main()
 				call CastAb "${strCastNameShort}" "${strCastName}" ${strCastID} ${strCastTarget}
 				if ${boolPostCast}
 				{
+					wait 5 ${Me.Ability[id,${strPostCastID}].IsReady}
 					if ${Me.CastingSpell}
 					{
 						wait 100 !${Me.CastingSpell} || ${DoCasting}
@@ -7226,7 +7232,7 @@ function main()
 							wait 5
 					}
 					if ${CombatBotDebug}
-						echo CombatBot: PostCasting ${strPreCastNameShort}
+						echo CombatBot: PostCasting ${strPostCastNameShort}
 					call CastAb "${strPostCastNameShort}" "${strPostCastName}" ${strPostCastID} FALSE
 				}
 			}
@@ -7965,47 +7971,47 @@ atom LoadProfile(string _Profile=${CombatBotDefaultProfile})
 		RI_Obj_CB:SetUISetting[SettingsConfrontFearCallTextEntry,${SettingsSet.FindSetting[SettingsConfrontFearCallTextEntry]}]
 	
 	if ${RI_Obj_CB.GetUISetting[SettingsAutoRunKeyTextEntry].Find[" "](exists)}
-		RI_Var_String_AutoRunKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsAutoRunKeyTextEntry]}\"]
+		RI_Var_String_AutoRunKey:Set["\"${RI_Obj_CB.GetUISetting[SettingsAutoRunKeyTextEntry]}\""]
 	else
 		RI_Var_String_AutoRunKey:Set[${RI_Obj_CB.GetUISetting[SettingsAutoRunKeyTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsForwardKeyTextEntry,${SettingsSet.FindSetting[SettingsForwardKeyTextEntry]}]
 	if ${RI_Obj_CB.GetUISetting[SettingsForwardKeyTextEntry].Find[" "](exists)}
-		RI_Var_String_ForwardKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsForwardKeyTextEntry]}\"]
+		RI_Var_String_ForwardKey:Set["\"${RI_Obj_CB.GetUISetting[SettingsForwardKeyTextEntry]}\""]
 	else
 		RI_Var_String_ForwardKey:Set[${RI_Obj_CB.GetUISetting[SettingsForwardKeyTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsBackwardKeyTextEntry,${SettingsSet.FindSetting[SettingsBackwardKeyTextEntry]}]
 	if ${RI_Obj_CB.GetUISetting[SettingsBackwardKeyTextEntry].Find[" "](exists)}
-		RI_Var_String_BackwardKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsBackwardKeyTextEntry]}\"]
+		RI_Var_String_BackwardKey:Set["\"${RI_Obj_CB.GetUISetting[SettingsBackwardKeyTextEntry]}\""]
 	else
 		RI_Var_String_BackwardKey:Set[${RI_Obj_CB.GetUISetting[SettingsBackwardKeyTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsStrafeLeftKeyTextEntry,${SettingsSet.FindSetting[SettingsStrafeLeftKeyTextEntry]}]
 	if ${RI_Obj_CB.GetUISetting[SettingsStrafeLeftKeyTextEntry].Find[" "](exists)}
-		RI_Var_String_StrafeLeftKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsStrafeLeftKeyTextEntry]}\"]
+		RI_Var_String_StrafeLeftKey:Set["\"${RI_Obj_CB.GetUISetting[SettingsStrafeLeftKeyTextEntry]}\""]
 	else
 		RI_Var_String_StrafeLeftKey:Set[${RI_Obj_CB.GetUISetting[SettingsStrafeLeftKeyTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsStrafeRightKeyTextEntry,${SettingsSet.FindSetting[SettingsStrafeRightKeyTextEntry]}]
 	if ${RI_Obj_CB.GetUISetting[SettingsStrafeRightKeyTextEntry].Find[" "](exists)}
-		RI_Var_String_StrafeRightKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsStrafeRightKeyTextEntry]}\"]
+		RI_Var_String_StrafeRightKey:Set["\"${RI_Obj_CB.GetUISetting[SettingsStrafeRightKeyTextEntry]}\""]
 	else
 		RI_Var_String_StrafeRightKey:Set[${RI_Obj_CB.GetUISetting[SettingsStrafeRightKeyTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsJumpKeyTextEntry,${SettingsSet.FindSetting[SettingsJumpKeyTextEntry]}]
 	if ${RI_Obj_CB.GetUISetting[SettingsJumpKeyTextEntry].Find[" "](exists)}
-		RI_Var_String_JumpKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsJumpKeyTextEntry]}\"]
+		RI_Var_String_JumpKey:Set["\"${RI_Obj_CB.GetUISetting[SettingsJumpKeyTextEntry]}\""]
 	else
 		RI_Var_String_JumpKey:Set[${RI_Obj_CB.GetUISetting[SettingsJumpKeyTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsCrouchKeyTextEntry,${SettingsSet.FindSetting[SettingsCrouchKeyTextEntry]}]
 	if ${RI_Obj_CB.GetUISetting[SettingsCrouchKeyTextEntry].Find[" "](exists)}
-		RI_Var_String_CrouchKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsCrouchKeyTextEntry]}\"]
+		RI_Var_String_CrouchKey:Set["\"${RI_Obj_CB.GetUISetting[SettingsCrouchKeyTextEntry]}\""]
 	else
 		RI_Var_String_CrouchKey:Set[${RI_Obj_CB.GetUISetting[SettingsCrouchKeyTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsFlyUpKeyTextEntry,${SettingsSet.FindSetting[SettingsFlyUpKeyTextEntry]}]
 	if ${RI_Obj_CB.GetUISetting[SettingsFlyUpKeyTextEntry].Find[" "](exists)}
-		RI_Var_String_FlyUpKeyKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsFlyUpKeyTextEntry]}\"]
+		RI_Var_String_FlyUpKeyKey:Set["\"${RI_Obj_CB.GetUISetting[SettingsFlyUpKeyTextEntry]}\""]
 	else
 		RI_Var_String_FlyUpKeyKey:Set[${RI_Obj_CB.GetUISetting[SettingsFlyUpKeyTextEntry]}]
 	RI_Obj_CB:SetUISetting[SettingsFlyDownKeyTextEntry,${SettingsSet.FindSetting[SettingsFlyDownKeyTextEntry]}]
 	if ${RI_Obj_CB.GetUISetting[SettingsFlyDownKeyTextEntry].Find[" "](exists)}
-		RI_Var_String_FlyDownKey:Set[\"${RI_Obj_CB.GetUISetting[SettingsFlyDownKeyTextEntry]}\"]
+		RI_Var_String_FlyDownKey:Set["\"${RI_Obj_CB.GetUISetting[SettingsFlyDownKeyTextEntry]}\""]
 	else
 		RI_Var_String_FlyDownKey:Set[${RI_Obj_CB.GetUISetting[SettingsFlyDownKeyTextEntry]}]
 
@@ -8122,10 +8128,10 @@ atom EQ2_onAnnouncement(string Text, string SoundType, float Timer)
 			{
 				variable int leftnum
 				leftnum:Set[${Math.Calc[6+${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Right[-6].Find[" "]}]}]
-				noop ${Execute[${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Left[${leftnum}]} "${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Right[${Math.Calc[-1*${leftnum}]}].Replace[\",""]}"]}
+				noop ${Execute[${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Left[${leftnum}]} "${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Right[${Math.Calc[-1*${leftnum}]}].Replace["\"",""]}"]}
 			}
 			else
-				noop ${Execute["${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Replace[\",""]}"]}
+				noop ${Execute["${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Replace["\"",""]}"]}
 		}
 	}
 }
@@ -8474,7 +8480,18 @@ atom EQ2_onIncomingText(string Text)
 	{
 		relay all "RIConsole:Echo[${Time} ${Me.Name} has received their maximum allotment of Ethereal Coins from ${Text.Right[-64].Left[-75]} Missions today.]"
 	}
-
+	if ${Text.Find["prepares to unleash a mighty barrage"]}
+	{
+		;echo BULWARK
+		if ${Me.Archetype.Find[Fighter](exists)}
+			TimedCommand 25 CastBulwark:Set[TRUE]
+	}
+	if ${Text.Find["prepares to unleash a barrage"]}
+	{
+		;echo BULWARK
+		if ${Me.Archetype.Find[Fighter](exists)}
+			TimedCommand 25 CastBulwark:Set[TRUE]
+	}
 	;check for OnEvent
 	;echo OnInc
 	variable int i
@@ -8488,10 +8505,10 @@ atom EQ2_onIncomingText(string Text)
 			{
 				;variable int leftnum
 				leftnum:Set[${Math.Calc[6+${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Right[-6].Find[" "]}]}]
-				noop ${Execute[${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Left[${leftnum}]} "${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Right[${Math.Calc[-1*${leftnum}]}].Replace[\",""]}"]}
+				noop ${Execute[${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Left[${leftnum}]} "${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Right[${Math.Calc[-1*${leftnum}]}].Replace["\"",""]}"]}
 			}
 			else
-				noop ${Execute["${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Replace[\",""]}"]}
+				noop ${Execute["${UIElement[OnEventsAddedOnEventsListBox@OnEventsFrame@CombatBotUI].OrderedItem[${i}].Value.Token[3,|].Replace["\"",""]}"]}
 		}
 	}
 	if ${Text.Find[not enough concentration](exists)}
@@ -8541,10 +8558,17 @@ atom EQ2_onIncomingText(string Text)
 	variable string strTemp1
 	variable bool CurseSeen=FALSE
 	variable bool CFSeen=FALSE
-   	if ${Text.Find["need a cure curse"](exists)}
+   	if ${Text.Find["need a cure curse"](exists)} || ${RI_Var_String_CurseName.NotEqual[FALSE]}
 	{
 		CurseSeen:Set[TRUE]
-		if ${Text.Find["You say"](exists)} || ${Text.Find["You shout"](exists)}
+		if ${RI_Var_String_CurseName.NotEqual[FALSE]}
+		{
+			CurseName:Set["${RI_Var_String_CurseName}"]
+			if ${RI_Var_Bool_CurseCallDebug}
+				echo ISXRI: Adding ${CurseName} to Curse Cure Index
+			RI_Var_String_CurseName:Set[FALSE]
+		}
+		elseif ${Text.Find["You say"](exists)} || ${Text.Find["You shout"](exists)}
 		{
 			CurseName:Set[${Me.Name}]
 			if ${RI_Var_Bool_CurseCallDebug}
@@ -8577,7 +8601,16 @@ atom EQ2_onIncomingText(string Text)
 	}
 	if ${CurseSeen} && ${Me.Archetype.Equal[priest]}
 	{
-		istrCurses:Insert[${CurseName}]
+		;echo istrCurses:Insert[${CurseName}]
+		variable int _cccnt=0
+		variable bool foundccc=FALSE
+		for(_cccnt:Set[0];${_cccnt}<=${istrCurses.Used};_cccnt:Inc)
+		{
+			if ${istrCurses.Get[${_cccnt}].Equal[${CurseName}]}
+				foundccc:Set[1]
+		}
+		if !${foundccc}
+			istrCurses:Insert[${CurseName}]
 	}
 	if ${Text.Find["has joined the group"](exists)} || ${Text.Find["have joined the group"](exists)} || ${Text.Find["has joined the raid"](exists)} || ${Text.Find["have joined the raid"](exists)} || ${Text.Find["has left the group"](exists)} || ${Text.Find["have left the group"](exists)} || ${Text.Find["has left the raid"](exists)} || ${Text.Find["have left the raid"](exists)}
 	{
@@ -11193,10 +11226,10 @@ atom Cast(string CastNameShort, string CastName, string CastID, string CastTarge
 	}
 	else
 	{
-		if ${Me.Ability[id,${strPostCastID}].IsReady}
+		;if ${Me.Ability[id,${strPostCastID}].IsReady}
 			boolPostCast:Set[TRUE]
-		else
-			boolPostCast:Set[FALSE]
+		;else
+		;	boolPostCast:Set[FALSE]
 		;echo ${CastNameShort} has a PostCast of ${PostCheck} == ${strPostCastName} ID: ${strPostCastID} : TF: ${boolPostCast} IsReady: ${Me.Ability[id,${strPostCastID}].IsReady}
 	}
 	;echo cast called for ${CastName} ID: ${CastID} Target: ${CastTarget}
@@ -11346,7 +11379,8 @@ objectdef PrePostCheckerObject
 			if ${UIElement[PrePostCastAddedListBox@PrePostCastFrame@CombatBotUI].OrderedItem[${count}].TextColor}==-10263709
 				continue
 			;echo Checking if ${RI_Obj_CB.PrePostCastAbility2[${count}]} is ${AbilityName}
-			if ${RI_Obj_CB.PrePostCastAbility2[${count}].Equal[${AbilityName}]} && !${RI_Obj_CB.PrePostCastBefore[${count}]} && ${Me.Ability[id,${istrExportID.Get[${RI_Obj_CB.PrePostCastAbility1ExportPosition[${count}]}]}].IsReady}
+			if ${RI_Obj_CB.PrePostCastAbility2[${count}].Equal[${AbilityName}]} && !${RI_Obj_CB.PrePostCastBefore[${count}]} 
+			;&& ${Me.Ability[id,${istrExportID.Get[${RI_Obj_CB.PrePostCastAbility1ExportPosition[${count}]}]}].IsReady}
 			{
 				strPostCastID:Set[${istrExportID.Get[${RI_Obj_CB.PrePostCastAbility1ExportPosition[${count}]}]}]
 				strPostCastName:Set["${istrExport.Get[${RI_Obj_CB.PrePostCastAbility1ExportPosition[${count}]}]}"]
@@ -11363,6 +11397,11 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 	;return
 	;echo string CastNameShort=${CastNameShort}, string CastName=${CastName}, string CastID=${CastID}, string CastTarget=FALSE=${CastTarget} ${Actor[id,${CastTarget}]}
 	;echo castab ${mainCount}
+	if ${CastNameShort.Equal["Possess Essence"]}
+	{
+		RI_CMD_Assist 0
+		Me:DoTarget
+	}
 	if !${DoCasting} && ${CastNameShort.NotEqual["Exploit Weakness"]}
 	{
 		if ${Me.AutoAttackOn} && ${Me.InCombat} && ${UIElement[SettingsTimeAutoCheckBox@SettingsFrame@CombatBotUI].Checked}
@@ -11775,6 +11814,10 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 		wait 5 !${Me.Ability[id,${CastID}].IsReady}
 	}
 	mainCount:Set[1]
+	if ${CastNameShort.Equal["Possess Essence"]}
+	{
+		RI_CMD_Assist 1
+	}
 }
 function CastItem(string ItemName, bool RIE, string fiCastTarget=FALSE)
 {
@@ -12601,7 +12644,7 @@ atom IterateOnEvents(settingsetref Set, int SetCount)
 			}
 			if ${SettingIterator.Key.Equal[OnEventsCommand]}
 			{
-				_Command:Set["${SettingIterator.Value.String.Replace[\",""].Escape}"]
+				_Command:Set["${SettingIterator.Value.String.Replace["\"",""].Escape}"]
 				RI_Obj_CB:AddOnEvents[${_Event},"${_Command.Escape}",${_OnEventsDisabled}]
 				;_gotCommand:Set[TRUE]
 				_OnEventsDisabled:Set[FALSE]
@@ -12692,6 +12735,7 @@ atom IterateExport(settingsetref Set, int ExportCount)
 		istrExportIsRes:Insert[FALSE]
 		istrExportIsASingleTargetBeneficial:Insert[FALSE]
 		istrExportIsASingleTargetHostile:Insert[FALSE]
+		istrExportIsAMultiTargetHostile:Insert[FALSE]
 		istrExportIsSingleTargetAbility:Insert[FALSE]
 		istrExportIsGroupAbility:Insert[FALSE]
 		istrExportIsPetAbility:Insert[FALSE]
@@ -12779,8 +12823,9 @@ atom IterateExport(settingsetref Set, int ExportCount)
 			}
 			else
 			{
-				if ${setSpell.FindSetting[${CurrentSpellName}].FindAttribute["IsAoE"]}
+				if ${strTmpIsAE.String.Equal[TRUE]}
 				{
+					istrExportIsAMultiTargetHostile:Set[${exportCount},TRUE]
 					;setSpell.FindSetting[${CurrentSpellName}]:AddAttribute[IsTargetAE,TRUE]
 				}
 				elseif ${setSpell.FindSetting[${CurrentSpellName}].FindAttribute["EffectRadius"]}

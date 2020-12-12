@@ -4478,6 +4478,367 @@
 ;				Fixed a bug that was not skipping the first set of rangers
 ;				when not on sig quest
 
+;v6.34 Changes 11-3-20
+;		Added:
+;			Traveler's Feast - Mara Mandaikon Kakiage
+;			Shattered Dawn: Midst Souls in the Manor
+;	RQ
+;		Piercing the Darkness: Carving a Legacy
+;			Fixed a bug that was not ending Path Function for Sublime Pulverulence
+;			Changed pathing and added FastTravel
+;	RZ
+;		RZ will now attempt to resume your merc at the begging of each zone when in [Solo]
+;		RZ will now replenish your Will's upon using Will of Seru
+;		If Grouped RZ will now relay RZ AC or RZ SSC to all group members
+;	RI
+;		Sanctus Seru: Echelon of Order [Solo]
+;			Will now wait on each side at the beginning until the "an Echelon vigilant" are dead
+;		Added:
+;			The Fordel Midst: Wayward Manor
+;				pathing throughout zone
+;				Added:
+;					The Deadly Dapperling (RI Pull Dapperling)
+;						Lockspots and Targets named
+;					Eegut Stonegut (RI Pull Eegut)
+;						Spawns mob by pulling muck diggers into traps (uses ranged attack for this so if you one shot, simmer down)
+;						Lockspots and Targets named
+;					Yelloweyes (RI Pull Yelloweyes)
+;						Lockspots and Targets named
+;						Uses Bottle of Screaming Flames as needed
+;						Jousts
+;						Cures Correct Curses
+;					Tog Voil (RI Pull Voil)
+;						Lockspots and Targets named
+;						Ports as needed
+;					Famyra the Biblioghost (RI Pull Famyra)
+;						Lockspots and Targets named
+;						Kills tome's when needed
+
+;v6.35 Changes 11-6-20
+;	RI
+;		Fixed a bug that was not loadiong the zone file for The Fordel Midst: Wayward Manor in Heroic
+
+;v6.36 Changes 11-20-20
+;	RQ
+;		Modified:
+;			Shattered Dawn: Extinguish the Corrupted Light
+;				Will now enter the Solo version instead of the Heroic
+;			Shattered Dawn: Cast a Long Shadow
+;				Fixed a bug that was not ending the path function
+;				Tweaked the Reishi spores so it shouldnt try to go into the landscape
+;		Added:
+;			Traveler's Feast - Kylong Bean Casserole
+;			Traveler's Feast - Othmir Pepper Pasta
+;			Shattered Dawn: Going to Wrack and Ruins
+;			Shattered Dawn: Moments in the Sun
+;			Shattered Dawn: Puzzling Power in Ssraeshza
+;			Shattered Dawn: Vault in the Wound
+;	RZ
+;		Fixed expert and challenge code to only work in Blood of Luclin xpac
+;		Fixed Event Heroics to be listed and work as Event Heroics
+;		Added:
+;			The Ruins of Ssraeshza [Solo]
+;			The Ruins of Ssraeshza [Heroic]
+;			The Ruins of Ssraeshza [Expert]
+;			The Venom of Ssraeshza [Solo]
+;			The Venom of Ssraeshza [Event Heroic]
+;			The Venom of Ssraeshza [Expert]
+;			The Vault of Ssraeshza [Solo]
+;			The Vault of Ssraeshza [Heroic]
+;			The Vault of Ssraeshza [Expert]
+;			Fordel Midst: Bizarre Bazaar [Solo]
+;			Fordel Midst: Bizarre Bazaar [Heroic]
+;			Fordel Midst: Bizarre Bazaar [Expert]
+;	RI
+;		Fixed a bug that was crashing RI on other toons in Sanctus Seru: Arx Aeturnus
+;		Modified:
+;			Fordel Midst: Wayward Manor
+;				Tweaked Eegut Stonegut Pull function to be more reliable and hopefully less stucky
+;				Modified pathing to avoid getting stuck trying to get shinies (since ISXEQ2's CheckCollision is currently broken)
+;				Modified:
+;					Tog Voil
+;						should now more reliably click the portal on all Toons
+;		Added:
+;			The Ruins of Ssraeshza
+;				pathing throughout zone
+;				Added:
+;					The Architect of Ruin (RI Pull Ruin)
+;						Lockspots toons
+;					Vesshtri the Swordfang (RI Pull Vesshtri)
+;						Lockspots toons
+;						Jousts behind for Slicing Fangs
+;					Rath Brothers (RI Pull Rath)
+;						Lockspots toons
+;						Enters correct time of death
+;					Gorgorah the Shadowmania (RI Pull Gorgorah)
+;						Lockspots toons
+;						Stays in Bubble
+;					Kor Va Xian (RI Pull Xian)
+;						Lockspots toons
+;						Jousts knockback
+;						Paths toons out of the Darkness
+;						Destroys Bombs
+;			The Venom of Ssraeshza
+;				pathing throughout zone
+;				Added:
+;					Rhag'Sekez (RI Pull Sekez)
+;						Lockspots toons
+;						Moves Rhag'Sekez to equidistance between the orbs
+;					Rhag'Voreth (RI Pull Voreth)
+;						Lockspots toons
+;						Moves to correct orb locations
+;						Autotargets Adds
+;					Arch Nemesis Rhag'Nazza (RI Pull Nazza)
+;						Lockspots toons under water
+;						Either have water breathing or a healer merc
+;						will turn on Totem of the Otter if you have it
+;						Autotargets Adds
+;			The Vault of Ssraeshza
+;				pathing throughout zone
+;					Added:
+;						Nev Dax'Thall (RI Pull Nev)
+;							Lockspots Toons
+;							Clicks Orbs
+;						Gloombeast Azrinax (RI Pull Azrinax)
+;							Lockspots Toons
+;						Umbral Lord Yzo (RI Pull Yzo)
+;							Lockspots Toons
+;							Moves to rooms and kills shadowspren
+;						Shadow Rhozth Ikeshzi (RI Pull Ikeshzi)
+;							Lockspots Toons
+;						Shade of Vyzh'dra (RI Pull Shade)
+;							Lockspots Toons
+;			Fordel Midst: Bizarre Bazaar (You need to have completed this the first time and you must speak kerran)
+;				pathing throughout zone
+;					Added:
+;						Financier Fendilix (RI Pull Fendilix)
+;							Lockspots Toons
+;						Mandee Quin and Mannee Quin (RI Pull Quin)
+;							Lockspots Toons
+;						Short Shift (RI PUll Shift)
+;							Lockspots Toons
+;						Trade Baroness Elsindir (RI Pull Elsindir)
+;							Lockspots Toons
+;							Uses Cat's Eye Agate when appropriate
+;						Bazaar Baron Brixwald (RI Pull Brixwald)
+;							Lockspots Toons
+;							Uses Cat's Eye Agate when appropriate
+;							Uses Paludal Catnip when appropriate
+
+;v6.37 Changes 12-11-20
+;	CombatBot
+;		Should more reliable cast Bulwark on raid mobs please report any it misses along with the message it calls out
+;		Will now more reliably cast PostCasts when the effecting ability reset the reuse, 
+;			for example Levinbolt (Precast on Focused Blast) -> Focused Blast -> Levinbolt (Postcast on Focused Blast)
+;				in this example you only need Focused Blast in the Cast Stack and the Combo will cast nearly everytime
+;	RILoot
+;		Widened the Window and the AddedItems List to be more readable
+;	RI
+;		Modified
+;			Sanctus Seru: Echelon of Order
+;				Fixed a pathing bug
+;			Fordel Midst: Wayward Manor
+;				Tweaked spawn eegut routine
+;			Fordel Midst: Bizarre Bazaar
+;				Turns on round robin before Trade Baroness fight to ensure everyone loots their items
+;			The Venom of Ssrashza
+;				Modified pathing
+;				Removed puzzle and now just kills engineer (you must have completed the zone at least once in heroic)
+;				Modified:
+;					Rhag'Voreth
+;						will now stop for heals if anyone in the group is 50 or below
+;					Arch Nemesis Rhag'Nazza
+;						tweaked pull and movement routine
+;			The Vault of Ssraeshza
+;				Fixed a pathing bug
+;				Fixed a bug that would occasionally not move to the orbs
+;				Fixed a bug that would sometimes miss spawning Yzo
+;				Fixed a bug that would sometimes miss floor panels
+;			The Ruins of Ssraeshza
+;				Turned off Shinycollection in the Bridge area
+;				Will now teleport more reliably
+;				Rotating ramp room should be more reliable
+;				Clock will try a few more times to get correct and if it fails it will message you pause and wait
+
+;v6.38 Changes 11-28-20
+;	RZ
+;		Added:
+;			Grab Shinys CheckBox - when checked RI will find and loot shinys, will not when unchecked
+;			RII CheckBox - when checked RZ will start RII with the following arguments -start -loop -noui
+;				- This will start RI Inventory and loop through your List continuously until RZ is closed
+;				- it will also not display a ui, to bring up the RI Inventory ui just simply type RII
+;			Solo Button - Will remove all non solo zones from the RZ List listbox (Does not save)
+;				- this will also put RZ in Solo Mode and will not allow saving or modifying of the ListBox
+;			Heroic Button - Will remove all solo zones from the RZ List listbox (Does not save)
+;				- this will also put RZ in Heroic Mode and will not allow saving or modifying of the ListBox
+;	RI
+;		For now and until Amadeus fixes CheckCollision, RI will now disable looting of shinys,
+;		to turn on use RI_Var_Bool_GrabShinys:Set[1] or RIMUIObj:GrabShinys[1] <- Can be made into a button
+;		You can also add the command to a onevent for your MainToon in CB jsut make sure to encapsulate
+;		the command in "" so the command would be "RIMUIObj:GrabShinys[1]" for the OnLoad event
+;		Modified:
+;			Fordel Midst: Wayward Manor
+;				Fixed a bug that would crash SpawnEegut function when a group member is trapped
+;	RILoot
+;		When adding an item, will now keep the item and qty of item to ease in adding for multiple toons
+
+;v6.39 Changes 11-28-20
+;	RI
+;		Fordel Midst: Wayward Manor
+;			Fixed a bug that was turning on GrabShinys when RZ had it set to off
+;			Tog Voil (RI Pull Voil)
+;				Fixed a bug that was not recognizing what portal you were at if ended on the top floor
+;		Ruins of Ssraeshza
+;			Fixed a bug that was turning on GrabShinys when RZ had it set to off
+
+;v6.40 Changes 12-11-20
+;	RI:
+;		Starts RI_Overseer When extension loads
+;			type RIO to modify settings
+;		Added:
+;			Solusek Eye: The Calling
+;				pathing up to Qaaron the Usurper (not coded yet)
+;				Added:
+;					The Iron Widow (RI Pull Widow)
+;						Lockspots toon
+;						Autotargets window makers
+;					Novinctus (RI Pull Novinctus)
+;						Lockspots toons
+;					Dread Lady Vezarra (RI Pull Vezarra)
+;						Autotargets cages
+;					Chief Babagoosh (RI Pull Babagoosh)
+;						Lockspots toons
+;						Turns off cure curse
+;						called out toon will move distance away then call for curse curse
+;					Sickleclaw and Evisceraptor (RI Pull Sickleclaw)
+;						Lockspots toons
+;						Kills Evisceraptor then Sickleclaw
+;					Lord Commander Izeroth (RI Pull Izeroth)
+;						Lockspots toons
+;						Kills Xeri then Korvisaur then the Lord Commander
+;						Auto targets Korvisaur when he is knocked out
+;					Pyreduke Surtaug (RI Pull Surtaug)
+;						Lockspots toons
+;						Autotargets twisting flames
+;					Onakoome Onakoome
+;						Lockspots toons
+;						One healer lockspots 5 away
+;						only cursed that healer
+;						Autotargets ascended
+;					Galadoon Galadoon
+;						Lockspots toons
+;						Moves to toon needing cured and cures
+;						moves on top of Galadoon when Slag Diving and Autotargets slags
+;					Hortu the Scorched
+;						Lockspots toons
+;						Moves group to and kills scion's
+;						Moves group to opposite rings to spawn carpet
+;						Non Healer will attempt to jump on the carpet to activate scion
+;							This is not 100% reliable 
+;								but even when it fails it will still activate the scion
+;								toon will revive and rejoin the group if failure
+;					Ayquini the Firemind
+;						Lockspots toons
+;						Balances named's
+;						Targets and ranged kills dopplegangers
+;					Lord Kargurak
+;						Lockspots toons
+;						Autotargets guards
+;						crouchs and uncrouchs as necessary
+;						Moves to and click's / types name for RO Call
+;		Modified:
+;			The Ruins of Ssraeshza
+;				Modified:
+;					The Architect of Ruin
+;						Called out toon will now move off to the side
+;		Added Raid Coding:
+;			Rockhopper Pouncer (RI Pull Rockhopper)
+;				Lockspots toons
+;				Fighters Autotarget
+;				Scouts move behind
+;				Everyone Jousts as needed
+;			Praetorian K'Tikrn (RI Pull Praetorian)
+;				Lockspots toons
+;				Fighters Autotarget
+;				Scouts move behind
+;				Everyone Jousts as needed
+;			Thought Horror Overfiend (RI Pull Overfiend)
+;				Lockspots toons
+;				Fighters Autotarget
+;				Scouts move behind
+;				Everyone Jousts as needed
+;				Fighters move named as needed
+;			The Stonegrabber Colossus (RI Pull Stonegrabber)
+;				Lockspots toons
+;				Fighters Autotarget
+;				Group 1 Bard pops bubbles	
+;			The Sambata Champion
+;				Lockspots toons
+;				Fighters Autotarget
+;				Jousts as needed
+;				Fighters will cast stoneskins if availble for Stone Rain (only coded for guardian will add more soon)
+;	Added:
+;		RI_Overseer or RIO
+;			Script to auto complete / run overseer quests w/ UI
+;	RIMUI
+;		Added RIMUIObj Method's, Member's and *Button's
+;			*method OverseerRunNow(string ForWho=ALL)
+;				Runs Overseer check NOW
+;			*method OverseerGO(string ForWho=ALL)
+;				Go's and gets overseer charged quests based on ui settings
+;	CB
+;		Possess Essence will now Target Self for casting to ensure you get the best buff
+;	RZ
+;		Fixed a bug that would not allow right click to remove even when not in Heroic and Solo mode
+;		Added:
+;			now accepts unlimited arguments of:
+;				as an example you can start RZ and have it auto run your SOLO zones with the command
+;					RZ -START -SOLO
+;				if you are absolutely sure there is nothing in your zone lockout you want to hold onto you can
+;					RZ -START -SOLO -RESETALL
+;						this will run RZ in Solo Mode and Reset all Zones then RUN RZ all with 1 Click
+;				I have a Button called RZSolo in my RIMUI and with just 1 Hit of that button it will call my mercs and start rz
+;					this button is a execute multiple commands button and the commands are as follows:
+;						ALL
+;						"eq2ex merc resume"
+;						"rz -start -solo"
+;				I have a 2nd button called RZHeroic in my RIMUI and with just 1 Hit of that button it will invite my group and start rz
+;					this button is a execute multiple commands button and the commands are as follows:
+;						${Me.Name}
+;						"RIMUIObj:Invite[ALL]"  
+;							-- This command invites whover you have loaded in and are uplinked
+;						"TimedCommand 50 rz -start -heroic"  
+;							-- this gives time for the group to get invited before loading RZ
+;				-START 
+;					starts RZ with whatever options you have saved
+;				-SOLO
+;					puts RZ into Solo Mode
+;				-HEROIC
+;					puts RZ into Heroic Mode
+;				-NORESET
+;					does not reset all zones initially on start
+;				-RESETALLZONES
+;					**DANGEROUS** This option will reset ALL Zones in your in game zone lock window
+;									including raids
+
+;v6.41 Changes 12-12-20
+;	RZ
+;		Added:
+;			Familiars Wild
+;				This will fast travel to either qeynos or freeport
+;				and will start the quest and delete the quest and restart
+;				until it gets the insect version then runs it
+;					-will add more later
+;				will call back to the guild hall when complete
+;	RI
+;		Modified
+;			Fordel Midst: Bizarre Bazaar
+;				Now Only MainToon will hail Percy
+;			Solusek's Eye: The Calling
+;				Added zone pathing (for real this time)
+
+;156 432 336
+;						
 ;code for commision items
 ;relay all EQ2UIPage[Inventory,CommissionedWork].Child[button,buttonAccept]:LeftClick;TimedCommand 2 relay all EQ2UIPage[Tradeskills,Tradeskills].Child[button,SummaryPage.BeginButton]:LeftClick
 
@@ -4504,7 +4865,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.33
+variable(global) float RI_Var_Float_Version=6.41
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -4543,7 +4904,7 @@ variable(global) bool RI_Var_Bool_AcceptTrades=TRUE
 variable(global) bool RI_Var_Bool_SkipCheckToons=FALSE
 variable(global) bool RI_Var_Bool_SkipLoot=FALSE
 variable(global) bool RI_Var_Bool_BalanceTrash=TRUE
-variable(global) bool RI_Var_Bool_GrabShinys=TRUE
+variable(global) bool RI_Var_Bool_GrabShinys=FALSE
 variable(global) bool RI_Var_Bool_WaitForShinys=FALSE
 variable(global) index:string RI_Index_String_AvailableRIMUICommands
 variable(global) index:string RI_Index_String_AvailableRIMUICommandsDescription
@@ -6121,6 +6482,10 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[MoveTo - Moves to a Loc\nAccepts Unlimited Arguments in Sets of 5\nALL ARGUMENTS REQUIRED:\nArgument 1: For Who\nArgument 2: X\nArgument 3: Y\nArgument 4: Z\nArgument 5: Precision]
 	RI_Index_String_AvailableRIMUICommands:Insert[MultipleCommands]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[MultipleCommands - Executes multiple commands all in the same frame\n\nArgument 1: ForWho\nArguments 2+: Unlimited number of commands (eq2ex commands, isxeq2 commands or even any of the commands from RIMUI or ISXRI)]
+	RI_Index_String_AvailableRIMUICommands:Insert[OverseerRunNow]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[OverseerRunNow - Runs overseer check NOW\n\nArgument 1: ForWho]
+	RI_Index_String_AvailableRIMUICommands:Insert[OverseerGO]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[OverseerGO - Go's and gets charged quests according to ui settings\n\nArgument 1: ForWho]
 	RI_Index_String_AvailableRIMUICommands:Insert[PauseBot]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[PauseBot - Pauses whatever compatible bot you are running\n\nArgument 1: For Who\n]
 	RI_Index_String_AvailableRIMUICommands:Insert[PauseRI]
@@ -6177,7 +6542,7 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetMoveInFront - Turns on/off/toggles MoveInFront in CombatBot\nAccepts Unlimited Arguments in Sets of 4\nALL ARGUMENTS REQUIRED:\nArgument 1: For Who\nArgument 2: On/Off/Toggle (1/0/-1)\nArgument 3: Move Health\nArgument 4: Skip Move Health Check (TRUE/FALSE)]
 	RI_Index_String_AvailableRIMUICommands:Insert[SetRIFollow]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetRIFollow - Turns on RIFollow\n\nArgument 1: For Who (Default: ALL)\nArgument 2: On Who (Default: OFF)\nArgument 3: Min (Default: 1)\nArgument 4: Max (Default: 100)]
-		RI_Index_String_AvailableRIMUICommands:Insert[SetShinyScanDistance]
+	RI_Index_String_AvailableRIMUICommands:Insert[SetShinyScanDistance]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetShinyScanDistance - Sets the distance to scan for shinies\n\nArgument 1: Distance]
 	RI_Index_String_AvailableRIMUICommands:Insert[SetUISetting]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[SetUISetting - Turns on/off/toggles UISettings in CombatBot\nAccepts Unlimited Arguments in Sets of 3\nALL ARGUMENTS REQUIRED:\nArgument 1: For Who\nArgument 2: Setting Name\nArgument 3: On/Off/Toggle (1/0/-1)]
@@ -6300,6 +6665,9 @@ function main()
 		wait 50
 	}
 	
+	;start ri overseer
+	RI_Overseer
+
 	;load ui
 	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RILoot.xml"
@@ -6446,47 +6814,58 @@ function main()
 											;if we find the Item of ChildCounter in our AddedItemsListbox
 											if ${RI_Var_Bool_LootDebug}
 												echo Checking #${AILCounter} of ${UIElement[AddedItemsListbox@RILoot].Items}: Checking ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText]} //${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]} // ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Find["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}"](exists)}
+											
 											if ${LootWindow.ItemsPage.Child[${ChildrenCounter}].GetProperty[LocalText].Find["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}"](exists)}
 											{
-												;now check if the toon associated is in our group and if the QTY is either ~ or < LootedTextEntry@RILoot
-												if ${RI_Var_Bool_LootDebug}
-													echo Checking #${AILCounter} of ${UIElement[AddedItemsListbox@RILoot].Items}: ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text} // ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]} ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} > ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
-												if ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} > ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
+												if ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|].Equals["*WAIT*"]}
 												{
-													;increment our Foundvar
-													FoundVar:Inc
-													;set the group member box to this toon and send over the item as well as increment the Looted
-													noop ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
-													wait 5
+													;sound Alarm and throw a messagebox on ALL Sessions
+													relay ALL MessageBox -skin eq2 "${Me.Name} Found ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} WAITING"
+													while ${Actor[Exquisite Chest,radius,7](exists)}
+														wait 1
+												}
+												else
+												{
+													;now check if the toon associated is in our group and if the QTY is either ~ or < LootedTextEntry@RILoot
 													if ${RI_Var_Bool_LootDebug}
-														echo Setting GroupMember ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
-													if ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
+														echo Checking #${AILCounter} of ${UIElement[AddedItemsListbox@RILoot].Items}: ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text} // ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]} : ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]} ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} > ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
+													if ${Me.Group["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"](exists)} && ( ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|].Equals[~]} || ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}]} > ${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]} )
 													{
+														;increment our Foundvar
+														FoundVar:Inc
+														;set the group member box to this toon and send over the item as well as increment the Looted
+														noop ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
+														wait 5
 														if ${RI_Var_Bool_LootDebug}
-															echo Setting Looted +1 for ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text}
+															echo Setting GroupMember ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
+														if ${RILootObj.SetGroupMember["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}"]}
+														{
+															if ${RI_Var_Bool_LootDebug}
+																echo Setting Looted +1 for ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text}
+																
+															;set looted +1
+															UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}]:SetText["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}|${Math.Calc[${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]}+1].Precision[0]}"]
+															;save and reload to All
+															RILootObj:SaveList
+															relay "all other" RILootObj:LoadAddedItems
+															wait 5
 															
-														;set looted +1
-														UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}]:SetText["${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[1,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]}|${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[3,|]}|${Math.Calc[${Int[${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[4,|]}]}+1].Precision[0]}"]
-														;save and reload to All
-														RILootObj:SaveList
-														relay "all other" RILootObj:LoadAddedItems
-														wait 5
-														
-														;Assign the loot
-														LootWindow.ItemsPage.Child[${ChildrenCounter}]:LeftClick
-														LootWindow.LeaderAssign:LeftClick
-														wait 5
-														relay "other ${RI_Var_String_RelayGroup}" LootWindow:RequestAll
-														relay "other ${RI_Var_String_RelayGroup}" LootWindow:LootAll
-														wait 5
-														;relay "other ${RI_Var_String_RelayGroup}" LootWindow:Receive
-														;set our counter over the break to end the for loop
-														AILCounter:Set[${Math.Calc[${UIElement[AddedItemsListbox@RILoot].Items}+1]}]
-													}
-													else
-													{
-														AILCounter:Dec
-														continue
+															;Assign the loot
+															LootWindow.ItemsPage.Child[${ChildrenCounter}]:LeftClick
+															LootWindow.LeaderAssign:LeftClick
+															wait 5
+															relay "other ${RI_Var_String_RelayGroup}" LootWindow:RequestAll
+															relay "other ${RI_Var_String_RelayGroup}" LootWindow:LootAll
+															wait 5
+															;relay "other ${RI_Var_String_RelayGroup}" LootWindow:Receive
+															;set our counter over the break to end the for loop
+															AILCounter:Set[${Math.Calc[${UIElement[AddedItemsListbox@RILoot].Items}+1]}]
+														}
+														else
+														{
+															AILCounter:Dec
+															continue
+														}
 													}
 												}
 											}
@@ -6657,6 +7036,10 @@ atom EQ2_onLootWindowAppeared(string LootWindowID)
 atom EQ2_onIncomingText(string Text)
 {
 	if ${Text.Find["Not a valid chest to summon!"](exists)} || ${Text.Find["There are no chests in range for you to summon"](exists)} || ${Text.Find["This treasure chest is locked and you do not have a key"](exists)}
+	{
+		RI_Var_Bool_BadChestTrigger:Set[1]
+	}
+	if ${Text.Find["You already have"](exists)} && ${Text.Find["Spirit of the Cat"](exists)} && ${Zone.Name.Find["Fordel Midst: Bizarre Bazaar [Solo]"]}
 	{
 		RI_Var_Bool_BadChestTrigger:Set[1]
 	}
@@ -6884,7 +7267,7 @@ objectdef RILootObject
 					do
 					{
 						;;echo ${Iterator2.Key} // ${Iterator2.Value}
-						UIElement[ToonsListbox@RILoot]:AddItem[${Iterator2.Key}]
+						UIElement[ToonsListbox@RILoot]:AddItem["${Iterator2.Key}"]
 					}
 					while ${Iterator2:Next(exists)}
 				}
@@ -6912,7 +7295,7 @@ objectdef RILootObject
 				do
 				{
 					;;echo "${SettingIterator.Key}=${SettingIterator.Value}"
-					UIElement[ItemsListbox@RILoot]:AddItem[${SettingIterator.Key}]
+					UIElement[ItemsListbox@RILoot]:AddItem["${SettingIterator.Key}"]
 				}
 				while ${SettingIterator:Next(exists)}
 			}
@@ -6939,7 +7322,7 @@ objectdef RILootObject
 				do
 				{
 					;echo "${SettingIterator.Key}=${SettingIterator.Value}"
-					UIElement[AddedItemsListbox@RILoot]:AddItem[${SettingIterator.Key}]
+					UIElement[AddedItemsListbox@RILoot]:AddItem["${SettingIterator.Key}"]
 				}
 				while ${SettingIterator:Next(exists)}
 			}
@@ -6949,7 +7332,7 @@ objectdef RILootObject
 	{
 		if ${UIElement[ItemsListbox@RILoot].SelectedItem.ID(exists)}
 		{
-			UIElement[ItemTextEntry@RILoot]:SetText[${UIElement[ItemsListbox@RILoot].SelectedItem}]
+			UIElement[ItemTextEntry@RILoot]:SetText["${UIElement[ItemsListbox@RILoot].SelectedItem}"]
 		}
 	}
 	method ItemsListboxRightClick()
@@ -6974,7 +7357,7 @@ objectdef RILootObject
 		if ${UIElement[AddedItemsListbox@RILoot].SelectedItem.ID(exists)}
 		{
 			UIElement[AddButton@RILoot]:SetText[Edit]
-			UIElement[ItemTextEntry@RILoot]:SetText[${UIElement[AddedItemsListbox@RILoot].SelectedItem.Text.Token[1,|]}]
+			UIElement[ItemTextEntry@RILoot]:SetText[${UIElement["AddedItemsListbox@RILoot].SelectedItem.Text.Token[1,|]}"]
 			UIElement[GroupTextEntry@RILoot]:SetText[${UIElement[AddedItemsListbox@RILoot].SelectedItem.Text.Token[2,|]}]
 			UIElement[QuantityTextEntry@RILoot]:SetText[${UIElement[AddedItemsListbox@RILoot].SelectedItem.Text.Token[3,|]}]
 			UIElement[LootedTextEntry@RILoot]:SetText[${UIElement[AddedItemsListbox@RILoot].SelectedItem.Text.Token[4,|]}]
@@ -7067,7 +7450,15 @@ objectdef RILootObject
 				if ${DNE}
 					UIElement[AddedItemsListbox@RILoot]:AddItem["${UIElement[ItemTextEntry@RILoot].Text}|${UIElement[GroupTextEntry@RILoot].Text}|${UIElement[QuantityTextEntry@RILoot].Text}|${UIElement[LootedTextEntry@RILoot].Text}"]
 			}
-			This:Clear
+			;UIElement[ItemTextEntry@RILoot]:SetText[""]
+			UIElement[GroupTextEntry@RILoot]:SetText[""]
+			;UIElement[QuantityTextEntry@RILoot]:SetText[""]
+			UIElement[LootedTextEntry@RILoot]:SetText[0]
+			UIElement[ItemsListbox@RILoot]:ClearSelection
+			UIElement[ToonsListbox@RILoot]:ClearSelection
+			UIElement[AddedItemsListbox@RILoot]:ClearSelection
+			UIElement[AddButton@RILoot]:SetText[Add]
+			UIElement[AddButton@RILoot]:SetFocus
 			This:SaveList
 			relay "all other" RILootObj:LoadAddedItems
 		}
@@ -7520,7 +7911,10 @@ objectdef RIMovementObject
 		
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Starting CheckShiny
-		RI_Var_Int_ShinyID:Set[${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].ID}]
+		if ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].X}==-123.940010 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Y}==180.789993 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Z}==-211.589996
+			RI_Var_Int_ShinyID:Set[0]
+		else
+			RI_Var_Int_ShinyID:Set[${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].ID}]
 		if ${RI_Var_Int_ShinyID}==0 || ${RIMUIObj.InvalidShinyCheck[${RI_Var_Int_ShinyID}]}
 		{
 			if ${RI_Var_Loot_Debug}
@@ -8451,6 +8845,20 @@ objectdef RIConsoleObject
 }
 objectdef RIMUIObject
 {
+	method OverseerRunNow(string _ForWho=ALL)
+	{
+		if ${This.ForWhoCheck[${_ForWho}]}
+		{
+			RIOverseerObj:RunNow
+		}
+	}
+	method OverseerGO(string _ForWho=ALL)
+	{
+		if ${This.ForWhoCheck[${_ForWho}]}
+		{
+			RIOverseerObj:GO
+		}
+	}
 	member(bool) QuestStepExists(string _QuestStep, bool _isChecked=FALSE)
 	{
 		variable index:collection:string Details    
@@ -9703,6 +10111,9 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Butcherblock Pumpkin Bread"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Dervish Squash Curry"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Sky Cake"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Mara Mandaikon Kakiage"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Kylong Bean Casserole"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Othmir Pepper Pasta"]
 			}
 			elseif ${_CatName.Equal[Chaos Descending]}
 			{
@@ -9720,6 +10131,7 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Blood of Luclin]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["Familiars Wild"]
 				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: The Vault of Omens"]
 				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: Spires of Mythic Passage"]
 				UIElement[QuestsListBox@RI]:AddItem[Blood of Luclin Timeline,0,FFE8E200]
@@ -9731,6 +10143,11 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Cast a Long Shadow]
 				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Burn the Midnight Oil]
 				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Battle of the Nexus]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Midst Souls in the Manor]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Going to Wrack and Ruins]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Moments in the Sun]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Puzzling Power in Ssraeshza]
+				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Vault in the Wound]
 				UIElement[QuestsListBox@RI]:AddItem[Blood of Luclin Tradeskill Timeline,0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Carving a Legacy]
 				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Monuments of Mythic Passage]

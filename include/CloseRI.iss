@@ -6,6 +6,8 @@ function main()
 	;if the scripts are running, End them
 	if ${Script[Buffer:RIMovement](exists)}
 		Script[Buffer:RIMovement]:End
+	if ${Script[Buffer:RIOverseer](exists)}
+		Script[Buffer:RIOverseer]:End
 	if ${Script[Buffer:RIMovementUI](exists)}
 		Script[Buffer:RIMovementUI]:End
 	if ${Script[Buffer:RunInstances](exists)}

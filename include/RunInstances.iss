@@ -58,7 +58,8 @@ variable string GarbageCollector
 variable string AddName
 variable bool KillAdd
 variable bool LockForCombat=TRUE
-variable bool DontStopForCombat=FALSE
+variable bool StopForCombat=TRUE
+variable bool ClearTarget=TRUE
 variable bool Trigger=FALSE
 
 variable bool MoveBehind=FALSE
@@ -521,8 +522,8 @@ atom(global) RI_Atom_AutoLoot(bool TF)
 atom EQ2_onQuestOffered(string Name, string Description, int Level, int StatusReward)
 {
 	if ${RewardWindow.NumRewards}<=1
-		relay ${RI_Var_String_RelayGroup} RewardWindow:AcceptReward
-	relay ${RI_Var_String_RelayGroup} EQ2:AcceptPendingQuest
+		TimedCommand 5 relay ${RI_Var_String_RelayGroup} RewardWindow:AcceptReward
+	TimedCommand 7 relay ${RI_Var_String_RelayGroup} EQ2:AcceptPendingQuest
 	TimedCommand 10 QuestJournalWindow.ActiveQuest[${Name}]:Share
 }
 ;atom triggered when an announcement is detected
@@ -1584,6 +1585,65 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 				istrMain:Insert[${FordelMidstTheListlessSpires[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
+		case Fordel Midst: Wayward Manor [Solo]
+		case Fordel Midst: Wayward Manor [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO FordelMidstWaywardManor 
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[FordelMidstWaywardManor]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${FordelMidstWaywardManor[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${FordelMidstWaywardManor[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case The Ruins of Ssraeshza [Solo]
+		case The Ruins of Ssraeshza [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO TheRuinsofSsraeshza 
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[TheRuinsofSsraeshza]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheRuinsofSsraeshza[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${TheRuinsofSsraeshza[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case The Venom of Ssraeshza [Solo]
+		case The Venom of Ssraeshza [Event Heroic]
+		{
+			RI_CMD_Hidden_AddTLO TheVenomofSsraeshza 
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[TheVenomofSsraeshza]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheVenomofSsraeshza[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${TheVenomofSsraeshza[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case The Vault of Ssraeshza [Solo]
+		case The Vault of Ssraeshza [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO TheVaultofSsraeshza 
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[TheVaultofSsraeshza]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheVaultofSsraeshza[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${TheVaultofSsraeshza[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Fordel Midst: Bizarre Bazaar [Solo]
+		case Fordel Midst: Bizarre Bazaar [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO FordelMidstBizarreBazaar 
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[FordelMidstBizarreBazaar]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${FordelMidstBizarreBazaar[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${FordelMidstBizarreBazaar[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Solusek's Eye: The Calling [Heroic]
+		{
+			RI_CMD_Hidden_AddTLO SoluseksEyeTheCallingHeroic 
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[SoluseksEyeTheCallingHeroic]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SoluseksEyeTheCallingHeroic[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${SoluseksEyeTheCallingHeroic[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
 		default
 		{
 			if ${Zone.Name.Equal["Brackish Vaults [Solo]"]} || ${Zone.Name.Equal["Brackish Vaults [Duo]"]}
@@ -1804,9 +1864,13 @@ function Go(bool _Quest=FALSE)
 			echo ${Time}: "${MainArrayCounter}: ${LineRead}//${LineRead.Length}"
 		}
 		if ${LineRead.Left[17].Equal[DontStopForCombat]}
-			DontStopForCombat:Set[TRUE]
+			StopForCombat:Set[FALSE]
 		elseif ${LineRead.Left[13].Equal[StopForCombat]}
-			DontStopForCombat:Set[FALSE]
+			StopForCombat:Set[TRUE]
+		elseif ${LineRead.Left[17].Equal[DontClearTarget]}
+			ClearTarget:Set[FALSE]
+		elseif ${LineRead.Left[13].Equal[ClearTarget]}
+			ClearTarget:Set[TRUE]
 		elseif ${LineRead.Left[6].Equal[Custom]}
 		{
 			MainArrayCounter:Inc
@@ -1907,15 +1971,12 @@ function CustomFunction(string arg1="", string arg2="", string arg3="", string a
 	;move to custom location
 	if !${CustomLoc.Find["0 0 0"]} && !${CustomFunction.Find[WaitForZoning](exists)}
 	{
-		if ${DontStopForCombat}
-			call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE FALSE TRUE FALSE TRUE
-		else
-			call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE
+			call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE ${StopForCombat} TRUE FALSE TRUE
 	}
 	call MakeCurrentActiveQuest
 	call ${CustomFunction} ${arg1} ${arg2} ${arg3} ${arg4} ${arg5}
 	wait 5
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 }
 function FlyDown(bool _AllToons=TRUE)
@@ -1929,17 +1990,14 @@ function WaitFunction()
 	;move to custom location
 	if ${WaitLoc.NotEqual["0 0 0"]}
 	{
-		if ${DontStopForCombat}
-			call RIMObj.Move ${WaitLoc} ${Precision} 0 TRUE FALSE TRUE FALSE TRUE
-		else
-			call RIMObj.Move ${WaitLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE
+		call RIMObj.Move ${WaitLoc} ${Precision} 0 TRUE ${StopForCombat} TRUE FALSE TRUE
 	}
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 	if ${RI_Var_Bool_Debug}
 		echo ${Time}: Wait ${WaitTime}
 	wait ${WaitTime}
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 }
 atom(global) RI_Atom_RIXMLClose()
@@ -1953,12 +2011,15 @@ function ClickActorFunction()
 		endscript Buffer:CoT
 	
 	RI_Var_Bool_Follow:Set[FALSE]
-	relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call RIMObj.Move ${ClickActorLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE"]
-	call RIMObj.Move ${ClickActorLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE
+	if ${ClickActorLoc.NotEqual["0 0 0"]}
+	{
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call RIMObj.Move ${ClickActorLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE"]
+		call RIMObj.Move ${ClickActorLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE
+	}
 	wait 20
 	;stop follow
 	call RIMObj.stopfollow
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 	;echo Clicking: ${ClickActorName}
 	variable int _ID=${Actor[Query, Name=-"${ClickActorName}"].ID}
@@ -1969,7 +2030,7 @@ function ClickActorFunction()
 	wait 5
 	relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
 	wait 20
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 	;cancel others movement if they are still trying to move
 	;to avoid ping ponging
@@ -1999,7 +2060,7 @@ function HailActorFunction()
 	if ${Actor[${HailActorName},radius,20](exists)}
 	{
 		;wait until we are out of combat
-		if !${DontStopForCombat}
+		if ${StopForCombat}
 			call RIMObj.CheckCombat
 		;wait 10
 		;pause bots
@@ -2017,7 +2078,7 @@ function HailActorFunction()
 		;unpause bots
 		relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
 	}
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 	;follow
 	call RIMObj.follow
@@ -2027,10 +2088,7 @@ function HailActorFunction()
 function NamedFunction()
 {
 	;move to Named location
-	if ${DontStopForCombat}
-		call RIMObj.Move ${NamedLoc} ${Precision} 0 TRUE FALSE TRUE FALSE TRUE
-	else
-		call RIMObj.Move ${NamedLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE
+	call RIMObj.Move ${NamedLoc} ${Precision} 0 TRUE ${StopForCombat} TRUE FALSE TRUE
 	wait 10
 	if ${StandardNamed}
 	{
@@ -2146,7 +2204,7 @@ objectdef RunInstancesObject
 		{
 			for(counter:Set[${CurrentArrayPosition}];${counter}>=${Math.Calc[${CurrentArrayPosition}-${_HowManyPoints}]};counter:Dec)
 			{
-				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>${_HowManyPoints} && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
+				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[ClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>${_HowManyPoints} && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 				{
 					;echo Checking ${counter}:: ${istrMain.Get[${counter}].Replace[" ",","]} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 					if ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} && ( !${EQ2.CheckCollision[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]} || !${_CheckCollision} )
@@ -2163,7 +2221,7 @@ objectdef RunInstancesObject
 		{
 			for(counter:Set[${CurrentArrayPosition}];${counter}<=${Math.Calc[${CurrentArrayPosition}+${_HowManyPoints}]};counter:Inc)
 			{
-				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>${_HowManyPoints} && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
+				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[ClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>${_HowManyPoints} && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 				{
 					;echo Checking ${counter}:: ${istrMain.Get[${counter}].Replace[" ",","]} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 					if ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} && ( !${EQ2.CheckCollision[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]} || !${_CheckCollision} )
@@ -2226,6 +2284,17 @@ objectdef RunInstancesObject
 				Me.Maintained[Singular Focus]:Cancel
 		}
 		
+	}
+	member:int LowestGroupHealth()
+	{
+		variable int _cnt=0
+		variable int _lowestHealth=100
+		for(_cnt:Set[0];${_cnt}<${Me.Group};_cnt:Inc)
+		{
+			if ${Me.Group[${_cnt}].Health}<${_lowestHealth}
+				_lowestHealth:Set[${Me.Group[${_cnt}].Health}]
+		}
+		return ${_lowestHealth}
 	}
 	function Target(... args)
 	{
@@ -2366,13 +2435,13 @@ objectdef RunInstancesObject
 			call MoveBehind 1
 		}
 	}
-	function MageAbsorbMagic(int _ID, int _MainIconID=-1)
+	function MageAbsorbMagic(int _ID, int _MainIconID=-1, int _Increments=0)
 	{
 		;if we are a mage watch for spell's MainIconID and cast absorb magic
 		if ${Me.Archetype.Equal[mage]}
 		{
 			;if we see The MainIconID of the Ability on Named, pause bot, stop casting and cast Absorb Magic
-			if ( ${RIMUIObj.MainIconIDExists[${_ID},${_MainIconID}]} || ${_MainIconID}==-1 ) && ${Me.Ability[id,1812025739].IsReady}
+			if ( ${_MainIconID}==-1 || ( ${RIMUIObj.MainIconIDExists[${_ID},${_MainIconID}]} && ${_Increments}==0 ) || ( ${Actor[id,${_ID}].Effect[${RIMUIObj.MainIconIDExists[${_ID},${_MainIconID}]}].CurrentIncrements}>=${_Increments} ) ) && ${Me.Ability[id,1812025739].IsReady}
 			{
 				if ${RI_Var_Bool_Debug}
 					echo ISXRI: ${Time}: MainIconID: ${_MainIconID} Found or none required
@@ -2506,7 +2575,7 @@ objectdef RunInstancesObject
 			while ${_ZonesIterator:Next(exists)}
 		}
 	}
-	member(int) RowByName(string _ZoneName)
+	member:int RowByName(string _ZoneName)
 	{
 		variable iterator _ZonesIterator
 		ZoneList:GetIterator[_ZonesIterator]
@@ -2581,8 +2650,9 @@ objectdef RunInstancesObject
 			return 0
 	}
 	variable int ScriptTargetTime=0
-	method BalanceMobs(string MobName=ALL)
+	method BalanceMobs(string MobName=ALL, int BalanceNum=2, int WaitTime=5000)
 	{
+		;echo BalanceMobs(string MobName=${MobName}, int BalanceNum=${BalanceNum}, int WaitTime=${WaitTime})
 		if !${RI_Var_Bool_BalanceTrash}
 			return
 		variable index:actor ActorIndex
@@ -2598,20 +2668,20 @@ objectdef RunInstancesObject
 			
 		ActorIndex:GetIterator[ActorIterator]
 		
-		
+		;echo ${ActorIndex.Used}
 		if ${ActorIterator:First(exists)}
 		{
 			do
 			{
 				;if the actor's health is higher than BalanceMobWithHighestHealth
 				;set them to BalanceMobWithHighestHealth
-				if ${ActorIterator.Value.Health}>${Math.Calc[${Actor[${BalanceMobWithHighestHealth}].Health}+2]}
+				if ${ActorIterator.Value.Health}>${Math.Calc[${Actor[${BalanceMobWithHighestHealth}].Health}+${BalanceNum}]}
 					BalanceMobWithHighestHealth:Set[${ActorIterator.Value.ID}]
 			}
 			while ${ActorIterator:Next(exists)}
 			;if i am not targeting BalanceMobWithHighestHealth and it is not 0 and exists
 			;target BalanceMobWithHighestHealth
-			if ${Target.ID}!=${BalanceMobWithHighestHealth} && ${BalanceMobWithHighestHealth}!=0 && ${Actor[${BalanceMobWithHighestHealth}](exists)} && !${Actor[${BalanceMobWithHighestHealth}].IsDead} && ${Script.RunningTime}>${Math.Calc[${ScriptTargetTime}+5000]}
+			if ${Target.ID}!=${BalanceMobWithHighestHealth} && ${BalanceMobWithHighestHealth}!=0 && ${Actor[${BalanceMobWithHighestHealth}](exists)} && !${Actor[${BalanceMobWithHighestHealth}].IsDead} && ${Script.RunningTime}>${Math.Calc[${ScriptTargetTime}+${WaitTime}]}
 			{
 				;echo ${Time}: Targeting ${BalanceMobWithHighestHealth} / ${Actor[${BalanceMobWithHighestHealth}]} Health: ${Actor[${BalanceMobWithHighestHealth}].Health}
 				Actor[${BalanceMobWithHighestHealth}]:DoTarget
@@ -2619,7 +2689,7 @@ objectdef RunInstancesObject
 			}
 		}
 	}
-	member(bool) QuestStepExists(string _QuestStep, bool _isChecked=FALSE)
+	member:bool QuestStepExists(string _QuestStep, bool _isChecked=FALSE)
 	{
 		variable index:collection:string Details    
 		variable iterator DetailsIterator
@@ -2671,7 +2741,7 @@ objectdef RunInstancesObject
 			return FALSE
 	}
 	
-	member(bool) QuestExists(string _QuestName)
+	member:bool QuestExists(string _QuestName)
 	{
 		variable index:quest Quests
 		variable iterator QuestsIterator
@@ -2693,7 +2763,7 @@ objectdef RunInstancesObject
 		}
 		return FALSE
 	}
-	member(bool) CompletedQuestExists(string _QuestName)
+	member:bool CompletedQuestExists(string _QuestName)
 	{
 		variable index:quest Quests
 		variable iterator QuestsIterator
@@ -2719,25 +2789,32 @@ objectdef RunInstancesObject
 	{
 		Script:End
 	}
+	method QueueCommand(string _ForWho, string _ScriptName, string _Command, string _args)
+	{
+		echo QueueCommand(string _ForWho=${_ForWho}, string _ScriptName=${_ScriptName}, string _Command=${_Command}, string _args=${_args})
+		if ${RIMUIObj.ForWhoCheck["${_ForWho}"]}
+			Script[${_ScriptName}]:QueueCommand["${_Command} ${_args}"]
+	}
 }
 
 ;EndForFunction
 function EndForFunction()
 {
 	if ${LineRead.Equal[DontStopForCombat]}
-		DontStopForCombat:Set[TRUE]
+		StopForCombat:Set[FALSE]
 	elseif ${LineRead.Equal[StopForCombat]}
-		DontStopForCombat:Set[FALSE]
-	elseif ${LineRead.NotEqual[Custom]} && ${LineRead.NotEqual[Wait]} && ${LineRead.NotEqual[ClickActor]} && ${LineRead.NotEqual[HailActor]} && ${LineRead.NotEqual[Named]} && ${LineRead.NotEqual[DontStopForCombat]} && ${LineRead.NotEqual[StopForCombat]} && ${LineRead.NotEqual[StartQuest]} && ${LineRead.NotEqual[StopQuest]} && ${LineRead.NotEqual[NULL]}
+		StopForCombat:Set[TRUE]
+	elseif ${LineRead.Equal[DontClearTarget]}
+		ClearTarget:Set[FALSE]
+	elseif ${LineRead.Equal[ClearTarget]}
+		ClearTarget:Set[TRUE]
+	elseif ${LineRead.NotEqual[Custom]} && ${LineRead.NotEqual[Wait]} && ${LineRead.NotEqual[ClickActor]} && ${LineRead.NotEqual[HailActor]} && ${LineRead.NotEqual[Named]} && ${LineRead.NotEqual[DontStopForCombat]} && ${LineRead.NotEqual[StopForCombat]} && ${LineRead.NotEqual[DontClearTarget]} && ${LineRead.NotEqual[ClearTarget]} && ${LineRead.NotEqual[StartQuest]} && ${LineRead.NotEqual[StopQuest]} && ${LineRead.NotEqual[NULL]}
 	{
 		if ${RI_Var_Bool_Debug}
 			echo ${Time}: Move ${LineRead}
 		if ${LineRead.NotEqual["0 0 0"]}
 		{
-			if ${DontStopForCombat}
-				call RIMObj.Move ${LineRead} ${Precision} 0 TRUE FALSE FALSE TRUE TRUE
-			else
-				call RIMObj.Move ${LineRead} ${Precision} 0 TRUE TRUE FALSE TRUE TRUE
+			call RIMObj.Move ${LineRead} ${Precision} 0 ${ClearTarget} ${StopForCombat} FALSE TRUE TRUE
 		}
 	}
 	wait 1
@@ -2789,7 +2866,7 @@ function FindClosestWaypoint(string InputArrayElement)
 	elseif ${InputArrayElement.Equal[ReturnLOCS]}
 		MainArrayCounter:Set[${istrMain.Used}]
 	;found waypoint on line call waypointchecker
-	elseif ${InputArrayElement.NotEqual[Custom]} && ${InputArrayElement.NotEqual[Wait]} && ${InputArrayElement.NotEqual[ClickActor]} && ${InputArrayElement.NotEqual[HailActor]} && ${InputArrayElement.NotEqual[Named]} && ${InputArrayElement.NotEqual[CustomNamed]} && ${InputArrayElement.NotEqual[StandardNamed]} && ${InputArrayElement.NotEqual[SameLock]} && ${InputArrayElement.NotEqual[DontMoveBehind]} && ${InputArrayElement.NotEqual[MoveBehind]} && ${InputArrayElement.NotEqual[StopForCombat]} && ${InputArrayElement.NotEqual[DontStopForCombat]} && ${InputArrayElement.NotEqual[DontKillAdd]} && ${InputArrayElement.NotEqual[ReturnLOCS]} && ${InputArrayElement.NotEqual["0 0 0"]} && ${InputArrayElement.Length}>10
+	elseif ${InputArrayElement.NotEqual[Custom]} && ${InputArrayElement.NotEqual[Wait]} && ${InputArrayElement.NotEqual[ClickActor]} && ${InputArrayElement.NotEqual[HailActor]} && ${InputArrayElement.NotEqual[Named]} && ${InputArrayElement.NotEqual[CustomNamed]} && ${InputArrayElement.NotEqual[StandardNamed]} && ${InputArrayElement.NotEqual[SameLock]} && ${InputArrayElement.NotEqual[DontMoveBehind]} && ${InputArrayElement.NotEqual[MoveBehind]} && ${InputArrayElement.NotEqual[StopForCombat]} && ${InputArrayElement.NotEqual[DontStopForCombat]} && ${InputArrayElement.NotEqual[ClearTarget]} && ${InputArrayElement.NotEqual[DontClearTarget]} && ${InputArrayElement.NotEqual[DontKillAdd]} && ${InputArrayElement.NotEqual[ReturnLOCS]} && ${InputArrayElement.NotEqual["0 0 0"]} && ${InputArrayElement.Length}>10
 		call WaypointChecker ${InputArrayElement}
 }
 function WaypointChecker(float WX, float WY, float WZ)
@@ -2994,6 +3071,15 @@ function Named(string Name, bool Lock, float LockMXN, float LockMYN, float LockM
 			RI_CoT
 		;Script[Buffer:AggroControl].Variable[TrashTargeting]:Set[TRUE]
 	}
+}
+function GrabShinys(int _OnOff)
+{
+	if ${Script[${RI_Var_String_RZScriptName}](exists)} && ${_OnOff} && !${UIElement[GrabShinysCheckBox@RZ].Checked}
+		return
+	;;;;; This code can be removed once amadeus fixes CheckCollision
+	if ${_OnOff}
+		return
+	relay ${RI_Var_String_RelayGroup} RI_Var_Bool_GrabShinys:Set[${_OnOff}]
 }
 function LootChest()
 {
@@ -3201,6 +3287,10 @@ function WaitForMob(string WMName, int WMDistance=100, bool Aggro=FALSE, bool Ch
 }
 function WaitForMobAway(string WMName, int WMDistance=100)
 {
+	call WaitForMobExists "${WMName}" ${WMDistance}
+}
+function WaitForMobExists(string WMName, int WMDistance=100)
+{
 	;set ID number of closest mob named WMName
 	;wait for mob to exist
 	relay "${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[ALL,${Me.X},${Me.Y},${Me.Z}]
@@ -3222,24 +3312,7 @@ function PreHeal(int _FighterStoneSkin=0)
 		return
 	if ${Me.Archetype.Equal[fighter]} && ${_FighterStoneSkin}>0
 	{
-		switch ${Me.SubClass}
-		{
-			case guardian
-			{
-				wait 60
-				RI_Obj_CB:Cast[Unyielding Will,1]
-				wait 5
-				RI_Obj_CB:Cast[Last Man Standing,1]
-				TimedCommand 100 RI_Obj_CB:Cast[Perfect Counter,1]
-			}
-			case monk
-			{
-				wait 60
-				RI_Obj_CB:Cast[Tsunami,1]
-				wait 5
-				RI_Obj_CB:Cast[Brawler's Tenacity,1]
-			}
-		}
+		call FighterStoneskin
 	}
 	wait 20
 	if ${Me.Class.Equal[druid]}
@@ -3250,7 +3323,47 @@ function PreHeal(int _FighterStoneSkin=0)
 	else
 		wait 70
 }
-
+function FighterStoneskin()
+{
+	switch ${Me.SubClass}
+	{
+		case guardian
+		{
+			;echo Guard
+			if ${Me.Ability[id,2822291254].IsReady}
+			{
+				;echo LMS
+				do
+				{
+					RI_Obj_CB:Cast[Last Man Standing,1]
+					wait 1
+				}
+				while ${Me.Ability[id,2822291254].TimeUntilReady}<1
+			}
+			elseif ${Me.Ability[id,2660262412].IsReady}
+			{
+				;echo PC
+				do
+				{
+					RI_Obj_CB:Cast[Perfect Counter,1]
+					wait 1
+				}
+				while ${Me.Ability[id,2660262412].TimeUntilReady}<1
+			}
+			elseif ${Me.Ability[id,1110318339].IsReady}
+			{
+				;echo TOS
+				do
+				{
+					RI_Obj_CB:Cast[Tower of Stone,1]
+					wait 1
+				}
+				while ${Me.Ability[id,1110318339].TimeUntilReady}<1
+			}
+			break
+		}
+	}
+}
 ;script to change loot options
 function LootOptions(string Options)
 {
@@ -3301,8 +3414,11 @@ function LootOptions(string Options)
 ;script to target a specific mob
 function Target(string TName, bool StayTargeted, int Distance=1000, bool _NoKillNPC=TRUE)
 {
+	;echo Target(string TName=${TName}, bool StayTargeted=${StayTargeted}, int Distance=${Distance}, bool _NoKillNPC=${_NoKillNPC})
 	;set TargetsID
 	variable int TID
+	if ${TName.Equal[Me]}
+		TName:Set[${Me.Name}]
 	;echo ${TName}
 	;echo "${TName}"
 	;echo if ${Actor[Query, Name=-"${TName}" && Distance<=${Distance} && IsDead=FALSE && Type!="NoKill NPC"](exists)}
@@ -3376,7 +3492,7 @@ function HailActorFast(string _Actor, int _NumberOfResponses=1, int _ResponseNum
 	if ${Actor["${_Actor}",radius,20](exists)}
 	{
 		;wait until we are out of combat
-		if !${DontStopForCombat}
+		if ${StopForCombat}
 			call RIMObj.CheckCombat
 		;wait 10
 		;pause bots
@@ -3408,7 +3524,7 @@ function HailActorFast(string _Actor, int _NumberOfResponses=1, int _ResponseNum
 		;unpause bots
 		relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
 	}
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 	;follow
 	call RIMObj.follow
@@ -3456,14 +3572,119 @@ function FastTravel(string _ZoneName, int _RelayToGroup=1, string _DoorOption=0)
 		wait 600 ${EQ2.Zoning}==0
 	}
 }
-function HailActor(string _Actor, int _NumberOfResponses=1, int _ResponseNumber=1, bool _Hail=TRUE, bool _Follow=TRUE, bool _ExactName=FALSE, int _CameraTime=15)
+function HailActor(... args)
 {
 	;echo HailActor(string _Actor=${_Actor}, int _NumberOfResponses=1=${_NumberOfResponses}, int _ResponseNumber=1=${_ResponseNumber}, bool _Hail=TRUE=${_Hail})
 	;move to HailActor location
 	;stop follow
+	;string _Actor, bool _LoopUntilNoHighlightOnMouseHover=0, bool _LoopUntilDNE=0, int _GiveUpCNT=50
+	;echo ClickActor(string _Actor=${_Actor}, int _LoopUntilNoHighlightOnMouseHover=0=${_LoopUntilNoHighlightOnMouseHover}, int _GiveUpCNT=50=${_GiveUpCNT})
+	;move to ClickActor location
+	;stop follow
+	
+	variable string _Actor
+	variable int _NumberOfResponses=1
+	variable int _ResponseNumber=1
+	variable int _CameraTime=15
+	variable bool _Hail=TRUE
+	variable int _acnt=0
+	variable bool _Follow=TRUE
+	variable bool _ExactName=FALSE
+	variable bool _RelayToGroup=TRUE
+	variable string _Relay
+
+	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
+	{
+		;backwards compatibility
+		if ${_acnt}==1 && ${args[1].Left[1].NotEqual[-]}
+		{
+			_Actor:Set["${args[1]}"]
+			continue
+		}
+		if ${args[2].Left[1].NotEqual[-]} && ${_acnt}==2
+		{
+			_NumberOfResponses:Set[${Int[${args[2]}]}]
+			continue
+		}
+		if ${args[3].Left[1].NotEqual[-]} && ${_acnt}==3
+		{
+			_ResponseNumber:Set[${Int[${args[3]}]}]
+			continue
+		}
+		if ${args[4].Left[1].NotEqual[-]} && ${_acnt}==4
+		{
+			_Hail:Set[${args[4]}]
+			continue
+		}
+		if ${args[5].Left[1].NotEqual[-]} && ${_acnt}==5
+		{
+			_Follow:Set[${args[5]}]
+			continue
+		}
+		if ${args[6].Left[1].NotEqual[-]} && ${_acnt}==6
+		{
+			_ExactName:Set[${args[6]}]
+			continue
+		}
+		if ${args[7].Left[1].NotEqual[-]} && ${_acnt}==7
+		{
+			_CameraTime:Set[${args[7]}]
+			continue
+		}
+		;echo args ${_acnt} : ${args[${_acnt}]}
+		switch ${args[${_acnt}]}
+		{
+			case -Actor
+			{
+				_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -NumberofResponses
+			{
+				_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -ResponseNumber
+			{
+				_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -NoHail
+			{
+				_Hail:Set[FALSE]
+				break
+			}
+			case -NoFollow
+			{
+				_Follow:Set[FALSE]
+				break
+			}
+			case -ExactName
+			{
+				_ExactName:Set[TRUE]
+				break
+			}
+			case -CameraTime
+			{
+				_CameraTime:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -NoRelayToGroup
+			{
+				_RelayToGroup:Set[FALSE]
+				break
+			}
+		}
+	}
+	if ${_RelayToGroup}
+		_Relay:Set["${RI_Var_String_RelayGroup}"]
+	else
+		_Relay:Set["${Session}"]
+
 	if ${_Actor.Left[6].Upper.Equal[GUILD-]}
 		_Actor:Set["guild,${_Actor.Right[-6]}"]
-
+	if ${_Actor.Left[6].Upper.Equal[QUERY-]}
+		_Actor:Set["Query,${_Actor.Right[-6].Replace["`","\""]}"]
 	;echo Moving to ${CustomLoc} and Hailing ${_Actor}
 	if ${CustomLoc.NotEqual[0 0 0]} && ${Math.Distance[${Me.Loc},${CustomLoc.Replace[" ",","]}]}>5
 	{
@@ -3489,7 +3710,7 @@ function HailActor(string _Actor, int _NumberOfResponses=1, int _ResponseNumber=
 		else
 			_ID:Set[${Actor[${_Actor}].ID}]
 		;wait until we are out of combat
-		if !${DontStopForCombat}
+		if ${StopForCombat}
 			call RIMObj.CheckCombat
 		
 		if ${_Hail}
@@ -3497,31 +3718,31 @@ function HailActor(string _Actor, int _NumberOfResponses=1, int _ResponseNumber=
 			wait 10
 			;pause bots
 			
-			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
+			relay ${_Relay} -noredirect RI_CMD_PauseCombatBots 1
 			;wait 5
 			;change camera
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookDownKey}
+			relay ${_Relay} -noredirect Press -hold ${RI_Var_String_LookDownKey}
 			wait ${_CameraTime}
 			;change camera
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookDownKey}
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -hold ${RI_Var_String_LookUpKey}
+			relay ${_Relay} -noredirect Press -release ${RI_Var_String_LookDownKey}
+			relay ${_Relay} -noredirect Press -hold ${RI_Var_String_LookUpKey}
 			wait 3
-			relay ${RI_Var_String_RelayGroup} -noredirect Press -release ${RI_Var_String_LookUpKey}
+			relay ${_Relay} -noredirect Press -release ${RI_Var_String_LookUpKey}
 			
-			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
-			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoFace
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoFace
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoFace
 			wait 5
 			;scroll the mouse wheel
-			relay ${RI_Var_String_RelayGroup} -noredirect MouseWheel -10000
-			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoTarget
+			relay ${_Relay} -noredirect MouseWheel -10000
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoTarget
 			wait 2
-			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoTarget
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoTarget
 			wait 2
-			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoTarget
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoTarget
 			wait 5
-			relay ${RI_Var_String_RelayGroup} -noredirect eq2execute hail
+			relay ${_Relay} -noredirect eq2execute hail
 			wait 2
-			relay ${RI_Var_String_RelayGroup} -noredirect eq2execute hail
+			relay ${_Relay} -noredirect eq2execute hail
 			wait 2
 		}
 		variable int count
@@ -3544,16 +3765,16 @@ function HailActor(string _Actor, int _NumberOfResponses=1, int _ResponseNumber=
 			
 			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText]}"]
 			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-				relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}]:LeftClick
+				relay ${_Relay} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}]:LeftClick
 			wait 5
 			wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]}
 			;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
 		}
 		;unpause bots
-		relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
+		relay ${_Relay} -noredirect RI_CMD_PauseCombatBots 0
 	}
 	;echo after for
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 	;follow
 	if ${_Follow}
@@ -3577,12 +3798,13 @@ function HailActorGetQuest(... args)
 	variable int _NumberOfResponses=1
 	variable int _ResponseNumber=1
 	variable bool _Hail=TRUE
+	variable bool _Cam=TRUE
 	variable bool _CheckQuestExists=TRUE
 	variable string _QuestName="${MainQuestName.Get[${MainQuestName.Used}]}"
 	variable int _acnt=0
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	{
-		;echo args ${_acnt} : ${args[${_acnt}]}
+		echo args ${_acnt} : ${args[${_acnt}]}
 		switch ${args[${_acnt}]}
 		{
 			case -Actor
@@ -3618,6 +3840,11 @@ function HailActorGetQuest(... args)
 				_CheckQuestExists:Set[0]
 				break
 			}
+			case -NoCam
+			{
+				_Cam:Set[0]
+				break
+			}
 		}
 	}
 	;echo "${_QuestName}" // ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} // ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)}
@@ -3627,7 +3854,7 @@ function HailActorGetQuest(... args)
 		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE"]
 		call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE
 	}
-	if ${_Hail}
+	if ${_Hail} && ${_Cam}
 	{
 		wait 20
 	}
@@ -3638,7 +3865,7 @@ function HailActorGetQuest(... args)
 	if ${_CheckQuestExists} && ( ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} )
 		return
 	;make sure _Actor exists so we do not go through the motions for nothign
-	;echo \${Actor[${_Actor}](exists)}  //  ${Actor[${_Actor}](exists)}
+	echo \${Actor[${_Actor}](exists)}  //  ${Actor[${_Actor}](exists)}
 	if ${Actor[${_Actor}](exists)}
 	{
 		variable int _ID
@@ -3647,10 +3874,10 @@ function HailActorGetQuest(... args)
 		else
 			_ID:Set[${Actor[${_Actor}].ID}]
 		;wait until we are out of combat
-		if !${DontStopForCombat}
+		if ${StopForCombat}
 			call RIMObj.CheckCombat
 		
-		if ${_Hail}
+		if ${_Hail} && ${_Cam}
 		{
 			wait 10
 			;pause bots
@@ -3678,6 +3905,13 @@ function HailActorGetQuest(... args)
 			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoTarget
 			wait 5
 			relay ${RI_Var_String_RelayGroup} -noredirect eq2execute hail
+			wait 2
+			relay ${RI_Var_String_RelayGroup} -noredirect eq2execute hail
+			wait 2
+		}
+		elseif ${_Hail} && !${_Cam}
+		{
+			relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
 			wait 2
 			relay ${RI_Var_String_RelayGroup} -noredirect eq2execute hail
 			wait 2
@@ -3711,7 +3945,7 @@ function HailActorGetQuest(... args)
 		MainArrayCounter:Set[${Math.Calc[${MainArrayCounter}-3]}]
 	}	
 		
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 	;follow
 	;if ${_Follow}
@@ -3730,6 +3964,7 @@ function ClickActor(... args)
 	
 	variable string _Actor
 	variable int _LoopUntilNoHighlightOnMouseHover=0
+	variable int _LoopUntilNotInteractable=0
 	variable int _LoopUntilDNE=0
 	variable int _HighlightOnMouseHover=0
 	variable int _GiveUpCNT=50
@@ -3737,6 +3972,7 @@ function ClickActor(... args)
 	variable bool _TintFlags=FALSE
 	variable int _acnt=0
 	variable bool _ExactName=FALSE
+	variable bool _LockSpot=FALSE
 	
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	{
@@ -3761,6 +3997,10 @@ function ClickActor(... args)
 		;echo args ${_acnt} : ${args[${_acnt}]}
 		switch ${args[${_acnt}]}
 		{
+			case -LockSpot
+			{
+				_LockSpot:Set[1]
+			}
 			case -Actor
 			{
 				_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
@@ -3769,6 +4009,11 @@ function ClickActor(... args)
 			case -LoopUntilNoHighlightOnMouseHover
 			{
 				_LoopUntilNoHighlightOnMouseHover:Set[1]
+				break
+			}
+			case -LoopUntilNotInteractable
+			{
+				_LoopUntilNotInteractable:Set[1]
 				break
 			}
 			case -ExactName
@@ -3832,14 +4077,25 @@ function ClickActor(... args)
 	
 	if ${CustomLoc.NotEqual[0 0 0]}
 	{	
-		;call RIMObj.follow
-		call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE
-		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE"]
-		wait 20
+		if ${LockSpot}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${CustomLoc.Replace[" ",","]}]
+			wait 300 ${Me.Distance[${CustomLoc.Replace[" ",","]}]}<3
+			wait 50 ${RIMUIObj.AllGroupWithinRange[5]} && !${Me.IsMoving}
+			wait 10
+		}
+		else
+		{
+			;call RIMObj.follow
+			call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE
+			relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE TRUE TRUE FALSE TRUE"]
+			wait 20
+		}
 	}
+	
 	;call RIMObj.stopfollow
 	;wait until we are out of combat
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 	;make sure _Actor exists so we do not go through the motions for nothign
 	;echo \${Actor[Query, Name=-"${_Actor}"](exists)}  //  ${Actor[Query, Name=-"${_Actor}"](exists)}
@@ -3848,7 +4104,7 @@ function ClickActor(... args)
 		if ${Actor[id,${_ID}](exists)}
 		{
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -3866,12 +4122,35 @@ function ClickActor(... args)
 			}
 		}
 	}
+	elseif ${_LoopUntilNotInteractable}
+	{
+		if ${Actor[id,${_ID}](exists)}
+		{
+			;wait until we are out of combat
+			if ${StopForCombat}
+				call RIMObj.CheckCombat
+			wait 10
+			;pause bots
+			
+			relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 1
+			wait 5
+			eq2ex cancel_spellcast
+			wait 2
+			while ${Actor[${_ID}].Interactable} && ${_Cnt:Inc} <= ${_GiveUpCNT}
+			{
+				relay ${RI_Var_String_RelayGroup} -noredirect Actor[${_ID}]:DoubleClick
+				wait 5 ${Me.CastingSpell}
+				wait 50 !${Me.CastingSpell}
+				wait 5
+			}
+		}
+	}
 	elseif ${_LoopUntilDNE}
 	{
 		if ${Actor[id,${_ID}](exists)}
 		{
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -3892,7 +4171,7 @@ function ClickActor(... args)
 		if ${Actor[id,${_ID}](exists)}
 		{
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -3913,7 +4192,7 @@ function ClickActor(... args)
 		if ${Actor[id,${_ID}](exists)}
 		{
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -3933,8 +4212,10 @@ function ClickActor(... args)
 
 	}
 	relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
+	if ${_LockSpot}
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[OFF]
 	;follow
-	;if ${_Follow}
+	if ${_Follow}
 		call RIMObj.follow
 }
 function RightClickActor(... args)
@@ -4055,7 +4336,7 @@ function RightClickActor(... args)
 	}
 	;call RIMObj.stopfollow
 	;wait until we are out of combat
-	if !${DontStopForCombat}
+	if ${StopForCombat}
 		call RIMObj.CheckCombat
 	;make sure _Actor exists so we do not go through the motions for nothign
 	;echo \${Actor[Query, Name=-"${_Actor}"](exists)}  //  ${Actor[Query, Name=-"${_Actor}"](exists)}
@@ -4064,7 +4345,7 @@ function RightClickActor(... args)
 		if ${Actor[id,${_ID}](exists)}
 		{
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -4087,7 +4368,7 @@ function RightClickActor(... args)
 		if ${Actor[id,${_ID}](exists)}
 		{
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -4108,7 +4389,7 @@ function RightClickActor(... args)
 		if ${Actor[id,${_ID}](exists)}
 		{
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -4129,7 +4410,7 @@ function RightClickActor(... args)
 		if ${Actor[id,${_ID}](exists)}
 		{
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -4150,7 +4431,7 @@ function RightClickActor(... args)
 	}
 	relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
 	;follow
-	;if ${_Follow}
+	if ${_Follow}
 		call RIMObj.follow
 }
 function KillAll(string MobName, int Distance=1000)
@@ -13629,7 +13910,7 @@ function BaronHuntForKey()
 }
 function Baron()
 {
-	DontStopForCombat:Set[1]
+	StopForCombat:Set[0]
 	echo ISXRI: Starting Baron
 	variable int _BaronID=${Actor[Query, Name=="Haggle Baron Dalnir" && IsDead=FALSE].ID}
 	if ${Zone.Name.Find["[Solo]"](exists)}
@@ -14045,7 +14326,7 @@ function Baron()
 		RI_Var_Bool_SkipLoot:Set[FALSE]
 	}
 	echo Ending Baron
-	DontStopForCombat:Set[0]
+	StopForCombat:Set[1]
 }
 function Enchanted()
 {
@@ -17691,7 +17972,7 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
 		_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
 	else
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -17706,37 +17987,37 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	_QuestName:Set[${istrMain.Get[1]}]
 	MainQuestName:Insert["${_QuestName}"]
 	variable int _GiveUpCNT=0
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace[\",""]}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace[\",""]}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName.Replace[\",""]}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName.Replace[\",""]}]}
+		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName.Replace["\"",""]}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName.Replace["\"",""]}]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
-	;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}
+	_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+	;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
 	variable bool _Repeatable
 	if ${istrMain.Get[2].Equal[Repeatable]}
 		_Repeatable:Set[TRUE]
 	
-	if ${_QuestName.Replace[\",""].Find["Brother Pang's Trial"](exists)}
+	if ${_QuestName.Replace["\"",""].Find["Brother Pang's Trial"](exists)}
 		_QuestName:Concat[" "]
 		
-	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
+	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
 	{
 		;MessageBox -skin eq2 "${_QuestName} is already completed"
-		echo ISXRI: ${_QuestName.Replace[\",""]} already Completed moving on
+		echo ISXRI: ${_QuestName.Replace["\"",""]} already Completed moving on
 		;skip here
 		_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 		
 		_GiveUpCNT:Set[0]
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace[\",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
 		{
-			QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
+			QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
 			wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 		
@@ -17761,35 +18042,35 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	}
 	else
 	{
-		echo ISXRI: ${Time} Starting ${_QuestName.Replace[\",""]}
+		echo ISXRI: ${Time} Starting ${_QuestName.Replace["\"",""]}
 		
 		call Go TRUE
 		
-		echo ISXRI: ${Time} Ending ${_QuestName.Replace[\",""]}
+		echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	}
 
-	if ${_CheckQuestCompleted} && !${_QuestName.Replace[\",""].Find["Access to Tower of the Four Winds"](exists)} && !${_QuestName.Replace[\",""].Find["Yun Zi"](exists)} && !${_QuestName.Replace[\",""].Find[Timeline](exists)} && !${_QuestName.Replace[\",""].Find["Losers Weepers"](exists)} && !${_QuestName.Replace[\",""].Find["New Lands New Profits"](exists)}
+	if ${_CheckQuestCompleted} && !${_QuestName.Replace["\"",""].Find["Access to Tower of the Four Winds"](exists)} && !${_QuestName.Replace["\"",""].Find["Yun Zi"](exists)} && !${_QuestName.Replace["\"",""].Find[Timeline](exists)} && !${_QuestName.Replace["\"",""].Find["Losers Weepers"](exists)} && !${_QuestName.Replace["\"",""].Find["New Lands New Profits"](exists)}
 	{
 		waitframe
 		squelch wait 100 ${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}
-		;echo \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}
-		if !${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}
-			call MessageBox "Quest: ${_QuestName.Replace[\",""]} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
+		;echo \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
+		if !${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
+			call MessageBox "Quest: ${_QuestName.Replace["\"",""]} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
 	}
 	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 	
 	_GiveUpCNT:Set[0]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace[\",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -17838,12 +18119,12 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 		
 		_GiveUpCNT:Set[0]
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace[\",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
 		{
-			QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
+			QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
 			wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 		
@@ -17898,7 +18179,7 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
 			_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
 		else
-			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 		
@@ -17912,26 +18193,26 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		wait 50 ${istrMain.Used}>0
 		_QuestName:Set[${istrMain.Get[1]}]
 		variable int _GiveUpCNT=0
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace[\",""]}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
 		{
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 			squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
-		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}
+		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
 		variable bool _Repeatable
 		if ${istrMain.Get[2].Equal[Repeatable]}
 			_Repeatable:Set[TRUE]
 		
-		echo ISXRI: ${Time} Starting ${_QuestName.Replace[\",""]} #${_qcount:Inc} Faction: ${RIMUIObj.FactionAmount[${_FactionName}]} Needed: ${_Faction}
+		echo ISXRI: ${Time} Starting ${_QuestName.Replace["\"",""]} #${_qcount:Inc} Faction: ${RIMUIObj.FactionAmount[${_FactionName}]} Needed: ${_Faction}
 ;		of ${_NumRepeats}
 		
 		call Go TRUE
 		
-		echo ISXRI: ${Time} Ending ${_QuestName.Replace[\",""]}
+		echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
 		
 		if ${Me.IsMoving}
 		{
@@ -17944,15 +18225,15 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 	
 	_GiveUpCNT:Set[0]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace[\",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -18004,7 +18285,7 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 		if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
 			_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
 		else
-			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 		
@@ -18018,25 +18299,25 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 		wait 50 ${istrMain.Used}>0
 		_QuestName:Set[${istrMain.Get[1]}]
 		variable int _GiveUpCNT=0
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace[\",""]}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
 		{
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 			squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
-		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}
+		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
 		variable bool _Repeatable
 		if ${istrMain.Get[2].Equal[Repeatable]}
 			_Repeatable:Set[TRUE]
 		
-		echo ISXRI: ${Time} Starting ${_QuestName.Replace[\",""]} #${_qcount} of ${_NumRepeats}
+		echo ISXRI: ${Time} Starting ${_QuestName.Replace["\"",""]} #${_qcount} of ${_NumRepeats}
 		
 		call Go TRUE
 		
-		echo ISXRI: ${Time} Ending ${_QuestName.Replace[\",""]}
+		echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
 		
 		if ${Me.IsMoving}
 		{
@@ -18049,15 +18330,15 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 	
 	_GiveUpCNT:Set[0]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace[\",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -18087,10 +18368,10 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 function SetActiveQuest(string _QuestName)
 {
 	variable int _GiveUpCNT=0
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace[\",""]}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
@@ -18125,7 +18406,7 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 	if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
 		_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
 	else
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 	;open dat or var and do all of it
 	;echo ${_QuestName}  //  ${_QuestName.Replace[" ",""].Replace["?",""]}
 	
@@ -18144,36 +18425,36 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 	_QuestName:Set[${istrMain.Get[1]}]
 	MainQuestName:Insert["${_QuestName}"]
 	variable int _GiveUpCNT=0
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace[\",""]}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace[\",""]}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace[\",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace[\",""]}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName.Replace[\",""]}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName.Replace[\",""]}]}
+		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName.Replace["\"",""]}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName.Replace["\"",""]}]}
 	}
 	
 	variable bool _Repeatable
 	if ${istrMain.Get[2].Equal[Repeatable]}
 		_Repeatable:Set[TRUE]
 		
-	if ${_QuestName.Replace[\",""].Find["Brother Pang's Trial"](exists)}
+	if ${_QuestName.Replace["\"",""].Find["Brother Pang's Trial"](exists)}
 		_QuestName:Concat[" "]
 		
-	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
+	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
 	{
 		;MessageBox -skin eq2 "${_QuestName} is already completed"
-		echo ISXRI: ${_QuestName.Replace[\",""]} already Completed moving on
+		echo ISXRI: ${_QuestName.Replace["\"",""]} already Completed moving on
 		;skip here
 		if ${_ElementToJumpTo}>0
 			MainArrayCounter:Set[${_ElementToJumpTo}]
 		return
 	}
-	echo ISXRI: ${Time} Starting ${_QuestName.Replace[\",""]}
+	echo ISXRI: ${Time} Starting ${_QuestName.Replace["\"",""]}
 	
 	call Go TRUE
 	
-	echo ISXRI: ${Time} Ending ${_QuestName.Replace[\",""]}
+	echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	
@@ -18183,14 +18464,29 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 		press -release ${RI_Var_String_ForwardKey}
 	}
 	
-	if ${_CheckQuestCompleted} && !${_QuestName.Replace[\",""].Find["Yun Zi"](exists)} && !${_QuestName.Replace[\",""].Find[Timeline](exists)} && !${_QuestName.Replace[\",""].Find["Losers Weepers"](exists)} && !${_QuestName.Replace[\",""].Find["New Lands New Profits"](exists)}
+	if ${_CheckQuestCompleted} && !${_QuestName.Replace["\"",""].Find["Yun Zi"](exists)} && !${_QuestName.Replace["\"",""].Find[Timeline](exists)} && !${_QuestName.Replace["\"",""].Find["Losers Weepers"](exists)} && !${_QuestName.Replace["\"",""].Find["New Lands New Profits"](exists)}
 	{
 		waitframe
 		squelch wait 100 ${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}
-		;echo \${QuestJournalWindow.CompletedQuest[${_QuestName.Replace[\",""]}](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}
-		if !${QuestJournalWindow.CompletedQuest["${_QuestName.Replace[\",""]}"](exists)}
-			call MessageBox "Quest: ${_QuestName.Replace[\",""]} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
+		;echo \${QuestJournalWindow.CompletedQuest[${_QuestName.Replace["\"",""]}](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
+		if !${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
+			call MessageBox "Quest: ${_QuestName.Replace["\"",""]} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
 	}
+}
+function GoFreeportQeynos(bool _RelayToGroup=TRUE)
+{
+	if ${_RelayToGroup} && !${RI_Var_Bool_GlobalOthers}
+	{
+		relay "other ${RI_Var_String_RelayGroup}" Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call GoFreeportQeynos"]
+	}
+	RIMUIObj:FastTravel[ALL,Freeport]
+	wait 50 ${EQ2.Zoning}==1
+	if ${EQ2.Zoning}==0
+	{
+		RIMUIObj:FastTravel[ALL,Qeynos,1]
+		wait 50 ${EQ2.Zoning}==1
+	}
+	wait 6000 ${EQ2.Zoning}==0
 }
 function CheckAndSet(... args)
 {
@@ -18215,6 +18511,12 @@ function CheckAndSet(... args)
 			case -NamedNPC
 			{
 				_NamedNPC:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
+				_Index:Insert[${Int[${args[${Math.Calc[${_acnt}+2]}]}]}]
+				break
+			}
+			case -NamedNPCDNE
+			{
+				_NamedNPC:Insert["${args[${Math.Calc[${_acnt}+1]}]}-DNE"]
 				_Index:Insert[${Int[${args[${Math.Calc[${_acnt}+2]}]}]}]
 				break
 			}
@@ -18265,6 +18567,21 @@ function CheckAndSet(... args)
 		;MainArrayCounter:Set[${Int[${_Index.Get[1]}]}]
 	}
 	;echo ${_NamedNPC.Used}
+	variable string _namedtmp
+	for(_acnt:Set[1];${_acnt}<=${_NamedNPC.Used};_acnt:Inc)
+	{
+		if ${_NamedNPC.Get[${_acnt}].Find["-DNE"]}
+		{
+			_namedtmp:Set[${_NamedNPC.Get[${_acnt}].Left[-4]}]
+			if !${Actor[NamedNPC,"${_namedtmp}"](exists)} && ${Int[${_Index.Get[${_acnt}]}]}>${_HighestIndex}
+				_HighestIndex:Set[${Int[${_Index.Get[${_acnt}]}]}]
+		}
+		else
+		{
+			if ${Actor[NamedNPC,"${_NamedNPC.Get[${_acnt}]}"](exists)} && ${Int[${_Index.Get[${_acnt}]}]}>${_HighestIndex}
+				_HighestIndex:Set[${Int[${_Index.Get[${_acnt}]}]}]
+		}
+	}
 	for(_acnt:Set[1];${_acnt}<=${_NamedNPC.Used};_acnt:Inc)
 	{
 		if ${Actor[NamedNPC,"${_NamedNPC.Get[${_acnt}]}"](exists)} && ${Int[${_Index.Get[${_acnt}]}]}>${_HighestIndex}
@@ -18457,6 +18774,34 @@ function RIMUIObj(... args)
 	}
 	relay ${RI_Var_String_RelayGroup} execute RIMUIObj:${args[1]}[${argsin}]
 }
+function AutoConsume(string _ItemName, bool _On, bool _RelayToGroup=TRUE)
+{
+	;echo AutoConsume(string _ItemName=${_ItemName}, bool _On=${_On}, bool _RelayToGroup=${_RelayToGroup})
+	if ${_RelayToGroup} && !${RI_Var_Bool_GlobalOthers}
+	{
+		relay "other ${RI_Var_String_RelayGroup}" Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call AutoConsume \"${_ItemName}\" ${_On}"]
+	}
+	if !${Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"](exists)}
+		return
+	variable int _cnt=0
+	if ${_On}
+	{
+		;echo \${Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"].AutoConsumeOn}:${Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"].AutoConsumeOn}
+		while !${Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"].AutoConsumeOn} && ${_cnt:Inc}<60
+		{
+			Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"]:ToggleAutoConsume
+			wait 5
+		}
+	}
+	else
+	{
+		while ${Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"].AutoConsumeOn} && ${_cnt:Inc}<60
+		{
+			Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"]:ToggleAutoConsume
+			wait 5
+		}
+	}
+}
 function Path(... args)
 {
 	if ${RI_Var_Bool_PathDebug}
@@ -18478,7 +18823,7 @@ function Path(... args)
 	variable bool _JumpAfterEachLoc=FALSE
 	variable index:string _QueryActor
 	;-ActorName|-Interactable|-QueryDistance|-MoveToDistance|-Trigger "Type:Text"|-Events
-	;									DoubleClick&Hail&Kill
+	;									DoubleClick&Hail&Kill&Harvest
 	variable int _YINC=1
 	variable bool _Interactable=FALSE
 	variable int _QueryDistance=50
@@ -18487,6 +18832,9 @@ function Path(... args)
 	variable string _QuestStep
 	variable bool _QuestStepExists=FALSE
 	variable bool _QuestStepChecked=FALSE
+	variable bool _QuestExists=FALSE
+	variable bool _QuestDNE=FALSE
+	variable string _Quest
 	variable string _Events
 	variable bool _Done=FALSE
 	variable bool _LoopPath=FALSE
@@ -18500,6 +18848,7 @@ function Path(... args)
 	variable string _args=""
 	variable string _tempName
 	variable string _temp
+	variable bool _PauseBot=FALSE
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	{
 		;echo args ${_acnt} : ${args[${_acnt}]}
@@ -18532,6 +18881,11 @@ function Path(... args)
 			case -Loop
 			{
 				_LoopPath:Set[1]
+				break
+			}
+			case -PauseBot
+			{
+				_PauseBot:Set[1]
 				break
 			}
 			case -Reverse
@@ -18579,6 +18933,9 @@ function Path(... args)
 	if ${RI_Var_Bool_GlobalOthers}
 		wait ${_GroupWait}
 	
+	if ${_PauseBot}
+		relay ${RI_Var_String_RelayGroup} RI_CMD_PauseCombatBots 1
+
 	;echo ${_QueryActor.Get[1]}
 	if !${RI_Var_Bool_GlobalOthers}
 	{
@@ -18714,6 +19071,16 @@ function Path(... args)
 										_QuestStepExists:Set[1]
 										_QuestStep:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:]}"]
 									}
+									elseif ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[QuestExists]}
+									{
+										_QuestExists:Set[1]
+										_Quest:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:]}"]
+									}
+									elseif ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[QuestDNE]}
+									{
+										_QuestDNE:Set[1]
+										_Quest:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:]}"]
+									}
 									elseif ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[QuestStepChecked]}
 									{
 										_QuestStepChecked:Set[1]
@@ -18729,6 +19096,7 @@ function Path(... args)
 										_CheckItemQty:Set[TRUE]
 										_ItemName:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:].Token[1,-]}"]
 										_ItemQty:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:].Token[2,-]}"]
+										echo ${_CheckItemQty} // ${_ItemName} // ${_ItemQty}
 									}
 									break
 								}
@@ -18753,15 +19121,16 @@ function Path(... args)
 						}
 						else
 							_Query:Set["Name=-\"${_ActorName}\" && Distance<=${_QueryDistance} && IsLocked=FALSE && IsDead=FALSE"]
-						;echo ${_Query}
+						if ${RI_Var_Bool_PathDebug}
+							echo ${_Query} // ${Actor[Query, ${_Query}](exists)}
 						if ${Actor[Query, ${_Query}](exists)}
 						{
 							if ${RI_Var_Bool_PathDebug}
 								echo _Interactable=${_Interactable} // ActorName=${_ActorName} // _QueryDistance=${_QueryDistance} // _MoveToDistance=${_MoveToDistance} // _Events=${_Events}
 							_ID:Set[${Actor[Query, ${_Query}].ID}]
 							if ${RI_Var_Bool_PathDebug}
-								echo if ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",20,${_goReverse}]}==${MainArrayCounter} && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& \${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]} = !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
-							if ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",20,${_goReverse}]}==${MainArrayCounter} && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
+								echo if ( ${Actor[id,${_ID}].Distance}<=${_MoveToDistance} || ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",20,${_goReverse}]}==${MainArrayCounter} ) && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& \${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]} = !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
+							if ( ${Actor[id,${_ID}].Distance}<=${_MoveToDistance} || ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",20,${_goReverse}]}==${MainArrayCounter} ) && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} ) && !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
 							{
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
 								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
@@ -18775,180 +19144,300 @@ function Path(... args)
 								else
 									call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE ${_StopForCombat} TRUE FALSE TRUE TRUE
 								_tempName:Set[${Actor[Query, ID=${_ID}].Name}]
-								;here we are at the mob lets determine our events
+								;here we are at the actor lets determine our events
 								for(_ecnt:Set[1];${_ecnt}<=${Math.Calc[${_Events.Count[&]}+1]};_ecnt:Inc)
 								{
-									switch ${_Events.Token[${_ecnt},&]}
+									if ${_Events.Find["UseItem"]}
 									{
-										case DoubleClick
+
+										if ${RI_Var_Bool_PathDebug}
+											echo ${_tempName}: while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]}
+										if ${RI_Var_Bool_PathDebug}
+											echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
+										relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
+										while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]}
 										{
-											;clickactor event
-											while ${Actor[Query, ID=${_ID}](exists)} && ( ${Me.CastingSpell} || ${Actor[Query, ID=${_ID}].Interactable} || !${_Interactable} )
+											if ${RI_Var_Bool_BreakPathFunction}
 											{
-												if ${RI_Var_Bool_BreakPathFunction}
-												{
-													RI_Var_Bool_BreakPathFunction:Set[0]
-													return
-												}
-												if ${_StopForCombat}
-													call RIMObj.CheckCombat
-												relay ${RI_Var_String_RelayGroup} Actor[${_ID}]:DoTarget
-												wait 5
-												relay ${RI_Var_String_RelayGroup} Actor[${_ID}]:DoubleClick
-												wait 5 ${Me.CastingSpell}
-												wait 50 !${Me.CastingSpell}
-												wait 2
-												if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
-													Trigger:Set[FALSE]
-												}
-												if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
-													Trigger:Set[FALSE]
-												}
-												if ${_QuestStepChecked} && ${RIObj.QuestStepExists["${_QuestStep}",${_QuestStepChecked}]}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${_QuestStep}
-													Trigger:Set[FALSE]
-												}
-												if ${Trigger}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
-													Trigger:Set[FALSE]
-													wait 1
-												}
+												RI_Var_Bool_BreakPathFunction:Set[0]
+												return
+											}
+											if ${Me.FlyingUsingMount}
+												call RIMObj.FlyDown
+											if ${Target.ID}!=${Actor[Query, ID=${_ID}].ID}
+												Actor[Query, ID=${_ID}]:DoTarget
+											wait 2
+											Me.Inventory[Query, Name=="${_Events.Token[2,-]}" && Location=="Inventory"]:Use
+											if ${Actor[Query, ID=${_ID}].Distance}>${Math.Calc[${_MoveToDistance}+${_Precision}+1]}
+											{
+												;call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 0 0 1 0 1 1
+												if ${RI_Var_Bool_PathDebug}
+													echo Moving To ${Actor[Query, ID=${_ID}].Name}: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Query, ID=${_ID}].Loc},${_MoveToDistance},1000]
+												relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,OFF,1000]
+												relay ${RI_Var_String_RelayGroup} RIMUIObj:SetRIFollow[ALL,${Me.ID}]
 												if ${Actor[Query, ID=${_ID}].Distance}>=${_MoveToDistance}
 													call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
+												if ${RI_Var_Bool_PathDebug}
+													echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
+												relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
+												wait 5
 											}
-											break
-										}
-										case Kill
-										{
-											if ${RI_Var_Bool_PathDebug}
-												echo ${_tempName}: while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]}
-											if ${RI_Var_Bool_PathDebug}
-												echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
-											relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
-											while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]}
+											if ${Target.ID}==${Actor[Query, ID=${_ID}].ID} && ( !${Me.TargetLOS} || ${ICantSeeMyTarget} )
 											{
-												if ${RI_Var_Bool_BreakPathFunction}
+												eq2ex target_none
+												break
+											}
+											if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+											{
+												_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+												echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
+												Trigger:Set[FALSE]
+											}
+											if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
+											{
+												_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+												echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+												Trigger:Set[FALSE]
+											}
+											if ${_QuestExists} && ${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+											{
+												_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+												echo ISXRI: Triggered: ${_Quest} Exists from ${_tempName}
+												Trigger:Set[FALSE]
+											}
+											if ${_QuestDNE} && !${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+											{
+												_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+												echo ISXRI: Triggered: ${_Quest} Does Not Exist from ${_tempName}
+												Trigger:Set[FALSE]
+											}
+											if ${_QuestStepChecked} && ${RIObj.QuestStepExists["${_QuestStep}",${_QuestStepChecked}]}
+											{
+												_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+												echo ISXRI: Triggered: ${_QuestStep}
+												Trigger:Set[FALSE]
+											}
+											if ${Trigger}
+											{
+												_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+												echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
+												Trigger:Set[FALSE]
+												wait 1
+											}
+										}
+									}
+									else
+									{
+										switch ${_Events.Token[${_ecnt},&]}
+										{
+											case DoubleClick
+											{
+												;clickactor event
+												while ${Actor[Query, ID=${_ID}](exists)} && ( ${Me.CastingSpell} || ${Actor[Query, ID=${_ID}].Interactable} || !${_Interactable} )
 												{
-													RI_Var_Bool_BreakPathFunction:Set[0]
-													return
-												}
-												if ${Me.FlyingUsingMount}
-													call RIMObj.FlyDown
-												if ${Target.ID}!=${Actor[Query, ID=${_ID}].ID}
-													Actor[Query, ID=${_ID}]:DoTarget
-												wait 2
-												if ${Actor[Query, ID=${_ID}].Distance}>${Math.Calc[${_MoveToDistance}+${_Precision}+1]}
-												{
-													;call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 0 0 1 0 1 1
-													if ${RI_Var_Bool_PathDebug}
-														echo Moving To ${Actor[Query, ID=${_ID}].Name}: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Query, ID=${_ID}].Loc},${_MoveToDistance},1000]
-													relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,OFF,1000]
-													relay ${RI_Var_String_RelayGroup} RIMUIObj:SetRIFollow[ALL,${Me.ID}]
+													if ${RI_Var_Bool_BreakPathFunction}
+													{
+														RI_Var_Bool_BreakPathFunction:Set[0]
+														return
+													}
+													if ${_StopForCombat}
+														call RIMObj.CheckCombat
+													relay ${RI_Var_String_RelayGroup} Actor[${_ID}]:DoTarget
+													wait 5
+													relay ${RI_Var_String_RelayGroup} Actor[${_ID}]:DoubleClick
+													wait 5 ${Me.CastingSpell}
+													wait 50 !${Me.CastingSpell}
+													wait 2
+													if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestExists} && ${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_Quest} Exists from ${_tempName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestDNE} && !${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_Quest} Does Not Exist from ${_tempName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestStepChecked} && ${RIObj.QuestStepExists["${_QuestStep}",${_QuestStepChecked}]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_QuestStep}
+														Trigger:Set[FALSE]
+													}
+													if ${Trigger}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
+														Trigger:Set[FALSE]
+														wait 1
+													}
 													if ${Actor[Query, ID=${_ID}].Distance}>=${_MoveToDistance}
 														call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
-													if ${RI_Var_Bool_PathDebug}
-														echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
-													relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
-													wait 5
 												}
-												if ${Target.ID}==${Actor[Query, ID=${_ID}].ID} && ( !${Me.TargetLOS} || ${ICantSeeMyTarget} )
-												{
-													eq2ex target_none
-													break
-												}
-												if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
-													Trigger:Set[FALSE]
-												}
-												if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
-													Trigger:Set[FALSE]
-												}
-												if ${_QuestStepChecked} && ${RIObj.QuestStepExists["${_QuestStep}",${_QuestStepChecked}]}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${_QuestStep}
-													Trigger:Set[FALSE]
-												}
-												if ${Trigger}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
-													Trigger:Set[FALSE]
-													wait 1
-												}
+												break
 											}
-											break
-										}
-										case Harvest
-										{
-											while ${Actor[Query, ID=${_ID}](exists)} && ( ${Me.CastingSpell} || ${Actor[Query, ID=${_ID}].HighlightOnMouseHover} || !${_HighlightOnMouseHover} ) && !${_Done}
+											case Kill
 											{
-												if ${RI_Var_Bool_BreakPathFunction}
+												if ${RI_Var_Bool_PathDebug}
+													echo ${_tempName}: while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]}
+												if ${RI_Var_Bool_PathDebug}
+													echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
+												relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
+												while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]}
 												{
-													RI_Var_Bool_BreakPathFunction:Set[0]
-													return
+													if ${RI_Var_Bool_BreakPathFunction}
+													{
+														RI_Var_Bool_BreakPathFunction:Set[0]
+														return
+													}
+													if ${Me.FlyingUsingMount}
+														call RIMObj.FlyDown
+													if ${Target.ID}!=${Actor[Query, ID=${_ID}].ID}
+														Actor[Query, ID=${_ID}]:DoTarget
+													wait 2
+													if ${Actor[Query, ID=${_ID}].Distance}>${Math.Calc[${_MoveToDistance}+${_Precision}+1]}
+													{
+														;call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 0 0 1 0 1 1
+														if ${RI_Var_Bool_PathDebug}
+															echo Moving To ${Actor[Query, ID=${_ID}].Name}: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Query, ID=${_ID}].Loc},${_MoveToDistance},1000]
+														relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,OFF,1000]
+														relay ${RI_Var_String_RelayGroup} RIMUIObj:SetRIFollow[ALL,${Me.ID}]
+														if ${Actor[Query, ID=${_ID}].Distance}>=${_MoveToDistance}
+															call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
+														if ${RI_Var_Bool_PathDebug}
+															echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
+														relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
+														wait 5
+													}
+													if ${Target.ID}==${Actor[Query, ID=${_ID}].ID} && ( !${Me.TargetLOS} || ${ICantSeeMyTarget} )
+													{
+														eq2ex target_none
+														break
+													}
+													if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestExists} && ${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_Quest} Exists from ${_tempName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestDNE} && !${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_Quest} Does Not Exist from ${_tempName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestStepChecked} && ${RIObj.QuestStepExists["${_QuestStep}",${_QuestStepChecked}]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_QuestStep}
+														Trigger:Set[FALSE]
+													}
+													if ${Trigger}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
+														Trigger:Set[FALSE]
+														wait 1
+													}
 												}
-												call RIMObj.CheckCombat
-												relay ${RI_Var_String_RelayGroup} Actor[id,${_ID}]:DoTarget
-												wait 5
-												relay ${RI_Var_String_RelayGroup} Actor[id,${_ID}]:DoubleClick
-												wait 5 ${Me.CastingSpell}
-												wait 50 !${Me.CastingSpell}
-												wait 2
-												;echo ${Time}: Before: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
-												;echo ${Trigger} // ${TriggerMessage}
-												wait 15
-												if ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance}
-													call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
-												;echo ${Time}: After: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
-												if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
-													Trigger:Set[FALSE]
-												}
-												if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
-													Trigger:Set[FALSE]
-												}
-												if ${_QuestStepChecked} && ${RIObj.QuestStepExists["${_QuestStep}",${_QuestStepChecked}]}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${_QuestStep}
-													Trigger:Set[FALSE]
-												}
-												if ${Trigger}
-												{
-													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
-													Trigger:Set[FALSE]
-													wait 1
-												}
+												break
 											}
-											break
+											case Harvest
+											{
+												while ${Actor[Query, ID=${_ID}](exists)} && ( ${Me.CastingSpell} || ${Actor[Query, ID=${_ID}].HighlightOnMouseHover} || !${_HighlightOnMouseHover} ) && !${_Done}
+												{
+													if ${RI_Var_Bool_BreakPathFunction}
+													{
+														RI_Var_Bool_BreakPathFunction:Set[0]
+														return
+													}
+													call RIMObj.CheckCombat
+													relay ${RI_Var_String_RelayGroup} Actor[id,${_ID}]:DoTarget
+													wait 5
+													relay ${RI_Var_String_RelayGroup} Actor[id,${_ID}]:DoubleClick
+													wait 5 ${Me.CastingSpell}
+													wait 50 !${Me.CastingSpell}
+													wait 2
+													;echo ${Time}: Before: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
+													;echo ${Trigger} // ${TriggerMessage}
+													wait 15
+													if ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance}
+														call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
+													;echo ${Time}: After: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
+													if ${RI_Var_Bool_PathDebug}
+														echo 1 ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+													if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_QuestStep} from ${_tempName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestExists} && ${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_Quest} Exists from ${_tempName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestDNE} && !${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_Quest} Does Not Exist from ${_tempName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestStepChecked} && ${RIObj.QuestStepExists["${_QuestStep}",${_QuestStepChecked}]}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_QuestStep}
+														Trigger:Set[FALSE]
+													}
+													if ${Trigger}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
+														Trigger:Set[FALSE]
+														wait 1
+													}
+												}
+												break
+											}
 										}
 									}
 									wait 25
 								}
 								wait 25
-								if ${Me.WaterDepth}>0
+								if ${Me.WaterDepth} >0 && ${Me.IsSwimming}
 									call SwimUp
 								if ${_IWasFlying}
 								{
@@ -18966,10 +19455,30 @@ function Path(... args)
 						;;need to figure out how to handle this because we dont want a lagged trigger to trigger the next queryactor, 
 						;should be ok since we are in the query actor itself we can have a wait here but that may be problematic so nm because it would slow down everything
 						;and the problem is this is required for Harvest where the harvestables disappear after the trigger, this should technically work because of the 5s wait after each harvest/kill/whatever
+						if ${RI_Var_Bool_PathDebug}
+							echo 2 ${_QueryActor.Get[${_cnt}]} // ${_CheckItemQty} && \${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+						if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+						{
+							_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+							echo ISXRI: Triggered: ${_QuestStep} from ${_ItemName}
+							Trigger:Set[FALSE]
+						}
 						if ${_QuestStepExists} && ${RIObj.QuestStepExists["${_QuestStep}"]}
 						{
 							_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
 							echo ISXRI: Triggered: ${_QuestStep}
+							Trigger:Set[FALSE]
+						}
+						if ${_QuestExists} && ${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+						{
+							_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+							echo ISXRI: Triggered: ${_Quest} Exists from ${_tempName}
+							Trigger:Set[FALSE]
+						}
+						if ${_QuestDNE} && !${QuestJournalWindow.ActiveQuest["${_Quest}"]}
+						{
+							_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+							echo ISXRI: Triggered: ${_Quest} Does Not Exist from ${_tempName}
 							Trigger:Set[FALSE]
 						}
 						if ${_QuestStepChecked} && ${RIObj.QuestStepExists["${_QuestStep}",${_QuestStepChecked}]}
@@ -19019,7 +19528,8 @@ function Path(... args)
 			_goReverse:Set[0]
 			MainArrayCounter:Set[${_start}]
 		}
-		;echo do while ${_LoopPath} && ${_Done}
+		if ${RI_Var_Bool_PathDebug}
+			echo do while ${_LoopPath} && ${_Done}
 	}
 	while ${_LoopPath} && !${_Done}
 	wait 20
@@ -19034,6 +19544,8 @@ function Path(... args)
 			call RIMObj.follow
 		}
 	}
+	if ${_PauseBot}
+		relay ${RI_Var_String_RelayGroup} RI_CMD_PauseCombatBots 0
 	if ${RI_Var_Bool_PathDebug}
 		echo ISXRI: Ending Path Function MAC: ${MainArrayCounter}
 }
@@ -20561,6 +21073,56 @@ function ShatteredSeasTempleofDoom()
 			Me.Ability[id,2153736181]:Use
 		wait 1
 	}
+}
+function GetCorrectQuest(string _Actor, string _QuestName, string _QuestStep)
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["${_Actor}"]
+	IncomingText2:Insert["says to you"]
+	CustomLoc:Set["0 0 0"]
+	wait 2
+	Trigger:Set[0]
+	do
+	{
+		Actor["${_Actor}"]:DoFace
+		Actor["${_Actor}"]:DoubleClick
+		wait 10 ${Trigger}
+	}
+	while !${Trigger} && !${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} && !${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)}
+	
+	Trigger:Set[FALSE]
+	while !${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} && !${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)}
+	{
+		wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+	}
+	do
+	{
+		wait 5
+		if !${RIObj.QuestStepExists[${_QuestStep}]}
+		{
+			if ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)}
+				QuestJournalWindow.ActiveQuest["${_QuestName}"]:Delete
+			wait 2
+			Trigger:Set[0]
+			do
+			{
+				Actor["${_Actor}"]:DoFace
+				Actor["${_Actor}"]:DoubleClick
+				wait 10 ${Trigger}
+			}
+			while !${Trigger} && !${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} && !${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)}
+			Trigger:Set[FALSE]
+			while !${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} && !${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)}
+			{
+				wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
+				EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+			}
+		}
+	}
+	while !${RIObj.QuestStepExists[${_QuestStep}]}
+
 }
 function PathHail(int _PathLines, int _Distance, bool _Loop, bool _GoReverseAfterAllQuantitiesMet, bool _GoReverseAtLoopOrEnd, ... args)
 {	
@@ -25113,7 +25675,7 @@ function CastAbility(... args)
 }
 function SwimUp(float YLoc=0)
 {
-	if !${RI_Var_Bool_GlobalOthers}
+	if !${RI_Var_Bool_GlobalOthers} && ${YLoc}==0
 		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call SwimUp"]
 	relay ${RI_Var_String_RelayGroup} press -hold ${RI_Var_String_FlyUpKey}
 	if ${YLoc}==0
@@ -25402,7 +25964,7 @@ function CheckZoneVersion(string _ActorName)
 	{
 		;echo exists: ${_ID}
 		;wait until we are out of combat
-		if !${DontStopForCombat}
+		if ${StopForCombat}
 			call RIMObj.CheckCombat
 		wait 10
 		;pause bots
@@ -25465,10 +26027,28 @@ function ReplyDialog(... args)
     variable iterator OptionsIterator
     variable int OptionCounter = 0
 	variable int _CNT
+	variable bool _OnlyMain=FALSE
 	for(_CNT:Set[1];${_CNT}<=${args.Used};_CNT:Inc)
 	{
+		if ${args[${_CNT}].Equal[-OnlyMain]}
+		{
+			_OnlyMain:Set[1]
+		}
+	}
+	for(_CNT:Set[1];${_CNT}<=${args.Used};_CNT:Inc)
+	{
+		if ${args[${_CNT}].Equal[-OnlyMain]}
+		{
+			continue
+		}
+		OptionCounter:Set[0]
 		if ${Int[${args[${_CNT}]}]}>0
-			relay ${RI_Var_String_RelayGroup} ReplyDialog:Choose[${Int[${args[${_CNT}]}]}]
+		{
+			if ${_OnlyMain}
+				ReplyDialog:Choose[${Int[${args[${_CNT}]}]}]
+			else
+				relay ${RI_Var_String_RelayGroup} ReplyDialog:Choose[${Int[${args[${_CNT}]}]}]
+		}
 		else
 		{
 			ReplyDialog.Replies:GetOptions[Options]
@@ -25486,9 +26066,12 @@ function ReplyDialog(... args)
 						{
 							if ${OptionsIterator.Value.CurrentValue.Find["${args[${_CNT}]}"]}
 							{
-								relay ${RI_Var_String_RelayGroup} ReplyDialog:Choose[${Math.Calc[${OptionCounter}+1]}]
+								if ${_OnlyMain}
+									ReplyDialog:Choose[${Math.Calc[${OptionCounter}+1]}]
+								else
+									relay ${RI_Var_String_RelayGroup} ReplyDialog:Choose[${Math.Calc[${OptionCounter}+1]}]
 							}
-							;echo "Option #${OptionCounter}::  '${OptionsIterator.Value.CurrentKey}' => '${OptionsIterator.Value.CurrentValue}' // ${args[${_CNT}]} // ${OptionsIterator.Value.CurrentValue.Find["${args[${_CNT}]}"]}"
+							;echo "Option #${OptionCounter}::  '${OptionsIterator.Value.CurrentKey}' // '${OptionsIterator.Value.CurrentValue}' // ${args[${_CNT}]} // ${OptionsIterator.Value.CurrentValue.Find["${args[${_CNT}]}"]}"
 						}
 						while ${OptionsIterator.Value.NextKey(exists)}
 						;echo "------"
@@ -25501,6 +26084,21 @@ function ReplyDialog(... args)
 		wait 5
 	}
 }
+function ZoomCamera(bool _In)
+{
+	if ${_In}
+	{
+		;zoomin
+		MouseWheel -10000
+		wait 5
+		MouseWheel 10000
+	}
+	else
+	{
+		;zoomout
+		MouseWheel -10000
+	}
+}
 function PlaceHouseItem(int _FaceDegree=${Me.Heading})
 {
 	Face ${_FaceDegree}
@@ -25508,6 +26106,7 @@ function PlaceHouseItem(int _FaceDegree=${Me.Heading})
 	;change camera
 	Press -hold ${RI_Var_String_LookDownKey}
 	wait 10
+	
 	;move mouse to just above center of screen aka on top of you and up
 	Mouse:SetPosition[${Math.Calc[${Display.Width}/2]},${Math.Calc[(${Display.Height}/2)-((${Display.Height}/2)*.1)]}]
 	wait 1
@@ -25765,7 +26364,7 @@ function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Re
 	;echo _QuestName:Set["${MainQuestName.Get[${MainQuestName.Used}]}"]
 	_QuestName:Set["${MainQuestName.Get[${MainQuestName.Used}]}"]
 
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}"]
+	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
 
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -25905,7 +26504,7 @@ function EquipItem(string _ItemName, int _slot=1, bool _StoreOldItem=0)
 }
 function SummonMount()
 {
-	if !${Me.OnHorse} && !${Me.OnFlyingMount}
+	if !${Me.OnTransport} && !${Me.OnFlyingMount}
 		eq2ex summon_mount
 	wait 20
 }
@@ -25993,7 +26592,7 @@ function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlig
 			else
 				_ID:Set[${Actor[Query, Name=-"${_Actor}" && HighlightOnMouseHover=TRUE].ID}]
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -26033,7 +26632,7 @@ function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlig
 			else
 				_ID:Set[${Actor[Query, Name=-"${_Actor}"].ID}]
 			;wait until we are out of combat
-			if !${DontStopForCombat}
+			if ${StopForCombat}
 				call RIMObj.CheckCombat
 			wait 10
 			;pause bots
@@ -26111,6 +26710,40 @@ function Teleporter(float _x, float _y, float _z, int _precision=1, int _maxdist
 	if !${Script[Buffer:CoT]}
 		RI_CoT
 }
+function ClickTeleporter(string _Actor, float _x, float _y, float _z, string _precision=1,string _maxdistance=20)
+{
+	if ${Script[Buffer:CoT]}
+		endscript Buffer:CoT
+	;echo Teleporter(float _x=${_x}, float _y=${_y}, float _z=${_z}, int _precision=1=${_precision}, int _maxdistance=10=${_maxdistance})
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		wait 20
+		call RIMObj.stopfollow
+	}
+	if !${RI_Var_Bool_GlobalOthers}
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call ClickTeleporter \"${_Actor}\" ${_x} ${_y} ${_z} ${_precision} ${_maxdistance}"]
+	RIMUIObj:SetLockSpot[ALL,${_x},${_y},${_z},${_precision},${_maxdistance}]
+	wait 100 ${Math.Distance[${Me.Loc},${_x},${_y},${_z}]}<=${_precision}
+	;echo before while ${Math.Distance[${Me.Loc},${_x},${_y},${_z}]}<=${_maxdistance} && !${EQ2.Zoning}
+	
+	while ${Math.Distance[${Me.Loc},${_x},${_y},${_z}]}<=${_maxdistance} && !${EQ2.Zoning}
+	{
+		wait 5
+		;echo in while
+		if !${Me.InCombat}
+		{
+			Actor[exactname,${_Actor}]:DoubleClick
+			Actor[${_Actor}]:DoubleClick
+		}
+		wait 300 !${Me.CastingSpell}
+	}
+	;echo after while ${Math.Distance[${Me.Loc},${_x},${_y},${_z}]}<=${_precision} && !${EQ2.Zoning}
+	RIMUIObj:SetLockSpot[OFF]
+	wait 600 ${RIMObj.AllGroupWithinRange[10]}
+	wait 20
+	if !${Script[Buffer:CoT]}
+		RI_CoT
+}
 function RingEvent(int _Distance, ... args)
 {
 	variable int _countor
@@ -26138,9 +26771,20 @@ function RingEvent(int _Distance, ... args)
 		wait 2
 	}
 }
+function CloseLootWindow()
+{
+	if !${RI_Var_Bool_GlobalOthers}
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call CloseLootWindow"]
+	variable int failcnt=0
+	while ${LootWindow(exists)} && ${failcnt:Inc}<150
+	{
+		LootWindow:Close
+		wait 1
+	}
+}
 function BuyFromVendor(string _VendorName, string _Item, int _Qty)
 {
-	echo ${_VendorName}
+	;echo ${_VendorName}
 	wait 20
 	relay ${RI_Var_String_RelayGroup} RI_CMD_PauseCombatBots 1
 	wait 20
@@ -26158,7 +26802,22 @@ function BuyFromVendor(string _VendorName, string _Item, int _Qty)
 	wait 20
 	relay ${RI_Var_String_RelayGroup} MerchantWindow.MerchantInventory["${_Item}"]:Buy[${_Qty}]
 	wait 20
+	if ${ChoiceWindow(exists)}
+		relay ${RI_Var_String_RelayGroup} ChoiceWindow:DoChoice1
+	wait 2
+	if ${ChoiceWindow(exists)}
+		relay ${RI_Var_String_RelayGroup} ChoiceWindow:DoChoice1
+	wait 2
 	relay ${RI_Var_String_RelayGroup} RI_CMD_PauseCombatBots 0
+}
+function RILoot(bool _On)
+{
+	wait 5
+	if ${_On}
+		relay ${RI_Var_String_RelayGroup} UIElement[RILootOnCheckbox@RILoot]:SetChecked
+	else
+		relay ${RI_Var_String_RelayGroup} UIElement[RILootOnCheckbox@RILoot]:UnsetChecked
+	wait 5
 }
 function CancelInvis()
 {
@@ -26346,11 +27005,17 @@ function LockAndWait(... args)
 	variable int _Wait=150
 	variable bool _RelayToGroup=0
 	variable int _acnt
+	variable string _ForWho=!NA!
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	{
 		;echo args ${_acnt} : ${args[${_acnt}]}
 		switch ${args[${_acnt}]}
 		{
+			case -FORWHO
+			{
+				_ForWho:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
 			case -LOC
 			{
 				_XYZ:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
@@ -26383,6 +27048,8 @@ function LockAndWait(... args)
 			}
 		}
 	}
+	if ${_ForWho.NotEqual["!NA!"]} && !${RIMUIObj.ForWhoCheck[${_ForWho}]}
+		return
 	if ${_RelayToGroup}
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_XYZ},${_Precision},${_Max}]
 	else
@@ -35481,21 +36148,32 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 {	
 	variable bool _NMB
 	variable bool _NLP
+	variable bool _NLC
 	variable string _NamedName
 	if ${_NamedsName.Right[4].Equal[-NMB]}
 	{
 		_NMB:Set[TRUE]
 		_NLP:Set[FALSE]
+		_NLC:Set[FALSE]
 		_NamedName:Set["${_NamedsName.Left[-4]}"]
 	}
 	elseif ${_NamedsName.Right[4].Equal[-NLP]}
 	{
 		_NLP:Set[TRUE]
 		_NMB:Set[FALSE]
+		_NLC:Set[FALSE]
+		_NamedName:Set["${_NamedsName.Left[-4]}"]
+	}
+	elseif ${_NamedsName.Right[4].Equal[-NLC]}
+	{
+		_NLC:Set[TRUE]
+		_NMB:Set[FALSE]
+		_NLP:Set[FALSE]
 		_NamedName:Set["${_NamedsName.Left[-4]}"]
 	}
 	else
 	{
+		_NLC:Set[FALSE]
 		_NLP:Set[FALSE]
 		_NMB:Set[FALSE]
 		_NamedName:Set["${_NamedsName}"]
@@ -35568,7 +36246,7 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 	call MoveBehind 0
 	wait 5
 	wait 45 !${Me.IsMoving}
-	if !${RI_Var_Bool_GlobalOthers} && ${Actor[Chest,radius,100](exists)} && ${Me.WaterDepth}==0 && !${Me.FlyingUsingMount} && !${RI_Var_Bool_SkipLoot}
+	if !${_NLC} && !${RI_Var_Bool_GlobalOthers} && ${Actor[Chest,radius,100](exists)} && ${Me.WaterDepth}==0 && !${Me.FlyingUsingMount} && !${RI_Var_Bool_SkipLoot}
 	{
 		eq2ex summon
 		wait 2
@@ -35997,7 +36675,7 @@ function CouncilCustom()
 ;;;;;;;; Start Vegarlson: Ruins of Rathe
 function Glimmerstone()
 {
-	DontStopForCombat:Set[TRUE]
+	StopForCombat:Set[FALSE]
 	AnnounceText:Clear
 	AnnounceText:Insert[Glimmerstone seeks protection within the stones]
 	Trigger:Set[TRUE]
@@ -36011,7 +36689,7 @@ function Glimmerstone()
 	call RIMObj.Move -289.182892 37.276058 -230.824738
 	DeleteVariable GlimmerstoneTriggerCount
 	DeleteVariable GlimmerstoneRunicID
-	DontStopForCombat:Set[FALSE]
+	StopForCombat:Set[TRUE]
 	;;have to move to and kill runic stones every time he is in pillars then, put this in function GlimmerstoneCustom then send that as the customloop
 	;13:22:42:Announce: Glimmerstone seeks protection within the stones!
 	;just move to and kill the stones he will come to you
@@ -36029,21 +36707,18 @@ function GlimmerstoneCustom()
 			{
 				call RIMObj.Move -305.970490 36.056591 -177.409592
 				call RIMObj.Move -319.988098 36.691917 -173.739548
-				echo 1
+				;echo 1
 				CustomLoc:Set[0 0 0]
 				call ClickActor -Actor "Runic Stone"
-				echo 2
+				;echo 2
 				GlimmerstoneRunicID:Set[${Actor[Runic Stone].ID}]
 				Actor[${GlimmerstoneRunicID}]:DoTarget
 				wait 600 ${Actor[id,${GlimmerstoneRunicID}].IsDead}
 				call RIMObj.Move -305.970490 36.056591 -177.409592
 				wait 50
-				echo 3
+				;echo 3
 				if ${Actor[Glimmerstone].Distance}>7
 					call RIMObj.Move ${Actor[Glimmerstone].X} ${Actor[Glimmerstone].Y} ${Actor[Glimmerstone].Z} 5
-				echo 4
-				
-				echo 5
 				break
 			}
 			case 2
@@ -36951,6 +37626,7 @@ function Xylox()
 	;AnnounceText:Insert["The shield dissipates"]
 	call CustomNamed "Xylox the Poisonous-NMB" "-498.070923,31.269993,-148.6769873" XyloxCustom
 }
+
 function XyloxCustom(int _NamedID)
 {
 	if ${Trigger}
@@ -36973,7 +37649,7 @@ function XyloxCustom(int _NamedID)
 				if ${Actor[id, ${_NamedID}].Distance}<30
 				{
 					if ${Me.Distance[-498.070923,31.269993,-148.6769873]}<10
-						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-451.647095,28.741383,-236.845184]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-459.246399,30.097427,-224.127747]
 					;elseif ${Actor[id,${_NamedID}].Distance[-498.070923,31.269993,-148.6769873]}<30
 					;	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-457.382080,30.019697,-237.328156]
 					else
@@ -37030,7 +37706,7 @@ function Cerio()
 }
 function Raizyl()
 {
-	call CustomNamed "Raizyl Pajdu" "-150.178848,82.870377,-297.967041"
+	call CustomNamed "Raizyl Pajdu-NMB" "-150.178848,82.870377,-297.967041" NONE apprentice
 }
 function Dichromanus()
 {
@@ -37066,7 +37742,7 @@ function Unhilynd()
 function Prysmerah()
 {
 	IncomingText:Insert["gathers fire and poison"]
-	call CustomNamed "Prysmerah, Arx Patrona" "-235.021988,179.759079,-0.059676"
+	call CustomNamed "Prysmerah, Arx Patrona-NMB" "-235.021988,179.759079,-0.059676"
 }
 function PrysmerahCustom()
 {
@@ -37185,8 +37861,11 @@ function ArxEvent1()
 }
 function Life()
 {
+	AnnounceText:Clear
+	AnnounceText:Insert["The Archon of Life's Pole Position fortifies its defenses"]
 	call CustomNamed "Archon of Life-NMB" "-42.978535,78.122383,4.232473" LifeCustom
-	DeleteVariable  RI_Var_IndexString_ArxEvent1
+	if ${RI_Var_IndexString_ArxEvent1(exists)}
+		DeleteVariable RI_Var_IndexString_ArxEvent1
 }
 function LifeCustom(int _NamedID)
 {
@@ -37194,13 +37873,27 @@ function LifeCustom(int _NamedID)
 	{
 		call RIObj.Target ${_NamedID}
 		if ${Actor[id,${_NamedID}].Health}>76
+		{
 			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${RI_Var_IndexString_ArxEvent1.Get[1]}]
+		}
 		elseif ${Actor[id,${_NamedID}].Health}>51
+		; && ${Trigger}
+		{
 			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${RI_Var_IndexString_ArxEvent1.Get[2]}]
+			Trigger:Set[FALSE]
+		}
 		elseif ${Actor[id,${_NamedID}].Health}>26
+		; && ${Trigger}
+		{
 			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${RI_Var_IndexString_ArxEvent1.Get[3]}]
+			Trigger:Set[FALSE]
+		}
 		elseif ${Actor[id,${_NamedID}].Health}<27
+		; && ${Trigger}
+		{
 			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${RI_Var_IndexString_ArxEvent1.Get[4]}]
+			Trigger:Set[FALSE]
+		}
 	}
 }
 
@@ -37256,6 +37949,3675 @@ function Baltar()
 
 ;;;;;;;; End Fordel Midst: The Listless Spires
 
+;;;;;;;; Start Fordel Midst: Wayward Manor
+
+function CustomDapperlingSpawn()
+{
+
+	call RIMObj.Move 567.823364 -22.081345 -580.778870 2 0 TRUE FALSE TRUE FALSE TRUE
+	
+	while ${Actor[Query, ( Name=-"a reishi" || Name=-"baleful" || Name=-"umbral" || Name=-"rotting" ) && IsDead=FALSE && Distance<10](exists)} && !${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+		wait 1
+	wait 20
+	if !${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+	{
+		call RIMObj.Move 554.734863 -23.477221 -603.918762 2 0 TRUE FALSE TRUE FALSE TRUE
+		while ${Actor[Query, ( Name=-"a reishi" || Name=-"baleful" || Name=-"umbral" || Name=-"rotting" ) && IsDead=FALSE && Distance<10](exists)} && !${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+			wait 1
+		call RIMObj.Move 567.823364 -22.081345 -580.778870 2 0 TRUE FALSE TRUE FALSE TRUE
+		wait 20
+	}
+	if !${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+	{
+		call RIMObj.Move 554.336182 -23.429367 -558.502563 2 0 TRUE FALSE TRUE FALSE TRUE
+		while ${Actor[Query, ( Name=-"a reishi" || Name=-"baleful" || Name=-"umbral" || Name=-"rotting" ) && IsDead=FALSE && Distance<10](exists)} && !${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+			wait 1
+		call RIMObj.Move 567.823364 -22.081345 -580.778870 2 0 TRUE FALSE TRUE FALSE TRUE
+		wait 20
+	}
+	if !${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+	{
+		call RIMObj.Move 600.624268 -23.421547 -603.745972 2 0 TRUE FALSE TRUE FALSE TRUE
+		while ${Actor[Query, ( Name=-"a reishi" || Name=-"baleful" || Name=-"umbral" || Name=-"rotting" ) && IsDead=FALSE && Distance<10](exists)} && !${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+			wait 1
+		call RIMObj.Move 567.823364 -22.081345 -580.778870 2 0 TRUE FALSE TRUE FALSE TRUE
+		wait 20
+	}
+	if !${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+	{
+		
+		call RIMObj.Move 600.265198 -23.423006 -555.624939 2 0 TRUE FALSE TRUE FALSE TRUE
+		while ${Actor[Query, ( Name=-"a reishi" || Name=-"baleful" || Name=-"umbral" || Name=-"rotting" ) && IsDead=FALSE && Distance<10](exists)} && !${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+			wait 1
+		call RIMObj.Move 567.823364 -22.081345 -580.778870 2 0 TRUE FALSE TRUE FALSE TRUE
+		wait 20
+	}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,567.823364 -22.081345 -580.778870]
+	wait 100 ${Actor[Query, Name=-"The Deadly Dapperling"](exists)}
+	while ${Actor[Query, Name=-"The Deadly Dapperling"].Distance}>20 && !${Actor[Query, Name=-"The Deadly Dapperling"].IsDead}
+	{
+		Actor[Query, Name=-"The Deadly Dapperling" && IsDead=FALSE]:DoTarget
+		wait 5
+	}
+	call Dapperling
+	relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Dapperling"]
+}
+function Dapperling()
+{
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		while ${Actor[Query, Name=-"The Deadly Dapperling" && IsDead=FALSE].Distance}>10
+		{
+			Actor[Query, Name=-"The Deadly Dapperling" && IsDead=FALSE]:DoTarget
+			wait 1
+		}
+	}
+	else
+	{
+		while ${Actor[Query, Name=-"The Deadly Dapperling" && IsDead=FALSE].Distance}>10
+		{
+			wait 1
+		}
+	}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,531.667358,-21.434948,-593.719177]
+	while ${Me.Distance[531.667358,-21.434948,-593.719177]}>5
+		wait 1
+	wait 20
+	call CustomNamed "The Deadly Dapperling" "530.676758,-21.435129,-604.148438"
+}
+function Waywardcustomseattack(bool _On)
+{
+	if ${_On}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,1]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,1]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,1]
+	}
+	else
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,0]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,0]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,0]
+		relay ${RI_Var_String_RelayGroup} eq2ex cancel_spellcast
+		relay ${RI_Var_String_RelayGroup} eq2ex pet backoff
+	}
+}
+function Waywardcustomcheckcombat()
+{
+	while ( ${Me.InCombat} || ${Me.IsHated} ) && ${RI_Var_Bool_Start}
+	{
+		if ${Actor[stone-worked trap](exists)} && ${Target.ID}!=${Actor[stone-worked trap].ID}
+			Actor[stone-worked trap]:DoTarget
+		wait 1
+	}
+}
+function SpawnEegutPull(int _muckID, string _TrappedLoc)
+{
+	if ${_muckID}==0
+		return
+	if ${Actor[Query, Name=="a trapped muck digger"](exists)} && ${Actor[Query, Name=="a trapped muck digger"].Distance[${_TrappedLoc}]}<2
+		return
+	variable string _Loc
+	variable int _failcnt=0
+	_Loc:Set["${Actor[id,${_muckID}].Loc}"]
+	Actor[id,${_muckID}]:DoTarget
+	Actor[id,${_muckID}]:DoFace
+	_failcnt:Set[0]
+	while ${Actor[id,${_muckID}].Target.ID}!=${Me.ID} && ${Actor[id,${_muckID}].Distance[${_Loc}]}<1 && ${_failcnt:Inc}<150
+	{
+		eq2ex togglerangedattack
+		wait 2
+	}
+	while ${Actor[Query, ID=${_muckID} && IsDead=FALSE](exists)} && ${_failcnt:Inc}<300 && ${Actor[id,${_muckID}].Distance}>8
+	{
+		Actor[id,${_muckID}]:DoTarget
+		Actor[id,${_muckID}]:DoFace
+		wait 1
+	}
+}
+function SpawnEegut()
+{
+	variable int _muckID
+	variable int _failcnt=0
+	AnnounceText:Clear
+	AnnounceText:Insert["It checks its TRAPS"]
+	while !${Trigger} && ${_failcnt:Inc}<=5
+	{
+		wait 20
+		call LockAndWait -Loc "682.057861,-23.477221,-599.390015" -RelayToGroup
+		wait 20
+		call Waywardcustomseattack 0
+		wait 5
+		_muckID:Set[${Actor[Query, Name=="a muck digger" && X=658.679993 && Y=-22.099909 && Z=-611.989990].ID}]
+		call SpawnEegutPull ${_muckID} "677.919983,-23.437988,-601.760010"
+		wait 20
+		call LockAndWait -Loc "690.571655,-23.477222,-601.006104" -RelayToGroup
+		wait 20
+		call Waywardcustomseattack 1
+		call Waywardcustomcheckcombat
+		call Waywardcustomseattack 0
+		wait 5
+		_muckID:Set[${Actor[Query, Name=="a muck digger" && X=673.539978 && Y=-22.099657 && Z=-626.859985].ID}]
+		call SpawnEegutPull ${_muckID} "688.179993,-23.477221,-605.200012"
+		wait 20
+		call LockAndWait -Loc "691.210266,-22.107286,-585.510803" -RelayToGroup
+		wait 20
+		call LockAndWait -Loc "686.224731,-22.107286,-578.093140" -RelayToGroup
+		wait 20
+		call LockAndWait -Loc "679.450317,-22.107290,-586.313965" -RelayToGroup
+		wait 20
+		call LockAndWait -Loc "685.940857,-22.901522,-593.328552" -RelayToGroup
+		call LockAndWait -Loc "690.779907,-23.477221,-602.343201" -RelayToGroup
+
+		call LockAndWait -Loc "699.552588,-23.477221,-606.945313" -RelayToGroup
+		wait 20
+		call Waywardcustomseattack 1
+		call Waywardcustomcheckcombat
+		call Waywardcustomseattack 0
+		wait 5
+		_muckID:Set[${Actor[Query, Name=="a muck digger" && X=716.049988 && Y=-23.477221 && Z=-599.109985].ID}]
+		call SpawnEegutPull ${_muckID} "704.640015,-23.421547,-604.739990"
+		wait 20
+		call LockAndWait -Loc "700.012024,-23.477221,-603.180908" -RelayToGroup
+		call LockAndWait -Loc "669.598999,-22.082491,-578.435913" -RelayToGroup
+		wait 20
+		call LockAndWait -Loc "682.445801,-23.477221,-561.693054" -RelayToGroup
+		wait 20
+		call Waywardcustomseattack 1
+		call Waywardcustomcheckcombat
+		call Waywardcustomseattack 0
+		wait 5
+		Face 127
+		_muckID:Set[${Actor[Query, Name=="a muck digger" && X=658.489990 && Y=-22.099703 && Z=-547.700012].ID}]
+		wait 5
+		_muckID:Set[${Actor[Query, Name=="a muck digger" && X=658.489990 && Y=-22.099703 && Z=-547.700012].ID}]
+		call SpawnEegutPull ${_muckID} "679.419983,-23.477221,-559.520020"
+		wait 20
+		call LockAndWait -Loc "688.998389,-23.477221,-561.773315" -RelayToGroup
+		wait 20
+		call Waywardcustomseattack 1
+		call Waywardcustomcheckcombat
+		call Waywardcustomseattack 0
+		wait 5
+		_muckID:Set[${Actor[Query, Name=="a muck digger" && X=695.270020 && Y=-22.099524 && Z=-534.500000].ID}]
+		call SpawnEegutPull ${_muckID} "689.469971,-23.477221,-556.530029"
+		wait 20
+		call LockAndWait -Loc "695.168152,-23.477221,-562.178223" -RelayToGroup
+		call LockAndWait -Loc "698.566223,-23.477221,-552.561523" -RelayToGroup
+		call LockAndWait -Loc "701.191040,-23.423014,-558.817139" -RelayToGroup
+		wait 20
+		call Waywardcustomseattack 1
+		call Waywardcustomcheckcombat
+		call Waywardcustomseattack 0
+		wait 5
+		_muckID:Set[${Actor[Query, Name=="a muck digger" && X=726.450012 && Y=-23.477221 && Z=-549.250000].ID}]
+		call SpawnEegutPull ${_muckID} "705.130005,-23.423008,-558.000000"
+		wait 20
+		call LockAndWait -Loc "694.949707,-23.477221,-564.592529" -RelayToGroup -WaitAfter 50
+		call Waywardcustomseattack 1
+		call Waywardcustomcheckcombat
+		if !${Trigger} && ${_failcnt:Inc}<=5
+		{
+			call LockAndWait -Loc "689.920288,-22.523958,-592.715576" -RelayToGroup -WaitAfter 20
+		}
+	}
+	if !${Trigger}
+		call MessageBox "We failed spawning Eegut spawn him and resume at 694.949707,-23.477221,-564.592529"
+	else
+		Trigger:Set[0]
+
+}
+function Eegut()
+{
+	call CustomNamed "Eegut Stonegut" "720.989075,-21.799664,-586.574158"
+}
+function Yelloweyes()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["but towards"]
+	IncomingText:Insert["dread to those nearby"]
+	RI_CMD_AbilityEnableDisable "Cure Curse" 0
+	declare YE_GotCursed bool global FALSE
+	call CustomNamed "Yelloweyes-NMB" "627.560181,-7.976874,-528.934448" YelloweyesCustom
+	RI_CMD_AbilityEnableDisable "Cure Curse" 1
+	deletevariable YE_GotCursed
+}
+function YelloweyesCustom(int _NamedID)
+{
+	if ${Trigger} && ${TriggerMessage.Find["but towards"](exists)}
+	{
+		;echo TRIGGER ${TriggerMessage} // \${TriggerMessage.Find[${Me.Archetype}](exists)} // ${TriggerMessage.Find[${Me.Archetype}](exists)}
+		if ${Me.Cursed}==1 && ${TriggerMessage.Find[${Me.Archetype}](exists)}
+		{
+			;echo its me and im the right archetype: ${TriggerMessage}
+			YE_GotCursed:Set[1]
+			relay ${RI_Var_String_RelayGroup} RI_Var_String_CurseName:Set[${Me.Name}]
+			wait 10
+		}
+		elseif !${TriggerMessage.Find[${Me.Archetype}](exists)}
+		{
+			Trigger:Set[FALSE]
+		}
+		elseif ${TriggerMessage.Find[${Me.Archetype}](exists)} && ${Me.Cursed}<1 && ${YE_GotCursed}
+		{
+			Trigger:Set[FALSE]
+			YE_GotCursed:Set[0]
+		}
+	}
+	elseif ${Trigger} && ${TriggerMessage.Find["dread to those nearby"](exists)}
+	{
+		if ${Me.Distance[627.560181,-7.976874,-528.934448]}<5
+			RIMUIObj:SetLockSpot[ALL,654.493103,-7.998078,-504.817383]
+		else
+			RIMUIObj:SetLockSpot[ALL,627.560181,-7.976874,-528.934448]
+		Trigger:Set[0]
+	}
+	if ${RIMUIObj.MainIconIDExists[${_NamedID},717]}
+	{
+		if ${Me.Group}>4 && ${Me.Archetype.Equal[priest]}
+			return
+		call UseItem "Bottle of Screaming Flames" 2
+	}
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		call RIObj.Target ${_NamedID}
+	}
+}
+function Waywardcustomvoilend()
+{
+	if ${RI_Var_Bool_GlobalOthers}
+		while 1
+			wait 1
+	wait 50
+	if ${Math.Distance[${Me.Y},-8.63]}>5
+	{
+		if ${Me.Distance[568.553040,-23.477221,-546.567139]}<10
+		{
+			call RIMObj.Move 559.836914 -23.477221 -563.800964 2 0 TRUE FALSE TRUE FALSE TRUE
+			wait 20
+		}
+		if ${Math.Distance[${Me.Y},-21.759998]}<10
+		{
+			if ${Me.Distance[634.411987,-21.756823,-592.931702]}>10
+				call RIMObj.Move 609.983154 -22.081347 -580.730896 2 0 TRUE FALSE TRUE FALSE TRUE
+			call RIMObj.Move 634.411987 -21.756823 -592.931702 2 0 TRUE FALSE TRUE FALSE TRUE
+			wait 20
+			variable int MEY
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,OFF]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetRIFollow[ALL,OFF]
+			MEY:Set[${Me.Y}]
+			while ${Math.Distance[${Me.Y},${MEY}]}<5 || ( !${RIMObj.AllGroupWithinRange[5]} && !${Zone.Name.Find["[Solo]"]} )
+			{
+				relay ${RI_Var_String_RelayGroup} Actor["black hole 2"]:DoubleClick
+				waitframe
+			}
+			wait 20
+			wait 300 ${RIMObj.AllGroupWithinRange[5]}
+		}
+	}
+	else
+	{
+		variable index:string _Locs
+		variable int _i
+		variable int _closestWaypointIndex=0
+		variable int _closestWaypointDistance=10000
+
+		_Locs:Insert["659.829102,-8.654459,-567.066162"]
+		_Locs:Insert["640.386047,-8.654518,-567.132019"]
+		_Locs:Insert["621.964294,-8.654470,-567.322693"]
+		_Locs:Insert["616.246826,-8.601758,-542.237122"]
+		_Locs:Insert["580.158691,-8.613431,-538.103394"]
+		_Locs:Insert["556.280396,-8.651175,-538.393555"]
+		_Locs:Insert["541.947693,-8.632845,-543.327942"]
+		_Locs:Insert["535.962646,-8.654644,-579.741760"]
+		_Locs:Insert["543.169434,-8.605640,-619.400146"]
+		_Locs:Insert["582.494629,-8.613464,-623.567261"]
+		_Locs:Insert["616.901306,-8.632845,-616.968994"]
+		_Locs:Insert["622.863708,-8.654472,-593.817627"]
+		_Locs:Insert["640.889343,-8.627186,-593.779663"]
+
+		for(_i:Set[1];${_i}<=${_Locs.Used};_i:Inc)
+		{
+			if ${Me.Distance[${_Locs.Get[${_i}]}]}<${_closestWaypointDistance}
+			{
+				_closestWaypointDistance:Set[${Me.Distance[${_Locs.Get[${_i}]}]}]
+				_closestWaypointIndex:Set[${_i}]
+			}
+		}
+		for(_i:Set[${_closestWaypointIndex}];${_i}<=${_Locs.Used};_i:Inc)
+		{
+			call LockAndWait -Loc "${_Locs.Get[${_i}]}" -RelayToGroup
+			wait 50 ${RIMObj.AllGroupWithinRange[3]}
+		}
+	}
+	wait 20
+}
+function Voil()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["vanishes to another floor"]
+	call CustomNamed "Tog Voil-NLP" "641.158752 -8.654509 -568.052856" VoilCustom
+}
+function VoilCustom(int _NamedID)
+{
+	variable int MEY=0
+	if ${Trigger} || ${RIMUIObj.MainIconIDExists[${_NamedID},553]}
+	{
+		RIMUIObj:SetLockSpot[ALL,OFF]
+		MEY:Set[${Me.Y}]
+		if ${Math.Distance[${MEY},-8.627186]}<5
+		{
+			while ${Math.Distance[${Me.Y},${MEY}]}<5 || ( !${RIMObj.AllGroupWithinRange[5]} && !${Zone.Name.Find["[Solo]"]} )
+			{
+				relay ${RI_Var_String_RelayGroup} Actor["black hole 1"]:DoubleClick
+				waitframe
+			}
+		}
+		else
+		{
+			while ${Math.Distance[${Me.Y},${MEY}]}<5 || ( !${RIMObj.AllGroupWithinRange[5]} && !${Zone.Name.Find["[Solo]"]} )
+			{
+				relay ${RI_Var_String_RelayGroup} Actor["black hole 2"]:DoubleClick
+				waitframe
+			}
+		}
+		Trigger:Set[0]
+		RIMUIObj:SetLockSpot[ALL,${Me.Loc}]
+		if ${Zone.Name.Find["[Solo]"]}
+			wait 150
+		else
+			wait 150 ${RIMObj.AllGroupWithinRange[5]} && !${RIMUIObj.MainIconIDExists[${_NamedID},553]}
+	}
+	if !${RI_Var_Bool_GlobalOthers}
+		call RIObj.Target netherbian -Distance 10 baleful -Distance 10 umbral -Distance 10 rotting -Distance 10 ${_NamedID}
+}
+function Famyra()
+{
+	call CustomNamed "Famyra the Biblioghost" "760.726074 -8.550653 -733.980957" FamyraCustom
+}
+function FamyraCustom(int _NamedID)
+{
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		if ${Actor[an ancient tome](exists)}
+		{
+			call RIObj.Target ${Actor[an ancient tome].ID}
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[an ancient tome].Loc},25,100]
+		}
+		else
+		{
+			call RIObj.Target ${_NamedID}
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,760.295654,-8.550663,-731.974915]
+		}
+	}
+}
+
+;;;;;;;; End Fordel Midst: Wayward Manor
+;;;;;;;; Start The Ruins of Ssraeshza
+function Ruin()
+{
+	AnnounceText:Clear
+	AnnounceText:Insert["The Architect of Ruin shines moonlight in your direction"]
+	call CustomNamed "The Architect of Ruin" "-55.180870,-32.003540,-53.481030" RuinCustom
+}
+function RuinCustom(int _NamedID)
+{
+	if !${RI_Var_Bool_GlobalOthers}
+		call RIObj.Target ${_NamedID}
+
+	if ${Trigger}
+	{	
+		variable point3f PointSideMob
+		PointSideMob:Set[${Position.PointAtAngle[${_NamedID},90,15]}]
+		wait 1
+		RIMUIObj:SetLockSpot[ALL,${PointSideMob}]
+		wait 80
+		if ${Me.Archetype.Equal[scout]}
+			RIMUIObj:ComeOn[${Me.Name}]
+		else
+			RIMUIObj:SetLockSpot[ALL,"-55.180870,-32.003540,-53.481030"]
+		Trigger:Set[0]
+	}
+}
+function Ruinscustombridgehighlightcheck()
+{
+	if ${Zone.Name.Find["[Solo]"]}
+		return
+	while !${Actor[Query, Name=-"spike room button highlight" && Distance<5](exists)}
+	{
+		face 90
+		wait 2
+		press -hold w
+		wait 5
+		press -release w
+		wait 20
+	}
+}
+function Ruinscustombridge(int _Stage)
+{
+	if ${_Stage}==1
+	{
+		declare RI_Var_Int_RuinsCustomBridge int globalkeep 0
+		;echo STAGE1
+		CustomLoc:Set["0 0 0"]
+		RI_Var_Bool_Follow:Set[0]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,2.562085,-169.613907,-272.315216,1,100]
+		;call RIMObj.Move 2.562085 -169.613907 -272.315216 1
+		wait 20
+		if ${Zone.Name.Find["[Solo]"]}
+		{
+			call ClickActor -Actor "spike room floor plate 1" -ExactName
+			wait 20
+		}
+		call Ruinscustombridgehighlightcheck
+		;echo after
+		relay "other ${RI_Var_String_RelayGroup}" RIMUIObj:StopMove[ALL]
+		wait 5
+		if ${Actor["invisible walkway 1"](exists)}
+		{
+			RIMUIObj:SetLockSpot[ALL,2.955392,-169.613541,-331.560211,1,100]
+			wait 150 ${Me.Distance[2.955392,-169.613541,-331.560211]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,2.955392,-169.613541,-331.560211,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+			RI_Var_Bool_Follow:Set[1]
+			call RIMObj.Move 16.154007 -169.877014 -336.855621
+			wait 20
+			call RIMObj.Move 15.675031 -169.877014 -349.420532
+			RI_Var_Int_RuinsCustomBridge:Set[1]
+			return
+		}
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-14.096043,-169.615326,-272.463654,1,100]
+		;call RIMObj.Move -14.096043 -169.615326 -272.463654 1
+		wait 20
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+		wait 5
+		if ${Zone.Name.Find["[Solo]"]}
+		{
+			call ClickActor -Actor "spike room floor plate 2" -ExactName
+			wait 20
+		}
+		call Ruinscustombridgehighlightcheck
+		if ${Actor["invisible walkway 2"](exists)}
+		{
+			RIMUIObj:SetLockSpot[ALL,-14.137972,-169.614212,-331.667816,1,100]
+			wait 150 ${Me.Distance[-14.137972,-169.614212,-331.667816]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-14.137972,-169.614212,-331.667816,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+			RI_Var_Bool_Follow:Set[1]
+			call RIMObj.Move 16.154007 -169.877014 -336.855621
+			wait 20
+			call RIMObj.Move 15.675031 -169.877014 -349.420532
+			RI_Var_Int_RuinsCustomBridge:Set[2]
+			return
+		}
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-30.013706,-169.614395,-272.300049,1,100]
+		;call RIMObj.Move -30.013706 -169.614395 -272.300049 1
+		wait 20
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+		wait 5
+		if ${Zone.Name.Find["[Solo]"]}
+		{
+			call ClickActor -Actor "spike room floor plate 3" -ExactName
+			wait 20
+		}
+		call Ruinscustombridgehighlightcheck
+		if ${Actor["invisible walkway 3"](exists)}
+		{
+			RIMUIObj:SetLockSpot[ALL,-29.919804,-169.614090,-331.608795,1,100]
+			wait 150 ${Me.Distance[-29.919804,-169.614090,-331.608795]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-29.919804,-169.614090,-331.608795,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+			RI_Var_Bool_Follow:Set[1]
+			call RIMObj.Move -76.967842 -169.877014 -336.179108
+			wait 20
+			call RIMObj.Move -77.043182 -169.877014 -350.282227
+			RI_Var_Int_RuinsCustomBridge:Set[3]
+			return
+		}
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-46.053577,-169.615494,-272.535797,1,100]
+		;call RIMObj.Move -46.053577 -169.615494 -272.535797 1
+		wait 20
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+		wait 5
+		if ${Zone.Name.Find["[Solo]"]}
+		{
+			call ClickActor -Actor "spike room floor plate 4" -ExactName
+			wait 20
+		}
+		call Ruinscustombridgehighlightcheck
+		if ${Actor["invisible walkway 4"](exists)}
+		{
+			RIMUIObj:SetLockSpot[ALL,-45.959658,-169.614227,-331.557007,1,100]
+			wait 150 ${Me.Distance[-45.959658,-169.614227,-331.557007]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-45.959658,-169.614227,-331.557007,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+			RI_Var_Bool_Follow:Set[1]
+			call RIMObj.Move -76.967842 -169.877014 -336.179108
+			wait 20
+			call RIMObj.Move -77.043182 -169.877014 -350.282227
+			RI_Var_Int_RuinsCustomBridge:Set[4]
+			return
+		}
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-62.295345,-169.615356,-272.436615,1,100]
+		;call RIMObj.Move -62.295345 -169.615356 -272.436615 1
+		wait 20
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+		wait 5
+		if ${Zone.Name.Find["[Solo]"]}
+		{
+			call ClickActor -Actor "spike room floor plate 5" -ExactName
+			wait 20
+		}
+		call Ruinscustombridgehighlightcheck
+		if ${Actor["invisible walkway 5"](exists)}
+		{
+			RIMUIObj:SetLockSpot[ALL,-61.826420,-169.614807,-331.659302,1,100]
+			wait 150 ${Me.Distance[-61.826420,-169.614807,-331.659302]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-61.826420,-169.614807,-331.659302,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+			RI_Var_Bool_Follow:Set[1]
+			call RIMObj.Move -76.967842 -169.877014 -336.179108
+			wait 20
+			call RIMObj.Move -77.043182 -169.877014 -350.282227
+			RI_Var_Int_RuinsCustomBridge:Set[5]
+			return
+		}
+		if ${RI_Var_Int_RuinsCustomBridge}==0
+			call MessageBox "We did not see the invisible bridge do this part and resume when its up"
+	}
+	else
+	{
+		;echo STAGE2
+		RI_Var_Bool_Follow:Set[0]
+		if ${RI_Var_Int_RuinsCustomBridge}==5
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-62.036610,-169.614944,-331.611206,1,100]
+			wait 150 ${Me.Distance[-62.036610,-169.614944,-331.611206]}<=1
+			wait 20
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+			wait 5
+			RIMUIObj:SetLockSpot[ALL,-62.295345,-169.615356,-272.436615,1,100]
+			wait 150 ${Me.Distance[-62.295345,-169.615356,-272.436615]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-62.295345,-169.615356,-272.436615,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+		}
+		if ${RI_Var_Int_RuinsCustomBridge}==4
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-45.790775,-169.615097,-331.717560,1,100]
+			wait 150 ${Me.Distance[-45.790775,-169.615097,-331.717560]}<=1
+			wait 20
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+			wait 5
+			RIMUIObj:SetLockSpot[ALL,-46.053577,-169.615494,-272.535797,1,100]
+			wait 150 ${Me.Distance[-46.053577,-169.615494,-272.535797]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-46.053577,-169.615494,-272.535797,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+		}
+		if ${RI_Var_Int_RuinsCustomBridge}==3
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-29.782019,-169.614655,-331.666351,1,100]
+			wait 150 ${Me.Distance[-29.782019,-169.614655,-331.666351]}<=1
+			wait 20
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+			wait 5
+			RIMUIObj:SetLockSpot[ALL,-30.013706,-169.614395,-272.300049,1,100]
+			wait 150 ${Me.Distance[-30.013706,-169.614395,-272.300049]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-30.013706,-169.614395,-272.300049,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+		}
+		if ${RI_Var_Int_RuinsCustomBridge}==2
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-13.979129,-169.614899,-331.664337,1,100]
+			wait 150 ${Me.Distance[-13.979129,-169.614899,-331.664337]}<=1
+			wait 20
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+			wait 5
+			RIMUIObj:SetLockSpot[ALL,-14.096043,-169.615326,-272.463654,1,100]
+			wait 150 ${Me.Distance[-14.096043,-169.615326,-272.463654]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-14.096043,-169.615326,-272.463654,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+		}
+		if ${RI_Var_Int_RuinsCustomBridge}==1
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,2.020472,-169.614777,-331.541931,1,100]
+			wait 150 ${Me.Distance[2.020472,-169.614777,-331.541931]}<=1
+			wait 20
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+			wait 5
+			RIMUIObj:SetLockSpot[ALL,2.562085,-169.613907,-272.315216,1,100]
+			wait 150 ${Me.Distance[2.562085,-169.613907,-272.315216]}<=1
+			wait 20
+			call Ruinscustombridgehighlightcheck
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,2.562085,-169.613907,-272.315216,1,100]
+			wait 150 ${RIMObj.AllGroupWithinRange[2]}
+		}
+		deletevariable RI_Var_Int_RuinsCustomBridge
+	}
+	RI_Var_Bool_Follow:Set[1]
+}
+
+function Vesshtri()
+{
+	call CustomNamed "Vesshtri the Swordfang" "-30.279108,-169.877014,-365.168732" VesshtriCustom
+}
+function VesshtriCustom()
+{
+	call RIObj.Target ${_NamedID}
+	if ( ${Me.GetGameData[Target.Casting].Label.Equal[Slicing Fangs]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Slicing Fangs]} )
+	{
+		RIMUIObj:SetLockSpot[OFF]
+		RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[1]
+		call MoveBehind 1
+		RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[1]
+	}
+	else
+	{
+		if ${Me.Archetype.Equal[scout]} && ${RI_Var_Bool_GlobalOthers}
+			noop
+		else
+		{
+			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[0]
+			call MoveBehind 0
+			RI_Var_Bool_MoveBehindIgnoreAggroCheck:Set[0]
+			RIMUIObj:SetLockSpot[ALL,-30.279108,-169.877014,-365.168732]
+		}
+	}
+}
+;Rath'Argoth
+;Rath'Girosz
+function Rath()
+{
+	call CustomNamed "Rath" "178.580353,-160.771133,-29.563877"
+	call CustomNamed "Rath" "178.580353,-160.771133,-29.563877"
+}
+function RathCustom()
+{
+	;LOL cant figure out what to determine Time of day.
+	;0.000107    12
+	;30.000046   1
+	;60.000015   2
+	;90.000000   3
+	;120.000000  4
+	;149.999985  5
+	;180.000000  6
+	;210.000000  7
+	;240.000000  8
+	;270.000000  9
+	;300.000000  10
+	;329.999939  11
+	;6pm to 5:59am
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		if ${Actor[clock hour hand].Heading}==180.000000 || ${Actor[clock hour hand].Heading}==210.000000 || ${Actor[clock hour hand].Heading}==240.000000 || ${Actor[clock hour hand].Heading}==270.000000 || ${Actor[clock hour hand].Heading}==300.000000 || ${Actor[clock hour hand].Heading}==329.999939 || ${Actor[clock hour hand].Heading}==0.000107 || ${Actor[clock hour hand].Heading}==30.000046 || ${Actor[clock hour hand].Heading}==60.000015 || ${Actor[clock hour hand].Heading}==90.000000 || ${Actor[clock hour hand].Heading}==120.000000 || ${Actor[clock hour hand].Heading}==149.999985
+		{
+			echo 6PM to 6AM
+			call RIObj.Target ${Actor[Rath'Girosz].ID}
+		}
+		else
+		{
+			echo 6AM to 6PM
+			call RIObj.Target ${Actor[Rath'Argoth].ID}
+		}
+	}
+}
+function Ruinscustomclock()
+{
+	;Hour Clock
+	;0.000107    12
+	;30.000046   1
+	;60.000015   2
+	;90.000000   3
+	;120.000000  4
+	;149.999985  5
+	;180.000000  6
+	;210.000000  7
+	;240.000000  8
+	;270.000000  9
+	;300.000000  10
+	;329.999939  11
+	variable int _failcnt
+	_failcnt:Set[0]
+	while ${Actor[clock adjustment].Interactable} && ${_failcnt:Inc}<=30
+	{
+		switch ${Actor[clock hour hand].Heading}
+		{
+			variable int _hour
+			variable int _min
+			variable string _minconvert
+			variable int _cnt
+
+			case 360.000000
+			case 0.000107
+			{
+				_hour:Set[12]
+				break
+			}
+			case 30.000046
+			{
+				_hour:Set[1]
+				break
+			}
+			case 60.000015
+			{
+				_hour:Set[2]
+				break
+			}
+			case 90.000000
+			{
+				_hour:Set[3]
+				break
+			}
+			case 120.000000
+			{
+				_hour:Set[4]
+				break
+			}
+			case 149.999985
+			{
+				_hour:Set[5]
+				break
+			}
+			case 180.000000
+			{
+				_hour:Set[6]
+				break
+			}
+			case 210.000000
+			{
+				_hour:Set[7]
+				break
+			}
+			case 240.000000
+			{
+				_hour:Set[8]
+				break
+			}
+			case 270.000000
+			{
+				_hour:Set[9]
+				break
+			}
+			case 300.000000
+			{
+				_hour:Set[10]
+				break
+			}
+			case 329.999939 
+			{
+				_hour:Set[11]
+				break
+			}
+		}
+		
+		;MinuteClock
+		;180.000000 0
+		;210.000000 5
+		;240.000000 10
+		;270.000000 15
+		;300.000000 20
+		;330.000000 25
+		;0.000000 30
+		;30.000000 35
+		;60.000000 40
+		;90.000000 45
+		;120.000000 50
+		;150.000000 55
+		if ${Actor[clock minute hand].Heading}>=180 && ${Actor[clock minute hand].Heading}<210
+		{
+			_min:Set[0]
+			_minconvert:Set[00]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=210 && ${Actor[clock minute hand].Heading}<240
+		{
+			_min:Set[5]
+			_minconvert:Set[05]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=240 && ${Actor[clock minute hand].Heading}<270
+		{
+			_min:Set[10]
+			_minconvert:Set[10]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=270 && ${Actor[clock minute hand].Heading}<300
+		{
+			_min:Set[15]
+			_minconvert:Set[15]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=300 && ${Actor[clock minute hand].Heading}<330
+		{
+			_min:Set[20]
+			_minconvert:Set[20]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=330 && ${Actor[clock minute hand].Heading}<360
+		{
+			_min:Set[25]
+			_minconvert:Set[25]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=0 && ${Actor[clock minute hand].Heading}<30
+		{
+			_min:Set[30]
+			_minconvert:Set[30]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=30 && ${Actor[clock minute hand].Heading}<60
+		{
+			_min:Set[35]
+			_minconvert:Set[35]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=60 && ${Actor[clock minute hand].Heading}<90
+		{
+			_min:Set[40]
+			_minconvert:Set[40]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=90 && ${Actor[clock minute hand].Heading}<120
+		{
+			_min:Set[45]
+			_minconvert:Set[45]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=120 && ${Actor[clock minute hand].Heading}<150
+		{
+			_min:Set[50]
+			_minconvert:Set[50]
+		}
+		elseif ${Actor[clock minute hand].Heading}>=150 && ${Actor[clock minute hand].Heading}<180
+		{
+			_min:Set[55]
+			_minconvert:Set[55]
+		}
+
+		;echo ${_hour}:${_min}
+		_cnt:Set[0]
+		while ${Actor[clock adjustment].Interactable} && ${_cnt:Inc}<=5
+		{
+			;echo inputing ${_hour}:${_minconvert}
+			Actor[clock adjustment]:DoubleClick
+			wait 2
+			Actor[clock adjustment]:DoubleClick
+			wait 2
+			Actor[clock adjustment]:DoubleClick
+			wait 2
+			type ${_hour}:${_minconvert}
+			wait 2
+			press enter
+			wait 2
+			press enter
+			wait 2
+			press enter
+			wait 10
+			_min:Inc
+			if ${_min}<10
+				_minconvert:Set[0${_min}]
+			else
+				_minconvert:Set[${_min}]
+		}
+	}
+	if ${Actor[clock adjustment].Interactable}
+		call MessageBox "We failed inputing the correct time! please do so and resume"
+}
+function Gorgorah()
+{
+	wait 20
+	echo ISXRI: Starting "Gorgorah the Shadowmania"
+
+	call RIObj.LockAndPull "Gorgorah the Shadowmania" "-230.816711,-138.321747,65.921249" 10 FALSE
+	
+	while ${Actor[Dark Sphere](exists)} || ${EQ2.Zoning} || ${Me.IsDead}
+	{
+		call GorgorahCustom "Gorgorah the Shadowmania"
+		waitframe
+	}
+	call MoveBehind 0
+	wait 5
+	wait 45 !${Me.IsMoving}
+	if !${RI_Var_Bool_GlobalOthers} && ${Actor[Chest,radius,100](exists)} && ${Me.WaterDepth}==0 && !${Me.FlyingUsingMount} && !${RI_Var_Bool_SkipLoot}
+	{
+		eq2ex summon
+		wait 2
+		call RIMObj.LootChest
+		wait 2
+		eq2ex summon
+	}
+	wait 50 !${Me.IsMoving}
+	echo ISXRI: Ending "Gorgorah the Shadowmania"
+}
+function GorgorahCustom(int _NamedID)
+{
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		call RIObj.Target ${_NamedID}
+		if ${Me.Distance[${Actor[Dark Sphere].Loc}]}>5
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Dark Sphere].Loc}]
+	}
+}
+function Ruinscustomrotatingramp()
+{
+	CustomLoc:Set["0 0 0"]
+	if ${Zone.Name.Find["[Solo]"](exists)}
+	{
+		call LockAndWait -Loc "-230.865768,-138.321747,65.935303" -RelayToGroup -WaitAfter 20
+		call ClickActor -Actor "Ramp Wheel" -LoopUntilNotInteractable
+		wait 20
+		call Ruinscustomrotatingrampsouthclicker
+		call LockAndWait -Loc "-230.955933,-138.321777,66.540810" -RelayToGroup -WaitAfter 20
+		call ClickActor -Actor "Ramp Wheel" -LoopUntilNotInteractable
+		wait 20
+		call Ruinscustomrotatingrampwestclicker
+		call LockAndWait -Loc "-230.339355,-138.321793,65.972015" -RelayToGroup -WaitAfter 20
+		call ClickActor -Actor "Ramp Wheel" -LoopUntilNotInteractable
+		wait 20
+		call Ruinscustomrotatingrampnorthclicker
+		call LockAndWait -Loc "-230.911926,-138.321793,65.074127" -RelayToGroup -WaitAfter 20
+		call ClickActor -Actor "Ramp Wheel" -LoopUntilNotInteractable
+		wait 20
+		call Ruinscustomrotatingrampdoorclicker
+	}
+	else
+	{
+		call LockAndWait -Loc "-230.865768,-138.321747,65.935303" -RelayToGroup -WaitAfter 20
+		call Ruinscustomrotatingrampheroicrampwheelclicker
+		wait 10
+		call ReplyDialog -OnlyMain "Turn it clockwise."
+		wait 70
+		call Ruinscustomrotatingrampsouthclicker
+		call LockAndWait -Loc "-230.865768,-138.321747,65.935303" -RelayToGroup -WaitAfter 20
+		call Ruinscustomrotatingrampheroicrampwheelclicker
+		wait 10
+		call ReplyDialog -OnlyMain "Turn it clockwise."
+		wait 70
+		call Ruinscustomrotatingrampheroicrampwheelclicker
+		wait 10
+		call ReplyDialog -OnlyMain "Turn it clockwise."
+		wait 70
+		call Ruinscustomrotatingrampnorthclicker
+		call LockAndWait -Loc "-230.865768,-138.321747,65.935303" -RelayToGroup -WaitAfter 20
+		call Ruinscustomrotatingrampheroicrampwheelclicker
+		wait 10
+		call ReplyDialog -OnlyMain "Turn it counter-clockwise."
+		wait 70
+		call Ruinscustomrotatingrampheroicrampwheelclicker
+		wait 10
+		call ReplyDialog -OnlyMain "Turn it counter-clockwise."
+		wait 70
+		call Ruinscustomrotatingrampheroicrampwheelclicker
+		wait 10
+		call ReplyDialog -OnlyMain "Turn it clockwise."
+		wait 70
+		call Ruinscustomrotatingrampwestclicker
+		call LockAndWait -Loc "-230.865768,-138.321747,65.935303" -RelayToGroup -WaitAfter 20
+		call Ruinscustomrotatingrampheroicrampwheelclicker
+		wait 10
+		call ReplyDialog -OnlyMain "Turn it clockwise."
+		wait 70
+		call Ruinscustomrotatingrampheroicrampwheelclicker
+		wait 10
+		call ReplyDialog -OnlyMain "Turn it clockwise."
+		wait 70
+		call Ruinscustomrotatingrampdoorclicker
+	}
+}
+function Ruinscustomrotatingrampheroicrampwheelclicker()
+{
+	variable bool _ReplyDialogExists=FALSE
+	while !${_ReplyDialogExists}
+	{
+		call ClickActor "Ramp Wheel"
+		if ${ReplyDialog(exists)}
+			_ReplyDialogExists:Set[TRUE]
+	}
+}
+function Ruinscustomrotatingrampsouthclicker()
+{
+	call LockAndWait -Loc "-266.064941,-138.171585,83.636192" -RelayToGroup -WaitAfter 20
+	call LockAndWait -Loc "-255.383926,-129.851898,95.770897" -RelayToGroup
+	call LockAndWait -Loc "-246.867188,-123.813736,101.068764" -RelayToGroup
+	call LockAndWait -Loc "-231.284943,-119.911156,104.916855" -RelayToGroup -WaitAfter 20
+	call LockAndWait -Loc "-230.944885,-119.008713,125.545479" -RelayToGroup -WaitAfter 20
+	call ClickActor -Actor "rotating room switch 1" -LoopUntilNotInteractable
+}
+function Ruinscustomrotatingrampwestclicker()
+{
+	call LockAndWait -Loc "-211.376343,-138.170593,98.618301" -RelayToGroup -WaitAfter 20
+	call LockAndWait -Loc "-200.538712,-129.586304,90.105934" -RelayToGroup
+	call LockAndWait -Loc "-195.634186,-123.347252,80.561226" -RelayToGroup
+	call LockAndWait -Loc "-191.089020,-119.911079,65.596695" -RelayToGroup -WaitAfter 20
+	call LockAndWait -Loc "-171.394974,-119.008713,65.880814" -RelayToGroup -WaitAfter 20
+	call ClickActor -Actor "rotating room switch 2" -LoopUntilNotInteractable
+}
+function Ruinscustomrotatingrampnorthclicker()
+{
+	call LockAndWait -Loc "-198.216522,-138.170471,46.499340" -RelayToGroup -WaitAfter 20
+	call LockAndWait -Loc "-205.116867,-130.390686,35.127048" -RelayToGroup
+	call LockAndWait -Loc "-216.467880,-123.340179,30.548471" -RelayToGroup
+	call LockAndWait -Loc "-230.769180,-119.911186,26.486328" -RelayToGroup -WaitAfter 20
+	call LockAndWait -Loc "-231.313339,-119.010963,6.266468" -RelayToGroup -WaitAfter 20
+	call ClickActor -Actor "rotating room switch 3"
+}
+function Ruinscustomrotatingrampdoorclicker()
+{
+		call LockAndWait -Loc "-251.033478,-138.170746,33.295448" -RelayToGroup -WaitAfter 20
+		call LockAndWait -Loc "-260.957916,-129.800522,41.678604" -RelayToGroup
+		call LockAndWait -Loc "-266.202515,-123.451653,51.067505" -RelayToGroup
+		call LockAndWait -Loc "-270.150482,-119.911316,65.258362" -RelayToGroup -WaitAfter 20
+		call LockAndWait -Loc "-291.684448,-119.467720,65.702393" -RelayToGroup -WaitAfter 20
+		call ClickActor -Actor "door rotating room" -LoopUntilNotInteractable
+		wait 50
+		call LockAndWait -Loc "-296.031250,-119.193039,65.853806" -RelayToGroup -WaitAfter 20
+		call ClickActor -Actor "progression symbol - royalty" -LoopUntilNotInteractable
+		call RIMObj.Move -265.222351 -119.818268 66.186760
+}
+function Ruinscustomsettings(int _Stage)
+{
+	;33345 - Hammer
+	;33343 - Symbol
+	;33344 - Sword
+	;33342 - Staff
+	variable int _FaceDegree=0
+	if ${_Stage}==1
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-66.450790,-150.100403,-101.077026]
+		wait 20
+		declare RI_Var_Int_RuinsCustomSettingsSymbol1 int globalkeep 0
+		waitframe
+		while ${RI_Var_Int_RuinsCustomSettingsSymbol1}==0
+		{
+			_FaceDegree:Set[180]
+			while !${Actor[center main symbol 1](exists)}
+			{
+				face ${_FaceDegree}
+				wait 2
+				press -hold ${RI_Var_String_ForwardKey}
+				wait 5
+				press -release ${RI_Var_String_ForwardKey}
+				if ${Actor[center main symbol 1](exists)}
+					RI_Var_Int_RuinsCustomSettingsSymbol1:Set[${Actor[center main symbol 1].TintFlags}]
+				wait 3
+				if ${_FaceDegree}==180
+					_FaceDegree:Set[0]
+				else	
+					_FaceDegree:Set[180]
+			}
+			if ${Actor[center main symbol 1](exists)}
+				RI_Var_Int_RuinsCustomSettingsSymbol1:Set[${Actor[center main symbol 1].TintFlags}]
+			;echo ${RI_Var_Int_RuinsCustomSettingsSymbol1}
+		}
+		switch ${RI_Var_Int_RuinsCustomSettingsSymbol1}
+		{
+			case 33345
+			{
+				echo ISXRI: Setting symbol 1 as Hammer
+				break
+			}
+			case 33343
+			{
+				echo ISXRI: Setting symbol 1 as Symbol
+				break
+			}
+			case 33344
+			{
+				echo ISXRI: Setting symbol 1 as Sword
+				break
+			}
+			case 33342
+			{
+				echo ISXRI: Setting symbol 1 as Staff
+				break
+			}
+		}
+	}
+	elseif ${_Stage}==2
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-98.897934,-150.100403,-66.491386]
+		wait 20
+		declare RI_Var_Int_RuinsCustomSettingsSymbol2 int globalkeep 0
+		waitframe
+		while ${RI_Var_Int_RuinsCustomSettingsSymbol2}==0
+		{
+			_FaceDegree:Set[270]
+			while !${Actor[center main symbol 2](exists)}
+			{
+				face ${_FaceDegree}
+				wait 2
+				press -hold ${RI_Var_String_ForwardKey}
+				wait 5
+				press -release ${RI_Var_String_ForwardKey}
+				if ${Actor[center main symbol 2](exists)}
+					RI_Var_Int_RuinsCustomSettingsSymbol2:Set[${Actor[center main symbol 2].TintFlags}]
+				wait 3
+				if ${_FaceDegree}==270
+					_FaceDegree:Set[90]
+				else	
+					_FaceDegree:Set[270]
+			}
+			if ${Actor[center main symbol 2](exists)}
+			{
+				;echo setting to ${Actor[center main symbol 2].TintFlags}
+				RI_Var_Int_RuinsCustomSettingsSymbol2:Set[${Actor[center main symbol 2].TintFlags}]
+			}
+			;echo ${RI_Var_Int_RuinsCustomSettingsSymbol2}
+			wait 1
+		}
+		switch ${RI_Var_Int_RuinsCustomSettingsSymbol2}
+		{
+			case 33345
+			{
+				echo ISXRI: Setting symbol 2 as Hammer
+				break
+			}
+			case 33343
+			{
+				echo ISXRI: Setting symbol 2 as Symbol
+				break
+			}
+			case 33344
+			{
+				echo ISXRI: Setting symbol 2 as Sword
+				break
+			}
+			case 33342
+			{
+				echo ISXRI: Setting symbol 2 as Staff
+				break
+			}
+		}
+	}
+	elseif ${_Stage}==3
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-65.874435,-150.100418,-34.489075]
+		wait 20
+		declare RI_Var_Int_RuinsCustomSettingsSymbol3 int globalkeep 0
+		waitframe
+		while ${RI_Var_Int_RuinsCustomSettingsSymbol3}==0
+		{
+			_FaceDegree:Set[0]
+			while !${Actor[center main symbol 3](exists)}
+			{
+				face ${_FaceDegree}
+				wait 2
+				press -hold ${RI_Var_String_ForwardKey}
+				wait 5
+				press -release ${RI_Var_String_ForwardKey}
+				if ${Actor[center main symbol 3](exists)}
+					RI_Var_Int_RuinsCustomSettingsSymbol3:Set[${Actor[center main symbol 3].TintFlags}]
+				wait 3
+				if ${_FaceDegree}==0
+					_FaceDegree:Set[180]
+				else	
+					_FaceDegree:Set[0]
+			}
+			if ${Actor[center main symbol 3](exists)}
+				RI_Var_Int_RuinsCustomSettingsSymbol3:Set[${Actor[center main symbol 3].TintFlags}]
+			;echo ${RI_Var_Int_RuinsCustomSettingsSymbol3}
+		}
+		switch ${RI_Var_Int_RuinsCustomSettingsSymbol3}
+		{
+			case 33345
+			{
+				echo ISXRI: Setting symbol 3 as Hammer
+				break
+			}
+			case 33343
+			{
+				echo ISXRI: Setting symbol 3 as Symbol
+				break
+			}
+			case 33344
+			{
+				echo ISXRI: Setting symbol 3 as Sword
+				break
+			}
+			case 33342
+			{
+				echo ISXRI: Setting symbol 3 as Staff
+				break
+			}
+		}
+	}
+	elseif ${_Stage}==4
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-34.252087,-150.100403,-66.681160]
+		wait 20
+		declare RI_Var_Int_RuinsCustomSettingsSymbol4 int globalkeep 0
+		waitframe
+		while ${RI_Var_Int_RuinsCustomSettingsSymbol4}==0
+		{
+			_FaceDegree:Set[90]
+			while !${Actor[center main symbol 4](exists)}
+			{
+				face ${_FaceDegree}
+				wait 2
+				press -hold ${RI_Var_String_ForwardKey}
+				wait 5
+				press -release ${RI_Var_String_ForwardKey}
+				if ${Actor[center main symbol 4](exists)}
+					RI_Var_Int_RuinsCustomSettingsSymbol4:Set[${Actor[center main symbol 4].TintFlags}]
+				wait 3
+				if ${_FaceDegree}==90
+					_FaceDegree:Set[270]
+				else	
+					_FaceDegree:Set[90]
+			}
+			if ${Actor[center main symbol 4](exists)}
+				RI_Var_Int_RuinsCustomSettingsSymbol4:Set[${Actor[center main symbol 4].TintFlags}]
+			;echo ${RI_Var_Int_RuinsCustomSettingsSymbol4}
+		}
+		switch ${RI_Var_Int_RuinsCustomSettingsSymbol4}
+		{
+			case 33345
+			{
+				echo ISXRI: Setting symbol 4 as Hammer
+				break
+			}
+			case 33343
+			{
+				echo ISXRI: Setting symbol 4 as Symbol
+				break
+			}
+			case 33344
+			{
+				echo ISXRI: Setting symbol 4 as Sword
+				break
+			}
+			case 33342
+			{
+				echo ISXRI: Setting symbol 4 as Staff
+				break
+			}
+		}
+	}
+	else
+	{
+		variable int _cnt=0
+		variable int _wordcnt=0
+		variable string _word
+		variable string _wordchange
+
+		if ${_Stage} == 5 && ${RI_Var_Int_RuinsCustomSettingsSymbol1}>0
+		{
+			switch ${RI_Var_Int_RuinsCustomSettingsSymbol1}
+			{
+				case 33345
+				{
+					_word:Set[hammer]
+					break
+				}
+				case 33343
+				{
+					_word:Set[symbol]
+					break
+				}
+				case 33344
+				{
+					_word:Set[sword]
+					break
+				}
+				case 33342
+				{
+					_word:Set[staff]
+					break
+				}
+			}
+			if ${_word.Equal[symbol]}
+				_wordchange:Set[Shissar]
+			else
+				_wordchange:Set[${_word}]
+			while !${Actor[statue 1 ${_wordchange} rings](exists)} && ${_cnt:Inc}<60
+			{
+				;echo inputing ${_word}
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				type ${_word}
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 20
+				wait 300 ${Actor[switch transporter room statue].Interactable} || ${Actor[statue 1 ${_wordchange} rings](exists)}
+				wait 20
+			}
+		}
+		elseif ${_Stage} == 6 && ${RI_Var_Int_RuinsCustomSettingsSymbol2}>0
+		{
+			switch ${RI_Var_Int_RuinsCustomSettingsSymbol2}
+			{
+				case 33345
+				{
+					_word:Set[hammer]
+					break
+				}
+				case 33343
+				{
+					_word:Set[symbol]
+					break
+				}
+				case 33344
+				{
+					_word:Set[sword]
+					break
+				}
+				case 33342
+				{
+					_word:Set[staff]
+					break
+				}
+			}
+			if ${_word.Equal[symbol]}
+				_wordchange:Set[Shissar]
+			else
+				_wordchange:Set[${_word}]
+			while !${Actor[statue 2 ${_wordchange} rings](exists)} && ${_cnt:Inc}<60
+			{
+				;echo inputing ${_word}
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				type ${_word}
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 20
+				wait 300 ${Actor[switch transporter room statue].Interactable} || ${Actor[statue 2 ${_wordchange} rings](exists)}
+				wait 20
+			}
+		}
+		elseif ${_Stage} == 7 && ${RI_Var_Int_RuinsCustomSettingsSymbol3}>0
+		{
+			switch ${RI_Var_Int_RuinsCustomSettingsSymbol3}
+			{
+				case 33345
+				{
+					_word:Set[hammer]
+					break
+				}
+				case 33343
+				{
+					_word:Set[symbol]
+					break
+				}
+				case 33344
+				{
+					_word:Set[sword]
+					break
+				}
+				case 33342
+				{
+					_word:Set[staff]
+					break
+				}
+			}
+			if ${_word.Equal[symbol]}
+				_wordchange:Set[Shissar]
+			else
+				_wordchange:Set[${_word}]
+			while !${Actor[statue 3 ${_wordchange} rings](exists)} && ${_cnt:Inc}<60
+			{
+				;echo inputing ${_word}
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				type ${_word}
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 20
+				wait 300 ${Actor[switch transporter room statue].Interactable} || ${Actor[statue 3 ${_wordchange} rings](exists)}
+				wait 20
+			}
+		}
+		elseif ${_Stage} == 8 && ${RI_Var_Int_RuinsCustomSettingsSymbol4}>0
+		{
+			switch ${RI_Var_Int_RuinsCustomSettingsSymbol4}
+			{
+				case 33345
+				{
+					_word:Set[hammer]
+					break
+				}
+				case 33343
+				{
+					_word:Set[symbol]
+					break
+				}
+				case 33344
+				{
+					_word:Set[sword]
+					break
+				}
+				case 33342
+				{
+					_word:Set[staff]
+					break
+				}
+			}
+			if ${_word.Equal[symbol]}
+				_wordchange:Set[Shissar]
+			else
+				_wordchange:Set[${_word}]
+			while !${Actor[statue 4 ${_wordchange} rings](exists)} && ${_cnt:Inc}<60
+			{
+				;echo inputing ${_word}
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				type ${_word}
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 20
+				wait 300 ${Actor[switch transporter room statue].Interactable} || ${Actor[statue 4 ${_wordchange} rings](exists)}
+				wait 20
+			}
+		}
+		else
+		{
+			while ${Actor[switch transporter room statue].Interactable} && ${_cnt:Inc}<60 && !${_done}
+			{
+				if ${_wordcnt}<=4
+					_wordcnt:Inc
+				else
+					_wordcnt:Set[1]
+				switch ${_wordcnt}
+				{
+					case 1
+					{
+						_word:Set[hammer]
+						break
+					}
+					case 2
+					{
+						_word:Set[staff]
+						break
+					}
+					case 3
+					{
+						_word:Set[sword]
+						break
+					}
+					case 4
+					{
+						_word:Set[symbol]
+						break
+					}
+				}
+				;echo inputing ${_word}
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				Actor[switch transporter room statue]:DoubleClick
+				wait 2
+				type ${_word}
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 2
+				press enter
+				wait 20
+				wait 300 ${Actor[switch transporter room statue].Interactable} || (!${Actor[switch transporter room statue].Interactable} && ${Actor[Query, Name=-"rings" && Distance<20](exists)})
+				wait 20
+			}
+		}
+	}
+
+	if ${_Stage} == 8
+	{
+		if ${RI_Var_Int_RuinsCustomSettingsSymbol1(exists)}
+			deletevariable RI_Var_Int_RuinsCustomSettingsSymbol1
+		if ${RI_Var_Int_RuinsCustomSettingsSymbol2(exists)}
+			deletevariable RI_Var_Int_RuinsCustomSettingsSymbol2
+		if ${RI_Var_Int_RuinsCustomSettingsSymbol3(exists)}
+			deletevariable RI_Var_Int_RuinsCustomSettingsSymbol3
+		if ${RI_Var_Int_RuinsCustomSettingsSymbol4(exists)}
+			deletevariable RI_Var_Int_RuinsCustomSettingsSymbol4
+	}
+}
+function Xian()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["prepares to knock back everyone within 10 meters of him"]
+	call CustomNamed "Kor Va Xian" "-64.815247,-146.063492,-67.061028" XianCustom
+}
+function XianCustom(string _NamedID)
+{
+	variable int _cnt=0
+	if ${Me.Inventory[Query, Location=="Inventory" && Name=-"luclinite bomb"](exists)}
+		Me.Inventory[Query, Location=="Inventory" && Name=-"luclinite bomb"]:Destroy
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-64.815247,-146.063492,-67.061028,1,100]
+		call RIObj.Target ${_NamedID}
+		if ${Trigger}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-22.005571,-150.100403,-66.243095,1,50]
+			while ${_cnt:Inc}<50
+			{
+				wait 1
+				if ${Me.Inventory[Query, Location=="Inventory" && Name=-"luclinite bomb"](exists)}
+					Me.Inventory[Query, Location=="Inventory" && Name=-"luclinite bomb"]:Destroy
+			}
+			Trigger:Set[FALSE]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-64.815247,-146.063492,-67.061028,1,100]
+		}
+	}
+	if ${Me.Distance[-66.381088,-150.144989,-173.367859]}<30
+	{
+		call RIMObj.Move -74.988770 -150.145538 -168.717789
+ 		call RIMObj.Move -66.579834 -150.059479 -148.639236
+		call RIMObj.Move -64.815247 -146.063492 -67.061028
+	}
+	if ${Me.Distance[-173.887421,-150.144836,-66.360168]}<30
+	{
+		call RIMObj.Move -168.259125 -150.145538 -56.777462
+		call RIMObj.Move -148.874969 -150.052078 -65.922531
+		call RIMObj.Move -64.815247 -146.063492 -67.061028
+	}
+	if ${Me.Distance[-66.038216,-150.144638,42.165756]}<30
+	{
+		call RIMObj.Move -56.753090 -150.145340 37.059597
+		call RIMObj.Move -65.613800 -150.052078 15.910136
+		call RIMObj.Move -64.815247 -146.063492 -67.061028
+	}
+	if ${Me.Distance[44.267311,-150.144470,-65.781174]}<30
+	{
+		call RIMObj.Move 39.148270 -150.145096 -75.140190
+		call RIMObj.Move 15.807122 -150.059402 -66.697403
+		call RIMObj.Move -64.815247 -146.063492 -67.061028
+	}
+}
+;;;;;;;; End The Ruins of Ssraeshza
+
+;;;;;;;; Start The Venom of Ssraeshza
+
+function Sekez()
+{
+	call CustomNamed "Rhag'Sekez-NMB" "33.876316,-188.258148,199.541458" SekezCustom
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,1]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,1]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,1]
+}
+function SekezCustom(int _NamedID)
+{
+	call RIObj.Target ${_NamedID}
+	variable int _cnt=0
+	;supposed to pull him towards crystals for something i just T+S
+	;33327 - Blue
+	;33781 - Red
+	;Midpoint formula - x=(x1 + x2)/2  z=(z1 + z2)/2
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		;Proxima Noesis // 244 - BLUE
+		;Proxima Sanguis // 390 - RED
+		;Proxima Aequus // 757 - MID
+		if ${RIMUIObj.MainIconIDExists[${_NamedID},244]} || ${RIMUIObj.MainIconIDExists[${_NamedID},390]}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} eq2ex cancel_spellcast
+			relay ${RI_Var_String_RelayGroup} eq2ex pet backoff
+		}
+		else
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,1]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,1]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,1]
+		}
+		if ${Actor[Query, Name=="" & TintFlags=33327](exists)} && ${Actor[Query, Name=="" & TintFlags=33781](exists)} 
+		{
+			if ${Me.Distance[${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].X}+${Actor[Query, Name=="" & TintFlags=33781].X})/2]},-188.26,${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].Z}+${Actor[Query, Name=="" & TintFlags=33781].Z})/2]}]}>5
+			{
+				wait 1
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].X}+${Actor[Query, Name=="" & TintFlags=33781].X})/2]},-188.26,${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].Z}+${Actor[Query, Name=="" & TintFlags=33781].Z})/2]}]
+				;echo wait 1
+				_cnt:Set[0]
+				while ${_cnt:Inc}<300 && ${Me.Distance[${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].X}+${Actor[Query, Name=="" & TintFlags=33781].X})/2]},-188.26,${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].Z}+${Actor[Query, Name=="" & TintFlags=33781].Z})/2]}]}>10
+				{
+					wait 1
+					if ${RIMUIObj.MainIconIDExists[${_NamedID},244]} || ${RIMUIObj.MainIconIDExists[${_NamedID},390]}
+					{
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} eq2ex cancel_spellcast
+						relay ${RI_Var_String_RelayGroup} eq2ex pet backoff
+					}
+					else
+					{
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,1]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,1]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,1]
+					}
+				}
+				;echo wait 2
+				_cnt:Set[0]
+				while ${_cnt:Inc}<300 && ${Actor[id,${_NamedID}].Distance}>7
+				{
+					wait 1
+					if ${RIMUIObj.MainIconIDExists[${_NamedID},244]} || ${RIMUIObj.MainIconIDExists[${_NamedID},390]}
+					{
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,0]
+						relay ${RI_Var_String_RelayGroup} eq2ex cancel_spellcast
+						relay ${RI_Var_String_RelayGroup} eq2ex pet backoff
+					}
+					else
+					{
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,1]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,1]
+						relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,1]
+					}
+				}
+				wait 300 ${Actor[id,${_NamedID}].Distance}<7
+				;echo end wait
+			}
+			if ${RIMUIObj.MainIconIDExists[${_NamedID},244]}
+			{
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} eq2ex cancel_spellcast
+				relay ${RI_Var_String_RelayGroup} eq2ex pet backoff
+				RI_Obj_CB:SetUISetting[SettingsFaceMobCheckBox,0]
+				;if ${Actor[id,${_NamedID}].Distance}<8
+				if ${Me.Distance[${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].X}+${Actor[Query, Name=="" & TintFlags=33781].X})/2]},-188.26,${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].Z}+${Actor[Query, Name=="" & TintFlags=33781].Z})/2]}]}<10
+				{
+					Actor[Query, Name=="" & TintFlags=33781]:DoFace
+					press -hold w
+				}
+				else
+					press -release w
+			}
+			elseif ${RIMUIObj.MainIconIDExists[${_NamedID},390]}
+			{
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,0]
+				relay ${RI_Var_String_RelayGroup} eq2ex cancel_spellcast
+				relay ${RI_Var_String_RelayGroup} eq2ex pet backoff
+				RI_Obj_CB:SetUISetting[SettingsFaceMobCheckBox,0]
+				;if ${Actor[id,${_NamedID}].Distance}<8
+				if ${Me.Distance[${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].X}+${Actor[Query, Name=="" & TintFlags=33781].X})/2]},-188.26,${Math.Calc[(${Actor[Query, Name=="" & TintFlags=33327].Z}+${Actor[Query, Name=="" & TintFlags=33781].Z})/2]}]}<10
+				{
+					Actor[Query, Name=="" & TintFlags=33327]:DoFace
+					press -hold w
+				}
+				else
+					press -release w
+			}
+			else
+			{
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,1]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,1]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,1]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_NamedID}].Loc},5,1000]
+				RI_Obj_CB:SetUISetting[SettingsFaceMobCheckBox,1]
+			}
+		}
+		else
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_NamedID}].Loc},5,1000]
+		}
+	}
+
+}
+
+function Voreth()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["reinforces her scales in a"]
+	IncomingText:Insert["begin wane while she remains"]
+	AnnounceText:Clear
+	AnnounceText:Insert["Scales recede!"]
+	call CustomNamed "Rhag'Voreth-NMB" "34.279888,-188.259293,351.201355" VorethCustom
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,1]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,1]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,1]
+}
+function VorethCustomHealthCheck(string _Loc)
+{
+	variable int _cnt=0
+	while ${_cnt:Inc}<=300 && ${Me.Distance[${_Loc}]}>3
+	{
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:ComeOn[ALL]
+		wait 1
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},1,200]
+		wait 1
+		if ${RIObj.LowestGroupHealth}<=50
+			RIMUIObj:SetLockSpot[ALL,OFF]
+		else
+			RIMUIObj:SetLockSpot[ALL,${_Loc},1,1000]
+		wait 1
+	}
+}
+function VorethCustom(int _NamedID)
+{
+	;supposed to bring him in between the 2 colors that make up his layer, i just T+S, need to determine if the location of the colors change
+	;also the text to determine his layer color is incomingtext
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		variable int _cnt=0
+		call RIObj.Target sentry -Distance 30 ${_NamedID}
+		if ${Trigger}
+		{
+			;echo triggered ${TriggerMessage}
+			if ${TriggerMessage.Find["begin wane while she remains"](exists)}
+			{
+				;echo wane
+				Trigger:Set[0]
+				return
+			}
+			if ${TriggerMessage.Find["Scales recede!"](exists)}
+			{
+				;echo recede
+				Trigger:Set[0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,1]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,1]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,1]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,1]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,1]
+				wait 20
+				Actor[id,${_NamedID}]:DoTarget
+				Actor[id,${_NamedID}]:DoFace
+				press -hold ${RI_Var_String_BackwardKey}
+				wait 5
+				press -release ${RI_Var_String_BackwardKey}
+				;relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,34.279888,-188.259293,351.201355]
+				return
+			}
+			
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastHostileCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsCastNamedHostileCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsRangedAutoCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsMeleeAutoCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,0]
+			relay ${RI_Var_String_RelayGroup} eq2ex cancel_spellcast
+			relay ${RI_Var_String_RelayGroup} eq2ex pet backoff
+			;purple
+			if ${TriggerMessage.Find["in a purple layer!"](exists)}
+			{
+				;echo purple
+				call VorethCustomHealthCheck "-20.989998,-188.26,352.244995"
+				wait 150 ${Actor[id,${_NamedID}].Distance}<8
+				wait 10
+				RIMUIObj:SetLockSpot[OFF]
+				Actor[id,${_NamedID}]:DoFace
+				press -hold s
+				wait 5
+				press -release s
+				wait 5
+			}
+			;orange
+			if ${TriggerMessage.Find["in an orange layer!"](exists)}
+			{
+				;echo orange
+				call VorethCustomHealthCheck "90.870003,-188.26,352.269989"
+				wait 150 ${Actor[id,${_NamedID}].Distance}<8
+				wait 10
+				RIMUIObj:SetLockSpot[OFF]
+				Actor[id,${_NamedID}]:DoFace
+				press -hold s
+				wait 5
+				press -release s
+				wait 5
+			}
+			;green
+			if ${TriggerMessage.Find["in a green layer!"](exists)}
+			{
+				;echo green
+				call VorethCustomHealthCheck "69.180000,-188.26,352.284989"
+				wait 150 ${Actor[id,${_NamedID}].Distance}<8
+				wait 10
+				RIMUIObj:SetLockSpot[OFF]
+				Actor[id,${_NamedID}]:DoFace
+				press -hold s
+				wait 5
+				press -release s
+				wait 5
+			}
+			;silvery
+			if ${TriggerMessage.Find["in a silvery layer!"](exists)}
+			{
+				;echo silver
+				call VorethCustomHealthCheck "1.295000,-188.26,352.265000"
+				wait 150 ${Actor[id,${_NamedID}].Distance}<8
+				wait 10
+				RIMUIObj:SetLockSpot[OFF]
+				Actor[id,${_NamedID}]:DoFace
+				press -hold s
+				wait 5
+				press -release s
+				wait 5
+			}
+			;echo end if
+		}
+		
+	}
+	else
+	{
+		if ${Trigger}
+			Trigger:Set[0]
+	}
+	;33577 red
+	;33573 blue
+	;33578 yellow
+	;33783 white
+	;33572 black
+	;23:15:04:IT: Found reinforces her scales in PC 281146 Rhag'Voreth:Rhag'Voreth/a reinforces her scales in a purple layer!  - red and blue
+	;23:16:12:IT: Found reinforces her scales in PC 281146 Rhag'Voreth:Rhag'Voreth/a reinforces her scales in an orange layer! red and yellow
+	;23:16:34:IT: Found reinforces her scales in PC 281146 Rhag'Voreth:Rhag'Voreth/a reinforces her scales in a green layer! yellow and blue
+	;23:16:34:IT: Found reinforces her scales in PC 281146 Rhag'Voreth:Rhag'Voreth/a reinforces her scales in a silvery layer!   -- Black and White
+	;23:22:15:Announce: Rhag'Voreth's Arcane Scales recede! -- go back to lockspot
+}
+function Nazza()
+{
+	;AnnounceText:Clear
+	;AnnounceText:Insert["A large bubble forms nearby!"]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,0]
+	relay ${RI_Var_String_RelayGroup} RI_Obj_CB:CastWhileMoving[1]
+	if !${RI_Var_Bool_GlobalOthers}
+		Actor[Arch Nemesis Rhag'Nazza]:DoTarget
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		wait 1
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:ComeOn[ALL]
+		wait 1
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},1,200]
+		wait 1
+		;call RIMObj.Move 35.005032 -96.817757 276.104370
+		call RIMObj.Move -28.056892 -169.374222 338.808685
+		call RIMObj.Move -41.181824 -191.257996 351.601074
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect RIMUIObj:SetRIFollow[ALL,${Me.Name},1,200]
+		wait 1
+		wait 50
+	}
+	else
+		wait 600 ${Me.Distance[-41.181824 -191.257996 351.601074]}<10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetUISetting[ALL,SettingsSendPetsCheckBox,1]
+	call CustomNamed "Arch Nemesis Rhag'Nazza-NMB" "-41.181824,-191.257996,351.601074"
+	if ${Me.Inventory["Totem of the Otter"].AutoConsumeOn}
+		Me.Inventory["Totem of the Otter"]:ToggleAutoConsume
+	relay ${RI_Var_String_RelayGroup} RI_Obj_CB:CastWhileMoving[0]
+}
+function NazzaCustom(int _NamedID)
+{
+	;goto X and Z of actor then swim down until not swimming
+	;after the bubble pops call swim up then do again
+	;if !${RI_Var_Bool_GlobalOthers}
+	;{
+	;	call RIObj.Target serpent -Distance 30 ${_NamedID}
+	;	if ${Trigger}
+	;	{
+	;		call SwimUp
+	;		call RIMObj.Move 34.915325 -96.817749 275.335999
+	;		call RIMObj.Move ${Actor[Bubble Sphere].X} -96.817749 ${Actor[Bubble Sphere].Z}
+	;		press -hold ${RI_Var_String_FlyDownKey}
+	;		wait 30 !${Me.IsSwimming}
+	;		press -release ${RI_Var_String_FlyDownKey}
+	;		Trigger:Set[0]
+	;	}
+	;}
+}
+function Venomcustompuzzle()
+{
+	wait 50
+	if ${Zone.Name.Find["[Solo]"]}
+		return
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-40.999912,-188.258453,304.293152]
+	wait 300 ${Me.Distance[-40.999912,-188.258453,304.293152]}<3
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-45.805195,-188.246704,241.902252]
+	wait 300 ${Me.Distance[-45.805195,-188.246704,241.902252]}<3
+
+	while ${Actor[Query, Name=-"a travailing flood control engineer" && IsDead=FALSE](exists)}
+	{
+		Actor[Query, Name=-"a travailing flood control engineer" && IsDead=FALSE]:DoTarget
+		wait 1
+	}
+
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-40.999912,-188.258453,304.293152]
+	wait 300 ${Me.Distance[-40.999912,-188.258453,304.293152]}<3
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-36.721031,-188.268921,347.077240]
+	wait 300 ${Me.Distance[-36.721031,-188.268921,347.077240]}<3
+
+	return
+	CustomLoc:Set["0 0 0"]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Movable Block 10].Loc},1,1000]
+	wait 300 ${Me.Distance[${Actor[Movable Block 10].Loc}]}<2
+	wait 10
+	Actor[Movable Block 10]:DoubleClick
+	wait 2
+	Actor[Movable Block 10]:DoubleClick
+	wait 2
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,26.916777,-187.768707,358.294830,1,1000]
+	wait 300 ${Me.Distance[26.916777,-187.768707,358.294830]}<2
+	wait 10
+	call PlaceHouseItem 270
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Movable Block 9].Loc},1,1000]
+	wait 300 ${Me.Distance[${Actor[Movable Block 9].Loc}]}<2
+	wait 10
+	Actor[Movable Block 9]:DoubleClick
+	wait 2
+	Actor[Movable Block 9]:DoubleClick
+	wait 2
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,26.873474,-187.811829,356.650818,1,1000]
+	wait 300 ${Me.Distance[26.873474,-187.811829,356.650818]}<2
+	wait 10
+	call PlaceHouseItem 270
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[exactname,Movable Block 1].Loc},1,1000]
+	wait 300 ${Me.Distance[${Actor[exactname,Movable Block 1].Loc}]}<2
+	wait 10
+	Actor[Movable Block 1]:DoubleClick
+	wait 2
+	Actor[Movable Block 1]:DoubleClick
+	wait 2
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,26.873474,-187.811829,356.650818,1,1000]
+	wait 300 ${Me.Distance[26.873474,-187.811829,356.650818]}<2
+	wait 10
+	call PlaceHouseItem 270
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-42.066479,-188.255829,352.178833,1,1000]
+	wait 300 ${Me.Distance[-42.066479,-188.255829,352.178833]}<2
+	wait 10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-46.717861,-188.191879,264.867767,1,1000]
+	wait 300 ${Me.Distance[-46.717861,-188.191879,264.867767]}<2
+	wait 10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Movable Block 8].Loc},1,1000]
+	wait 300 ${Me.Distance[${Actor[Movable Block 8].Loc}]}<2
+	wait 10
+	Actor[Movable Block 8]:DoubleClick
+	wait 2
+	Actor[Movable Block 8]:DoubleClick
+	wait 2
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-47.458832,-187.908234,267.332153,1,1000]
+	wait 300 ${Me.Distance[-47.458832,-187.908234,267.332153]}<2
+	wait 10
+	call PlaceHouseItem 180
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Movable Block 7].Loc},1,1000]
+	wait 300 ${Me.Distance[${Actor[Movable Block 7].Loc}]}<2
+	wait 10
+	Actor[Movable Block 7]:DoubleClick
+	wait 2
+	Actor[Movable Block 7]:DoubleClick
+	wait 2
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-46.145863,-188.106247,267.204071,1,1000]
+	wait 300 ${Me.Distance[-46.145863,-188.106247,267.204071]}<2
+	wait 10
+	call PlaceHouseItem 180
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-40.278946,-188.258133,199.546509,1,1000]
+	wait 300 ${Me.Distance[-40.278946,-188.258133,199.546509]}<2
+	wait 10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,53.344505,-188.244736,194.070908,1,1000]
+	wait 300 ${Me.Distance[53.344505,-188.244736,194.070908]}<2
+	wait 10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Movable Block 5].Loc},1,1000]
+	wait 300 ${Me.Distance[${Actor[Movable Block 5].Loc}]}<2
+	wait 10
+	Actor[Movable Block 5]:DoubleClick
+	wait 2
+	Actor[Movable Block 5]:DoubleClick
+	wait 2
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,42.896370,-187.781937,194.263763,1,1000]
+	wait 300 ${Me.Distance[42.896370,-187.781937,194.263763]}<2
+	wait 10
+	call PlaceHouseItem 90
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,111.663849,-188.256470,201.077835,1,1000]
+	wait 300 ${Me.Distance[111.663849,-188.256470,201.077835]}<2
+	wait 10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,116.272789,-188.245178,295.834717,1,1000]
+	wait 300 ${Me.Distance[116.272789,-188.245178,295.834717]}<2
+	wait 10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Movable Block 6].Loc},1,1000]
+	wait 300 ${Me.Distance[${Actor[Movable Block 6].Loc}]}<2
+	wait 10
+	Actor[Movable Block 6]:DoubleClick
+	wait 2
+	Actor[Movable Block 6]:DoubleClick
+	wait 2
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,117.468658,-188.004822,284.057831,1,1000]
+	wait 300 ${Me.Distance[117.468658,-188.004822,284.057831]}<2
+	wait 10
+	call PlaceHouseItem 0
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Movable Block 4].Loc},1,1000]
+	wait 300 ${Me.Distance[${Actor[Movable Block 4].Loc}]}<2
+	wait 10
+	Actor[Movable Block 4]:DoubleClick
+	wait 2
+	Actor[Movable Block 4]:DoubleClick
+	wait 2
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,116.054306,-187.967697,283.933472,1,1000]
+	wait 300 ${Me.Distance[115.054306,-187.967697,283.933472]}<2
+	wait 10
+	call PlaceHouseItem 0
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,109.647888,-188.259766,351.001038,1,1000]
+	wait 300 ${Me.Distance[109.647888,-188.259766,351.001038]}<2
+	wait 10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,35.441181,-188.277100,344.728546,1,1000]
+	wait 300 ${Me.Distance[35.441181,-188.277100,344.728546]}<2
+	wait 10
+	if !${Me.IsSwimming}
+		call MessageBox "We failed the puzzle go see what we did wrong and fix it then resume right here"
+}
+;;;;;;;; End The Venom of Ssraeshza
+
+;;;;;;;; Start The Vault of Ssraeshza
+function Vaultcustomclickactor(string _ActorName, string _ToonName)
+{
+	waitframe
+	if ${_ToonName.NotEqual[${Me.Name}]}
+		return
+	RI_CMD_PauseCombatBots 1
+	wait 5
+	Actor[${_ActorName}]:DoubleClick
+	wait 5
+	Actor[${_ActorName}]:DoubleClick
+	wait 5
+	Actor[${_ActorName}]:DoubleClick
+	wait 5 ${Me.CastingSpell}
+	wait 50 !${Me.CastingSpell}
+	wait 5
+	RI_CMD_PauseCombatBots 0
+}
+function Vaultcustomcheckcombat()
+{
+	while ( ${Me.InCombat} || ${Me.IsHated} ) && ${RI_Var_Bool_Start}
+	{
+		wait 1
+	}
+}
+function Vaultcustomcylinder(int _Stage)
+{
+	CustomLoc:Set["0 0 0"]
+	Follow:Set[0]
+	
+	variable int _HealerGroupNum=1
+	variable int _NonHealerGroupNum=2
+	variable int _cnt=0
+	for(_cnt:Set[1];${_cnt}<${Me.Group};_cnt:Inc)
+	{
+		if ${RIObj.Archetype[${Me.Group[${_cnt}].ID}].Equal[priest]}
+			_HealerGroupNum:Set[${_cnt}]
+		else
+			_NonHealerGroupNum:Set[${_cnt}]
+	}
+	;echo ${_HealerGroupNum}
+	echo ${_NonHealerGroupNum}
+	switch ${_Stage}
+	{
+		case 1
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+			wait 1
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-262.961761,-161.829285,669.940125]
+			wait 10
+			waitframe
+			RIMUIObj:SetLockSpot[${Me.Name},-273.110748,-161.829224,669.290955]
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				;echo heroic
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-257.282471,-161.829285,664.449585]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-257.226837,-161.829285,677.867188]
+				wait 300 ${Me.Distance[-273.110748,-161.829224,669.290955]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-257.282471,-161.829285,664.449585]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-257.226837,-161.829285,677.867188]}<3
+				wait 10
+				while ${Actor[sphere red main room](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere red main room\" ${Me.Group[${_HealerGroupNum}]}"]
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere red main room\" ${Me.Group[${_NonHealerGroupNum}]}"]
+					call Vaultcustomclickactor "sphere red main room" ${Me.Name}
+					wait 50
+				}
+				RIMUIObj:SetLockSpot[${Me.Name},-291.647064,-161.829285,671.121887]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-291.647064,-161.829285,671.121887]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-291.647064,-161.829285,671.121887]
+				wait 300 ${Me.Distance[-291.647064,-161.829285,671.121887]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-291.647064,-161.829285,671.121887]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-291.647064,-161.829285,671.121887]}<3
+				wait 10
+ 				RIMUIObj:SetLockSpot[${Me.Name},-311.337646,-161.829285,692.773254]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-311.337646,-161.829285,692.773254]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-311.337646,-161.829285,692.773254]
+				wait 300 ${Me.Distance[-311.337646,-161.829285,692.773254]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-311.337646,-161.829285,692.773254]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-311.337646,-161.829285,692.773254]}<3
+				wait 30
+				call Vaultcustomcheckcombat
+				while !${Actor[Query, Name=="sphere red side room" && Distance<10](exists)}
+				{
+					call Vaultcustomclickactor "sphere stand red room" ${Me.Name}
+					wait 5
+				}
+				;RIMUIObj:SetLockSpot[${Me.Name},-312.820770,-161.573547,671.091980]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-312.820770,-161.573547,671.091980]
+				;relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-312.820770,-161.573547,671.091980]
+				;relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-312.820770,-161.573547,671.091980]
+				wait 300 ${Me.Distance[-312.820770,-161.573547,671.091980]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-312.820770,-161.573547,671.091980]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-312.820770,-161.573547,671.091980]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				RIMUIObj:SetLockSpot[${Me.Name},-311.337646,-161.829285,692.773254]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-311.337646,-161.829285,692.773254]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-311.337646,-161.829285,692.773254]
+				wait 300 ${Me.Distance[-311.337646,-161.829285,692.773254]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-311.337646,-161.829285,692.773254]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-311.337646,-161.829285,692.773254]}<3
+				wait 10
+				while ${Actor[sphere purple red room](exists)}
+				{
+					call Vaultcustomclickactor "sphere purple red room" ${Me.Name}
+					wait 5
+				}
+
+				RIMUIObj:SetLockSpot[${Me.Name},-327.152283,-161.829285,655.283875]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-327.152283,-161.829285,655.283875]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-327.152283,-161.829285,655.283875]
+				wait 300 ${Me.Distance[-327.152283,-161.829285,655.283875]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-327.152283,-161.829285,655.283875]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-327.152283,-161.829285,655.283875]}<3
+				wait 30
+				call Vaultcustomcheckcombat
+				while !${Actor[Query, Name=="sphere red side room" && Distance<10](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere stand red room\" ${Me.Group[${_HealerGroupNum}]}"]
+					wait 50
+				}
+				;call Vaultcustomclickactor "sphere stand red room" ${Me.Name}
+				RIMUIObj:SetLockSpot[${Me.Name},-312.820770,-161.573547,671.091980]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-312.820770,-161.573547,671.091980]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-312.820770,-161.573547,671.091980]
+				wait 300 ${Me.Distance[-312.820770,-161.573547,671.091980]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-312.820770,-161.573547,671.091980]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-312.820770,-161.573547,671.091980]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				RIMUIObj:SetLockSpot[${Me.Name},-327.152283,-161.829285,655.283875]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-327.152283,-161.829285,655.283875]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-327.152283,-161.829285,655.283875]
+				wait 300 ${Me.Distance[-327.152283,-161.829285,655.283875]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-327.152283,-161.829285,655.283875]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-327.152283,-161.829285,655.283875]}<3
+				wait 10
+				while ${Actor[sphere purple red room](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere purple red room\" ${Me.Group[${_HealerGroupNum}]}"]
+					wait 50
+				}
+				;call Vaultcustomclickactor "sphere purple red room" ${Me.Name}
+
+				RIMUIObj:SetLockSpot[${Me.Name},-299.530731,-161.829285,656.073975]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-299.530731,-161.829285,656.073975]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-299.530731,-161.829285,656.073975]
+				wait 300 ${Me.Distance[-299.530731,-161.829285,656.073975]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-299.530731,-161.829285,656.073975]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-299.530731,-161.829285,656.073975]}<3
+				wait 30
+				call Vaultcustomcheckcombat
+				while !${Actor[Query, Name=="sphere red side room" && Distance<10](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere stand red room\" ${Me.Group[${_NonHealerGroupNum}]}"]
+					wait 50
+				}
+				;call Vaultcustomclickactor "sphere stand red room" ${Me.Name}
+				RIMUIObj:SetLockSpot[${Me.Name},-312.820770,-161.573547,671.091980]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-312.820770,-161.573547,671.091980]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-312.820770,-161.573547,671.091980]
+				wait 300 ${Me.Distance[-312.820770,-161.573547,671.091980]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-312.820770,-161.573547,671.091980]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-312.820770,-161.573547,671.091980]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				RIMUIObj:SetLockSpot[${Me.Name},-299.530731,-161.829285,656.073975]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-299.530731,-161.829285,656.073975]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-299.530731,-161.829285,656.073975]
+				wait 300 ${Me.Distance[-299.530731,-161.829285,656.073975]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-299.530731,-161.829285,656.073975]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-299.530731,-161.829285,656.073975]}<3
+				wait 10
+				while ${Actor[sphere purple red room](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere purple red room\" ${Me.Group[${_NonHealerGroupNum}]}"]
+					wait 50
+				}
+				;call Vaultcustomclickactor "sphere purple red room" ${Me.Name}
+				RIMUIObj:SetLockSpot[${Me.Name},-290.433411,-161.829285,671.646301]
+				;relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-290.433411,-161.829285,671.646301]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-290.433411,-161.829285,671.646301]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-290.433411,-161.829285,671.646301]
+				wait 300 ${Me.Distance[-290.433411,-161.829285,671.646301]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-290.433411,-161.829285,671.646301]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-290.433411,-161.829285,671.646301]}<3
+				wait 20
+				RIMUIObj:SetLockSpot[ALL,-273.762756,-161.829285,668.977661]
+				;relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-273.762756,-161.829285,668.977661]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-273.762756,-161.829285,668.977661]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-273.762756,-161.829285,668.977661]
+				wait 300 ${Me.Distance[-273.762756,-161.829285,668.977661]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-273.762756,-161.829285,668.977661]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-273.762756,-161.829285,668.977661]}<3
+				relay "other ${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[ALL,OFF]
+				wait 1
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-257.221924,-161.829285,663.889587]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-257.311310,-161.829285,677.926880]
+				wait 300 ${Me.Group[${_HealerGroupNum}].Distance[-257.221924,-161.829285,663.889587]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-257.311310,-161.829285,677.926880]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				while ${Actor[sphere stand red main room].Interactable}
+				{
+					call Vaultcustomclickactor "sphere stand red main room" ${Me.Name}
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere stand red main room\" ${Me.Group[${_HealerGroupNum}]}"]
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere stand red main room\" ${Me.Group[${_NonHealerGroupNum}]}"]
+					wait 50
+				}
+				RIMUIObj:SetLockSpot[${Me.Name},-253.010101,-161.829285,669.038086]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-268.573120,-161.829285,677.886414]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-268.618408,-161.829269,663.965271]
+				wait 300 ${Me.Distance[-253.010101,-161.829285,669.038086]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-268.573120,-161.829285,677.886414]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-268.618408,-161.829269,663.965271]}<3
+				wait 10
+				while ${Actor[sphere blue main room](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere blue main room\" ${Me.Group[${_HealerGroupNum}]}"]
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere blue main room\" ${Me.Group[${_NonHealerGroupNum}]}"]
+					call Vaultcustomclickactor "sphere blue main room" ${Me.Name}
+					wait 50
+				}
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-262.900024,-161.829285,673.577942]
+				wait 1
+				RIMUIObj:SetLockSpot[${Me.Name},-235.028915,-161.829285,671.241638]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-235.028915,-161.829285,671.241638]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-235.028915,-161.829285,671.241638]
+				wait 300 ${Me.Distance[-235.028915,-161.829285,671.241638]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-235.028915,-161.829285,671.241638]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-235.028915,-161.829285,671.241638]}<3
+				wait 10
+				RIMUIObj:SetLockSpot[${Me.Name},-214.817184,-161.829285,650.185303]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-214.817184,-161.829285,650.185303]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-214.817184,-161.829285,650.185303]
+				wait 300 ${Me.Distance[-214.817184,-161.829285,650.185303]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-214.817184,-161.829285,650.185303]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-214.817184,-161.829285,650.185303]}<3
+				wait 30
+				call Vaultcustomcheckcombat
+				while !${Actor[Query, Name=="sphere blue side room" && Distance<10](exists)}
+				{
+					call Vaultcustomclickactor "sphere stand blue room" ${Me.Name}
+					wait 5
+				}
+				;RIMUIObj:SetLockSpot[${Me.Name},-212.465637,-161.573547,671.214172]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-212.465637,-161.573547,671.214172]
+				;relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-212.465637,-161.573547,671.214172]
+				;relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-212.465637,-161.573547,671.214172]
+				wait 300 ${Me.Distance[-212.465637,-161.573547,671.214172]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-212.465637,-161.573547,671.214172]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-212.465637,-161.573547,671.214172]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				RIMUIObj:SetLockSpot[${Me.Name},-214.817184,-161.829285,650.185303]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-214.817184,-161.829285,650.185303]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-214.817184,-161.829285,650.185303]
+				wait 300 ${Me.Distance[-214.817184,-161.829285,650.185303]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-214.817184,-161.829285,650.185303]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-214.817184,-161.829285,650.185303]}<3
+				wait 10
+				while ${Actor[sphere purple blue room](exists)}
+				{
+					call Vaultcustomclickactor "sphere purple blue room" ${Me.Name}
+					wait 5
+				}
+				RIMUIObj:SetLockSpot[${Me.Name},-196.775833,-161.829285,685.502563]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-196.775833,-161.829285,685.502563]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-196.775833,-161.829285,685.502563]
+				wait 300 ${Me.Distance[-196.775833,-161.829285,685.502563]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-196.775833,-161.829285,685.502563]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-196.775833,-161.829285,685.502563]}<3
+				wait 30
+				call Vaultcustomcheckcombat
+				while !${Actor[Query, Name=="sphere blue side room" && Distance<10](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere stand blue room\" ${Me.Group[${_HealerGroupNum}]}"]
+					wait 50
+				}
+				;call Vaultcustomclickactor "sphere stand blue room" ${Me.Name}
+				RIMUIObj:SetLockSpot[${Me.Name},-212.465637,-161.573547,671.214172]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-212.465637,-161.573547,671.214172]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-212.465637,-161.573547,671.214172]
+				wait 300 ${Me.Distance[-212.465637,-161.573547,671.214172]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-212.465637,-161.573547,671.214172]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-212.465637,-161.573547,671.214172]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				RIMUIObj:SetLockSpot[${Me.Name},-196.775833,-161.829285,685.502563]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-196.775833,-161.829285,685.502563]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-196.775833,-161.829285,685.502563]
+				wait 300 ${Me.Distance[-196.775833,-161.829285,685.502563]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-196.775833,-161.829285,685.502563]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-196.775833,-161.829285,685.502563]}<3
+				wait 10
+				while ${Actor[sphere purple blue room](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere purple blue room\" ${Me.Group[${_HealerGroupNum}]}"]
+					wait 50
+				}
+				;call Vaultcustomclickactor "sphere purple blue room" ${Me.Name}
+
+				RIMUIObj:SetLockSpot[${Me.Name},-227.337921,-161.829285,684.763855]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-227.337921,-161.829285,684.763855]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-227.337921,-161.829285,684.763855]
+				wait 300 ${Me.Distance[-227.337921,-161.829285,684.763855]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-227.337921,-161.829285,684.763855]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-227.337921,-161.829285,684.763855]}<3
+				wait 30
+				call Vaultcustomcheckcombat
+				while !${Actor[Query, Name=="sphere blue side room" && Distance<10](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere stand blue room\" ${Me.Group[${_NonHealerGroupNum}]}"]
+					wait 50
+				}
+				;call Vaultcustomclickactor "sphere stand blue room" ${Me.Name}
+				
+				RIMUIObj:SetLockSpot[${Me.Name},-212.465637,-161.573547,671.214172]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-212.465637,-161.573547,671.214172]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-212.465637,-161.573547,671.214172]
+				wait 300 ${Me.Distance[-212.465637,-161.573547,671.214172]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-212.465637,-161.573547,671.214172]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-212.465637,-161.573547,671.214172]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				RIMUIObj:SetLockSpot[${Me.Name},-227.337921,-161.829285,684.763855]
+				relay "other ${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[ALL,OFF]
+				wait 1
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-227.337921,-161.829285,684.763855]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-227.337921,-161.829285,684.763855]
+				wait 300 ${Me.Distance[-227.337921,-161.829285,684.763855]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-227.337921,-161.829285,684.763855]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-227.337921,-161.829285,684.763855]}<3
+				wait 10
+				while ${Actor[sphere purple blue room](exists)}
+				{
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere purple blue room\" ${Me.Group[${_NonHealerGroupNum}]}"]
+					wait 50
+				}
+				;call Vaultcustomclickactor "sphere purple blue room" ${Me.Name}
+				RIMUIObj:SetLockSpot[${Me.Name},-235.028915,-161.829285,671.241638]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-235.028915,-161.829285,671.241638]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-235.028915,-161.829285,671.241638]
+				wait 300 ${Me.Distance[-235.028915,-161.829285,671.241638]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-235.028915,-161.829285,671.241638]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-235.028915,-161.829285,671.241638]}<3
+				wait 10
+				RIMUIObj:SetLockSpot[ALL,-252.601685,-161.829285,668.994751]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-252.601685,-161.829285,668.994751]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-252.601685,-161.829285,668.994751]
+				wait 300 ${Me.Distance[-252.601685,-161.829285,668.994751]}<3 && ${Me.Group[${_HealerGroupNum}].Distance[-252.601685,-161.829285,668.994751]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-252.601685,-161.829285,668.994751]}<3
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}]},-268.173248,-161.831635,678.114685]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-268.662903,-161.830978,663.932739]
+				wait 300 ${Me.Group[${_HealerGroupNum}].Distance[-268.173248,-161.831635,678.114685]}<3 && ${Me.Group[${_NonHealerGroupNum}].Distance[-268.662903,-161.830978,663.932739]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				while ${Actor[sphere stand blue main room].Interactable}
+				{
+					call Vaultcustomclickactor "sphere stand blue main room" ${Me.Name}
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere stand blue main room\" ${Me.Group[${_HealerGroupNum}]}"]
+					relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call Vaultcustomclickactor \"sphere stand blue main room\" ${Me.Group[${_NonHealerGroupNum}]}"]
+					wait 50
+				}
+				wait 20
+			}
+			else
+			{
+				wait 300 ${Me.Distance[-273.110748,-161.829224,669.290955]}<3
+				wait 10
+				while ${Actor[sphere red main room](exists)}
+				{
+					call Vaultcustomclickactor "sphere red main room" ${Me.Name}
+					wait 5
+				}
+				RIMUIObj:SetLockSpot[${Me.Name},-291.647064,-161.829285,671.121887]
+				wait 300 ${Me.Distance[-291.647064,-161.829285,671.121887]}<3
+				wait 10
+				RIMUIObj:SetLockSpot[${Me.Name},-311.337646,-161.829285,692.773254]
+				wait 300 ${Me.Distance[-311.337646,-161.829285,692.773254]}<3
+				wait 30
+				call Vaultcustomcheckcombat
+				while !${Actor[sphere red side room](exists)}
+				{
+					call Vaultcustomclickactor "sphere stand red room" ${Me.Name}
+					wait 5
+				}
+				wait 30
+				RIMUIObj:SetLockSpot[${Me.Name},-312.820770,-161.573547,671.091980]
+				wait 300 ${Me.Distance[-312.820770,-161.573547,671.091980]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				wait 1
+				RIMUIObj:SetLockSpot[${Me.Name},-311.337646,-161.829285,692.773254]
+				wait 300 ${Me.Distance[-311.337646,-161.829285,692.773254]}<3
+				wait 30
+				while ${Actor[sphere purple red room](exists)}
+				{
+					call Vaultcustomclickactor "sphere purple red room" ${Me.Name}
+					wait 5
+				}
+				RIMUIObj:SetLockSpot[${Me.Name},-290.433411,-161.829285,671.646301]
+				wait 300 ${Me.Distance[-290.433411,-161.829285,671.646301]}<3
+				wait 20
+				RIMUIObj:SetLockSpot[ALL,-273.762756,-161.829285,668.977661]
+				wait 20
+				call Vaultcustomcheckcombat
+				while ${Actor[sphere stand red main room].Interactable}
+				{
+					call Vaultcustomclickactor "sphere stand red main room" ${Me.Name}
+					wait 5
+				}
+				RIMUIObj:SetLockSpot[${Me.Name},-253.010101,-161.829285,669.038086]
+				wait 300 ${Me.Distance[-253.010101,-161.829285,669.038086]}<3
+				wait 10
+				while ${Actor[sphere blue main room](exists)}
+				{
+					call Vaultcustomclickactor "sphere blue main room" ${Me.Name}
+					wait 5
+				}
+				wait 20
+				RIMUIObj:SetLockSpot[${Me.Name},-235.028915,-161.829285,671.241638]
+				wait 300 ${Me.Distance[-235.028915,-161.829285,671.241638]}<3
+				wait 10
+				RIMUIObj:SetLockSpot[${Me.Name},-214.817184,-161.829285,650.185303]
+				wait 300 ${Me.Distance[-214.817184,-161.829285,650.185303]}<3
+				wait 30
+				call Vaultcustomcheckcombat
+				while !${Actor[sphere blue side room](exists)}
+				{
+					call Vaultcustomclickactor "sphere stand blue room" ${Me.Name}
+					wait 5
+				}
+				wait 30
+				RIMUIObj:SetLockSpot[${Me.Name},-212.465637,-161.573547,671.214172]
+				wait 300 ${Me.Distance[-212.465637,-161.573547,671.214172]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				RIMUIObj:SetLockSpot[${Me.Name},-214.817184,-161.829285,650.185303]
+				wait 300 ${Me.Distance[-214.817184,-161.829285,650.185303]}<3
+				wait 30
+				while ${Actor[sphere purple blue room](exists)}
+				{
+					call Vaultcustomclickactor "sphere purple blue room" ${Me.Name}
+					wait 5
+				}
+				wait 20
+				RIMUIObj:SetLockSpot[${Me.Name},-235.028915,-161.829285,671.241638]
+				wait 300 ${Me.Distance[-235.028915,-161.829285,671.241638]}<3
+				wait 10
+				RIMUIObj:SetLockSpot[ALL,-252.601685,-161.829285,668.994751]
+				wait 300 ${Me.Distance[-252.601685,-161.829285,668.994751]}<3
+				wait 20
+				call Vaultcustomcheckcombat
+				while ${Actor[sphere stand blue main room].Interactable}
+				{
+					call Vaultcustomclickactor "sphere stand blue main room" ${Me.Name}
+					wait 5
+				}
+				wait 20
+			}
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-262.961761,-161.829285,669.940125]
+			break
+		}
+		case 2
+		{
+			call LockAndWait -Loc "-252.281433,-160.710953,602.785278" -RelayToGroup -WaitAfter 20
+			;while ${Actor[platform 1].TintFlags}==33325
+			;{
+			;	relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[ALL]
+			;	wait 20
+			;}
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[${Me.Group[${_NonHealerGroupNum}]}]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:PauseRIM[${Me.Group[${_NonHealerGroupNum}]}]
+				wait 5
+			}
+			call LockAndWait -Loc "-235.660889,-161.957092,602.559326" -RelayToGroup
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				wait 50
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:ResumeRIM[${Me.Group[${_NonHealerGroupNum}]}]
+				wait 5
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-242.876694,-161.957092,602.456909]
+				wait 20
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[${Me.Group[${_NonHealerGroupNum}]}]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:PauseRIM[${Me.Group[${_NonHealerGroupNum}]}]
+				wait 50
+			}
+			call LockAndWait -Loc "-207.338913,-161.701492,614.735168" -RelayToGroup
+			wait 20
+			call Vaultcustomcheckcombat
+			call LockAndWait -Loc "-209.204666,-161.701477,589.636047" -RelayToGroup
+			wait 20
+			call Vaultcustomcheckcombat
+			call LockAndWait -Loc "-235.880005,-161.957092,599.694702" -RelayToGroup
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				wait 50
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:ResumeRIM[${Me.Group[${_NonHealerGroupNum}]}]
+				wait 5
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-252.281433,-160.710953,602.785278]
+				wait 20
+				;while ${Actor[platform 1].TintFlags}==33325
+				;{
+				;	relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${_NonHealerGroupNum}]
+				;	wait 20
+				;}
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[${Me.Group[${_NonHealerGroupNum}]}]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:PauseRIM[${Me.Group[${_NonHealerGroupNum}]}]
+				wait 50
+			}
+			call LockAndWait -Loc "-254.045181,-161.957092,598.039246" -RelayToGroup -WaitAfter 20
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:ResumeRIM[${Me.Group[${_NonHealerGroupNum}]}]
+			call LockAndWait -Loc "-273.203430,-160.710938,602.776428" -RelayToGroup -WaitAfter 20
+			;while ${Actor[platform 2].TintFlags}==33325
+			;{
+			;	relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[ALL]
+			;	wait 20
+			;}
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[${Me.Group[${_NonHealerGroupNum}]}]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:PauseRIM[${Me.Group[${_NonHealerGroupNum}]}]
+				wait 5
+			}
+			call LockAndWait -Loc "-290.894104,-161.957108,603.059326" -RelayToGroup
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				wait 50
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:ResumeRIM[${Me.Group[${_NonHealerGroupNum}]}]
+				wait 5
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-283.306763,-161.375092,602.984375]
+				wait 20
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[${Me.Group[${_NonHealerGroupNum}]}]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:PauseRIM[${Me.Group[${_NonHealerGroupNum}]}]
+				wait 50
+			}
+			call LockAndWait -Loc "-318.132263,-161.701477,588.526367" -RelayToGroup
+			wait 20
+			call Vaultcustomcheckcombat
+			call LockAndWait -Loc "-316.133453,-161.701477,609.063843" -RelayToGroup
+			wait 20
+			call Vaultcustomcheckcombat
+			call LockAndWait -Loc "-292.066254,-161.957108,602.119324" -RelayToGroup
+			;if ${Zone.Name.Find["[Heroic]"](exists)}
+			;{
+			;	wait 50
+			;	relay ${RI_Var_String_RelayGroup} RIMUIObj:ResumeRIM[${Me.Group[${_NonHealerGroupNum}]}]
+			;	wait 5
+			;	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}]},-273.203430,-160.710938,602.776428]
+			;	wait 20
+			;	while ${Actor[platform 1].TintFlags}==33325
+			;	{
+			;		relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${_NonHealerGroupNum}]
+			;		wait 20
+			;	}
+			;	relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[${Me.Group[${_NonHealerGroupNum}]}]
+			;	relay ${RI_Var_String_RelayGroup} RIMUIObj:PauseRIM[${Me.Group[${_NonHealerGroupNum}]}]
+			;	wait 50
+			;}
+			call LockAndWait -Loc "-264.167175,-161.957092,594.597229" -RelayToGroup
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:ResumeRIM[${Me.Group[${_NonHealerGroupNum}]}]
+				wait 20
+			}
+			call LockAndWait -Loc "-233.241333,-161.957092,602.651184" -RelayToGroup
+			break
+		}
+	}
+	Follow:Set[1]
+}
+function Vaultcustomfloorpanelcyl1(int _Room)
+{
+	variable bool _Activated=FALSE
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.808441,-161.829285,672.285889]
+	wait 300 ${Me.Group[5].Distance[-262.808441,-161.829285,672.285889]}<3
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-313.167694,-161.573563,671.534241]
+	wait 300 ${Me.Group[5].Distance[-313.167694,-161.573563,671.534241]}<3
+	;-313.200012,-161.570007,671.299988
+	wait 20
+	while ${Actor[Query, Name=="switch ring" && X=-313.200012 && Y=-161.570007 && Z=671.299988].Aura.NotEqual[design_cylinder_cage_red]}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[5]}]
+		wait 20
+	}
+	wait 10
+	while ${Actor[room ${_Room} floor switch 1].Interactable}
+	{
+		call Vaultcustomclickactor "room ${_Room} floor switch 1" ${Me.Name}
+		_Activated:Set[1]
+	}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.808441,-161.829285,672.285889]
+	wait 300 ${Me.Group[5].Distance[-262.808441,-161.829285,672.285889]}<3
+	if !${_Activated}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-212.472153,-161.573547,671.407715]
+		wait 300 ${Me.Group[5].Distance[-212.472153,-161.573547,671.407715]}<3
+		;-212.500000,-161.570007,671.299988
+		wait 20
+		while ${Actor[Query, Name=="switch ring" && X=-212.500000 && Y=-161.570007 && Z=671.299988].Aura.NotEqual[design_cylinder_cage_red]}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[5]}]
+			wait 20
+		}
+		wait 10
+		while ${Actor[room ${_Room} floor switch 1].Interactable}
+			call Vaultcustomclickactor "room ${_Room} floor switch 1" ${Me.Name}
+		
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.808441,-161.829285,672.285889]
+		wait 300 ${Me.Group[5].Distance[-262.808441,-161.829285,672.285889]}<3
+	}
+}
+function Vaultcustomfloorpanelcyl2(int _Room)
+{
+	variable bool _Activated=FALSE
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-263.032898,-161.957092,596.951965]
+	wait 300 ${Me.Group[5].Distance[-263.032898,-161.957092,596.951965]}<3
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-313.106720,-161.701477,602.750488]
+	wait 300 ${Me.Group[5].Distance[-313.106720,-161.701477,602.750488]}<3
+	;-313.250000,-161.699997,602.770020
+	wait 20
+	while ${Actor[Query, Name=="switch ring" && X=-313.250000 && Y=-161.699997 && Z=602.770020].Aura.NotEqual[design_cylinder_cage_red]}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[5]}]
+		wait 20
+	}
+	wait 10
+	while ${Actor[room ${_Room} floor switch 2].Interactable}
+	{
+		call Vaultcustomclickactor "room ${_Room} floor switch 2" ${Me.Name}
+		_Activated:Set[1]
+	}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-263.032898,-161.957092,596.951965]
+	wait 300 ${Me.Group[5].Distance[-263.032898,-161.957092,596.951965]}<3
+	if !${_Activated}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-212.654846,-161.701477,602.895752]
+		wait 300 ${Me.Group[5].Distance[-212.654846,-161.701477,602.895752]}<3
+		;-212.520004,-161.699997,602.840027
+		wait 20
+		while ${Actor[Query, Name=="switch ring" && X=-212.520004 && Y=-161.699997 && Z=602.840027].Aura.NotEqual[design_cylinder_cage_red]}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[5]}]
+			wait 20
+		}
+		wait 10
+		while ${Actor[room ${_Room} floor switch 2].Interactable}
+			call Vaultcustomclickactor "room ${_Room} floor switch 2" ${Me.Name}
+		
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-263.032898,-161.957092,596.951965]
+		wait 300 ${Me.Group[5].Distance[-263.032898,-161.957092,596.951965]}<3
+	}
+}
+function Vaultcustomfloorpanelcyl3(int _Room)
+{
+	variable bool _Activated=FALSE
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.912018,-161.957092,528.205078]
+	wait 300 ${Me.Group[5].Distance[-262.912018,-161.957092,528.205078]}<3
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-313.175751,-161.701492,528.012756]
+	wait 300 ${Me.Group[5].Distance[-313.175751,-161.701492,528.012756]}<3
+	;-313.239990,-161.699997,527.890015
+	wait 20
+	while ${Actor[Query, Name=="switch ring" && X=-313.239990 && Y=-161.699997 && Z=527.890015].Aura.NotEqual[design_cylinder_cage_red]}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[5]}]
+		wait 20
+	}
+	wait 10
+	while ${Actor[room ${_Room} floor switch 3].Interactable}
+	{
+		call Vaultcustomclickactor "room ${_Room} floor switch 3" ${Me.Name}
+		_Activated:Set[1]
+	}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.912018,-161.957092,528.205078]
+	wait 300 ${Me.Group[5].Distance[-262.912018,-161.957092,528.205078]}<3
+	if !${_Activated}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-212.586929,-161.701477,527.958252]
+		wait 300 ${Me.Group[5].Distance[-212.586929,-161.701477,527.958252]}<3
+		;-212.539993,-161.699997,527.919983
+		wait 20
+		while ${Actor[Query, Name=="switch ring" && X=-212.539993 && Y=-161.699997 && Z=527.919983].Aura.NotEqual[design_cylinder_cage_red]}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[5]}]
+			wait 20
+		}
+		wait 10
+		while ${Actor[room ${_Room} floor switch 3].Interactable}
+			call Vaultcustomclickactor "room ${_Room} floor switch 3" ${Me.Name}
+		
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.912018,-161.957092,528.205078]
+		wait 300 ${Me.Group[5].Distance[-262.912018,-161.957092,528.205078]}<3
+	}
+}
+function Vaultcustomfloorpanelcyl4(int _Room)
+{
+	variable bool _Activated=FALSE
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.720428,-162.428619,452.865173]
+	wait 300 ${Me.Group[5].Distance[-262.720428,-162.428619,452.865173]}<3
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-313.194977,-161.701477,453.298004]
+	wait 300 ${Me.Group[5].Distance[-313.194977,-161.701477,453.298004]}<3
+	;-313.220001,-161.699997,453.070007
+	wait 20
+	while ${Actor[Query, Name=="switch ring" && X=-313.220001 && Y=-161.699997 && Z=453.070007].Aura.NotEqual[design_cylinder_cage_red]}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[5]}]
+		wait 20
+	}
+	wait 10
+	while ${Actor[room ${_Room} floor switch 4].Interactable}
+	{
+		call Vaultcustomclickactor "room ${_Room} floor switch 4" ${Me.Name}
+		_Activated:Set[1]
+	}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.720428,-162.428619,452.865173]
+	wait 300 ${Me.Group[5].Distance[-262.720428,-162.428619,452.865173]}<3
+	if !${_Activated}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-212.607941,-161.701477,452.897736]
+		wait 300 ${Me.Group[5].Distance[-212.607941,-161.701477,452.897736]}<3
+		;-212.539993,-161.699997,453.079987
+		wait 20
+		while ${Actor[Query, Name=="switch ring" && X=-212.539993 && Y=-161.699997 && Z=453.079987].Aura.NotEqual[design_cylinder_cage_red]}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[5]}]
+			wait 20
+		}
+		wait 10
+		while ${Actor[room ${_Room} floor switch 4].Interactable}
+			call Vaultcustomclickactor "room ${_Room} floor switch 4" ${Me.Name}
+		
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.720428,-162.428619,452.865173]
+		wait 300 ${Me.Group[5].Distance[-262.720428,-162.428619,452.865173]}<3
+	}
+}
+function Vaultcustomfloorpanel(int _Stage)
+{
+	wait 20
+	CustomLoc:Set["0 0 0"]
+	Follow:Set[0]
+	relay "other ${RI_Var_String_RelayGroup}" squelch endscript Buffer:CoT
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:StopMove[ALL]
+	waitframe
+	switch ${_Stage}
+	{
+		case 1
+		{
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				call Vaultcustomfloorpanelcyl1 1
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},${Me.Loc}]
+				wait 300 ${Me.Group[5].Distance}<3
+				wait 100
+			}
+			else
+			{
+				call ClickActor "room 1 floor switch 1"
+			}
+			if ${Zone.Name.Find["[Solo]"](exists)}
+				wait 150
+			break
+		}
+		case 2
+		{
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				call Vaultcustomfloorpanelcyl2 2
+				call Vaultcustomfloorpanelcyl1 2
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},${Me.Loc},1,1000]
+				wait 300 ${Me.Group[5].Distance}<3
+				wait 50
+			}
+			else
+			{
+				call ClickActor "room 2 floor switch 2"
+				call ClickActor "room 2 floor switch 1"
+			}
+			if ${Zone.Name.Find["[Solo]"](exists)}
+				wait 150
+			break
+		}
+		case 3
+		{
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				call Vaultcustomfloorpanelcyl3 3
+				call Vaultcustomfloorpanelcyl2 3
+				call Vaultcustomfloorpanelcyl1 3
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},${Me.Loc},1,1000]
+				wait 300 ${Me.Group[5].Distance}<3
+			}
+			else
+			{
+				call ClickActor "room 3 floor switch 3"
+				call ClickActor "room 3 floor switch 2"
+				call ClickActor "room 3 floor switch 1"
+			}
+			if ${Zone.Name.Find["[Solo]"](exists)}
+				wait 150
+			break
+		}
+		case 4
+		{
+			if ${Zone.Name.Find["[Heroic]"](exists)}
+			{
+				call Vaultcustomfloorpanelcyl4 4
+				call Vaultcustomfloorpanelcyl3 4
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-255.426010,-161.957092,430.732178,1,100]
+				wait 1
+				call Vaultcustomfloorpanelcyl2 4
+				call Vaultcustomfloorpanelcyl1 4
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},-262.720428,-162.428619,452.865173,1,1000]
+				wait 300 ${Me.Group[5].Distance[-262.720428,-162.428619,452.865173]}<3
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5]},${Me.Loc},1,1000]
+				wait 300 ${Me.Group[5].Distance}<3
+			}
+			else
+			{
+				call ClickActor "room 4 floor switch 4"
+				call ClickActor "room 4 floor switch 3"
+				call RIMObj.Move -255.426010 -161.957092 430.732178
+				call ClickActor "room 4 floor switch 2"
+				call ClickActor "room 4 floor switch 1"
+			}
+			if ${Zone.Name.Find["[Solo]"](exists)}
+				wait 150
+			break
+		}
+	}
+	Follow:Set[1]
+	relay ${RI_Var_String_RelayGroup} RI_CoT
+}
+function Nev()
+{
+	call CustomNamed "Nev Dax'Thall-NMB" "-263.103699,-161.829285,671.844604" NevCustom
+}
+function NevCustom(int _NamedID)
+{
+	call RIObj.Target ${_NamedID}
+	if ${Actor[sphere purple main room](exists)}
+		Actor[sphere purple main room]:DoubleClick
+}
+function Azrinax()
+{
+	call CustomNamed "Gloombeast Azrinax" "-213.904861,-161.701477,602.761169"
+}
+function Yzo()
+{
+	call CustomNamed "Umbral Lord Yzo-NMB" "-263.124756,-161.957092,528.895081" YzoCustom
+}
+function YzoCustom(int _NamedID)
+{
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		call RIObj.Target ${_NamedID}
+		if ${Actor[id,${_NamedID}].Distance[-313.190002,-161.701492,527.979980]}<5 && ${Actor[shadowspren](exists)}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-292.192017,-161.957108,528.047058]
+			wait 300 ${Me.Distance[-292.192017,-161.957108,528.047058]}<3
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-299.458832,-161.957092,514.973572]
+			wait 300 ${Me.Distance[-299.458832,-161.957092,514.973572]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-322.196045,-161.951340,511.487122]
+			wait 300 ${Me.Distance[-322.196045,-161.951340,511.487122]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-329.687134,-161.837616,534.040649]
+			wait 300 ${Me.Distance[-329.687134,-161.837616,534.040649]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-312.474792,-161.957092,546.966309]
+			wait 300 ${Me.Distance[-312.474792,-161.957092,546.966309]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-296.548065,-161.957108,537.251526]
+			wait 300 ${Me.Distance[-296.548065,-161.957108,537.251526]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-312.821106,-161.701492,529.034058]
+			wait 10
+		}
+		if ${Actor[id,${_NamedID}].Distance[-212.440002,-161.701477,528.119995]}<5 && ${Actor[shadowspren](exists)}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-233.831146,-161.957108,527.759277]
+			wait 300 ${Me.Distance[-233.831146,-161.957108,527.759277]}<3
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-228.910690,-161.929489,536.613281]
+			wait 300 ${Me.Distance[-228.910690,-161.929489,536.613281]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-212.183762,-161.880463,545.819702]
+			wait 300 ${Me.Distance[-212.183762,-161.880463,545.819702]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-194.602844,-161.931839,532.205566]
+			wait 300 ${Me.Distance[-194.602844,-161.931839,532.205566]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-203.654312,-161.907974,511.895203]
+			wait 300 ${Me.Distance[-203.654312,-161.907974,511.895203]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-224.008636,-161.953003,513.219360]
+			wait 300 ${Me.Distance[-224.008636,-161.953003,513.219360]}<3
+			call Target shadowspren 1 15
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-214.106216,-161.701477,526.591187]
+			wait 10
+		}
+	}
+}
+function Ikeshzi()
+{
+	call CustomNamed "Shadow Rhozth Ikeshzi-NMB" "-259.407990,-359.499756,628.242249" NONE soldier beast shissar
+}
+function Shade()
+{
+	call CustomNamed "Shade of Vyzh'dra" "-260.032654,-161.446838,293.148499"
+}
+;;;;;;;; End The Vault of Ssraeshza
+
+;;;;;;;; Start Fordel Midst: Bizarre Bazaar
+
+function Fendilix()
+{
+	call CustomNamed "Financier Fendilix" "-275.081207,-1.685512,32.970196"
+}
+
+;Mandee Quin
+;Mannee Quin
+function Quin()
+{
+	call CustomNamed "Quin" "-120.387802,-1.494008,72.475723"
+	call CustomNamed "Quin" "-120.387802,-1.494008,72.475723"
+}
+function Shift()
+{
+	call CustomNamed "Short Shift" "-63.471298,-1.741144,202.257202"
+}
+function Elsindir()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["Your Cat's Eye Agate begins to glow!"]
+	call CustomNamed "Trade Baroness Elsindir-NLC" "-29.738201,-1.490341,63.742359" ElsindirCustom
+	wait 20
+	call RILoot 0
+	call LootOptions RoundRobin
+	wait 5
+	if !${RI_Var_Bool_GlobalOthers} && ${Actor[Chest,radius,100](exists)}
+	{
+		eq2ex summon
+		wait 2
+		Actor[Chest,radius,100]:DoubleClick
+		wait 2
+		eq2ex summon
+	}
+	if !${RI_Var_Bool_GlobalOthers} && ${Actor[Chest,radius,100](exists)}
+	{
+		eq2ex summon
+		wait 2
+		Actor[Chest,radius,100]:DoubleClick
+		wait 2
+		eq2ex summon
+	}
+	if !${RI_Var_Bool_GlobalOthers} && ${Actor[Chest,radius,100](exists)}
+	{
+		eq2ex summon
+		wait 2
+		Actor[Chest,radius,100]:DoubleClick
+		wait 2
+		eq2ex summon
+	}
+	RI_Var_IndexInt_InvalidChest:Insert[${Actor[Chest,radius,100].ID}]
+	wait 20
+}
+function ElsindirCustom(int _NamedID)
+{
+	call RIObj.Target ${_NamedID}
+	if ${Trigger}
+	{
+		;echo Triggered: ${TriggerMessage} // ${Me.Inventory[Query, Name=="Cat's Eye Agate" && Location=="Inventory"].TimeUntilReady}
+		RI_CMD_PauseCombatBots 1
+		while ${Me.Inventory[Query, Name=="Cat's Eye Agate" && Location=="Inventory"].TimeUntilReady}<=0
+		{
+			wait 2
+			Me.Inventory[Query, Name=="Cat's Eye Agate" && Location=="Inventory"]:Use
+			wait 2
+		}
+		RI_CMD_PauseCombatBots 0
+		Trigger:Set[0]
+	}
+}
+function Brixwald()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["Your Cat's Eye Agate begins to glow!"]
+	IncomingText:Insert["Your Paludal Catnip starts to give off a strong scent!"]
+	call CustomNamed "Bazaar Baron Brixwald-NMB" "262.990570,-33.059879,26.555954" BrixwaldCustom
+}
+function BrixwaldCustom(int _NamedID)
+{
+	call RIObj.Target ${_NamedID}
+	if ${Trigger}
+	{
+		;echo Triggered: ${TriggerMessage}
+		RI_CMD_PauseCombatBots 1
+		if ${TriggerMessage.Find["Your Cat's Eye Agate begins to glow"](exists)}
+		{
+			while ${Me.Inventory[Query, Name=="Cat's Eye Agate" && Location=="Inventory"].TimeUntilReady}<=0
+			{
+				wait 2
+				Me.Inventory[Query, Name=="Cat's Eye Agate" && Location=="Inventory"]:Use
+				wait 2
+			}
+		}
+		else
+		{
+			while ${Me.Inventory[Query, Name=="Paludal Catnip" && Location=="Inventory"].TimeUntilReady}<=0
+			{
+				wait 2
+				Me.Inventory[Query, Name=="Paludal Catnip" && Location=="Inventory"]:Use
+				wait 2
+			}
+		}
+		RI_CMD_PauseCombatBots 0
+		Trigger:Set[0]
+	}
+}
+;;;;;;;; End Fordel Midst: Bizarre Bazaar
+
+;;;;;;;; Start Solusek Eye: The Calling
+
+function Widow()
+{
+	call CustomNamed "The Iron Widow" "18.192625,-13.440747,218.081314" WidowCustom
+}
+function WidowCustom(int _NamedID)
+{
+	call RIObj.Target maker -Distance 15 ${_NamedID}
+}
+function Novinctus()
+{
+	call CustomNamed "Novinctus the Unleashed" "-68.111809,-34.140427,-118.787788"
+}
+function Vezarra()
+{
+	call CustomNamed "Dread Lady Vezarra-NLP" "-279.508240,-40.448433,-160.450745" VezarraCustom
+}
+function VezarraCustom(int _NamedID)
+{
+	call RIObj.Target unearthed -Distance 5 ${_NamedID}
+}
+function Babagoosh()
+{
+	RI_CMD_AbilityEnableDisable "Cure Curse" 0
+	call CustomNamed "Chief Babagoosh" "-251.989731,-239.753830,-25.929913"
+	RI_CMD_AbilityEnableDisable "Cure Curse" 1
+}
+function Sickleclaw()
+{
+	call CustomNamed "Evisceraptor" "8.206963,-247.991837,24.617353 " NONE Sickleclaw
+}
+
+function Izeroth()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert[takes the brunt of the Sokokar Bomb]
+	call CustomNamed "Lord Commander Izeroth-NLP" "51.511246,-359.497498,175.481934" IzerothCustom
+}
+function IzerothCustom(int _NamedID)
+{
+	if ${Trigger}
+	{
+		call RIObj.Target Korvisaur
+		wait 110
+		Trigger:Set[0]
+	}
+	RIMUIObj:SetLockSpot[ALL,51.511246,-359.497498,175.481934]
+	if ${Actor[Query, Name=-"Xerin" && IsDead=FALSE](exists)}
+		call RIObj.Target Xerin
+	elseif ${Actor[Query, Name=-"Korvisaur" && IsDead=FALSE](exists)}
+		call RIObj.Target Korvisaur
+	else
+		call RIObj.Target ${_NamedID}
+}
+function Surtaug()
+{
+	call CustomNamed "Pyreduke Surtaug" "-54.266716,-336.819000,-32.537575" NONE twisting
+}
+function Onakoome()
+{
+	RI_CMD_AbilityEnableDisable "Cure Curse" 0
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		declare _HealerGroupNum int script 1
+		variable int _cnt=0
+		for(_cnt:Set[1];${_cnt}<${Me.Group};_cnt:Inc)
+		{
+			if ${RIObj.Archetype[${Me.Group[${_cnt}].ID}].Equal[priest]}
+				_HealerGroupNum:Set[${_cnt}]
+		}
+	}
+	call CustomNamed "Onakoome-NMB" "-156.508133,-369.836182,-287.070282" OnakoomeCustom
+	if !${RI_Var_Bool_GlobalOthers}
+		deletevariable _HealerGroupNum
+	RI_CMD_AbilityEnableDisable "Cure Curse" 1
+}
+function OnakoomeCustom(int _NamedID)
+{
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_HealerGroupNum}].Name},-152.043625,-369.533142,-287.324829]
+		if ${Me.Cursed}==1
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:CastOn[PRIESTS,"Cure Curse",${Me.Group[${_HealerGroupNum}].Name},1]
+		call RIObj.Target ascended ${_NamedID}
+	}
+}
+
+function Galadoon()
+{
+	RI_CMD_AbilityEnableDisable "Cure Curse" 0
+	call CustomNamed "Galadoon-NMB" "-255.069397,-371.068054,-97.962288" GaladoonCustom
+	RI_CMD_AbilityEnableDisable "Cure Curse" 1
+}
+function GaladoonCustom(int _NamedID)
+{
+	call RIObj.MageAbsorbMagic ${_NamedID} 205 1 
+	;(int _ID, int _MainIconID=-1, int _Increments=0)
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		if ${RIObj.GroupDetrimentCount[Curse]}>0
+		{
+			;echo CURSE
+			declare uncurableMember int 0
+			declare curableMember int 0
+			declare _i int 0
+			for(_i:Set[0];${_i}<${Me.Group};_i:Inc)
+			{
+				if ${Me.Group[${_i}].Cursed}==-1
+					uncurableMember:Set[${_i}]
+				if ${Me.Group[${_i}].Cursed}==1
+					curableMember:Set[${_i}]
+			}
+			while ${Me.Group[${uncurableMember}].Cursed}==-1 && !${Me.Group[${uncurableMember}].IsDead}
+			{
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Group[${uncurableMember}].X},${Me.Y},${Me.Group[${uncurableMember}].Z},3,1000]
+				if ${Me.Distance2D[${Me.Group[${uncurableMember}].X},${Me.Group[${uncurableMember}].Z}]}<=3
+					relay ${RI_Var_String_RelayGroup} RIMUIObj:CastOn[PRIESTS,"Cure Curse",${Me.Group[${curableMember}].Name},1]
+				wait 1
+			}
+		}
+		elseif ${RIMUIObj.MainIconIDExists[${_NamedID},509]}
+		{
+			;echo SLAG DIVING
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_NamedID}].Loc}]
+			call RIObj.Target slag
+		}
+		else
+		{
+			;echo NORMAL
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-255.069397,-371.068054,-97.962288]
+			call RIObj.Target ${_NamedID}
+		}
+	}
+}
+
+function Hortu()
+{
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		declare _NonHealerGroupNum int script 1
+		variable int _cnt=0
+		for(_cnt:Set[1];${_cnt}<${Me.Group};_cnt:Inc)
+		{
+			if !${RIObj.Archetype[${Me.Group[${_cnt}].ID}].Equal[priest]}
+				_NonHealerGroupNum:Set[${_cnt}]
+		}
+	}
+	call CustomNamed "Hortu the Scorched-NMB" "-199.447769,-557.484436,212.077820" HortuCustom
+	if !${RI_Var_Bool_GlobalOthers}
+		deletevariable _NonHealerGroupNum
+}
+function HortuCustom()
+{
+	call RIObj.MageAbsorbMagic ${_NamedID} 205 1 
+	if ${Me.IsDead} && ${Math.Distance[${Me.Y},-557]}>20
+	{
+		while ${Me.IsDead}
+		{
+			eq2ex "select_junction 4"
+			wait 5
+		}
+		wait 600 ${EQ2.Zoning}!=0
+		wait 600 ${EQ2.Zoning}==0
+		while ${Me.Distance[-197.500290,-557.344177,201.892990]}>3
+		{
+			RIMUIObj:SetLockSpot[${Me.Name},-197.500290,-557.344177,201.892990]
+			wait 1
+		}
+		RIMUIObj:SetLockSpot[ALL,-199.447769,-557.484436,212.077820]
+	}
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		if ${Actor[Query, Name=="a singeing scion"](exists)}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor["a singeing scion"].Loc},5,1000]
+			call RIObj.Target ${Actor[Query, Name=="a singeing scion"].ID}
+		}
+		elseif ${Actor[Query, Name=="a singing scion" && X=-213.860001 && Y=-556.340027 && Z=200.839996](exists)}
+		{
+			echo NORTH
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Assist[${Me.Group[${_NonHealerGroupNum}].Name},0]
+			wait 1
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Target[${Me.Group[${_NonHealerGroupNum}].Name},${Me.Group[${_NonHealerGroupNum}].Name}]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-201.687592,-557.163025,229.287735]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}].Name},-197.205154,-557.344177,202.632660]
+			wait 300 ${Me.Distance[-201.687592,-557.163025,229.287735]}<3
+			wait 300 ${Me.Group[${_NonHealerGroupNum}].Distance[-197.205154,-557.344177,202.632660]}<3
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}].Name},-211.841110,-556.343140,201.008057]
+			wait 300 ${Me.Group[${_NonHealerGroupNum}].Distance[-204.416107,-557.344177,201.538544]}<4
+			eq2ex /g jump
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[${_NonHealerGroupNum}].Name}]
+			wait 1
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[${_NonHealerGroupNum}].Name}]
+			wait 20
+			Actor[Query, Name=="a singing scion" && X=-213.860001 && Y=-556.340027 && Z=200.839996]:DoTarget
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}].Name},-197.205154,-557.344177,202.632660]
+			wait 300 ${Me.Group[${_NonHealerGroupNum}].Distance[-197.205154,-557.344177,202.632660]}<4
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Assist[${Me.Group[${_NonHealerGroupNum}].Name},1]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-199.447769,-557.484436,212.077820]
+			wait 50
+		}
+		elseif ${Actor[Query, Name=="a singing scion" && X=-216.809998 && Y=-556.340027 && Z=218.630005](exists)}
+		{
+			echo SOUTH
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Assist[${Me.Group[${_NonHealerGroupNum}].Name},0]
+			wait 1
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Target[${Me.Group[${_NonHealerGroupNum}].Name},${Me.Group[${_NonHealerGroupNum}].Name}]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-196.182541,-557.344177,195.493484]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}].Name},-200.640366,-557.163025,222.816528]
+			wait 300 ${Me.Distance[-196.182541,-557.344177,195.493484]}<3
+			wait 300 ${Me.Group[${_NonHealerGroupNum}].Distance[-200.640366,-557.163025,222.816528]}<3
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}].Name},-215.119354,-556.343201,219.193741]
+			wait 300 ${Me.Group[${_NonHealerGroupNum}].Distance[-207.958923,-557.163025,220.980362]}<4
+			eq2ex /g jump
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[${_NonHealerGroupNum}].Name}]
+			wait 1
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Jump[${Me.Group[${_NonHealerGroupNum}].Name}]
+			wait 20
+			Actor[Query, Name=="a singing scion" && X=-216.809998 && Y=-556.340027 && Z=218.630005]:DoTarget
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[${_NonHealerGroupNum}].Name},-200.640366,-557.163025,222.816528]
+			wait 300 ${Me.Group[${_NonHealerGroupNum}].Distance[-200.640366,-557.163025,222.816528]}<4
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:Assist[${Me.Group[${_NonHealerGroupNum}].Name},1]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-199.447769,-557.484436,212.077820]
+			wait 50
+		}
+		else
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-199.447769,-557.484436,212.077820]
+	}
+}
+function Ayquini()
+{
+	call CustomNamed "Ayquini the Firemind-NMB" "-285.547760,-516.409607,120.104797" AyquiniCustom
+}
+function AyquiniCustom()
+{
+	call RIObj.MageAbsorbMagic ${_NamedID} 205 1 
+	;echo custom
+	if !${RI_Var_Bool_GlobalOthers}
+	{
+		;echo ngo
+		if ${Actor[Query, Name=-"Scorion's doppel" && IsDead=FALSE](exists)}
+			Actor[Query, Name=-"Scorion's doppel" && IsDead=FALSE]:DoTarget
+		else
+			RIObj:BalanceMobs[ALL,0,500]
+	}
+}
+;01:13:49: guardian / 141.306732,-494.430695,309.131226
+;Lord Kargurak
+;the Usurper's guard
+;At Ease Description: BackDropIconID: 313 MainIconID: 434 ID: 2827563 Duration: -1.000000 MaxDuration: -1.000000 CurrentIncrements: 0
+;Roll Call Description: Sign up, or die! BackDropIconID: 315 MainIconID: 566 ID: 2887883 Duration: 18.000000 MaxDuration: 20.000000 CurrentIncrements: 0
+function Kargurak()
+{
+	call CustomNamed "Lord Kargurak-NMB" "141.306732,-494.430695,309.131226" KargurakCustom
+}
+function KargurakCustom(int _NamedID)
+{
+	call RIObj.MageAbsorbMagic ${_NamedID} 205 1 
+	if !${RI_Var_Bool_GlobalOthers}
+		call RIObj.Target guard -distance 10 ${_NamedID}
+	if ${RIMUIObj.MainIconIDExists[${Me.ID},434]}
+	{
+		while !${Me.IsCrouching} && ${RIMUIObj.MainIconIDExists[${Me.ID},434]}
+		{
+			press ${RI_Var_String_CrouchKey}
+			wait 2
+		}
+		while ${RIMUIObj.MainIconIDExists[${Me.ID},434]}
+			wait 1
+		while ${Me.IsCrouching}
+		{
+			press ${RI_Var_String_CrouchKey}
+			wait 2
+		}
+	}
+	if ${RIMUIObj.MainIconIDExists[${Me.ID},566]}
+	{
+		;eq2ex gu roll call
+		while !${Actor[Query, Name=="" && TintFlags=${Me.TintFlags}](exists)}
+		{
+			;echo waiting for my statue
+			wait 1
+		}
+		RIMUIObj:SetLockSpot[${Me.Name},${Actor[Query, Name=="" && TintFlags=${Me.TintFlags}].Loc},3,1000]
+		wait 150 ${Me.Distance[${Actor[Query, Name=="" && TintFlags=${Me.TintFlags}].Loc}]}<4
+		wait 20
+		while ${RIMUIObj.MainIconIDExists[${Me.ID},566]}
+		{
+			Actor[Query, Name=-"boss 12 statue sign" && Distance<5]:DoubleClick
+			wait 5
+			type ${Me.Name}
+			wait 2
+			press enter
+			wait 13
+		}
+		RIMUIObj:SetLockSpot[${Me.Name},141.306732,-494.430695,309.131226]
+	}
+}
+;;;;;;;; End Solusek Eye: The Calling
+
+
+;;;;;;;; Start BoL Raid Coding
+
+function Rockhopper()
+{
+	;00:39:02: guardian / -709.398926,6.139619,644.550781
+    ;00:39:06: guardian / -694.173157,4.685901,654.502869
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["prepares to pounce"]
+	call CustomNamed "Rockhopper Pouncer" "-709.398926,6.139619,644.550781" RockhopperCustom
+}
+function RockhopperCustom(int _NamedID)
+{
+	if ${Trigger}
+	{
+		if !${RI_Var_Bool_GlobalOthers} || ${Me.Archetype.Equal[fighter]}
+		{
+			if ${Me.Distance[-709.398926,6.139619,644.550781]}<5
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-694.173157,4.685901,654.502869]
+			else
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-709.398926,6.139619,644.550781]
+			Trigger:Set[FALSE]
+		}
+		else
+			Trigger:Set[FALSE]
+	}
+	else
+	{
+		if ${Actor[id,${_NamedID}].Distance}<10 && ${Me.Archetype.Equal[Scout]}
+			RIMUIObj:ComeOn[${Me.Name}]
+		if !${RI_Var_Bool_GlobalOthers} || ${Me.Archetype.Equal[fighter]}
+		{
+			call RIObj.Target ${_NamedID}
+		}
+	}
+}
+function Praetorian()
+{
+	declare _PStage int script 0
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["unwittingly unleashes a nasty pustule at his feet"]
+	call CustomNamed "Praetorian K'Tikrn" "416.769196,97.053978,766.322449" PraetorianCustom
+	deletevariable _PStage
+}
+function PraetorianCustom(int _NamedID)
+{
+	if ${Trigger}
+	{
+		;echo 2
+		if !${RI_Var_Bool_GlobalOthers} || ${Me.Archetype.Equal[fighter]}
+		{
+			if ${_PStage}==2
+			{
+				;echo 3
+				_PStage:Set[0]
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,416.769196,97.053978,766.322449]
+			}
+			elseif ${_PStage}==0
+			{
+			;	echo 4
+				_PStage:Inc				
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,479.362152,100.560600,750.807068]
+			}
+			elseif ${_PStage}==1
+			{
+				;echo 5
+				_PStage:Inc				
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,435.930054,82.919701,706.278381]
+			}
+			wait 50
+			Trigger:Set[FALSE]
+		}
+		else
+		{
+			wait 50
+			Trigger:Set[FALSE]
+		}
+	}
+	else
+	{
+		if ${Me.Archetype.Equal[scout]} && ${Actor[id,${_NamedID}].Distance}<10
+			RIMUIObj:ComeOn[${Me.Name}]
+		if !${RI_Var_Bool_GlobalOthers} || ${Me.Archetype.Equal[fighter]}
+		{
+			call RIObj.Target ${_NamedID}
+		}
+	}
+}
+function Overfiend() 
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["angers as he has moved too far"]
+	IncomingText:Insert["massive mind spike"]
+	RIMUIObj:SetLockSpot[ALL,-533.415527,62.421314,259.907715]
+	if !${RI_Var_Bool_GlobalOthers} || ${Me.Archetype.Equal[fighter]}
+	{
+		call RIObj.Target "Thought Horror Overfiend"
+		wait 20
+		RIMUIObj:SetLockSpot[ALL,-533.019043,61.457664,277.267517]
+	}
+	call CustomNamed "Thought Horror Overfiend" "-533.415527,62.421314,259.907715" OverfiendCustom
+}
+function OverfiendCustom(int _NamedID)
+{
+	if !${RI_Var_Bool_GlobalOthers} || ${Me.Archetype.Equal[fighter]}
+	{
+		call RIObj.Target ${_NamedID}
+		if ${RIMUIObj.MainIconIDExists[${Me.ID},60]} || ( ${Trigger} && ${TriggerMessage.Find[angers as he has moved too far](exists)} )
+		{
+			if ${Me.Distance[-533.019043,61.457664,277.267517]}<15
+				RIMUIObj:SetLockSpot[ALL,-533.489136,61.604141,242.635895]
+			else
+				RIMUIObj:SetLockSpot[ALL,-533.019043,61.457664,277.267517]
+			wait 300 !${RIMUIObj.MainIconIDExists[${Me.ID},60]}
+			Trigger:Set[FALSE]
+		}
+		elseif ${Trigger} && ${TriggerMessage.Find[massive mind spike](exists)}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-533.415527,62.421314,259.907715]
+			if ${Me.Distance[-533.019043,61.457664,277.267517]}<15
+				RIMUIObj:SetLockSpot[ALL,-533.148315,61.516685,289.822968]
+			else
+				RIMUIObj:SetLockSpot[ALL,-533.019836,61.544247,230.961197]
+			wait 50
+			Trigger:Set[FALSE]
+		}
+	}
+	else
+	{
+		if ${Trigger} && ${TriggerMessage.Find[massive mind spike](exists)}
+		{
+			if ${Me.Archetype.Equal[scout]}
+			{
+				wait 50
+				RIMUIObj:ComeOn[${Me.Name}]
+			}
+			Trigger:Set[FALSE]
+		}
+		elseif ${Trigger}
+			Trigger:Set[FALSE]
+
+	}
+}
+;Prismatic Shield 911
+;a prismatic shield
+function Stonegrabber()
+{
+	;00:39:02: guardian / -709.398926,6.139619,644.550781
+    ;00:39:06: guardian / -694.173157,4.685901,654.502869
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["prepares to pounce"]
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-312.923431,4.328952,-225.615631]
+	wait 300 ${Me.Distance[-312.923431,4.328952,-225.615631]}<3
+	call CustomNamed "The Stonegrabber Colossus-NMB" "-312.923431,4.328952,-225.615631" StonegrabberCustom
+}
+function StonegrabberCustom(int _NamedID)
+{
+	if !${RI_Var_Bool_GlobalOthers} || ${Me.Archetype.Equal[fighter]}
+	{
+		call RIObj.Target ${_NamedID}
+	}
+	elseif ${Me.Class.Equal[bard]} && ( ${Me.RaidGroupNum}==1 || !${Me.InRaid} )&& ${Actor[Query, ID=${_NamedID} && IsDead=FALSE].Effect[${RIMUIObj.MainIconIDExists[${_NamedID},911]}].CurrentIncrements}>1
+	{
+		echo found ${Actor[Query, ID=${_NamedID} && IsDead=FALSE].Effect[${RIMUIObj.MainIconIDExists[${_NamedID},911]}].CurrentIncrements}
+		variable int _prismaticshieldID
+		_prismaticshieldID:Set[${Actor[Query, Name=="a prismatic shield" && Aura=="cast_cyclone_stones"].ID}]
+		RIMUIObj:SetLockSpot[ALL,${Actor[id,${_prismaticshieldID}].Loc},3,1000]
+		wait 300 ${Me.Distance[${Actor[id,${_prismaticshieldID}].Loc}]}<4 || !${Actor[id,${_prismaticshieldID}].Aura.Find["cast_cyclone_stones"](exists)}
+		RIMUIObj:SetLockSpot[ALL,-318.060913,4.800460,-232.227249,1,1000]
+		wait 50
+	}
+	else
+	{
+		RIMUIObj:SetLockSpot[ALL,-318.060913,4.800460,-232.227249,1,1000]
+	}
+}
+function Sambata()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["Bring on the rocks"]
+	IncomingText:Insert["drops a nasty grime"]
+	declare _Lockspot string script "-570.059509,33.675255,770.237122"
+	declare _Joustspot string script "-550.881226,34.484768,763.166748"
+	declare _SambataChampionCastStoneskin_ bool global FALSE
+	call CustomNamed "The Sambata Champion-NMB" "-570.059509,33.675255,770.237122" SambataCustom
+	deletevariable _Lockspot
+	deletevariable _Joustspot
+	deletevariable _SambataChampionCastStoneskin_
+}
+function SambataCustom(int _NamedID)
+{
+	if ${Me.Archetype.Equal[fighter]}
+	{
+		if ${_SambataChampionCastStoneskin_}
+		{
+			call SambataFighterStoneskin
+			_SambataChampionCastStoneskin_:Set[0]
+		}
+		call RIObj.Target Mutagenic ${_NamedID}
+		if ${Trigger} && ${TriggerMessage.Find["Bring on the rocks"]}
+		{
+			relay "other ${RI_Var_String_RelayGroup}" RIMUIObj:SetLockSpot[ALL,${_Joustspot}]
+			TimedCommand 140 relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_Lockspot}]
+			TimedCommand 110 _SambataChampionCastStoneskin_:Set[TRUE]
+			Trigger:Set[0]
+		}
+		if ${Trigger} && ${TriggerMessage.Find["drops a nasty grime"]}
+		{
+			if ${_Lockspot.Equal["-601.460938,34.691975,782.799988"]}
+			{
+				_Lockspot:Set["-570.059509,33.675255,770.237122"]
+				_Joustspot:Set["-550.881226,34.484768,763.166748"]
+			}
+			else
+			{
+				_Lockspot:Set["-601.460938,34.691975,782.799988"]
+				_Joustspot:Set["-618.644592,34.843853,791.141052"]
+			}
+			wait 1
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_Lockspot}]
+			Trigger:Set[0]
+		}
+	}
+
+}
+function SambataFighterStoneskin()
+{
+	;echo FSK
+	switch ${Me.SubClass}
+	{
+		case guardian
+		{
+			;echo Guard
+			if ${Me.Ability[id,2822291254].IsReady}
+			{
+				;echo LMS
+				do
+				{
+					RI_Obj_CB:Cast[Last Man Standing,1]
+					wait 1
+				}
+				while ${Me.Ability[id,2822291254].TimeUntilReady}<1
+			}
+			elseif ${Me.Ability[id,2660262412].IsReady}
+			{
+				;echo PC
+				do
+				{
+					RI_Obj_CB:Cast[Perfect Counter,1]
+					wait 1
+				}
+				while ${Me.Ability[id,2660262412].TimeUntilReady}<1
+			}
+			elseif ${Me.Ability[id,1110318339].IsReady}
+			{
+				;echo TOS
+				do
+				{
+					RI_Obj_CB:Cast[Tower of Stone,1]
+					wait 1
+				}
+				while ${Me.Ability[id,1110318339].TimeUntilReady}<1
+			}
+			break
+		}
+	}
+}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

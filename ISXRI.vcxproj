@@ -384,6 +384,7 @@
     <ClInclude Include="include\OthmirCobaltScarTimeline\TheScar.h" />
     <ClInclude Include="include\OthmirCobaltScarTimeline\VillageoftheDead.h" />
     <ClInclude Include="include\OutfitterErrands.h" />
+    <ClInclude Include="include\Overseer.h" />
     <ClInclude Include="include\ParamTest.h" />
     <ClInclude Include="include\PG\TheUnderdepthsProvingGround.h" />
     <ClInclude Include="include\PoisonReplenish.h" />

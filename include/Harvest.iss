@@ -6,17 +6,20 @@ function main()
 	;disable debugging
 	Script:DisableDebugging
 	
-	echo ${Time}: Starting Harvest v1
+	echo ${Time}: Starting Harvest v2
 	
 	While 1
 	{
-		if !${Me.InCombat}
+		if !${Me.InCombat} && !${Me.IsHated}
 		{
+			;echo 1
 			if ${Actor[resource].Distance} < 7
 			{
-				Actor[resource]:DoTarget
-				while ${Target(exists)} && ${Target.Type.Equal[Resource]} && ${Target.Distance} < 7 && !${Me.IsMoving} && !${Me.FlyingUsingMount}
+				if !${Me.InCombat} && !${Me.IsHated}
+					Actor[resource]:DoTarget
+				while ${Target(exists)} && ${Target.Type.Equal[Resource]} && ${Target.Distance} < 7 && !${Me.IsMoving} && !${Me.FlyingUsingMount} && !${Me.InCombat} && !${Me.IsHated}
 				{
+					;echo 2
 					waitframe
 					Target:DoubleClick
 					waitframe
@@ -24,6 +27,11 @@ function main()
 						waitframe
 				}
 			}
+		}
+		else
+		{
+			if ${Target.Type.Equal[Resource]}
+				eq2ex target_none
 		}
 		waitframe
 	}

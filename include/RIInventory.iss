@@ -64,7 +64,10 @@ function main(... args)
 	variable int ArgCount=1
 	variable bool LoadUI=TRUE
 	Event[EQ2_onIncomingText]:AttachAtom[RIIEQ2_onIncomingText]
-	
+	;load ui
+	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
+	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIInventory.xml"
+	echo ISXRI: Starting RI Inventory
 	while ${ArgCount} <= ${args.Used}
 	{
 		switch ${args[${ArgCount}]}
@@ -87,10 +90,6 @@ function main(... args)
 		}
 		ArgCount:Inc
 	}
-	echo ISXRI: Starting RI Inventory
-	;load ui
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIInventory.xml"
 
 	if !${LoadUI}
 		UIElement[RIInventory]:Hide
@@ -181,7 +180,7 @@ function main(... args)
 }
 function Ready()
 {
-	while ${Me.InCombat} || ${Me.IsMoving}
+	while ${Me.InCombat} || ${Me.IsMoving} || ${EQ2.Zoning}!=0
 		wait 1
 }
 atom(global) displayindex()
@@ -307,6 +306,11 @@ objectdef RIInventoryObject
 				eq2ex container deposit_all ${Actor["Adornment Depot"].ID} 0
 				wait 5
 			}
+			if ${Actor[Query, Name=-"Totem Depot" && Distance<12](exists)}
+			{
+				eq2ex container deposit_all ${Actor["Totem Depot"].ID} 0
+				wait 5
+			}
 		}
 		RI_CMD_Assist 0
 		Me:QueryInventory[InventoryIndex, Location == "Inventory" && ${BagQuery}]
@@ -348,13 +352,25 @@ objectdef RIInventoryObject
 					call Ready
 					RII_Var_String_ItemName:Set["${Me.Inventory[id,${InventoryMatches.Get[${counter}].Token[1,|]}].Name}"]
 					if ${InventoryMatches.Get[${counter}].Token[2,|].Equal[Sell]} && ( ${Actor[guild,Guild Commodities Exporter].Distance}>12 || !${Actor[guild,Guild Commodities Exporter](exists)} )
-						echo ISXRI: Skipping ${RII_Var_String_ItemName} we are not near a vendor;continue
+					{
+						echo ISXRI: Skipping ${RII_Var_String_ItemName} we are not near a vendor
+						continue
+					}
 					if ${InventoryMatches.Get[${counter}].Token[2,|].Equal[Salvage]} && !${Me.Ability[id,2266640201](exists)}
-						echo ISXRI: Skipping ${RII_Var_String_ItemName} we do not have salvage ability;continue
+					{
+						echo ISXRI: Skipping ${RII_Var_String_ItemName} we do not have salvage ability
+						continue
+					}
 					if ${InventoryMatches.Get[${counter}].Token[2,|].Equal[Transmute]} && !${Me.Ability[id,2266640201](exists)}
-						echo ISXRI: Skipping ${RII_Var_String_ItemName} we do not have transmute ability;continue
-					call This.${InventoryMatches.Get[${counter}].Token[2,|]} ${InventoryMatches.Get[${counter}].Token[1,|]}
-					waitframe
+					{
+						echo ISXRI: Skipping ${RII_Var_String_ItemName} we do not have transmute ability
+						continue
+					}
+					GUCnt:Set[0]
+					
+					while ${Me.Inventory[id,${InventoryMatches.Get[${counter}].Token[1,|]}](exists)} && ${GUCnt:Inc}<10 && !${RII_Var_Bool_SkipThisItem}
+						call This.${InventoryMatches.Get[${counter}].Token[2,|]} ${InventoryMatches.Get[${counter}].Token[1,|]} ${GUCnt}
+					;waitframe
 				}
 			}
 		}
@@ -413,16 +429,22 @@ objectdef RIInventoryObject
 				eq2ex container deposit_all ${Actor["Adornment Depot"].ID} 0
 				wait 5
 			}
+			if ${Actor[Query, Name=-"Totem Depot" && Distance<12](exists)}
+			{
+				eq2ex container deposit_all ${Actor["Totem Depot"].ID} 0
+				wait 5
+			}
 		}
 		if ${Start} && !${Loop}
 			Script:End
 	}
-	function Transmute(int _ItemID)
+	function Transmute(int _ItemID, int _Cnt=1)
 	{
 		;echo Transmute : : : ${_ItemID}
 		;return
 		call Ready
-		echo ISXRI: Transmuting "${Me.Inventory[id,${_ItemID}]}"
+		if ${_Cnt}==1
+			echo ISXRI: Transmuting "${Me.Inventory[id,${_ItemID}]}"
 		eq2ex usea Transmute
 		wait 10 ${EQ2.ReadyToRefineTransmuteOrSalvage}
 		Me.Inventory[id,${_ItemID}]:Transmute
@@ -578,7 +600,7 @@ objectdef RIInventoryObject
 				
 				GUCnt:Set[0]
 				while ${InventoryIterator.Value.ID(exists)} && ${GUCnt:Inc}<10 && !${RII_Var_Bool_SkipThisItem}
-					call Destroy ${InventoryIterator.Value.ID}
+					call Destroy ${InventoryIterator.Value.ID} ${GUCnt}
 				if ${RII_Var_Bool_SkipThisItem}
 					RII_Var_Bool_SkipThisItem:Set[0]
 			}
@@ -587,7 +609,7 @@ objectdef RIInventoryObject
 	}
 	function Ready()
 	{
-		while ${Me.InCombat} || ${Me.IsMoving}
+		while ${Me.InCombat} || ${Me.IsMoving} || ${EQ2.Zoning}!=0
 			wait 1
 	}
 	function AddAgents()
@@ -841,6 +863,7 @@ objectdef RIInventoryObject
 		{
 			do
 			{
+				call Ready
 				if (!${InventoryIterator.Value.IsItemInfoAvailable})
 				{
 					;; When you check to see if "IsItemInfoAvailable", ISXEQ2 checks to see if it's already
@@ -883,7 +906,7 @@ objectdef RIInventoryObject
 							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be transmuted
 						continue
 					}
-					if ${InventoryIterator.Value.ToItemInfo.Tier.NotEqual[${_Type.ReplaceSubstring["*All ",""].ReplaceSubstring[" Items*"].Upper}]}
+					if ${InventoryIterator.Value.ToItemInfo.Tier.NotEqual[${_Type.ReplaceSubstring["*All ",""].ReplaceSubstring[" Items*"].Upper}]} && !${InventoryIterator.Value.ToItemInfo.Type.Equal[Spell Scroll]}
 					{
 						if ${Debug}
 							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it is not the correct tier
@@ -916,6 +939,24 @@ objectdef RIInventoryObject
 								echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because we are not set to Transmute Adept
 							continue
 						}
+						if ${InventoryIterator.Value.Name.Find[(Grandmaster)](exists)}
+						{
+							if ${Debug}
+								echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because we do not Transmute Grandmaster
+							continue
+						}
+						if ${InventoryIterator.Value.Name.Find[(Ancient)](exists)}
+						{
+							if ${Debug}
+								echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because we do not Transmute Ancient
+							continue
+						}
+						if ${InventoryIterator.Value.Name.Find[(Celestial)](exists)}
+						{
+							if ${Debug}
+								echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because we do not Transmute Celestial
+							continue
+						}
 						if ${InventoryIterator.Value.Name.Find[Accolade](exists)}
 						{
 							if ${Debug}
@@ -935,7 +976,7 @@ objectdef RIInventoryObject
 					{
 						GUCnt:Set[0]
 						while ${InventoryIterator.Value.ID(exists)} && ${GUCnt:Inc}<10
-							call Transmute ${InventoryIterator.Value.ID}
+							call Transmute ${InventoryIterator.Value.ID} ${GUCnt}
 					}
 					if ${RII_Var_Bool_SkipThisItem}
 						RII_Var_Bool_SkipThisItem:Set[0]
@@ -948,12 +989,19 @@ objectdef RIInventoryObject
 			while ${InventoryIterator:Next(exists)}
 		}
 	}
-	function Salvage(int _ItemID)
+	function Salvage(int _ItemID, int _Cnt=1)
 	{
+		if !${Me.Ability[id,2266640201].TimeUntilReady(exists)}
+		{
+			echo ISXRI: We do not have the Salvage Ability, Skipping Salvage: ${RII_Var_String_ItemName}
+			RII_Var_Bool_SkipThisItem:Set[1]
+			return
+		}
 		;echo Salvage : : : ${_ItemID}
 		;return
 		call Ready
-		echo ISXRI: Salvaging "${Me.Inventory[id,${_ItemID}]}"
+		if ${_Cnt}==1
+			echo ISXRI: Salvaging "${Me.Inventory[id,${_ItemID}]}"
 		eq2ex usea Salvage
 		wait 10 ${EQ2.ReadyToRefineTransmuteOrSalvage}
 		Me.Inventory[id,${_ItemID}]:Salvage
@@ -964,6 +1012,12 @@ objectdef RIInventoryObject
 	}
 	function SalvageALL(string _Type)
 	{
+		if !${Me.Ability[id,2266640201].TimeUntilReady(exists)}
+		{
+			echo ISXRI: We do not have the Salvage Ability, Skipping Salvage All ${_Type}
+			RII_Var_Bool_SkipThisItem:Set[1]
+			return
+		}
 		;echo ISXRI: Salvaging ${_Type}
 		Me:QueryInventory[InventoryIndex, Location == "Inventory" && IsContainer=FALSE && IsAgent=FALSE && IsFamiliar=FALSE && IsUnpackable=FALSE && Quantity=1 && IsFoodOrDrink=FALSE]
 		;echo ${InventoryIndex.Used}
@@ -1026,6 +1080,7 @@ objectdef RIInventoryObject
 			
 			do
 			{
+				call Ready
 				;echo Checking ${InventoryIterator.Value}
 				if (!${InventoryIterator.Value.IsItemInfoAvailable})
 				{
@@ -1074,7 +1129,7 @@ objectdef RIInventoryObject
 					;echo ${InventoryIterator.Value.Name} - ${InventoryIterator.Value} - ${InventoryIterator.Value.InContainerID} - ${Me.Inventory[id,${InventoryIterator.Value.ID}].IsInventoryContainer} - ${Me.Inventory[id,${InventoryIterator.Value.ID}].Slot} - ${InventoryIterator.Value.ToItemInfo.Tier} - ${InventoryIterator.Value.ToItemInfo.Type}
 					GUCnt:Set[0]
 					while ${InventoryIterator.Value.ID(exists)} && ${GUCnt:Inc}<10 && !${RII_Var_Bool_SkipThisItem}
-						call Salvage ${InventoryIterator.Value.ID}
+						call Salvage ${InventoryIterator.Value.ID} ${GUCnt}
 
 					if ${RII_Var_Bool_SkipThisItem}
 						RII_Var_Bool_SkipThisItem:Set[0]
@@ -1089,6 +1144,12 @@ objectdef RIInventoryObject
 	}
 	function ExtractALL(string _Type)
 	{
+		if !${Me.Ability[id,406528868].TimeUntilReady(exists)}
+		{
+			echo ISXRI: We do not have the Extract Planar Essence Ability, Skipping Extracting All ${_Type}
+			RII_Var_Bool_SkipThisItem:Set[1]
+			return
+		}
 		;echo ISXRI: Extracting ${_Type}
 		Me:QueryInventory[InventoryIndex, Location == "Inventory" && IsContainer=FALSE && IsAgent=FALSE && IsFamiliar=FALSE && IsUnpackable=FALSE && Quantity=1 && IsFoodOrDrink=FALSE]
 		;echo ${InventoryIndex.Used}
@@ -1150,6 +1211,7 @@ objectdef RIInventoryObject
 		{
 			do
 			{
+				call Ready
 				if (!${InventoryIterator.Value.IsItemInfoAvailable})
 				{
 					;; When you check to see if "IsItemInfoAvailable", ISXEQ2 checks to see if it's already
@@ -1197,7 +1259,7 @@ objectdef RIInventoryObject
 					;echo ${InventoryIterator.Value.Name} - ${InventoryIterator.Value} - ${InventoryIterator.Value.InContainerID} - ${Me.Inventory[id,${InventoryIterator.Value.ID}].IsInventoryContainer} - ${Me.Inventory[id,${InventoryIterator.Value.ID}].Slot} - ${InventoryIterator.Value.ToItemInfo.Tier} - ${InventoryIterator.Value.ToItemInfo.Type}
 					GUCnt:Set[0]
 					while ${InventoryIterator.Value.ID(exists)} && ${GUCnt:Inc}<10 && !${RII_Var_Bool_SkipThisItem}
-						call Extract ${InventoryIterator.Value.ID}
+						call Extract ${InventoryIterator.Value.ID} ${GUCnt}
 					if ${RII_Var_Bool_SkipThisItem}
 						RII_Var_Bool_SkipThisItem:Set[0]
 				}
@@ -1209,10 +1271,17 @@ objectdef RIInventoryObject
 			while ${InventoryIterator:Next(exists)}
 		}
 	}
-	function Extract(int _ItemID)
+	function Extract(int _ItemID, int _Cnt=1)
 	{
+		if !${Me.Ability[id,406528868].TimeUntilReady(exists)}
+		{
+			echo ISXRI: We do not have the Extract Planar Essence Ability, Skipping Extracting: ${RII_Var_String_ItemName}
+			RII_Var_Bool_SkipThisItem:Set[1]
+			return
+		}
 		call Ready
-		echo ISXRI: Extracting "${Me.Inventory[id,${_ItemID}]}"
+		if ${_Cnt}==1
+			echo ISXRI: Extracting "${Me.Inventory[id,${_ItemID}]}"
 		eq2ex usea 406528868
 		wait 20 ${EQ2.ReadyToRefineTransmuteOrSalvage}
 		wait 10
@@ -1222,15 +1291,17 @@ objectdef RIInventoryObject
 		wait 5
 		wait 10
 	}
-	function Destroy(int _ItemID)
+	function Destroy(int _ItemID, int _Cnt=1)
 	{
 		;echo Destroy : : : ${_ItemID}
 		;return
-		echo ISXRI: Destroying "${Me.Inventory[id,${_ItemID}]}"
+		call Ready
+		if ${_Cnt}==1
+			echo ISXRI: Destroying "${Me.Inventory[id,${_ItemID}]}"
 		Me.Inventory[id,${_ItemID}]:Destroy
 		wait 10
 	}
-	function Sell(int _ItemID)
+	function Sell(int _ItemID, int _Cnt=1)
 	{
 		if ${Actor[guild,Guild Commodities Exporter].Distance}<12 && ${Me.Inventory[id,${_ItemID}](exists)}
 		{
@@ -1239,12 +1310,13 @@ objectdef RIInventoryObject
 			if !${EQ2UIPage[Inventory,Merchant].IsVisible}
 				Actor[guild,Guild Commodities Exporter]:DoubleClick
 			wait 2
-			echo ISXRI: Selling "${Me.Inventory[id,${_ItemID}]}"
+			if ${_Cnt}==1
+				echo ISXRI: Selling "${Me.Inventory[id,${_ItemID}]}"
 			;return
 			;old way Me.Merchandise["${Me.Inventory[id,${_ItemID}]}"]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=="${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
 			MerchantWindow.MyInventory[${Me.Inventory[id,${_ItemID}].Name}]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=="${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
 		}
-		wait 8
+		wait 10
 	}
 	method LoadInventoryList()
 	{
@@ -1754,6 +1826,11 @@ atom RIIEQ2_onIncomingText(string Text)
 	{
 		RII_Var_Bool_SkipThisItem:Set[1]
 		echo ISXRI: Skipping ${RII_Var_String_ItemName} You already have this Familiar in your collection
+	}
+	if ${Text.Find["This spell or ability is no longer available"]}
+	{
+		RII_Var_Bool_SkipThisItem:Set[1]
+		echo ISXRI: Skipping ${RII_Var_String_ItemName} That spell or ability is no longer available
 	}
 	
 }

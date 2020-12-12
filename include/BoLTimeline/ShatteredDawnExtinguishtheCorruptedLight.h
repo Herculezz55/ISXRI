@@ -41,7 +41,7 @@ string ShatteredDawnExtinguishtheCorruptedLight[] = {"Shattered Dawn: Extinguish
 "-257.773346 180.814026 2.780124", 
 "-267.923553 180.956726 0.744694", 
 "Custom", 
-"ZoneDoor \"Zone to Sanctus Seru dungeons 1 and 2\" \"Sanctus Seru: Echelon of Divinity\"", 
+"ZoneDoor \"Zone to Sanctus Seru dungeons 1 and 2\" \"Sanctus Seru: Echelon of Divinity [Solo]\"", 
 "-274.966675 180.790131 0.490304", 
 "Custom", 
 "Instance", 

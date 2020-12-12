@@ -3,7 +3,7 @@ string BloodofLuclinTradeskillTimeline[] = {"Blood of Luclin Tradeskill Timeline
 "MessageBox \"This quest requires 6 Portable Workbench's please make sure they are in your inventory\"", 
 "0 0 0", 
 "Custom", 
-"RemoveFromDepot \"Harvesting Supply Depot\" \"Hardened Zelniak Pelt\" 600 \"Hornbeam Spruce Log\" 302 \"Humming Azurite\" 297 \"Luclizite Cluster\" 161 \"Lunar Mushroom\" 49 \"Radiant Algae\" 52 \"Rockhopper Meat\" 233 \"Slow Creeping Root\" 54 \"Splitfin Dartfish\" 229", 
+"RemoveFromDepot \"Harvesting Supply Depot\" \"Hardened Zelniak Pelt\" 600 \"Hornbeam Spruce Log\" 302 \"Humming Azurite\" 297 \"Luclizite Cluster\" 261 \"Lunar Mushroom\" 49 \"Radiant Algae\" 52 \"Rockhopper Meat\" 233 \"Slow Creeping Root\" 54 \"Splitfin Dartfish\" 229", 
 "0 0 0", 
 "Custom", 
 "RemoveFromDepot \"Fuel Depot\" \"Coruscating Candle\" 75 \"Coruscating Coal\" 282 \"Coruscating Filament\" 25 \"Coruscating Kindling\" 15", 

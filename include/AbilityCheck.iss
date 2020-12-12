@@ -14,7 +14,7 @@ function main(... args)
 	variable int LevelLessThan=120
 	variable index:string Tier
 	variable string MSC
-	
+	variable int _failcnt=0
 	variable int _acnt=0
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	{
@@ -24,6 +24,12 @@ function main(... args)
 			case -AbilityName
 			{
 				AbilityName:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
+				_failcnt:Set[0]
+				while ${Me.Ability["${args[${Math.Calc[${_acnt}+1]}]}"].ID}<1 && ${_failcnt:Inc}<10
+				{
+					wait 1
+				}
+				AbilityID:Insert[${Me.Ability["${args[${Math.Calc[${_acnt}+1]}]}"].ID}]
 				break
 			}
 			case -AbilityID
@@ -131,7 +137,7 @@ function main(... args)
 				}
 				if !${_FoundAbility}
 				{
-					echo ISXRI: ${Time}: Skipping Not Passed In Ability ${AbilityCounter} of ${Me.NumAbilities}: w/ ID #: ${AbilitiesIterator.Value.ID}
+					;echo ISXRI: ${Time}: Skipping Not Passed In Ability ${AbilityCounter} of ${Me.NumAbilities}: w/ ID #: ${AbilitiesIterator.Value.ID}
 					continue
 				}
 			}
@@ -298,7 +304,7 @@ function main(... args)
 			count:Set[0]
 			for(count:Set[1];${count}<=${AbilitiesIterator.Value.ToAbilityInfo.NumEffects};count:Inc)
 			{
-				;echo Effect:Set["${AbilitiesIterator.Value.ToAbilityInfo.Effect[${count}].Desc}"]
+				echo Effect:Set["${AbilitiesIterator.Value.ToAbilityInfo.Effect[${count}].Desc}"]
 				Effect:Set["${AbilitiesIterator.Value.ToAbilityInfo.Effect[${count}].Desc}"]
 				if ${Effect.Find["targets in area of effect"](exists)} && !${Effect.Find["heals targets in area of effect"](exists)}
 					IsAoE:Set[TRUE]
@@ -389,6 +395,7 @@ function main(... args)
 				; AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[Feral,FALSE]
 				; AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[Spiritual,FALSE]
 			; }
+			;echo ${IsAoE}
 			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[IsEncounter,${IsEncounter}]
 			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[IsCureCurse,${IsCureCurse}]
 			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[IsCure,${IsCure}]

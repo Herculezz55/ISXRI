@@ -103,7 +103,7 @@ objectdef RILootObject
 					do
 					{
 						;;echo ${Iterator2.Key} // ${Iterator2.Value}
-						UIElement[ToonsListbox@RILoot]:AddItem[${Iterator2.Key}]
+						UIElement[ToonsListbox@RILoot]:AddItem["${Iterator2.Key}"]
 					}
 					while ${Iterator2:Next(exists)}
 				}
@@ -131,7 +131,7 @@ objectdef RILootObject
 				do
 				{
 					;;echo "${SettingIterator.Key}=${SettingIterator.Value}"
-					UIElement[ItemsListbox@RILoot]:AddItem[${SettingIterator.Key}]
+					UIElement[ItemsListbox@RILoot]:AddItem["${SettingIterator.Key}"]
 				}
 				while ${SettingIterator:Next(exists)}
 			}
@@ -157,7 +157,7 @@ objectdef RILootObject
 				do
 				{
 					;echo "${SettingIterator.Key}=${SettingIterator.Value}"
-					UIElement[AddedItemsListbox@RILoot]:AddItem[${SettingIterator.Key}]
+					UIElement[AddedItemsListbox@RILoot]:AddItem["${SettingIterator.Key}"]
 				}
 				while ${SettingIterator:Next(exists)}
 			}
