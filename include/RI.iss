@@ -4837,6 +4837,42 @@
 ;			Solusek's Eye: The Calling
 ;				Added zone pathing (for real this time)
 
+;v6.42 Changes 12-13-20
+;	Due to popular request, and maybe a little bribary :P The following has been added
+;	RZ
+;		Added:
+;			The Icy Keep (Hard)
+;				When added to the Added zones list will remove all other zones and set infinite mode
+;	RI
+;		Added:
+;			The Icy Keep (Hard)
+;				***** REQUIRES you have and be wearing Spring-Loaded Gnomish Stilts ******
+;				pathing throughout zone
+;	RQ
+;		Modified:
+;			Familiars Wild
+;				should now more reliably Hail the Quest giver
+
+;v6.43 Changes 12-13-20
+;	Version bump for corrupt DLL
+
+;v6.44 Changes 12-17-20
+;	RQ
+;		Modified:
+;			Piercing the Darkness: A Very Fortunate Turn of Events Part II
+;				Fixed a bug that would not end the path function for the harvests
+;		Added:
+			Reign of Shadows Tradeskill Timeline
+The Delineation of Method
+Through the Belly of the Beast
+Paying the Piper
+The Grumbling
+Tiptoe Through the Shadows
+The Grandiose Wordsmith Pursuance
+Ennoblement of Penitence
+Dark Side of the Dark Side
+
+
 ;156 432 336
 ;						
 ;code for commision items
@@ -4865,7 +4901,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.41
+variable(global) float RI_Var_Float_Version=6.43
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -7121,7 +7157,8 @@ atom EQ2_onQuestOffered(string Name, string Description, int Level, int StatusRe
 {
 	if ${Script[${RI_Var_String_CombatBotScriptName}](exists)} || ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 	{
-		TimedCommand 3 RewardWindow:AcceptReward
+		if ${RI_Var_Bool_AcceptRewards}
+			TimedCommand 3 RewardWindow:AcceptReward
 		;TimedCommand 3 RewardWindow:Accept
 		TimedCommand 5 EQ2:AcceptPendingQuest
 	}
@@ -10131,7 +10168,6 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Blood of Luclin]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["Familiars Wild"]
 				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: The Vault of Omens"]
 				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: Spires of Mythic Passage"]
 				UIElement[QuestsListBox@RI]:AddItem[Blood of Luclin Timeline,0,FFE8E200]
@@ -10171,6 +10207,20 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Message in a Shadowed Bottle Part II]
 				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Message in a Shadowed Bottle Part III]
 			}
+			elseif ${_CatName.Equal[Reign of Shadows]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["Familiars Wild"]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows Tradeskill Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[The Delineation of Method]
+				UIElement[QuestsListBox@RI]:AddItem[Through the Belly of the Beast]
+				UIElement[QuestsListBox@RI]:AddItem[Paying the Piper]
+				UIElement[QuestsListBox@RI]:AddItem[The Grumbling]
+				UIElement[QuestsListBox@RI]:AddItem[Tiptoe Through the Shadows]
+				UIElement[QuestsListBox@RI]:AddItem[The Grandiose Wordsmith Pursuance]
+				UIElement[QuestsListBox@RI]:AddItem[Ennoblement of Penitence]
+				UIElement[QuestsListBox@RI]:AddItem[Dark Side of the Dark Side]
+			}
 		}
 	}
 	method RQ(string _QuestName=!NONE!)
@@ -10201,10 +10251,11 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:AddItem[Kunark Ascending Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Kunark Ascending Adventure]
 			UIElement[CategoryComboBox@RI]:AddItem[Planes of Prophecy]
+			UIElement[CategoryComboBox@RI]:AddItem[Reign of Shadows]
 			UIElement[CategoryComboBox@RI]:AddItem[Sokokar Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Terrors of Thalumbra Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
-			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Blood of Luclin].ID}]
+			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Reign of Shadows].ID}]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FF5DA5CF]

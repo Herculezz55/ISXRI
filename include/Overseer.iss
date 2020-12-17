@@ -100,7 +100,7 @@ function main()
     Quest:Insert["Rescue Captain Wilcox|1:00:00|5%|5%|1|Sly:Wise|Vigilant|Treasured"]
     Quest:Insert["Rob the Fool's Gold Tavern|1:30:00|10%|5%|1|Lucky:Cautious|Vigilant|Treasured"]
     Quest:Insert["Save Lira Singebellows|2:00:00|15%|10%|1|Focused|Persuasive|Treasured"]
-    Quest:Insert["Slay the Evol Ew Chieftan|1:30:00|10%|5%|1|Agile:Focused|Strong|Treasured"]
+    Quest:Insert["Slay the Evol Ew Chieftain|1:30:00|10%|5%|1|Agile:Focused|Strong|Treasured"]
     Quest:Insert["The Thexian Wizard's Wand|2:00:00|15%|10%|1|Cunning|Righteous|Treasured"]
     Quest:Insert["Thexian Treasure|1:30:00|10%|5%|1|Strong:Cunning|Wise|Treasured"]
     Quest:Insert["Treasure in Shortwine Burrow|2:00:00|15%|10%|1|Cunning|Vigilant|Treasured"]

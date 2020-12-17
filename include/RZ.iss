@@ -1177,6 +1177,21 @@ atom BuildIndexes(string _Expac)
 		case Blood of Luclin
 		{
 			;Zone
+			_Zone:Insert["The Icy Keep (Hard)"]
+			UIElement[ZonesAvail@RZ]:AddItem["The Icy Keep (Hard)"]
+			ZoneFrom:Insert["Frostfell Wonderland Village"]
+			ZoneTimer:Insert[5]
+			ZoneExit:Insert["!NONE!"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["special"]
+			ZoneEntranceLoc:Insert[""]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[300]
+
+			;Zone
 			_Zone:Insert["Aurelian Coast: Sambata Village [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Sambata Village [Solo]"]
 			ZoneFrom:Insert["Aurelian Coast"]
@@ -1932,6 +1947,8 @@ function main(... args)
 						_ZoneNameFormatter:Set["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}].Text.ReplaceSubstring["[Challenge]","[Event Heroic]"]}"]
 					elseif ${UIElement[ExpacComboBox@RZ].SelectedItem.Text.Equal["Blood of Luclin"]} && ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}].Text.Find["[Challenge]"]}
 						_ZoneNameFormatter:Set["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}].Text.ReplaceSubstring["[Challenge]","[Heroic]"]}"]
+					elseif ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}].Text.Equal["The Icy Keep (Hard)"]}
+						_ZoneNameFormatter:Set["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}].Text.ReplaceSubstring[" (Hard)",""]}"]
 					else
 						_ZoneNameFormatter:Set["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]
 					echo Reseting: ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]} as ${_ZoneNameFormatter}
@@ -2028,7 +2045,14 @@ atom EQ2_onIncomingText(string Text)
 		;go through our index and find the zone that was just unlocked
 		for(_count:Set[1];${_count}<=${_Zone.Used};_count:Inc)
 		{
-			if ${Text.Find["${_Zone.Get[${_count}]}"]}
+			;The Icey Keep (Hard)
+			if ${Text.Find["${_Zone.Get[${_count}].ReplaceSubstring[" (Hard)",""]}"]}
+			{
+				echo ISXRI: ${Time}: Succesfully Reset ${_Zone.Get[${_count}]}
+				ZoneSetTime.Get[${_count}]:Set[0]
+				ZoneUnlocked.Get[${_count}]:Set[TRUE]
+			}
+			if ${Text.Find["${_Zone.Get[${_count}]}"]} || ${Text.Find["${_Zone.Get[${_count}].ReplaceSubstring[" (Hard)",""]}"]}
 			{
 				echo ISXRI: ${Time}: Succesfully Reset ${_Zone.Get[${_count}]}
 				ZoneSetTime.Get[${_count}]:Set[0]
@@ -2961,7 +2985,10 @@ function Zone(int _IndexPosition)
 	echo ${Time}: Zoning into ${_Zone.Get[${_IndexPosition}]} as ${_ZoneNameFormatter}
 	
 	;click Zone1 Zone in
-	Actor["${ZoneEntrance.Get[${_IndexPosition}]}"]:DoubleClick
+	if ${_Zone.Get[${_IndexPosition}].Equal["The Icy Keep (Hard)"]}
+		relay ${RI_Var_String_RelayGroup} Actor["${ZoneEntrance.Get[${_IndexPosition}]}"]:DoubleClick
+	else	
+		Actor["${ZoneEntrance.Get[${_IndexPosition}]}"]:DoubleClick
 	wait 10
 	
 	
@@ -2979,12 +3006,17 @@ function Zone(int _IndexPosition)
 		Script:End
 	}
 	wait 10
-	EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${RZObj.RowByName["${_ZoneNameFormatter}"]}]
+	if ${_Zone.Get[${_IndexPosition}].Equal["The Icy Keep (Hard)"]}
+		relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${RZObj.RowByName["${_ZoneNameFormatter}"]}]
+	else
+		EQ2UIPage[popup,ZoneTeleporter].Child[list,Destinations.DestinationList]:HighlightRow[${RZObj.RowByName["${_ZoneNameFormatter}"]}]
 	wait 10
 	
 	;confirm selection and zone
-	EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
-	
+	if ${_Zone.Get[${_IndexPosition}].Equal["The Icy Keep (Hard)"]}
+		relay ${RI_Var_String_RelayGroup} EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
+	else
+		EQ2UIPage[popup,ZoneTeleporter].Child[button,ZoneButton]:LeftClick
 	;wait until we start zoning, or are unable to zone
 	wait 6000 ${EQ2.Zoning} || ${UnableToZone} || ${InstanceExpired}
 	
@@ -3023,11 +3055,11 @@ function Zone(int _IndexPosition)
 	
 	;wait 5s
 	wait 50
-	
+	;echo 1 \${Me.GetGameData[Self.ZoneName].Label.NotEqual["\${_ZoneNameFormatter}"]} // \${Me.GetGameData[Self.ZoneName].Label.NotEqual["${_ZoneNameFormatter}"]} // ${Me.GetGameData[Self.ZoneName].Label.NotEqual["${_ZoneNameFormatter}"]}
 	;if we are not in the correct zone, exit function
 	if ${Me.GetGameData[Self.ZoneName].Label.NotEqual["${_ZoneNameFormatter}"]}
 		return
-		
+	;echo 2	
 	;run runinstances started
 	ri
 	wait 50
@@ -3078,7 +3110,8 @@ function Zone(int _IndexPosition)
 	
 	;zoneout
 	;relay "other ${RI_Var_String_RelayGroup}" -noredirect RZ 0 0 TRUE "${Zone1Exit}" "${Zone1}"
-	call ZoneOut "${ZoneExit.Get[${_IndexPosition}]}" "${_ZoneNameFormatter}"
+	if ${ZoneExit.Get[${_IndexPosition}].NotEqual["!NONE!"]}
+		call ZoneOut "${ZoneExit.Get[${_IndexPosition}]}" "${_ZoneNameFormatter}"
 }
 
 function ZoneOut(string ZoneExit, string ZoneName)
@@ -3303,6 +3336,13 @@ objectdef RZObject
 		;echo ${_ZoneName}
 		if ${_ZoneName.NotEqual[""]} && ${_ZoneName.NotEqual[NULL]}
 		{
+			if ${_ZoneName.Equal["The Icy Keep (Hard)"]}
+			{
+				UIElement[AddedZoneList@RZ]:ClearItems
+				UIElement[LoopListCheckBox@RZ]:UnsetChecked
+				UIElement[InfiniteLoopListCheckBox@RZ]:SetChecked
+				_HeroicMode:Set[1]
+			}
 			UIElement[AddedZoneList@RZ]:AddItem["${_ZoneName}"]
 			This:RefreshAddedZoneIndex
 		}
@@ -3505,6 +3545,10 @@ objectdef RZObject
 				_ZoneNameFormatter:Set["${ZoneName.ReplaceSubstring["[Challenge]","[Event Heroic]"]}"]
 			else
 				_ZoneNameFormatter:Set["${ZoneName.ReplaceSubstring["[Challenge]","[Heroic]"]}"]
+		}
+		elseif ${ZoneName.Find["The Icy Keep (Hard)"]}
+		{
+				_ZoneNameFormatter:Set["${ZoneName.ReplaceSubstring[" (Hard)",""]}"]
 		}
 		else
 			_ZoneNameFormatter:Set["${ZoneName}"]
