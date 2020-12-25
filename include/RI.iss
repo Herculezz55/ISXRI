@@ -4861,17 +4861,169 @@
 ;		Modified:
 ;			Piercing the Darkness: A Very Fortunate Turn of Events Part II
 ;				Fixed a bug that would not end the path function for the harvests
+;			Piercing the Darkness: Gifts from the Great Beyond Part II
+;				Fixed a bug that would not end the path function for the harvests
 ;		Added:
-			Reign of Shadows Tradeskill Timeline
-The Delineation of Method
-Through the Belly of the Beast
-Paying the Piper
-The Grumbling
-Tiptoe Through the Shadows
-The Grandiose Wordsmith Pursuance
-Ennoblement of Penitence
-Dark Side of the Dark Side
+;			Reign of Shadows Tradeskill Timeline (Requires 2 Portable Workbench)
+;				The Delineation of Method
+;				Through the Belly of the Beast
+;				Paying the Piper
+;				The Grumbling 
+;					- This quest may need a little babysitting the devs decided to put those mushrooms
+;					  in some harder to reach places for a bot
+;				Tiptoe Through the Shadows
+;				The Grandiose Wordsmith Pursuance
+;				Ennoblement of Penitence
+;				Dark Side of the Dark Side
+;					- This quest may need a little babysitting when harvesting the resources
+;					  sometimes it can get caught up on a branch or those stupid light pillars
+;	RZ:
+;		Renamed exit actor in RZ for Listless Spires to the new one DBG renamed it too
 
+;v6.45 Changes 12-17-20
+;	RQ
+;		Modified:
+;			Through the Belly of the Beast
+;				Fixed a bug that would zone into the wrong zone
+
+;v6.46 Changes 12-25-20
+;************** MERRY CHRISTMAS **************
+;	Overseer:
+;		Fixed a bug that was not using the following agents:
+;			    Thomasina Fe'Qar
+;				Ugar Malshadow, Guardian of the Blades
+;				Yalno Accelerato, the Dark Star
+;	CombatBot:
+;		Fixed a bug that was casting Septic Strike instead of Septic Strike II
+;	RQ
+;		Added:
+;			Reign of Shadows Timeline
+;				Grown Up Solution
+;				Never Let You Echo
+;				Save the Last Blast For Me
+;				Reign of Shadows: Whispers of the Gods
+;				Reign of Shadows: Echoes In the Deep
+;				Reign of Shadows: Mapping the Dark
+;				Reign of Shadows: Echo the Distance
+;				Reign of Shadows: Facing the Savage Beast
+;				Reign of Shadows: Spirited Attacks
+;				Reign of Shadows: Shadow on the Vahl
+;				Reign of Shadows: Whispered Blessings
+;				Reign of Shadows: Vexing Challenge
+;				Reign of Shadows: Against Thal Odds
+;	RI
+;		Added:
+;		(ALL boss fights this xpac in Solo will use Cure Pots if you have them)
+;		(Some require it, therefore its best you have a good amount of all of them)
+;			Echo Caverns: Quarry Quandary (Not optimized for heroic)
+;				Pathing throughout zone
+;				Added:
+;					 Undertaker Zemilox (RI Pull Zemilox)
+;						Lockspots toons		
+;						Autotargets adds
+;					 The Needlite Queen (RI Pull Needlite)
+;						Lockspots toons
+;						Autotargets adds
+;						Dispels
+;					 Broglyn (RI Pull Broglyn)
+;						Lockspots toons
+;						Autotargets adds
+;					 Killmodo (RI Pull Killmodo)
+;						Lockspots toons
+;						Autotargets adds
+;					 Scyphodon (RI Pull Scyphodon)
+;						Lockspots toons
+;						Autotargets adds
+;						Auto handles cane
+;			Echo Caverns: Fungal Foray
+;				Pathing throughout zone
+;				Added:
+;					 Corrupted Construct (RI Pull Construct)
+;						Lockspots toons		
+;						Jousts				
+;					 Vinzerah Ral'Moor (RI Pull Vinzerah)
+;						Lockspots toons
+;						Autotargets adds
+;					 Shadowphage(RI Pull Shadowphage)
+;						Lockspots toons
+;						Autotargets adds
+;					 Sporefiend Zugu (RI Pull Zugu)
+;						Lockspots toons
+;						Autotargets adds
+;					 Fungus King Cremini (RI PullCremini)
+;						Lockspots toons
+;						Autotargets adds
+;						Jousts
+;			Savage Weald: Chaotic Caverns
+;				Pathing throughout zone
+;				Added:
+;					 Brutal Bloodbath (RI Pull Bloodbath)
+;						Lockspots toons	
+;						Autotargets adds					
+;					 The Spelobanzeothitem(RI Pull Spelobanzeothitem)
+;						Lockspots toons
+;						Autotargets adds
+;					 Forblarg the Foul (RI Pull Forblarg)
+;						Lockspots toons
+;						Autotargets adds
+;					 Morbigog(RI Pull Morbigog)
+;						Lockspots toons
+;						Autotargets adds
+;					 Shred of Tashakhi (RI Pull Tashakhi)
+;						Lockspots toons
+;						Autotargets adds
+;			Savage Weald: Fort Grim
+;				Pathing throughout zone
+;				Added:
+;					 Ulcine Nacisroc (RI Pull Nacisroc)
+;						Lockspots toons		
+;						Autotargets adds				
+;					 Chief Gadzuuks (RI Pull Gadzuuks)
+;						Lockspots toons
+;						Autotargets adds	
+;					 Felnir the Shadow Prowler (RI Pull Felnir)
+;						Lockspots toons
+;						Autotargets adds	
+;			Shadeweaver's Thicket: Feral Reserve
+;				Pathing throughout zone
+;				Added:
+;					 Greeneyes (RI Pull Greeneyes)
+;						Lockspots toons
+;						Autotargets adds				
+;					 Hopper the Blood-Drenched (RI Pull Hopper)
+;						Lockspots toons
+;						Autotargets and moves to adds
+;					 The Poached Poacher (RI Pull Poacher)
+;						Moves to and clicks spirit beast at 50
+;					 Thraxinae (RI Pull Thraxinae)
+;						Lockspots toons
+;						Autotargets adds
+;					 Kovari Twins(RI Pull Kovari)
+;						Lockspots toons
+;						Autotargets and moves to anchors
+;						Autotargets adds
+;			Shadeweaver's Thicket: Untamed Lands
+;				Pathing throughout zone
+;				Added:
+;					 Goretilla (RI Pull Goretilla)
+;						Lockspots toons		
+;						Autotargets and moves to adds				
+;					 Sotek (RI Pull Sotek)
+;						Lockspots toons
+;					 Nok Hakka (RI Pull Hakka)
+;						Lockspots toons
+;					 Spiritist Karina (RI Pull Karina)
+;						Lockspots toons
+;						Autotargets and moves to adds	
+; 					 Desolator (RI Pull Desolator)
+;						Lockspots toons
+;						Moves to and clicks the "right" portal
+
+;v6.46 Changes 12-25-20
+;	RI
+;		Modified:
+;			Echo Caverns: Fungal Foray
+;				Modified Pathing
 
 ;156 432 336
 ;						
@@ -4901,7 +5053,7 @@ Dark Side of the Dark Side
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.43
+variable(global) float RI_Var_Float_Version=6.46
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -10211,6 +10363,20 @@ objectdef RIMUIObject
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
 				UIElement[QuestsListBox@RI]:AddItem["Familiars Wild"]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Grown Up Solution]
+				UIElement[QuestsListBox@RI]:AddItem[Never Let You Echo]
+				UIElement[QuestsListBox@RI]:AddItem[Save the Last Blast For Me]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Whispers of the Gods]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Echoes In the Deep]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Mapping the Dark]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Echo the Distance]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Facing the Savage Beast]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Spirited Attacks]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Shadow on the Vahl]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Whispered Blessings]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Vexing Challenge]
+				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Against Thal Odds]
 				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows Tradeskill Timeline,0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[The Delineation of Method]
 				UIElement[QuestsListBox@RI]:AddItem[Through the Belly of the Beast]

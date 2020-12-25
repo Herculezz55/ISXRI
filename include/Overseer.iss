@@ -239,9 +239,9 @@ function main()
     Agent:Insert["Thosa Kern|Cautious:Noble"]
     ;Celestial
     Agent:Insert["Belliza Morninglight, Warrior of Tunare|Compassionate:Devoted"]
-    Agent:Insert["Thomasina Fe'Qar|Focused:Manipulative"]
-    Agent:Insert["Ugar Malshadow|Dexterous:Persuasive"]
-    Agent:Insert["Yalno Accelerator, the Dark Star|Impatient:Righteous"]
+    Agent:Insert["Thomasina Fe'Qar |Focused:Manipulative"]
+    Agent:Insert["Ugar Malshadow, Guardian of the Blades|Dexterous:Persuasive"]
+    Agent:Insert["Yalno Accelerato, the Dark Star|Impatient:Righteous"]
 
     declare count int
 	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/"

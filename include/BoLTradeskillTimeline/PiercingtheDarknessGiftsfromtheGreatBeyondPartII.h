@@ -12,7 +12,7 @@ string PiercingtheDarknessGiftsfromtheGreatBeyondPartII[] = {"Piercing the Darkn
 "CraftIt \"Advanced Lightning Tracker Mach I\" 3", 
 "-248.911728 2.600187 84.872398", 
 "Custom", 
-"Path -PathLines 296 -Loop -Reverse -QueryActor \"-ActorName|soft metal vein|-Trigger|AnnounceText:azurite for the recipe (24/24)|-Events|Harvest\" -QueryActor \"-ActorName|school of guppies|-Trigger|AnnounceText:dartfish (25/25)|-Events|Harvest\" -QueryActor \"-ActorName|fallen branch|-Trigger|AnnounceText:logs (32/32)|-Events|Harvest\" -QueryActor \"-ActorName|@@@@@@@@@|-Trigger|AnnounceText:have collected the remaining components|-Events|Harvest\"", 
+"Path -PathLines 296 -Loop -Reverse -QueryActor \"-ActorName|soft metal vein|-Trigger|AnnounceText:azurite for the recipe (24/24)|-Events|Harvest\" -QueryActor \"-ActorName|school of guppies|-Trigger|AnnounceText:dartfish (25/25)|-Events|Harvest\" -QueryActor \"-ActorName|fallen branch|-Trigger|AnnounceText:logs (32/32)|-Events|Harvest\" -CommonTrigger \"AnnounceText:have collected the remaining components\"", 
 "-248.583145 2.600187 84.375107", 
 "-238.972397 2.240650 81.668648", 
 "-229.696564 0.642855 77.788177", 

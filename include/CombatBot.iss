@@ -10930,7 +10930,15 @@ objectdef ConvertAbilityObject
 	member:int Convert(string caAbilityName)
 	{
 		;echo CombatBot: Scanning for ${caAbilityName}
-		
+		if ${caAbilityName.Equal[Septic Strike]} && ${Me.Ability[id,3181529665](exists)}
+		{
+			for(count2:Set[1];${count2}<=${istrExport.Used};count2:Inc)
+			{
+				if ${istrExport.Get[${count2}].Equal[Septic Strike II]}
+					return ${count2}
+			}
+		}
+
 		variable int intTempAbilityLength
 		variable int intTempAbilityExportLength
 		variable int intTempExportAbilityLevel=0
@@ -11020,7 +11028,9 @@ objectdef ConvertAbilityObject
 	member:string ConvertID(string caAbilityName)
 	{
 		;echo CombatBot: Scanning for ${caAbilityName}
-		
+		if ${caAbilityName.Equal[Septic Strike]} && ${Me.Ability[id,3181529665](exists)}
+			return "3181529665"
+
 		variable int intTempAbilityLength
 		variable int intTempAbilityExportLength
 		variable int intTempExportAbilityLevel=0
@@ -11110,6 +11120,10 @@ objectdef ConvertAbilityObject
 	}
 	member:string ConvertName(string caAbilityName)
 	{
+		;we need to add something to check the spell endings, II III IV etc when same level -- maybe add to abilitycheck
+		;for now lets just return septic strike II for septic strike if we have it
+		if ${caAbilityName.Equal[Septic Strike]} && ${Me.Ability[id,3181529665](exists)}
+			return "Septic Strike II"
 		;echo CombatBot: Scanning for ${caAbilityName}
 		
 		variable int intTempAbilityLength
@@ -11879,7 +11893,7 @@ function CastItemFN(string ItemName, string iCastTarget=FALSE)
 				ItemEquiped:Set[FALSE]
 				while ${Me.Equipment[${ItemName}].TimeUntilReady}<0 && ${GiveUpCnt:Inc}<250
 				{
-				echo 3
+				;echo 3
 					Me.Equipment[${ItemName}]:Use
 					waitframe
 				}
@@ -11896,7 +11910,7 @@ function CastItemFN(string ItemName, string iCastTarget=FALSE)
 				ItemEquiped:Set[FALSE]
 				while ${Me.Inventory[${ItemName}].TimeUntilReady}<0 && ${GiveUpCnt:Inc}<250
 				{
-					echo 5
+					;echo 5
 					Me.Inventory[${ItemName}]:Use
 					waitframe
 				}

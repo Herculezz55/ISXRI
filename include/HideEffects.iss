@@ -34,9 +34,10 @@ function main()
 			; Earthen Avatar
 			; Nightshade
 			; Undead Knight
-            if ( !${Me.Maintained[${Counter}].Name.Find[Aery Hunter](exists)} && !${Me.Maintained[${Counter}].Name.Find[Fiery Magician](exists)} && !${Me.Maintained[${Counter}].Name.Find[Grim Sorcerer](exists)} && !${Me.Maintained[${Counter}].Name.Find[Create Construct](exists)} && !${Me.Maintained[${Counter}].Name.Find[Earthen Avatar](exists)} && !${Me.Maintained[${Counter}].Name.Find[Nightshade](exists)} && !${Me.Maintained[${Counter}].Name.Find[Undead Knight](exists)} && !${Me.Maintained[${Counter}].Name.Find[Personae Reflection](exists)} && !${Me.Maintained[${Counter}].Name.Find[Grim Aura](exists)} && !${Me.Maintained[${Counter}].Name.Find[Summon](exists)} && ${Me.Maintained[${Counter}].Name.NotEqual[Possess Essence]} && ${Me.Maintained[${Counter}].Duration.Equal[-1]}) && ( ${Me.Maintained[${Counter}].TargetType.Equal[Raid]} || ${Me.Maintained[${Counter}].TargetType.Equal["Self Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Pet Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Group"]})
+            if ( !${Me.Maintained[${Counter}].Name.Find[Aery Hunter](exists)} && !${Me.Maintained[${Counter}].Name.Find[Fiery Magician](exists)} && !${Me.Maintained[${Counter}].Name.Find[Grim Sorcerer](exists)} && !${Me.Maintained[${Counter}].Name.Find[Create Construct](exists)} && !${Me.Maintained[${Counter}].Name.Find[Earthen Avatar](exists)} && !${Me.Maintained[${Counter}].Name.Find[Nightshade](exists)} && !${Me.Maintained[${Counter}].Name.Find[Undead Knight](exists)} && !${Me.Maintained[${Counter}].Name.Find[Personae Reflection](exists)} && !${Me.Maintained[${Counter}].Name.Find[Grim Aura](exists)} && !${Me.Maintained[${Counter}].Name.Find[Summon](exists)} && ${Me.Maintained[${Counter}].Name.NotEqual[Possess Essence]} && ${Me.Maintained[${Counter}].Duration.Equal[-1]}) && ( ${Me.Maintained[${Counter}].TargetType.Equal[Raid]} || ${Me.Maintained[${Counter}].TargetType.Equal["Self Only"]} || ${Me.Maintained[${Counter}].TargetType.Equal["Pet Only"]} )
+            ; || ${Me.Maintained[${Counter}].TargetType.Equal["Group"]})
 				MaintainedEffects:Insert["${Me.Maintained[${Counter}].Name}"]
-				;echo "- ${Counter}. ${Me.Maintained[${Counter}].Name} (Duration: ${Me.Maintained[${Counter}].Duration}, TargetType: ${Me.Maintained[${Counter}].TargetType}) :: Should Be Hidden"
+			echo "- ${Counter}. ${Me.Maintained[${Counter}].Name} (Duration: ${Me.Maintained[${Counter}].Duration}, TargetType: ${Me.Maintained[${Counter}].TargetType}) :: Should Be Hidden"
          
          }
          while (${Counter:Inc} <= ${CountMaintained})
@@ -55,6 +56,8 @@ function main()
 	Me:QueryEffects[Effects, Type == "Beneficial"]
     Effects:GetIterator[EffectsIterator]
 	MaintainedEffects:GetIterator[MaintainedEffectsIterator]
+    echo ${Effects.Used}
+    wait 50
     if ${EffectsIterator:First(exists)}
     {
         do
@@ -89,7 +92,7 @@ function main()
 				{
 					if ${EffectsIterator.Value.ToEffectInfo.Name.Equal[${MaintainedEffectsIterator.Value}]}
 					{
-						EffectsIterator.Value:Hide
+						echo EffectsIterator.Value:Hide
 						HideCounter:Inc
 						echo ISXRI: Hiding #${HideCounter} of ${MaintainedEffects.Used}: ${MaintainedEffectsIterator.Value}
 						if ${HideCounter}>=${MaintainedEffects.Used}

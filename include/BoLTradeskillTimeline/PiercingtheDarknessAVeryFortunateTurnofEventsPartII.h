@@ -74,7 +74,7 @@ string PiercingtheDarknessAVeryFortunateTurnofEventsPartII[] = {"Piercing the Da
 "647.394348 41.591984 633.143616", 
 "640.685608 40.515503 625.759705", 
 "Custom", 
-"Path -PathLines 443 -Loop -Reverse -CommonTrigger \"QuestStepChecked:collected the required components\" -QueryActor \"-ActorName|stone cluster|-Trigger|QuestStepChecked:Clusters|-Events|Harvest\" -QueryActor \"-ActorName|root break|-Trigger|QuestStepChecked:Roots|-Events|Harvest\" -QueryActor \"-ActorName|root break|-Trigger|QuestStepChecked:Jumping Creeper|-Events|Harvest\" -QueryActor \"-ActorName|berry bush|-Trigger|QuestStepChecked:Algae|-Events|Harvest\" -QueryActor \"-ActorName|!!!!NONNO!!!|-Trigger|AnnounceText:create the Sanctus Seru Formal Garb|-Events|Harvest\"", 
+"Path -PathLines 443 -Loop -Reverse -CommonTrigger \"QuestStepChecked:collected the required components\" -QueryActor \"-ActorName|stone cluster|-Trigger|QuestStepChecked:Clusters|-Events|Harvest\" -QueryActor \"-ActorName|root break|-Trigger|QuestStepChecked:Roots|-Events|Harvest\" -QueryActor \"-ActorName|root break|-Trigger|QuestStepChecked:Jumping Creeper|-Events|Harvest\" -QueryActor \"-ActorName|berry bush|-Trigger|QuestStepChecked:Algae|-Events|Harvest\"", 
 "634.399963 40.566517 617.657288", 
 "628.352051 40.960094 609.696350", 
 "622.159790 41.954330 601.545349", 

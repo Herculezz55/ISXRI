@@ -1659,6 +1659,69 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 				istrMain:Insert[${TheIcyKeepHard[3rtZdjv7,${MainArrayCounter}]}]
 			break
 		}
+		case Echo Caverns: Quarry Quandary [Solo]
+		{
+			RI_CMD_Hidden_AddTLO EchoCavernsQuarryQuandary
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[EchoCavernsQuarryQuandary]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${EchoCavernsQuarryQuandary[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${EchoCavernsQuarryQuandary[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Echo Caverns: Fungal Foray [Solo]
+		{
+			RI_CMD_Hidden_AddTLO EchoCavernsFungalForay
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[EchoCavernsFungalForay]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${EchoCavernsFungalForay[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${EchoCavernsFungalForay[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Savage Weald: Fort Grim [Solo]
+		{
+			RI_CMD_Hidden_AddTLO SavageWealdFortGrim
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[SavageWealdFortGrim]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SavageWealdFortGrim[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${SavageWealdFortGrim[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Savage Weald: Chaotic Caverns [Solo]
+		{
+			RI_CMD_Hidden_AddTLO SavageWealdChaoticCaverns
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[SavageWealdChaoticCaverns]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SavageWealdChaoticCaverns[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${SavageWealdChaoticCaverns[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Shadeweaver's Thicket: Feral Reserve [Solo]
+		{
+			RI_CMD_Hidden_AddTLO ShadeweaversThicketFeralReserve
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[ShadeweaversThicketFeralReserve]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ShadeweaversThicketFeralReserve[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${ShadeweaversThicketFeralReserve[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Shadeweaver's Thicket: Untamed Lands [Solo]
+		{
+			RI_CMD_Hidden_AddTLO ShadeweaversThicketUntamedLands
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[ShadeweaversThicketUntamedLands]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ShadeweaversThicketUntamedLands[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${ShadeweaversThicketUntamedLands[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
+		case Vex Thal: Shadow Citadel
+		{
+			RI_CMD_Hidden_AddTLO VexThalShadowCitadel
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[VexThalShadowCitadel]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${VexThalShadowCitadel[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${VexThalShadowCitadel[3rtZdjv7,${MainArrayCounter}]}]
+			break
+		}
 		default
 		{
 			if ${Zone.Name.Equal["Brackish Vaults [Solo]"]} || ${Zone.Name.Equal["Brackish Vaults [Duo]"]}
@@ -1986,7 +2049,7 @@ function CustomFunction(string arg1="", string arg2="", string arg3="", string a
 	;move to custom location
 	if !${CustomLoc.Find["0 0 0"]} && !${CustomFunction.Find[WaitForZoning](exists)}
 	{
-			call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE ${StopForCombat} TRUE FALSE TRUE
+		call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE ${StopForCombat} TRUE FALSE TRUE
 	}
 	call MakeCurrentActiveQuest
 	call ${CustomFunction} ${arg1} ${arg2} ${arg3} ${arg4} ${arg5}
@@ -2214,6 +2277,7 @@ objectdef RunInstancesObject
 	}
 	member:int ClosestPoint(int CurrentArrayPosition, string Loc, int _HowManyPoints=20, bool _Reverse=FALSE, bool _CheckCollision=TRUE)
 	{
+		;echo ClosestPoint(int CurrentArrayPosition=${CurrentArrayPosition}, string Loc=${Loc}, int _HowManyPoints=${_HowManyPoints}, bool _Reverse=${_Reverse}, bool _CheckCollision=${_CheckCollision}
 		variable int counter=0
 		variable int ClosestArrayPosition=${CurrentArrayPosition}
 		variable int Distance=${Math.Distance[${Loc},${istrMain.Get[${CurrentArrayPosition}].Replace[" ",","]}]}
@@ -2221,7 +2285,7 @@ objectdef RunInstancesObject
 		{
 			for(counter:Set[${CurrentArrayPosition}];${counter}>=${Math.Calc[${CurrentArrayPosition}-${_HowManyPoints}]};counter:Dec)
 			{
-				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[ClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>${_HowManyPoints} && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
+				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[ClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>25 && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 				{
 					;echo Checking ${counter}:: ${istrMain.Get[${counter}].Replace[" ",","]} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 					if ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} && ( !${EQ2.CheckCollision[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]} || !${_CheckCollision} )
@@ -2238,7 +2302,8 @@ objectdef RunInstancesObject
 		{
 			for(counter:Set[${CurrentArrayPosition}];${counter}<=${Math.Calc[${CurrentArrayPosition}+${_HowManyPoints}]};counter:Inc)
 			{
-				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[ClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>${_HowManyPoints} && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
+				;echo Checking ${counter}:: ${istrMain.Get[${counter}].Replace[" ",","]}
+				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[ClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>25 && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 				{
 					;echo Checking ${counter}:: ${istrMain.Get[${counter}].Replace[" ",","]} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 					if ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} && ( !${EQ2.CheckCollision[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]} || !${_CheckCollision} )
@@ -3429,7 +3494,7 @@ function LootOptions(string Options)
 	wait 5
 }
 ;script to target a specific mob
-function Target(string TName, bool StayTargeted, int Distance=1000, bool _NoKillNPC=TRUE, bool _UseName=FALSE)
+function Target(string TName, bool StayTargeted, int Distance=1000, bool _NoKillNPC=TRUE, bool _UseName=FALSE, int _WaitTime=0)
 {
 	;echo Target(string TName=${TName}, bool StayTargeted=${StayTargeted}, int Distance=${Distance}, bool _NoKillNPC=${_NoKillNPC})
 	;set TargetsID
@@ -3475,6 +3540,7 @@ function Target(string TName, bool StayTargeted, int Distance=1000, bool _NoKill
 			wait 1
 		}
 	}
+	wait ${_WaitTime}
 	;echo end target
 }
 function SpireDoor()
@@ -3575,6 +3641,23 @@ function HailActorMultiOption(string _Actor, ... args)
 			call HailActor "${_Actor}" 1 ${args[${_count}]} 1
 		else
 			call HailActor "${_Actor}" 1 ${args[${_count}]} 0
+		wait 5
+		wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${_count}]}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} 
+		;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
+	}
+}
+function ConversationDialog( ... args)
+{
+	if ${Me.FlyingUsingMount}
+		call FlyDown
+	variable int _count
+	variable string _tempbtntxt
+	for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
+	{
+		_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${_count}]}].GetProperty[LocalText]}"]
+		;echo ${args[${_count}]}
+		if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
+				relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${_count}]}]:LeftClick
 		wait 5
 		wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${_count}]}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} 
 		;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
@@ -3867,6 +3950,7 @@ function HailActorGetQuest(... args)
 				_Hail:Set[0]
 				break
 			}
+			case -Quest
 			case -QuestName
 			{
 				_QuestName:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
@@ -4038,7 +4122,9 @@ function ClickActor(... args)
 			case -LockSpot
 			{
 				_LockSpot:Set[1]
+			
 			}
+			case -ActorName
 			case -Actor
 			{
 				_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
@@ -17803,6 +17889,10 @@ variable bool complete=FALSE
 variable bool cancel=FALSE
 function RICraftIt(string _Recipe, int _Amount=1)
 {
+	if ${Script[Buffer:Craft](exists)} 
+		endscript buffer:craft
+	if ${Script[EQ2Craft](exists)}
+		endscript eq2craft
     echo ISXRI: Starting RI Craft
      ;Focus (These have 6 different reactives as the dur and prog abilities are not matching icons)
     ReactionAbility:Insert[Sudden Spark|11]
@@ -17864,62 +17954,65 @@ function RICraftIt(string _Recipe, int _Amount=1)
 	if ${Me.Recipe[${_Recipe}](exists)}
 	{
 		;make sure we have the components needed
-		wait 50 ${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
-		if ${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
+		
+		do
 		{
-			if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name.NotEqual[N/A]}
+			wait 50 ${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
+			if ${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
 			{
-				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity}
+				if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name.NotEqual[N/A]}
 				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
+					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity}
+					{
+						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
+						eq2ex start_broker
+						wait 10
+					}
+				}
+				if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name.NotEqual[N/A]}
+				{
+					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity}
+					{
+						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
+						eq2ex start_broker
+						wait 10
+					}
+				}
+				if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name.NotEqual[N/A]}
+				{
+					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity}
+					{
+						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
+						eq2ex start_broker
+						wait 10
+					}
+				}
+				if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name.NotEqual[N/A]}
+				{
+					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity}
+					{
+						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
+						eq2ex start_broker
+						wait 10
+					}
+				}
+				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity}
+				{
+					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand}"
 					eq2ex start_broker
 					wait 10
 				}
-			}
-			if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name.NotEqual[N/A]}
-			{
-				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity}
-				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
-					eq2ex start_broker
-					wait 10
-				}
-			}
-			if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name.NotEqual[N/A]}
-			{
-				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity}
-				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
-					eq2ex start_broker
-					wait 10
-				}
-			}
-			if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name.NotEqual[N/A]}
-			{
-				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity}
-				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
-					eq2ex start_broker
-					wait 10
-				}
-			}
-			while ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity}
-			{
-				MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand}"
-				eq2ex start_broker
-				wait 10
 			}
 		}
-		else
+		while !${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable} && ${_counter:Inc}<=6
+		if !${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
 		{
-			MessageBox -skin eq2 "We were unable to retrieve recipe info"
-			Script:End
+			call MessageBox "We were unable to retrieve recipe info Open your tradeskill window to the recipe and resume"
 		}
 	}
 	else
 	{
-		MessageBox -skin eq2 "Can not find Recipe: ${_Recipe}"
-		Script:End
+		call MessageBox "Can not find Recipe: ${_Recipe} open your recipe book to the recipe and resume"
 	}
 	
 	;start craft lite no ui
@@ -17967,7 +18060,7 @@ function RICraftIt(string _Recipe, int _Amount=1)
 				waitframe
                 if ${counter}>0
                 {
-                    echo Counter2:${counter}
+                    ;echo Counter2:${counter}
                     if ${counter}>3
                     {
                         if ${counter}==11
@@ -18182,6 +18275,42 @@ function ProgressCombo()
 }
 function CastReaction(int xability, int xtimer)
 {
+	;echo ISXRI: Casting Reaction: ${TSSpell[${xability},${xtimer}]}
+	variable uint skilltimer=${Script.RunningTime}
+	variable int _failcnt
+	do
+	{
+		if ${roundstart}
+		{
+			return
+		}
+
+		if ${Script.RunningTime}-${skilltimer}>${xtimer}*1900
+		{
+			return
+		}
+	}
+	while !${Me.Ability[${TSSpell[${xability},${xtimer}]}].IsReady}
+	_failcnt:Set[0]
+	
+	do
+	{
+		if ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${TSSpell[${xability},${xtimer}]}]} ) || ${Me.Ability[${TSSpell[${xability},${xtimer}]}].TimeUntilReady}>0
+			noop
+		else
+			Me.Ability[${TSSpell[${xability},${xtimer}]}]:Use
+		wait 2 ${Me.CastingSpell}
+	}
+	while ${Me.Ability[${TSSpell[${xability},${xtimer}]}].TimeUntilReady}==0 && ${_failcnt:Inc}<=5
+	
+	eq2ex clearabilityqueue
+
+	wait 5 ${Me.Maintained[${TSSpell[${xability},${xtimer}]}](exists)} || ${Me.Ability[${TSSpell[${xability},${xtimer}]}].TimeUntilReady}>0
+	
+	eq2ex clearabilityqueue
+}
+function CastReactionOLD(int xability, int xtimer)
+{
 	variable uint skilltimer=${Script.RunningTime}
 
 	do
@@ -18239,7 +18368,7 @@ objectdef RICraftObject
 {
     member:int ReactionAbility(string _ReactionName)
     {
-		echo ${_ReactionName}
+		;echo ${_ReactionName}
         variable int _i
         for(_i:Set[0];${_i}<=${ReactionAbility.Used};_i:Inc)
         {
@@ -18347,66 +18476,70 @@ function CraftIt(string _Recipe, int _Amount=1)
 		wait 50 ${Me.Recipe["${_Recipe}"](exists)}
 		EQ2Execute /toggletradeskills
 	}
+	_counter:Set[1]
 	;first check our resources
 	if ${Me.Recipe[${_Recipe}](exists)}
 	{
 		;make sure we have the components needed
-		wait 50 ${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
-		if ${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
+		
+		do
 		{
-			if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name.NotEqual[N/A]}
+			wait 50 ${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
+			if ${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
 			{
-				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity}
+				if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name.NotEqual[N/A]}
 				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
+					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity}
+					{
+						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
+						eq2ex start_broker
+						wait 10
+					}
+				}
+				if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name.NotEqual[N/A]}
+				{
+					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity}
+					{
+						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
+						eq2ex start_broker
+						wait 10
+					}
+				}
+				if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name.NotEqual[N/A]}
+				{
+					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity}
+					{
+						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
+						eq2ex start_broker
+						wait 10
+					}
+				}
+				if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name.NotEqual[N/A]}
+				{
+					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity}
+					{
+						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
+						eq2ex start_broker
+						wait 10
+					}
+				}
+				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity}
+				{
+					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand}"
 					eq2ex start_broker
 					wait 10
 				}
-			}
-			if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name.NotEqual[N/A]}
-			{
-				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity}
-				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
-					eq2ex start_broker
-					wait 10
-				}
-			}
-			if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name.NotEqual[N/A]}
-			{
-				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity}
-				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
-					eq2ex start_broker
-					wait 10
-				}
-			}
-			if ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name.NotEqual[N/A]}
-			{
-				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity}
-				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
-					eq2ex start_broker
-					wait 10
-				}
-			}
-			while ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity}
-			{
-				MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand}"
-				eq2ex start_broker
-				wait 10
 			}
 		}
-		else
+		while !${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable} && ${_counter:Inc}<=6
+		if !${Me.Recipe[${_Recipe}].IsRecipeInfoAvailable}
 		{
-			MessageBox -skin eq2 "We were unable to retrieve recipe info"
-			Script:End
+			call MessageBox "We were unable to retrieve recipe info Open your tradeskill window to the recipe and resume"
 		}
 	}
 	else
 	{
-		MessageBox -skin eq2 "Can not find Recipe: ${_Recipe}"
-		Script:End
+		call MessageBox "Can not find Recipe: ${_Recipe} open your recipe book to the recipe and resume"
 	}
 	
 	;start craft lite no ui
@@ -18601,13 +18734,16 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	;echo Start of Quest: MainQuestName Size: ${MainQuestName.Used}
 	press -release ${RI_Var_String_ForwardKey}
 	variable string _ConvertedQuestName
+
+	if ${_QuestName.Find["\""](exists)}
+		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
 	;echo ${_QuestName} // ${_ElementToJumpTo}
 	if ${_ElementToJumpTo}==0
 		variable int _OriginalMAC=${MainArrayCounter}
 	if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
 		_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
 	else
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -18622,37 +18758,37 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	_QuestName:Set[${istrMain.Get[1]}]
 	MainQuestName:Insert["${_QuestName}"]
 	variable int _GiveUpCNT=0
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} ) && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName.Replace["\"",""]}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName.Replace["\"",""]}]}
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
-	;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
+	_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
+	;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
 	variable bool _Repeatable
 	if ${istrMain.Get[2].Equal[Repeatable]}
 		_Repeatable:Set[TRUE]
 	
-	if ${_QuestName.Replace["\"",""].Find["Brother Pang's Trial"](exists)}
+	if ${_QuestName.Find["Brother Pang's Trial"](exists)}
 		_QuestName:Concat[" "]
 		
-	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
+	if ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
 	{
 		;MessageBox -skin eq2 "${_QuestName} is already completed"
-		echo ISXRI: ${_QuestName.Replace["\"",""]} already Completed moving on
+		echo ISXRI: ${_QuestName} already Completed moving on
 		;skip here
 		_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 		
 		_GiveUpCNT:Set[0]
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
 		{
-			QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+			QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 			wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 		
@@ -18677,35 +18813,33 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	}
 	else
 	{
-		echo ISXRI: ${Time} Starting ${_QuestName.Replace["\"",""]}
+		echo ISXRI: ${Time} Starting ${_QuestName}
 		
 		call Go TRUE
 		
-		echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
+		echo ISXRI: ${Time} Ending ${_QuestName}
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	}
 
-	if ${_CheckQuestCompleted} && !${_QuestName.Replace["\"",""].Find["Access to Tower of the Four Winds"](exists)} && !${_QuestName.Replace["\"",""].Find["Yun Zi"](exists)} && !${_QuestName.Replace["\"",""].Find[Timeline](exists)} && !${_QuestName.Replace["\"",""].Find["Losers Weepers"](exists)} && !${_QuestName.Replace["\"",""].Find["New Lands New Profits"](exists)}
+	if ${_CheckQuestCompleted} && !${_QuestName.Find["Access to Tower of the Four Winds"](exists)} && !${_QuestName.Find["Yun Zi"](exists)} && !${_QuestName.Find[Timeline](exists)} && !${_QuestName.Find["Losers Weepers"](exists)} && !${_QuestName.Find["New Lands New Profits"](exists)}
 	{
 		waitframe
 		squelch wait 100 ${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}
-		;echo \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
-		if !${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
-			call MessageBox "Quest: ${_QuestName.Replace["\"",""]} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
+		;echo \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
+		if !${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
+			call MessageBox "Quest: ${_QuestName} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
 	}
 	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 	
 	_GiveUpCNT:Set[0]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -18737,6 +18871,9 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 	MainQuestName:Insert["${_QuestName}"]
 	if ${_ElementToJumpTo}==0
 		variable int _OriginalMAC=${MainArrayCounter}
+
+	if ${_QuestName.Find["\""](exists)}
+		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
 		
 	;MainQuestName:Insert["${_QuestName}"]
 	if !${RIMUIObj.FactionsInitialized}
@@ -18754,12 +18891,12 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 		
 		_GiveUpCNT:Set[0]
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
 		{
-			QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
+			QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 			wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 		
@@ -18814,7 +18951,7 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
 			_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
 		else
-			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 		
@@ -18828,26 +18965,26 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		wait 50 ${istrMain.Used}>0
 		_QuestName:Set[${istrMain.Get[1]}]
 		variable int _GiveUpCNT=0
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
 		{
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 			squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
-		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
+		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
+		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
 		variable bool _Repeatable
 		if ${istrMain.Get[2].Equal[Repeatable]}
 			_Repeatable:Set[TRUE]
 		
-		echo ISXRI: ${Time} Starting ${_QuestName.Replace["\"",""]} #${_qcount:Inc} Faction: ${RIMUIObj.FactionAmount[${_FactionName}]} Needed: ${_Faction}
+		echo ISXRI: ${Time} Starting ${_QuestName} #${_qcount:Inc} Faction: ${RIMUIObj.FactionAmount[${_FactionName}]} Needed: ${_Faction}
 ;		of ${_NumRepeats}
 		
 		call Go TRUE
 		
-		echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
+		echo ISXRI: ${Time} Ending ${_QuestName}
 		
 		if ${Me.IsMoving}
 		{
@@ -18860,15 +18997,15 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 	
 	_GiveUpCNT:Set[0]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -18907,6 +19044,8 @@ function MakeCurrentActiveQuest(string _QuestName=${MainQuestName.Get[${MainQues
 function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=0)
 {
 	MainQuestName:Insert["${_QuestName}"]
+	if ${_QuestName.Find["\""](exists)}
+		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
 	if ${_ElementToJumpTo}==0
 		variable int _OriginalMAC=${MainArrayCounter}
 	variable int _qcount=1
@@ -18920,7 +19059,7 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 		if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
 			_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
 		else
-			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 		
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 		
@@ -18934,25 +19073,25 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 		wait 50 ${istrMain.Used}>0
 		_QuestName:Set[${istrMain.Get[1]}]
 		variable int _GiveUpCNT=0
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
 		{
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 			squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
-		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
+		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
+		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
 		variable bool _Repeatable
 		if ${istrMain.Get[2].Equal[Repeatable]}
 			_Repeatable:Set[TRUE]
 		
-		echo ISXRI: ${Time} Starting ${_QuestName.Replace["\"",""]} #${_qcount} of ${_NumRepeats}
+		echo ISXRI: ${Time} Starting ${_QuestName} #${_qcount} of ${_NumRepeats}
 		
 		call Go TRUE
 		
-		echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
+		echo ISXRI: ${Time} Ending ${_QuestName}
 		
 		if ${Me.IsMoving}
 		{
@@ -18965,15 +19104,15 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 	
 	_GiveUpCNT:Set[0]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -19003,10 +19142,12 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 function SetActiveQuest(string _QuestName)
 {
 	variable int _GiveUpCNT=0
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	if ${_QuestName.Find["\""](exists)}
+		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
@@ -19017,6 +19158,8 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 	;echo QuestDefault(string _QuestName=${_QuestName}, int _ElementToJumpTo=0=${_ElementToJumpTo}, bool _CheckQuestCompleted=TRUE=${_CheckQuestCompleted})
 	;echo ${_QuestName.Token[1,|]}
 	;echo "${_QuestName.Token[2,|]}" ${_QuestName.Token[2,|].Find[Repeatable]}
+	if ${_QuestName.Find["\""](exists)}
+		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
 	if ${_QuestName.Find[|](exists)}
 	{
 		if ${_QuestName.Token[2,|].Find[Repeatable]}
@@ -19041,7 +19184,7 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 	if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
 		_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
 	else
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	;open dat or var and do all of it
 	;echo ${_QuestName}  //  ${_QuestName.Replace[" ",""].Replace["?",""]}
 	
@@ -19060,36 +19203,36 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 	_QuestName:Set[${istrMain.Get[1]}]
 	MainQuestName:Insert["${_QuestName}"]
 	variable int _GiveUpCNT=0
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName.Replace["\"",""]}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName.Replace["\"",""]}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName.Replace["\"",""]}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName.Replace["\"",""]}]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName.Replace["\"",""]}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName.Replace["\"",""]}]}
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
 	
 	variable bool _Repeatable
 	if ${istrMain.Get[2].Equal[Repeatable]}
 		_Repeatable:Set[TRUE]
 		
-	if ${_QuestName.Replace["\"",""].Find["Brother Pang's Trial"](exists)}
+	if ${_QuestName.Find["Brother Pang's Trial"](exists)}
 		_QuestName:Concat[" "]
 		
-	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
+	if ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
 	{
 		;MessageBox -skin eq2 "${_QuestName} is already completed"
-		echo ISXRI: ${_QuestName.Replace["\"",""]} already Completed moving on
+		echo ISXRI: ${_QuestName} already Completed moving on
 		;skip here
 		if ${_ElementToJumpTo}>0
 			MainArrayCounter:Set[${_ElementToJumpTo}]
 		return
 	}
-	echo ISXRI: ${Time} Starting ${_QuestName.Replace["\"",""]}
+	echo ISXRI: ${Time} Starting ${_QuestName}
 	
 	call Go TRUE
 	
-	echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
+	echo ISXRI: ${Time} Ending ${_QuestName}
 	
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	
@@ -19099,13 +19242,13 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 		press -release ${RI_Var_String_ForwardKey}
 	}
 	
-	if ${_CheckQuestCompleted} && !${_QuestName.Replace["\"",""].Find["Yun Zi"](exists)} && !${_QuestName.Replace["\"",""].Find[Timeline](exists)} && !${_QuestName.Replace["\"",""].Find["Losers Weepers"](exists)} && !${_QuestName.Replace["\"",""].Find["New Lands New Profits"](exists)}
+	if ${_CheckQuestCompleted} && !${_QuestName.Find["Yun Zi"](exists)} && !${_QuestName.Find[Timeline](exists)} && !${_QuestName.Find["Losers Weepers"](exists)} && !${_QuestName.Find["New Lands New Profits"](exists)}
 	{
 		waitframe
 		squelch wait 100 ${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}
-		;echo \${QuestJournalWindow.CompletedQuest[${_QuestName.Replace["\"",""]}](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
-		if !${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)}
-			call MessageBox "Quest: ${_QuestName.Replace["\"",""]} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
+		;echo \${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
+		if !${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
+			call MessageBox "Quest: ${_QuestName} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
 	}
 }
 function GoFreeportQeynos(bool _RelayToGroup=TRUE)
@@ -19519,6 +19662,10 @@ function Path(... args)
 	variable bool _PauseBotDuringEvent=FALSE
 	variable string CommonTrigger=""
 	variable int Wait=0
+	variable bool _KeepMoving=TRUE
+	variable bool _Found=FALSE
+	variable bool _DontMove=FALSE
+	variable bool _FightAtPathLoc=FALSE
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	{
 		;echo args ${_acnt} : ${args[${_acnt}]}
@@ -19538,6 +19685,12 @@ function Path(... args)
 		}
 		switch ${args[${_acnt}]}
 		{
+			case -FightAtPathLoc
+			{
+				_FightAtPathLoc:Set[1]
+				break
+			}
+			case -PL
 			case -PathLines
 			{
 				_PathLines:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
@@ -19548,6 +19701,7 @@ function Path(... args)
 				_Precision:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
 				break
 			}
+			case -L
 			case -Loop
 			{
 				_LoopPath:Set[1]
@@ -19563,6 +19717,7 @@ function Path(... args)
 				_PauseBotDuringEvent:Set[1]
 				break
 			}
+			case -R
 			case -Reverse
 			{
 				_ReversePath:Set[1]
@@ -19598,11 +19753,13 @@ function Path(... args)
 				_TargetSelf:Set[1]
 				break
 			}
+			case -QA
 			case -QueryActor
 			{	
 				_QueryActor:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
 				break
 			}
+			case -CT
 			case -CommonTrigger
 			{	
 				CommonTrigger:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
@@ -19667,13 +19824,41 @@ function Path(... args)
 		{
 			if ${_goReverse} 
 			{
-				if ${MainArrayCounter:Dec}<=${_start}
-					_whileCheck:Set[0]
+				if ${_Found}
+					_Found:Set[FALSE]
+				else
+				{
+					if ${MainArrayCounter:Dec}<=${_start}
+						_whileCheck:Set[0]
+				}
 			}
 			else
 			{
-				if ${MainArrayCounter:Inc}>=${_endpoint}
-					_whileCheck:Set[0]
+				if ${_Found}
+					_Found:Set[FALSE]
+				else
+				{
+					if ${MainArrayCounter:Inc}>=${_endpoint}
+						_whileCheck:Set[0]
+				}
+			}
+			if ${istrMain.Get[${MainArrayCounter}].Token[1,|].Equal[Wait]}
+			{
+				wait ${Int[${istrMain.Get[${MainArrayCounter}].Token[2,|]}]}
+				continue
+			}
+			if ${istrMain.Get[${MainArrayCounter}].Token[1,|].Equal[ClickActor]}
+			{
+				CustomLoc:Set["0 0 0"]
+				call ClickActor -Actor "${istrMain.Get[${MainArrayCounter}].Token[2,|]}"
+				continue
+			}
+			if ${istrMain.Get[${MainArrayCounter}].Token[1,|].Equal[Target]}
+			{
+				CustomLoc:Set["0 0 0"]
+				;echo call Target "${istrMain.Get[${MainArrayCounter}].Token[2,|]}" ${istrMain.Get[${MainArrayCounter}].Token[3,|]}
+				call Target "${istrMain.Get[${MainArrayCounter}].Token[2,|]}" ${istrMain.Get[${MainArrayCounter}].Token[3,|]}
+				continue
 			}
 			if ${_TriggeredCount}>=${_QueryActor.Used}
 			{
@@ -19685,7 +19870,7 @@ function Path(... args)
 						echo setting _goReverse
 					_goReverse:Set[1]
 				}
-				if ( ${MainArrayCounter}==${_start} && ${_ReversePath} ) || ( !${_ReversePath} && ${MainArrayCounter}==${_endpoint} )
+				if ( ${MainArrayCounter}<=${_start} && ${_ReversePath} ) || ( !${_ReversePath} && ${MainArrayCounter}>=${_endpoint} )
 				{
 					if ${RI_Var_Bool_PathDebug}
 						echo setting _done 
@@ -19721,10 +19906,10 @@ function Path(... args)
 						_ItemName:Set[""]
 						_QuestStepExists:Set[FALSE]
 						_IWasFlying:Set[0]
-						if ${CommonTrigger.Token[1,|].Equal[IncomingText]}
-							IncomingText:Insert["${CommonTrigger.Token[2,|]}"]
-						if ${CommonTrigger.Token[1,|].Equal[AnnounceText]}
-							AnnounceText:Insert["${CommonTrigger.Token[2,|]}"]
+						if ${CommonTrigger.Token[1,:].Equal[IncomingText]}
+							IncomingText:Insert["${CommonTrigger.Token[2,:]}"]
+						if ${CommonTrigger.Token[1,:].Equal[AnnounceText]}
+							AnnounceText:Insert["${CommonTrigger.Token[2,:]}"]
 						for(_acnt:Set[1];${_acnt}<=${_QueryActor.Get[${_cnt}].Count[|]};_acnt:Inc)
 						{
 							;echo ${_acnt}: ${_QueryActor.Get[${_cnt}].Token[${_acnt},|]}
@@ -19735,6 +19920,8 @@ function Path(... args)
 									_Interactable:Set[1]
 									break
 								}
+								case -A
+								case -Actor
 								case -ActorName
 								{
 									_ActorName:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|]}"]
@@ -19750,6 +19937,7 @@ function Path(... args)
 									_MoveToDistance:Set[${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|]}]
 									break
 								}
+								case -T
 								case -Trigger
 								{
 									;echo ${_QueryActor.Get[${_cnt}]} // ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:]} // ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[AnnounceText]}
@@ -19773,7 +19961,7 @@ function Path(... args)
 										_QuestDNE:Set[1]
 										_Quest:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:]}"]
 									}
-									elseif ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[QuestStepChecked]}
+									elseif ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[QuestStepChecked]} || ${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[1,:].Equal[QSC]}
 									{
 										_QuestStepChecked:Set[1]
 										_QuestStep:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|].Token[2,:]}"]
@@ -19792,6 +19980,7 @@ function Path(... args)
 									}
 									break
 								}
+								case -E
 								case -Events
 								{
 									_Events:Set["${_QueryActor.Get[${_cnt}].Token[${Math.Calc[${_acnt}+1]},|]}"]
@@ -19821,11 +20010,12 @@ function Path(... args)
 								echo _Interactable=${_Interactable} // ActorName=${_ActorName} // _QueryDistance=${_QueryDistance} // _MoveToDistance=${_MoveToDistance} // _Events=${_Events}
 							_ID:Set[${Actor[Query, ${_Query}].ID}]
 							if ${RI_Var_Bool_PathDebug}
-								echo if ( ${Actor[id,${_ID}].Distance}<=${_MoveToDistance} || ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",20,${_goReverse}]}==${MainArrayCounter} ) && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& \${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]} = !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
-							if ( ${Actor[id,${_ID}].Distance}<=${_MoveToDistance} || ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",20,${_goReverse}]}==${MainArrayCounter} ) && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} ) && !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
+								echo if ( ${Actor[id,${_ID}].Distance}<=${_MoveToDistance} || ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",${Math.Calc[${_PathLines}-(${MainArrayCounter}-${_start})]},${_goReverse}]}==${MainArrayCounter} ) && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& \${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]} = !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
+							if ( ${Actor[id,${_ID}].Distance}<=${_MoveToDistance} || ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",${Math.Calc[${_PathLines}-(${MainArrayCounter}-${_start})]},${_goReverse}]}==${MainArrayCounter} ) && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} ) && !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
 							{
+								_Found:Set[TRUE]
 								_temp:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+								if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>2 ) && !${_FightAtPathLoc}
 								{
 									if ${Me.FlyingUsingMount}
 										_IWasFlying:Set[TRUE]
@@ -19834,7 +20024,7 @@ function Path(... args)
 									while ${Me.FlyingUsingMount} && ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} && ${_failcnt:Inc}<10
 									{
 										call RIMObj.FlyDown
-										if !${Me.FlyingUsingMount} && ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance}
+										if !${Me.FlyingUsingMount} && ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} && ${Me.Y}> ${Actor[Query, ID=${_ID}].Y}
 										{
 											press -hold ${RI_Var_String_ForwardKey}
 											wait 5
@@ -19848,6 +20038,12 @@ function Path(... args)
 								;here we are at the actor lets determine our events
 								for(_ecnt:Set[1];${_ecnt}<=${Math.Calc[${_Events.Count[&]}+1]};_ecnt:Inc)
 								{
+									if ${_Events.Find["Call-"]}
+									{
+										call ${_Events.Token[2,-]} "${Me.Loc}"
+										_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+										continue
+									}
 									if ${_Events.Find["UseItem"]}
 									{
 										if ${RI_Var_Bool_PathDebug}
@@ -19935,34 +20131,34 @@ function Path(... args)
 											}
 											if ${CommonTrigger.NotEqual[""]}
 											{
-												if ${CommonTrigger.Token[1,|].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}",1]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}",1]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered:${CommonTrigger.Token[2,|]}
+													echo ISXRI: Triggered:${CommonTrigger.Token[2,:]}
 													Trigger:Set[FALSE]
 												}
-												if ${CommonTrigger.Token[1,|].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+													echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 													Trigger:Set[FALSE]
 												}
-												if ${CommonTrigger.Token[1,|].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+													echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 													Trigger:Set[FALSE]
 												}
-												if ${CommonTrigger.Token[1,|].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Exists from ${_tempName}
+													echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Exists from ${_tempName}
 													Trigger:Set[FALSE]
 												}
-												if ${CommonTrigger.Token[1,|].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Does Not Exist from ${_tempName}
+													echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Does Not Exist from ${_tempName}
 													Trigger:Set[FALSE]
 												}
 											}
@@ -20050,34 +20246,34 @@ function Path(... args)
 											}
 											if ${CommonTrigger.NotEqual[""]}
 											{
-												if ${CommonTrigger.Token[1,|].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}",1]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}",1]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered:${CommonTrigger.Token[2,|]}
+													echo ISXRI: Triggered:${CommonTrigger.Token[2,:]}
 													Trigger:Set[FALSE]
 												}
-												if ${CommonTrigger.Token[1,|].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+													echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 													Trigger:Set[FALSE]
 												}
-												if ${CommonTrigger.Token[1,|].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+													echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 													Trigger:Set[FALSE]
 												}
-												if ${CommonTrigger.Token[1,|].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Exists from ${_tempName}
+													echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Exists from ${_tempName}
 													Trigger:Set[FALSE]
 												}
-												if ${CommonTrigger.Token[1,|].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+												if ${CommonTrigger.Token[1,:].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 												{
 													_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-													echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Does Not Exist from ${_tempName}
+													echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Does Not Exist from ${_tempName}
 													Trigger:Set[FALSE]
 												}
 											}
@@ -20093,7 +20289,7 @@ function Path(... args)
 											case DoubleClick
 											{
 												;clickactor event
-												while ${Actor[Query, ID=${_ID}](exists)} && ( ${Me.CastingSpell} || ${Actor[Query, ID=${_ID}].Interactable} || !${_Interactable} )
+												while ${Actor[Query, ID=${_ID}](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]} && ( ${Me.CastingSpell} || ${Actor[Query, ID=${_ID}].Interactable} || !${_Interactable} )
 												{
 													if ${RI_Var_Bool_BreakPathFunction}
 													{
@@ -20149,34 +20345,34 @@ function Path(... args)
 													}
 													if ${CommonTrigger.NotEqual[""]}
 													{
-														if ${CommonTrigger.Token[1,|].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}",1]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}",1]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered:${CommonTrigger.Token[2,|]}
+															echo ISXRI: Triggered:${CommonTrigger.Token[2,:]}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Exists from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Exists from ${_tempName}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Does Not Exist from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Does Not Exist from ${_tempName}
 															Trigger:Set[FALSE]
 														}
 													}
@@ -20189,9 +20385,25 @@ function Path(... args)
 											{
 												if ${RI_Var_Bool_PathDebug}
 													echo ${_tempName}: while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]}
-												if ${RI_Var_Bool_PathDebug}
-													echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
-												relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
+												if ${_FightAtPathLoc}
+												{
+													if ${RI_Var_Bool_PathDebug}
+														echo Moving To ${Actor[Query, ID=${_ID}].Name}: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance}
+													while ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} && !${Me.IsHated}
+													{
+														call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 0 0 0 0
+														waitframe
+													}
+													if ${RI_Var_Bool_PathDebug}
+														echo Moving back to loc
+													call RIMObj.Move ${_temp} ${_Precision} 0 0 0 0 0
+												}
+												else
+												{
+													if ${RI_Var_Bool_PathDebug}
+														echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
+													relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
+												}
 												while ${Actor[Query, ID=${_ID} && IsDead=FALSE](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]}
 												{
 													if ${RI_Var_Bool_BreakPathFunction}
@@ -20204,7 +20416,7 @@ function Path(... args)
 													if ${Target.ID}!=${Actor[Query, ID=${_ID}].ID}
 														Actor[Query, ID=${_ID}]:DoTarget
 													wait 2
-													if ${Actor[Query, ID=${_ID}].Distance}>${Math.Calc[${_MoveToDistance}+${_Precision}+1]}
+													if ${Actor[Query, ID=${_ID}].Distance}>${Math.Calc[${_MoveToDistance}+${_Precision}+1]} && !${_FightAtPathLoc}
 													{
 														;call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 0 0 1 0 1 1
 														if ${RI_Var_Bool_PathDebug}
@@ -20212,9 +20424,11 @@ function Path(... args)
 														relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,OFF,1000]
 														relay ${RI_Var_String_RelayGroup} RIMUIObj:SetRIFollow[ALL,${Me.ID}]
 														if ${Actor[Query, ID=${_ID}].Distance}>=${_MoveToDistance}
-															call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
-														if ${RI_Var_Bool_PathDebug}
-															echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
+															relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Query, ID=${_ID}].Loc},${_MoveToDistance},1000]
+														; && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<${_MoveToDistance}
+														;	call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
+														;if ${RI_Var_Bool_PathDebug}
+														;	echo Locking AT ME: ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance} // relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},${_MoveToDistance},1000]
 														relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},1,1000]
 														wait 5
 													}
@@ -20262,44 +20476,47 @@ function Path(... args)
 													}
 													if ${CommonTrigger.NotEqual[""]}
 													{
-														if ${CommonTrigger.Token[1,|].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}",1]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}",1]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered:${CommonTrigger.Token[2,|]}
+															echo ISXRI: Triggered:${CommonTrigger.Token[2,:]}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Exists from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Exists from ${_tempName}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Does Not Exist from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Does Not Exist from ${_tempName}
 															Trigger:Set[FALSE]
 														}
 													}
 												}
+												call RIMObj.LootChest
 												break
 											}
 											case Harvest
 											{
-												while ${Actor[Query, ID=${_ID}](exists)} && ( ${Me.CastingSpell} || ${Actor[Query, ID=${_ID}].HighlightOnMouseHover} || !${_HighlightOnMouseHover} ) && !${_Done}
+												while ${Actor[Query, ID=${_ID}](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]} && ( ${Me.CastingSpell} || ${Actor[Query, ID=${_ID}].HighlightOnMouseHover} || !${_HighlightOnMouseHover} ) && !${_Done}
 												{
+													if ${RI_Var_Bool_PathDebug}
+														echo QA: ${_QueryActor.Get[${_cnt}]}
 													if ${RI_Var_Bool_BreakPathFunction}
 													{
 														RI_Var_Bool_BreakPathFunction:Set[0]
@@ -20308,15 +20525,18 @@ function Path(... args)
 													call RIMObj.CheckCombat
 													if ${Me.FlyingUsingMount}
 														call RIMObj.FlyDown
-													relay ${RI_Var_String_RelayGroup} Actor[id,${_ID}]:DoTarget
-													wait 5
+													if ${Me.Target.ID}!=${_ID}
+													{
+														relay ${RI_Var_String_RelayGroup} Actor[id,${_ID}]:DoTarget
+														wait 5
+													}
 													relay ${RI_Var_String_RelayGroup} Actor[id,${_ID}]:DoubleClick
 													wait 5 ${Me.CastingSpell}
 													wait 50 !${Me.CastingSpell}
 													wait 2
 													;echo ${Time}: Before: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
 													;echo ${Trigger} // ${TriggerMessage}
-													wait 15
+													;wait 15
 													if ${Actor[Query, ID=${_ID}].Distance}>${_MoveToDistance}
 														call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
 													;echo ${Time}: After: ${_AmountHarvested.Get[${Math.Calc[${_count}+2]}]}
@@ -20361,34 +20581,36 @@ function Path(... args)
 													}
 													if ${CommonTrigger.NotEqual[""]}
 													{
-														if ${CommonTrigger.Token[1,|].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}",1]}
+														if ${RI_Var_Bool_PathDebug}
+															echo ${CommonTrigger} //  ${CommonTrigger.Token[1,:]} // ${CommonTrigger.Token[2,:]} // ${CommonTrigger.Token[1,:].Equal[QuestStepChecked]} // ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}",1]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}",1]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered:${CommonTrigger.Token[2,|]}
+															echo ISXRI: Triggered:${CommonTrigger.Token[2,:]}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Exists from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Exists from ${_tempName}
 															Trigger:Set[FALSE]
 														}
-														if ${CommonTrigger.Token[1,|].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+														if ${CommonTrigger.Token[1,:].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 														{
 															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-															echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Does Not Exist from ${_tempName}
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Does Not Exist from ${_tempName}
 															Trigger:Set[FALSE]
 														}
 													}
@@ -20400,7 +20622,7 @@ function Path(... args)
 									wait 25
 								}
 								wait 25
-								if ${Me.WaterDepth} >0 && ${Me.IsSwimming}
+								if ${Me.WaterDepth}>2 && ${Me.IsSwimming}
 									call SwimUp
 								if ${_IWasFlying}
 								{
@@ -20412,7 +20634,23 @@ function Path(... args)
 								}
 								if ${_StopForCombat}
 									call RIMObj.CheckCombat
-								call RIMObj.Move ${_temp} 1 0 FALSE ${_StopForCombat} TRUE FALSE
+								
+								if ${Actor[Query, ${_Query}](exists)}
+								{
+									if ${RI_Var_Bool_PathDebug}
+										echo _Interactable=${_Interactable} // ActorName=${_ActorName} // _QueryDistance=${_QueryDistance} // _MoveToDistance=${_MoveToDistance} // _Events=${_Events}
+									_ID:Set[${Actor[Query, ${_Query}].ID}]
+									if ${RI_Var_Bool_PathDebug}
+										echo \${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",${Math.Calc[${_PathLines}-(${MainArrayCounter}-${_start})]},${_goReverse}]} DMC if ( ${Actor[id,${_ID}].Distance}<=${_MoveToDistance} && ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",${Math.Calc[${_PathLines}-(${MainArrayCounter}-${_start})]},${_goReverse}]}==${MainArrayCounter} ) && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} )&& \${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]} = !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
+									if ( ${Actor[id,${_ID}].Distance}<=${_MoveToDistance} && ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${_ID}].Loc}",${Math.Calc[${_PathLines}-(${MainArrayCounter}-${_start})]},${_goReverse}]}==${MainArrayCounter} ) && ( ( ${Me.FlyingUsingMount} && (${Me.Y}<${Actor[Query, ID=${_ID}].Y} && ${Math.Distance[${Me.Y},${Actor[Query, ID=${_ID}].Y}]}<5 ) || ${Me.Y}>${Actor[Query, ID=${_ID}].Y} ) || !${Me.FlyingUsingMount} ) && !${EQ2.CheckCollision[${Me.Loc},${Actor[Query, ID=${_ID}].X},${Math.Calc[${Actor[Query, ID=${_ID}].Y}+${_YINC}]},${Actor[Query, ID=${_ID}].Z}]}
+									{
+										if ${RI_Var_Bool_PathDebug}
+											echo DontMove 
+										_DontMove:Set[1]
+									}
+									else
+										call RIMObj.Move ${_temp} 1 0 FALSE ${_StopForCombat} TRUE FALSE
+								}
 							}
 						}
 						;;need to figure out how to handle this because we dont want a lagged trigger to trigger the next queryactor, 
@@ -20458,34 +20696,34 @@ function Path(... args)
 						}
 						if ${CommonTrigger.NotEqual[""]}
 						{
-							if ${CommonTrigger.Token[1,|].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}",1]}
+							if ${CommonTrigger.Token[1,:].Equal[QuestStepChecked]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}",1]}
 							{
 								_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-								echo ISXRI: Triggered:${CommonTrigger.Token[2,|]}
+								echo ISXRI: Triggered:${CommonTrigger.Token[2,:]}
 								Trigger:Set[FALSE]
 							}
-							if ${CommonTrigger.Token[1,|].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+							if ${CommonTrigger.Token[1,:].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 							{
 								_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-								echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+								echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 								Trigger:Set[FALSE]
 							}
-							if ${CommonTrigger.Token[1,|].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,|]}"]}
+							if ${CommonTrigger.Token[1,:].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
 							{
 								_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-								echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} from ${_tempName}
+								echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
 								Trigger:Set[FALSE]
 							}
-							if ${CommonTrigger.Token[1,|].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+							if ${CommonTrigger.Token[1,:].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 							{
 								_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-								echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Exists from ${_tempName}
+								echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Exists from ${_tempName}
 								Trigger:Set[FALSE]
 							}
-							if ${CommonTrigger.Token[1,|].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,|]}"]}
+							if ${CommonTrigger.Token[1,:].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
 							{
 								_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
-								echo ISXRI: Triggered: ${CommonTrigger.Token[2,|]} Does Not Exist from ${_tempName}
+								echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Does Not Exist from ${_tempName}
 								Trigger:Set[FALSE]
 							}
 						}
@@ -20493,24 +20731,52 @@ function Path(... args)
 					else
 						_TriggeredCount:Inc
 				}
-			
-				if ( ${MainArrayCounter}>=${_endpoint} || ${MainArrayCounter}<=${_start} ) 
-				{	
-					;echo start move
-					;echo Moving: call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 1 1 0 1 1 0
-					if !${_StopForCombat}
-						call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 0 1 0 1 1 0
+				if ${_goReverse}
+				{
+					if ${istrMain.Get[${Math.Calc[${MainArrayCounter}-1]}].Token[1,|].Equal[ClickActor]} || ${istrMain.Get[${Math.Calc[${MainArrayCounter}-1]}].Token[1,|].Equal[Wait]} || ${istrMain.Get[${Math.Calc[${MainArrayCounter}-1]}].Token[1,|].Equal[Target]}
+						_KeepMoving:Set[FALSE]
 					else
-						call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 1 1 0 1 1 0
+						_KeepMoving:Set[TRUE]
 				}
 				else
 				{
-					;echo not start move
-					;echo Moving: call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0
-					if !${_StopForCombat}
-						call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 0 1 1 1 1 0
+					if ${istrMain.Get[${Math.Calc[${MainArrayCounter}+1]}].Token[1,|].Equal[ClickActor]} || ${istrMain.Get[${Math.Calc[${MainArrayCounter}+1]}].Token[1,|].Equal[Wait]} || ${istrMain.Get[${Math.Calc[${MainArrayCounter}+1]}].Token[1,|].Equal[Target]}
+						_KeepMoving:Set[FALSE]
 					else
-						call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 1 1 1 1 1 0
+						_KeepMoving:Set[TRUE]
+				}
+				;echo _KeepMoving: ${_KeepMoving}
+				if ( ${MainArrayCounter}>=${_endpoint} || ${MainArrayCounter}<=${_start} || !${_KeepMoving} ) 
+				{	
+					if ${_DontMove}
+					{
+						_DontMove:Set[0]
+					}
+					else
+					{
+						;echo start move
+						;echo Moving: call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 1 1 0 1 1 0
+						if !${_StopForCombat}
+							call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 0 1 0 1 1 0
+						else
+							call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 1 1 0 1 1 0
+					}
+				}
+				else
+				{
+					if ${_DontMove}
+					{
+						_DontMove:Set[0]
+					}
+					else
+					{
+						;echo not start move
+						;echo Moving: call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0
+						if !${_StopForCombat}
+							call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 0 1 1 1 1 0
+						else
+							call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 1 1 1 1 1 0
+					}
 				}
 				if ${_JumpAfterEachLoc} && ${MainArrayCounter}!=${_endpoint} && ${MainArrayCounter}!=${_start}
 					press ${RI_Var_String_JumpKey}
@@ -20518,9 +20784,15 @@ function Path(... args)
 			
 		}
 		if ( ${_ReversePath} && !${_goReverse} ) || ( ${_ReversePathLoopOnly} && !${_Done} && !${_goReverse} )
-			_goReverse:Set[1]
-		elseif !${_Done}
 		{
+			_goReverse:Set[1]
+			if ${RI_Var_Bool_PathDebug}
+				echo Setting _goReverse: ${_goReverse} because: ( ${_ReversePath} && !${_goReverse} ) || ( ${_ReversePathLoopOnly} && !${_Done} && !${_goReverse} )
+		}
+		elseif !${_Done} && ${_LoopPath} && !${_ReversePath} && !${_ReversePathLoopOnly}
+		{
+			if ${RI_Var_Bool_PathDebug}
+				echo NotLoop: setting MAC to ${_start}
 			_goReverse:Set[0]
 			MainArrayCounter:Set[${_start}]
 		}
@@ -22149,7 +22421,6 @@ function PathHail(int _PathLines, int _Distance, bool _Loop, bool _GoReverseAfte
 	variable string _temp
 	variable bool _IWasFlying=FALSE
 	variable bool _Done
-	
 	AnnounceText:Clear
 	IncomingText:Clear
 	IncomingText2:Clear
@@ -27360,7 +27631,7 @@ function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Re
 
 		RI_CMD_Hidden_RemoveTLO ${_InstanceName}
 	}
-	elseif ${_FP.FileExists[${_InstanceName}]}
+	elseif ${_FP.FileExists[${_InstanceName}.dat]}
 	{
 		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_InstanceName}" 0
 		wait 5
@@ -27385,7 +27656,7 @@ function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Re
 	;echo _QuestName:Set["${MainQuestName.Get[${MainQuestName.Used}]}"]
 	_QuestName:Set["${MainQuestName.Get[${MainQuestName.Used}]}"]
 
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace["\"",""].Replace[",",""].Replace[":",""]}"]
+	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 
 	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
@@ -37258,9 +37529,65 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 			if ${_CustomLoopCheck}
 				call ${_CustomLoop} ${_NamedID}
 			elseif ${_AddsCheck}
+			{
+				if ${Zone.Name.Find[Solo]}
+				{
+					if ${Me.Archetype.NotEqual[priest]} && ${RIMUIObj.Archetype[${Me.Group[1].ID}].NotEqual[priest]}
+					{
+						if ${Me.Trauma}==1 && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"].TimeUntilReady}<1
+						{
+							;echo TRAUM
+							RI_Obj_CB:Cast["Item:Cure Trauma",1]
+						}
+						elseif ${Me.Elemental}==1 && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"].TimeUntilReady}<1
+						{
+							;echo ELE
+							RI_Obj_CB:Cast["Item:Cure Elemental",1]
+						}
+						elseif ${Me.Arcane}==1 && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"].TimeUntilReady}<1
+						{
+							;echo ARC
+							RI_Obj_CB:Cast["Item:Cure Arcane",1]
+						}
+						elseif ${Me.Noxious}==1 && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"].TimeUntilReady}<1
+						{
+							;echo NOX
+							RI_Obj_CB:Cast["Item:Cure Noxious",1]
+						}
+					}
+				}
 				call RIObj.Target ${_Adds} ${_NamedID}
+			}
 			else
+			{
+				if ${Zone.Name.Find[Solo]}
+				{
+					if ${Me.Archetype.NotEqual[priest]} && ${RIMUIObj.Archetype[${Me.Group[1].ID}].NotEqual[priest]}
+					{
+						if ${Me.Trauma}==1 && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"].TimeUntilReady}<1
+						{
+							;echo TRAUM
+							RI_Obj_CB:Cast["Item:Cure Trauma",1]
+						}
+						elseif ${Me.Elemental}==1 && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"].TimeUntilReady}<1
+						{
+							;echo ELE
+							RI_Obj_CB:Cast["Item:Cure Elemental",1]
+						}
+						elseif ${Me.Arcane}==1 && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"].TimeUntilReady}<1
+						{
+							;echo ARC
+							RI_Obj_CB:Cast["Item:Cure Arcane",1]
+						}
+						elseif ${Me.Noxious}==1 && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"].TimeUntilReady}<1
+						{
+							;echo NOX
+							RI_Obj_CB:Cast["Item:Cure Noxious",1]
+						}
+					}
+				}
 				call RIObj.Target ${_NamedID}
+			}
 		}	
 		waitframe
 	}
@@ -42656,7 +42983,7 @@ function SambataFighterStoneskin()
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;; Start of RoS CODING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;; Start of RoS QUEST CODING ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -42687,44 +43014,38 @@ function RoSTSSigCustomCalming()
 		}
 		case sage
 		{
-			call Messagebox "Create the 2 items and resume"
-			;call CraftIt "" 1
-			;call CraftIt "" 1
+			call CraftIt "Calming Echo Scroll" 1
+			call CraftIt "Calming Epilogue of Sleep" 1
 			break
 		}
 		case alchemist
 		{
-			call Messagebox "Create the 2 items and resume"
-			;call CraftIt "" 1
-			;call CraftIt "" 1
+			call CraftIt "Calming Epilogue of Sleep" 1
+			call CraftIt "Calming Eucalyptus Spray" 1
 			break
 		}
 		case provisioner
 		{
-			call Messagebox "Create the 2 items and resume"
-			;call CraftIt "" 1
-			;call CraftIt "" 1
+			call CraftIt "Denmum's Calming Vulrich Drumstick" 1
+			call CraftIt "Wracked Calming Hourglass" 1
 			break
 		}
 		case carpenter
 		{
-			call Messagebox "Create the 2 items and resume"
-			;call CraftIt "" 1
-			;call CraftIt "" 1
+			call CraftIt "Calming Effigy of Quellious" 1
+			call CraftIt "Wracked Calming Hourglass" 1
 			break
 		}
 		case tailor
 		{
-			call Messagebox "Create the 2 items and resume"
-			;call CraftIt "" 1
-			;call CraftIt "" 1
+			call CraftIt "Calming Zelniak Strap of Leather" 1
+			call CraftIt "Enchanted Cloth of Calming" 1
 			break
 		}
 		case weaponsmith
 		{
-			call Messagebox "Create the 2 items and resume"
-			;call CraftIt "" 1
-			;call CraftIt "" 1
+			call CraftIt "Calming Polished Buckler" 1
+			call CraftIt "Calming Zelniak Strap of Leather" 1
 			break
 		}
 	}
@@ -42758,38 +43079,38 @@ function RoSTSSigCustomCalm(int _Stage)
 		}
 		case sage
 		{
-			Item1:Set[""]
-			Item2:Set[""]
+			Item1:Set["Calming Echo Scroll"]
+			Item2:Set["Calming Epilogue of Sleep"]
 			break
 		}
 		case alchemist
 		{
-			Item1:Set[""]
-			Item2:Set[""]
+			Item1:Set["Calming Epilogue of Sleep"]
+			Item2:Set["Calming Eucalyptus Spray"]
 			break
 		}
 		case provisioner
 		{
-			Item1:Set[""]
-			Item2:Set[""]
+			Item1:Set["Denmum's Calming Vulrich Drumstick"]
+			Item2:Set["Wracked Calming Hourglass"]
 			break
 		}
 		case carpenter
 		{
-			Item1:Set[""]
-			Item2:Set[""]
+			Item1:Set["Calming Effigy of Quellious"]
+			Item2:Set["Wracked Calming Hourglass"]
 			break
 		}
 		case weaponsmith
 		{
-			Item1:Set[""]
-			Item2:Set[""]
+			Item1:Set["Calming Polished Buckle"]
+			Item2:Set["Calming Zelniak Strap of Leather"]
 			break
 		}
 		case tailor
 		{
-			Item1:Set[""]
-			Item2:Set[""]
+			Item1:Set["Calming Zelniak Strap of Leather"]
+			Item2:Set["Enchanted Cloth of Calming"]
 			break
 		}
 	}
@@ -42805,7 +43126,7 @@ function RoSTSSigCustomCalm(int _Stage)
 			wait 2
 			Actor[id,${_ReishiID}]:DoTarget
 			wait 2
-			call UseItem ${Item1}
+			call UseItem "${Item1}"
 			wait 50
 			break
 		}
@@ -42820,9 +43141,18 @@ function RoSTSSigCustomCalm(int _Stage)
 			wait 2
 			Actor[id,${_ReishiID}]:DoTarget
 			wait 2
-			wait 600 ${Me.Inventory[${Item2}].TimeUntilReady}<1
-			wait 10
-			call UseItem ${Item2}
+			if ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+			{
+				wait 600 ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item1}"
+			}
+			else
+			{
+				wait 600 ${Me.Inventory["${Item2}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item2}"
+			}
 			wait 50
 			break
 		}
@@ -42837,9 +43167,18 @@ function RoSTSSigCustomCalm(int _Stage)
 			wait 2
 			Actor[id,${_ReishiID}]:DoTarget
 			wait 2
-			wait 600 ${Me.Inventory[${Item1}].TimeUntilReady}<1
-			wait 10
-			call UseItem ${Item1}
+			if ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+			{
+				wait 600 ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item1}"
+			}
+			else
+			{
+				wait 600 ${Me.Inventory["${Item2}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item2}"
+			}
 			wait 50
 			break
 		}
@@ -42854,9 +43193,18 @@ function RoSTSSigCustomCalm(int _Stage)
 			wait 2
 			Actor[id,${_ReishiID}]:DoTarget
 			wait 2
-			wait 600 ${Me.Inventory[${Item2}].TimeUntilReady}<1
-			wait 10
-			call UseItem ${Item2}
+			if ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+			{
+				wait 600 ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item1}"
+			}
+			else
+			{
+				wait 600 ${Me.Inventory["${Item2}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item2}"
+			}
 			wait 50
 			break
 		}
@@ -42871,9 +43219,18 @@ function RoSTSSigCustomCalm(int _Stage)
 			wait 2
 			Actor[id,${_ReishiID}]:DoTarget
 			wait 2
-			wait 600 ${Me.Inventory[${Item1}].TimeUntilReady}<1
-			wait 10
-			call UseItem ${Item1}
+			if ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+			{
+				wait 600 ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item1}"
+			}
+			else
+			{
+				wait 600 ${Me.Inventory["${Item2}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item2}"
+			}
 			wait 50
 			break
 		}
@@ -42888,9 +43245,18 @@ function RoSTSSigCustomCalm(int _Stage)
 			wait 2
 			Actor[id,${_ReishiID}]:DoTarget
 			wait 2
-			wait 600 ${Me.Inventory[${Item2}].TimeUntilReady}<1
-			wait 10
-			call UseItem ${Item2}
+			if ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+			{
+				wait 600 ${Me.Inventory["${Item1}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item1}"
+			}
+			else
+			{
+				wait 600 ${Me.Inventory["${Item2}"].TimeUntilReady}<1
+				wait 10
+				call UseItem "${Item2}"
+			}
 			wait 50
 			break
 		}
@@ -42901,12 +43267,560 @@ function RoSTSSigCustomCalm(int _Stage)
 	wait 2
 	RI_CMD_PauseCombatBots 0
 }
+function ROSSigAIICustomKaVethan()
+{
+	variable int _KAID
+	_KAID:Set[${Actor[Query, Name=-"Ka Vethan" && Distance<100].ID}]
+
+	while ${Actor[id, ${_KAID}].IsAggro}
+	{
+		Actor[id, ${_KAID}]:DoTarget
+		if ${Actor[id, ${_KAID}].Health}<=40
+			RI_Obj_CB:Cast[Item:Va Urssan,1]
+		wait 2
+	}
+}
+function BuyBaubles(string _VendorName, string _Which)
+{
+	variable int GUCnt=0
+	GUCnt:Set[0]
+	while ${RIMUIObj.InventoryQuantity["${_Which}"]}<20 && ${GUCnt:Inc}<10
+		call BuyFromVendor "${_VendorName}" "${_Which}" ${Math.Calc[20-${RIMUIObj.InventoryQuantity["${_Which}"]}].Precision[0]}
+}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;; End of RoS CODING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;; End of RoS QUEST CODING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; Start of RoS Zone CODING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;Start Echo Caverns: Quarry Quandary
+
+function Zemilox()
+{
+	call CustomNamed "Undertaker Zemilox" "134.652176,110.004822,9.788691" NONE soulsapper shade
+}
+function Needlite()
+{
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,704.013672,180.417877,283.524048]
+	call CustomNamed "The Needlite Queen-NLP" "704.013672,180.417877,283.524048" NeedliteCustom
+}
+function NeedliteCustom(int _NamedID)
+{
+	if ${Actor[id,${_NamedID}].Effect[${RIMUIObj.MainIconIDExists[${_NamedID},496]}].CurrentIncrements}>=1
+	{
+		;echo blood
+		call RIObj.Target ${_NamedID}
+		if ${Me.Class.Equal[mage]}
+		{
+			call RIObj.MageAbsorbMagic ${_NamedID}
+		}
+		elseif ${Me.Inventory[Query, Name=="a needlite bloodsac" && Location=="Inventory"].TimeUntilReady}<1
+		{
+			RI_Obj_CB:Cast["Item:a needlite bloodsac",1]
+		}
+	}
+	else
+		call RIObj.Target bloodsapper -Distance 10 ${_NamedID}
+}
+
+function Broglyn()
+{
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,67.476624,157.086945,285.814697]
+	call CustomNamed "Broglyn-NLP" "67.476624,157.086945,285.814697" BroglynCustom
+}
+function BroglynCustom(int _NamedID)
+{
+	if ${Me.Trauma}==1 && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"].TimeUntilReady}<1
+	{
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[${Me.ID}]:DoTarget
+		if ${Zone.Name.Findp[Solo]} && ${Me.Archetype.NotEqual[priest]}
+			RI_Obj_CB:Cast["Item:Cure Trauma",1]
+	}
+	call RIObj.Target bogling -Distance 10 ${_NamedID}
+}
+
+function Killmodo()
+{
+	call CustomNamed "Killmodo" "-236.855484,223.871567,50.304039" NONE tuatara
+}
+
+function Scyphodon()
+{
+	AnnounceText:Clear
+	AnnounceText:Insert["Those with a bit of sugar in their veins may soon be devoured"]
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["opens its maw"]
+	;IncomingText:Insert["lashes out at anyone"]
+	if ${Me.Inventory[Query, Name=="colossal cane" && Location=="Inventory"](exists)}
+	{
+		while !${Me.Maintained[Magic Sugar](exists)}
+		{
+			Me.Inventory[Query, Name=="colossal cane" && Location=="Inventory"]:Use
+			wait 5 ${Me.CastingSpell}
+		}
+	}
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-389.944092,176.069504,322.958282]
+	wait 300 ${Me.Distance[-389.944092,176.069504,322.958282]}<17
+	call CustomNamed "Scyphodon" "-389.944092,176.069504,322.958282" ScyphodonCustom
+}
+function ScyphodonCustom(int _NamedID)
+{
+	call RIObj.Target ${_NamedID}
+	if ${Zone.Name.Find[Solo]} && ${Me.Archetype.NotEqual[priest]}
+	{
+		if ${Me.Trauma}==1 && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"].TimeUntilReady}<1
+		{
+			;echo TRAUM
+			RI_Obj_CB:Cast["Item:Cure Trauma",1]
+		}
+		elseif ${Me.Elemental}==1 && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"].TimeUntilReady}<1
+		{
+			;echo ELE
+			RI_Obj_CB:Cast["Item:Cure Elemental",1]
+		}
+	}
+	if ${Trigger}
+	{
+		if ${TriggerMessage.Find["lashes out at anyone"]}
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-414.757477 182.114700 318.033844]
+			wait 50
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-389.944092,176.069504,322.958282]
+		}
+		else
+		{
+			while ${Me.Maintained[Magic Sugar](exists)}
+			{
+				Me.Maintained[Magic Sugar]:Cancel
+				wait 2
+			}
+		}
+		wait 50
+		
+		Trigger:Set[0]
+	}
+	if !${Me.Maintained[Magic Sugar](exists)} && !${Trigger}
+	{
+		if !${Me.Inventory[Query, Name=="colossal cane" && Location=="Inventory"](exists)}
+		{
+			variable int _CaneID
+			_CaneID:Set[${Actor[colossal cane].ID}]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_CaneID}].Loc},8,1000]
+			wait 300 ${Me.Distance[${Actor[id,${_CaneID}].Loc}]}<9
+			while ${Actor[id,${_CaneID}](exists)} && !${Me.Inventory[Query, Name=="colossal cane" && Location=="Inventory"](exists)}
+			{
+				Actor[id,${_CaneID}]:DoubleClick
+				wait 2
+			}
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-389.944092,176.069504,322.958282]
+			wait 300 ${Me.Distance[-389.944092,176.069504,322.958282]}<3
+		}
+		else
+		{
+			while !${Me.Maintained[Magic Sugar](exists)}
+			{
+				Me.Inventory[Query, Name=="colossal cane" && Location=="Inventory"]:Use
+				wait 5 ${Me.CastingSpell}
+				wait 2
+			}
+		}
+	}
+}
+
+;End Echo Caverns: Quarry Quandary
+
+;Start Echo Caverns: Fungal Foray
+
+function Construct()
+{
+	AnnounceText:Clear
+	IncomingText:Clear
+	IncomingText2:Clear
+	AnnounceText:Insert["10 meter blast around itself"]
+	IncomingText:Insert["fists become infected"]
+	call CustomNamed "Corrupted Construct-NMB" "-155.947571,56.363277,-368.294098" ConstructCustom
+}
+function ConstructCustom(int _NamedID)
+{
+	call RIObj.Target ${_NamedID}
+	if ${Trigger}
+	{
+		if ${Me.Distance[-155.947571,56.363277,-368.294098]}<5
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-185.030670,55.568680,-329.553131]
+		else
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-155.947571,56.363277,-368.294098]
+		Trigger:Set[0]
+	}
+}
+function Shadowphage()
+{
+	call CustomNamed "Shadowphage-NMB" "-263.842102,254.177261,-301.471313" NONE feedling
+}
+function Vinzerah()
+{
+	call CustomNamed "Vinzerah Ral'Moor" "-190.138702,312.685364,-315.130585" VinzerahCustom
+}
+function VinzerahCustom(int _NamedID)
+{
+	call RIObj.Target anima -Distance 15 ${_NamedID}
+	if ${Zone.Name.Find[Solo]} && ${Me.Archetype.NotEqual[priest]}
+	{
+		if ${Me.Arcane}==1 && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"].TimeUntilReady}<1
+		{
+			;echo TRAUM
+			RI_Obj_CB:Cast["Item:Cure Arcane",1]
+		}
+	}
+}
+function Zugu()
+{
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,293.872742,12.740015,-474.118561]
+	call CustomNamed "Sporefiend Zugu-NLP" "293.872742,12.740015,-474.118561" NONE bolete spore voracious
+}
+
+function Cremini()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["brings the rain"]
+	;IncomingText:Insert["You find it difficult to grasp"]
+	call CustomNamed "Fungus King Cremini" "442.845062,257.483673,-435.829193" CreminiCustom
+}
+function CreminiCustom(int _NamedID)
+{
+	call RIObj.Target royal -Distance 15 spore -Distance 15 ${_NamedID}
+	if ${Trigger}
+	{
+		Trigger:Set[0]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,452.984497,257.630127,-433.241211]
+		wait 120
+		while ${Actor[Query, Name=-"mushroom" && Distance<5].Interactable}
+		{
+			relay ${RI_Var_String_RelayGroup} Actor[mushroom]:DoubleClick
+		}
+		Trigger:Set[0]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,442.845062,257.483673,-435.829193]
+	}
+}
+
+;End Echo Caverns: Fungal Foray
+
+;Start Savage Weald: Chaotic Caverns
+
+function Bloodbath()
+{
+	call CustomNamed "Brutal Bloodbath" "-1126.007446,70.868431,-355.964355" NONE bloodpriest
+}
+
+function Spelobanzeothitem()
+{
+	call CustomNamed "The Spelobanzeothitem-NLP" "-955.619568,67.441833,-487.397614" NONE whirling speleothem grimling
+}
+ 
+function Forblarg()
+{
+	call CustomNamed "Forblarg the Foul" "-1044.432617,53.555458,-610.935181" NONE follower
+}
+
+function Morbigog()
+{
+	call CustomNamed "Morbigog" "-1022.236511,11.385015,-606.868713" NONE eruption swarmer
+}
+function Tashakhi()
+{
+	call CustomNamed "Shred of Tashakhi" "-1172.003540,70.193817,-552.239502" NONE warder
+}
+;End Savage Weald: Chaotic Caverns
+
+;Start Savage Weald: Fort Grim
+function Nacisroc()
+{
+	;05:13:41: guardian / -29.685295,41.632233,-285.720825
+	;05:13:47: guardian /  -- center
+	;05:13:52: guardian / -25.640493,41.496494,-314.312836
+	;grimling firechucker  -- white circle -- need to spewactor
+	;grimling horde  -- add
+	call CustomNamed "Ulcine Nacisroc" "-27.773952,41.063599,-297.199310" NONE disjoiner horde Ulosi
+}
+
+function Gadzuuks()
+{
+	;137.765884,51.425072,-216.954819
+	;05:25:29: guardian / 124.308205,48.747246,-225.845825  -- center
+	;111.752541,51.584370,-237.183121
+	;a grimling skullcracker --- add
+	;grimling firechucker  -- white circle -- need to spewactor
+	call CustomNamed "Chief Gadzuuks" "124.308205,48.747246,-225.845825" NONE skullcracker
+}
+
+function Felnir()
+{
+	call CustomNamed "Felnir the Shadow Prowler" "60.427582,31.790459,-284.736450" NONE wolf Pyre
+}
+
+;End Savage Weald: Fort Grim
+
+;Start Shadeweaver's Thicket: Feral Reserve
+
+function Greeneyes(string _Loc)
+{
+	call CustomNamed "Greeneyes" "${_Loc}" NONE glowbeak
+}
+
+function Hopper()
+{
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-488.126038,117.240852,-300.886322]
+	wait 300 ${Me.Distance[-488.126038,117.240852,-300.886322]}<5
+	Actor[Hopper the Blood-Drenched]:DoTarget
+	wait 300 ${Actor[Hopper the Blood-Drenched].Distance}<10
+	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-462.267029,115.578598,-350.630981]
+	wait 300 ${Me.Distance[-462.267029,115.578598,-350.630981]}<3
+	;wait 300 ${Actor[Hopper the Blood-Drenched].Distance}<10
+	call CustomNamed "Hopper the Blood-Drenched-NMB" "-462.267029,115.578598,-350.630981" HopperCustom 
+}
+function HopperCustom(int _NamedID)
+{
+	echo ${Actor[id,${_NamedID}]} // ${_NamedID} // ${Actor[id,${_NamedID}].Loc} // ${Actor[id,${_NamedID}].Effect[${RIMUIObj.MainIconIDExists[${_NamedID},496]}].CurrentIncrements}>=1
+	variable int _AqualingID
+	call RIObj.Target saurek -Distance 10 ${_NamedID}
+	if ${Actor[Query, Name=-"aqualing" && IsDead=FALSE && Distance<50](exists)} && ${Actor[id,${_NamedID}].Effect[${RIMUIObj.MainIconIDExists[${_NamedID},496]}].CurrentIncrements}>=21
+	{
+		_AqualingID:Set[${Actor[Query, Name=-"aqualing" && IsDead=FALSE && Distance<50].ID}]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_AqualingID}].Loc},1,1000]
+		while ${Me.Distance[${Actor[id,${_AqualingID}].X},${Me.Y},${Actor[id,${_AqualingID}].Z}]}>1
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_AqualingID}].Loc},1,1000]
+			waitframe
+		}
+		wait 5
+		Actor[id,${_AqualingID}]:DoTarget
+		wait 50 ${Actor[id,${_AqualingID}].IsAggro}
+		;Actor[id,${_NamedID}]:DoTarget
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_NamedID}].Loc},1,1000]
+		;wait 300 ${Actor[id,${_AqualingID}].Distance}<10
+		;Actor[id,${_AqualingID}]:DoTarget
+		while ${Actor[Query, ID==${_AqualingID} && IsDead=FALSE](exists)}
+		{
+			Actor[id,${_AqualingID}]:DoTarget
+			waitframe
+		}
+	}
+	else
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-462.267029,115.578598,-350.630981]
+		wait 300 ${Me.Distance[-462.267029,115.578598,-350.630981]}<3
+		wait 50
+	}
+}
+function Poacher()
+{
+	AnnounceText:Clear
+	AnnounceText:Insert["reveals his true persona"]
+	call CustomNamed "The Poached Poacher-NLP" "1,1,1" PoacherCustom
+}
+function PoacherCustom(int _NamedID)
+{
+	variable int _BeastID
+	_BeastID:Set[${Actor[Query, Type=="NoKill NPC"].ID}]
+	call RIObj.Target ${_NamedID}
+	if ${Trigger}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-338.378113,96.993126,44.354252]
+		wait 300 ${Me.Distance[-338.378113,96.993126,44.354252]}<3
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_BeastID}].Loc}]
+		wait 300 ${Me.Distance[${Actor[id,${_BeastID}].Loc}]}<3
+		while ${Actor[id,${_BeastID}](exists)}
+		{
+			Actor[id,${_BeastID}]:DoubleClick
+			waitframe
+		}
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-338.378113,96.993126,44.354252]
+		wait 300 ${Me.Distance[-338.378113,96.993126,44.354252]}<3
+		Trigger:Set[0]
+	}
+	else
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_NamedID}].Loc},5,1000]
+}
+function Thraxinae()
+{
+	call CustomNamed "Thraxinae" "-183.506531,-399.988312,-406.382111" NONE silkspinner hatchling
+}
+function Kovari()
+{
+	call CustomNamed "Kovari" "-548.681824,-325.703003,-326.468994" KovariCustom
+	call CustomNamed "Kovari" "-548.681824,-325.703003,-326.468994" KovariCustom
+}
+function KovariCustom(int _NamedID)
+{
+	;echo ${Actor[Query, Name=="a bestial daemon anchor" && IsDead=FALSE]} // ${Actor[Query, Name=="a bestial daemon anchor" && IsDead=FALSE](exists)} // ${Actor[Query, Name=="a bestial daemon anchor" && IsDead=FALSE].Loc}
+	variable int _AnchorID
+	call RIObj.Target deathbiter -Distance 10 ${_NamedID}
+	if ${Actor[Query, Name=="a bestial daemon anchor" && IsDead=FALSE](exists)}
+	{
+		_AnchorID:Set[${Actor[Query, Name=="a bestial daemon anchor" && IsDead=FALSE].ID}]
+		;echo ${_AnchorID}
+		;echo relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Query, ID=${_AnchorID} && IsDead=FALSE].Loc}]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Query, ID=${_AnchorID} && IsDead=FALSE].Loc},5,1000]
+		while ${Actor[Query, ID=${_AnchorID} && IsDead=FALSE](exists)}
+		{
+			;echo exists
+			Actor[Query, ID=${_AnchorID} && IsDead=FALSE]:DoTarget
+			waitframe
+		}
+		
+	}
+	else
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-548.681824,-325.703003,-326.468994]
+}
+
+;End Shadeweaver's Thicket: Feral Reserve
+
+;Start Shadeweaver's Thicket: Untamed Lands
+
+function Goretilla()
+{
+	call CustomNamed "Goretilla-NMB" "-93.493202,66.069939,-402.478912" GoretillaCustom 
+}
+function GoretillaCustom(int _NamedID)
+{
+	call RIObj.Target shadeweaver -Distance 20 silkweaver -Distance 10 ${_NamedID}
+	if ${Actor[Query, Name=="shadeweaver silk strand" && Distance<20](exists)}
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Query, Name=="shadeweaver silk strand" && Distance<20].Loc}]
+	}
+	else
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-93.493202,66.069939,-402.478912]
+	}
+}
+function Sotek()
+{
+	call CustomNamed "Sotek-NMB" "-165.159775,41.768318,-130.463211" 
+}
+function Hakka()
+{
+	call CustomNamed "Nok Hakka" "87.341187,53.831421,-145.339340" NONE
+	; Jobn Ganab
+}
+
+function Karina()
+{
+	call CustomNamed "Spiritist Karina" "${Me.Loc}" KarinaCustom
+}
+function KarinaCustom(int _NamedID)
+{
+	variable int _ShadeID
+	call RIObj.Target shade -Distance 10 ${_NamedID}
+	if ${Actor[Query, Name=="a lesser shade" && IsDead=FALSE && Distane<100](exists)}
+	{
+		_ShadeID:Set[${Actor[Query, Name=="a lesser shade" && IsDead=FALSE && Distane<100].ID}]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id,${_ShadeID}].Loc},6,1000]
+		wait 300 ${Me.Distance[${Actor[id,${_ShadeID}].X},${Me.Y},${Actor[id,${_ShadeID}].Z}]}<10
+		while ${Actor[Query, ID=${_ShadeID} && IsDead=FALSE](exists)}
+		{
+			call RIObj.Target shade -Distance 10 ${_NamedID}
+			waitframe
+		}
+		wait 30
+	}
+	else
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,177.724503,54.904110,-534.695313]
+	}
+}
+
+function Desolator()
+{
+	call CustomNamed "Desolator-NMB" "${Actor[Desolator].Loc}" DesolatorCustom
+	MainArrayCounter:Set[9999999]
+	
+	if ${Me.Distance[580.827209,16.475399,-623.062988]}<20
+	{
+		call RIMObj.Move 519.791016 16.098490 -623.997192
+	}
+	if ${Me.Distance[250.537720,18.117197,-417.524780]}<20
+	{
+		call RIMObj.Move 323.279938 21.232162 -455.559937
+	}
+	elseif ${Me.Distance[269.666260,15.071657,-333.964661]}<20
+	{
+		call RIMObj.Move 338.781982 16.041248 -351.658356
+	}
+	elseif ${Me.Distance[513.960022,16.866116,-465.377319]}<20
+	{
+		call RIMObj.Move 359.703552 17.719460 -506.263794
+	}
+	elseif ${Me.Distance[462.968109,17.340069,-385.804138]}<20
+	{
+		call RIMObj.Move 364.560547 21.121548 -455.290192
+	}
+	elseif ${Me.Distance[380.052490,15.989151,-309.745667]}<20
+	{
+		call RIMObj.Move 441.444824 15.921669 -405.880402
+		call RIMObj.Move 364.560547 21.121548 -455.290192
+	}
+	call RIMObj.Move 354.270844 17.706196 -541.197815
+}
+function DesolatorCustom(int _NamedID)
+{
+	;echo custom
+	if ${Actor[boss 5 portal - right](exists)}
+	;${Actor[id, ${_NamedID}].Distance}>50 && 
+	{
+		RIMUIObj:SetLockSpot[ALL,${Actor[boss 5 portal - right].Loc}]
+		while ${Actor[boss 5 portal - right](exists)}
+		{
+			Actor[boss 5 portal - right]:DoubleClick
+			waitframe
+		}
+		wait 5
+		RIMUIObj:SetLockSpot[ALL,${Actor[boss 5 portal - right].Loc}]
+	}
+}
+;End Shadeweaver's Thicket: Untamed Lands
+
+;Start Vex Thal: Shadow Citadel
+
+function Xiuhsiss()
+{
+	call CustomNamed "Rhag'Xiuhsiss" "85.774017,-30.630754,-214.171936"
+}
+
+function Shaaho()
+{
+	call CustomNamed "Enforcer Shaaho" "-81.514809,31.049467,-420.590668"
+}
+
+;End Vex Thal: Shadow Citadel
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;; End of RoS Zone CODING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
