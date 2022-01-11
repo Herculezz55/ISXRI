@@ -159,25 +159,41 @@ objectdef RIAutoTargetObject
 			}
 		}
 	}
-	method RadiusChange()
+	method RadiusChange(int _Radius=-1)
 	{
-		if ${UIElement[RadiusEntry@RIAutoTarget].Text.Equals["${strRadiusChange}"]}
-			return
-		strRadiusChange:Set[${UIElement[RadiusEntry@RIAutoTarget].Text}]
-		if ${UIElement[RadiusEntry@RIAutoTarget].Text.NotEqual[""]}
+		if ${_Radius}==-1
 		{
-			intRadiusChange:Set[${Int[${strRadiusChange}]}]
+			if ${UIElement[RadiusEntry@RIAutoTarget].Text.Equals["${strRadiusChange}"]}
+				return
+			strRadiusChange:Set[${UIElement[RadiusEntry@RIAutoTarget].Text}]
+			if ${UIElement[RadiusEntry@RIAutoTarget].Text.NotEqual[""]}
+			{
+				intRadiusChange:Set[${Int[${strRadiusChange}]}]
+				UIElement[RadiusEntry@RIAutoTarget]:SetText[${intRadiusChange}]
+			}
+		}
+		else
+		{
+			intRadiusChange:Set[${_Radius}]
 			UIElement[RadiusEntry@RIAutoTarget]:SetText[${intRadiusChange}]
 		}
 	}
-	method HealthChange()
+	method HealthChange(int _Health=-1)
 	{
-		if ${UIElement[HealthEntry@RIAutoTarget].Text.Equals["${strHealthChange}"]}
-			return
-		strHealthChange:Set[${UIElement[HealthEntry@RIAutoTarget].Text}]
-		if ${UIElement[HealthEntry@RIAutoTarget].Text.NotEqual[""]}
+		if ${_Health}==-1
 		{
-			intHealthChange:Set[${Int[${strHealthChange}]}]
+			if ${UIElement[HealthEntry@RIAutoTarget].Text.Equals["${strHealthChange}"]}
+				return
+			strHealthChange:Set[${UIElement[HealthEntry@RIAutoTarget].Text}]
+			if ${UIElement[HealthEntry@RIAutoTarget].Text.NotEqual[""]}
+			{
+				intHealthChange:Set[${Int[${strHealthChange}]}]
+				UIElement[HealthEntry@RIAutoTarget]:SetText[${intHealthChange}]
+			}
+		}
+		else
+		{
+			intHealthChange:Set[${_Health}]
 			UIElement[HealthEntry@RIAutoTarget]:SetText[${intHealthChange}]
 		}
 	}
@@ -192,14 +208,24 @@ objectdef RIAutoTargetObject
 			UIElement[TargetEntry@RIAutoTarget]:SetText[${Target}]
 		}
 	}
-	method AddTarget(int MinHP)
+	method AddTarget(string _Target=-1, int _MinHP=-1)
 	{
-		if ${UIElement[TargetEntry@RIAutoTarget].Text.Equal[""]}
-			return
-		if ${UIElement[HealthEntry@RIAutoTarget].Text.NotEqual[""]}
-			This:AddTargetToList[${UIElement[TargetEntry@RIAutoTarget].Text},${UIElement[HealthEntry@RIAutoTarget].Text}]
+		if ${_Target.Equal[-1]}
+		{
+			if ${UIElement[TargetEntry@RIAutoTarget].Text.Equal[""]}
+				return
+			if ${UIElement[HealthEntry@RIAutoTarget].Text.NotEqual[""]}
+				This:AddTargetToList[${UIElement[TargetEntry@RIAutoTarget].Text},${UIElement[HealthEntry@RIAutoTarget].Text}]
+			else
+				This:AddTargetToList[${UIElement[TargetEntry@RIAutoTarget].Text},0]
+		}
 		else
-			This:AddTargetToList[${UIElement[TargetEntry@RIAutoTarget].Text},0]
+		{
+			if ${_MinHP}==-1
+				This:AddTargetToList[${UIElement[TargetEntry@RIAutoTarget].Text},0]				
+			else
+				This:AddTargetToList[${UIElement[TargetEntry@RIAutoTarget].Text},${_MinHP}]
+		}
 	}
 	method AddTargetToList(string ActorName, int MinHP)
 	{

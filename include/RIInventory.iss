@@ -321,8 +321,11 @@ objectdef RIInventoryObject
 	;	}
 		for(counter:Set[1];${counter}<=${Items.Used};counter:Inc)
 		{
+			;echo ${Items.Get[${counter}]}
 			if ${Items.Get[${counter}].Token[1,|].Find["*All"]}
 				InventoryMatches:Insert[${Items.Get[${counter}]}]
+			elseif ${Items.Get[${counter}].Token[1,|].Find["Status Bounty [50"]} && ${Me.Inventory[Query, Name=="Status Bounty [50,000]" && Location=="Inventory"](exists)}
+				InventoryMatches:Insert[${Me.Inventory[Query, Name=="Status Bounty [50,000]" && Location=="Inventory"].ID}|${Items.Get[${counter}].Token[2,|]}]
 			else				
 				InventoryIndex:ForEach["execute \${If[\${ForEach.Value.Name.Equals[\${Items.Get[\${counter}].Token[1,|]}]},\"InventoryMatches:Insert[\${ForEach.Value.ID}|\${Items.Get[\${counter}].Token[2,|]}]\",noop]}"]
 		}
@@ -369,7 +372,7 @@ objectdef RIInventoryObject
 					GUCnt:Set[0]
 					
 					while ${Me.Inventory[id,${InventoryMatches.Get[${counter}].Token[1,|]}](exists)} && ${GUCnt:Inc}<10 && !${RII_Var_Bool_SkipThisItem}
-						call This.${InventoryMatches.Get[${counter}].Token[2,|]} ${InventoryMatches.Get[${counter}].Token[1,|]} ${GUCnt}
+						call This.${InventoryMatches.Get[${counter}].Token[2,|]} "${InventoryMatches.Get[${counter}].Token[1,|]}" ${GUCnt}
 					;waitframe
 				}
 			}
@@ -887,7 +890,7 @@ objectdef RIInventoryObject
 				}
 				if ${InventoryIterator.Value.IsItemInfoAvailable}
 				{
-					if ${InventoryIterator.Value.ToItemInfo.Type.NotEqual[Ranged Weapon]} && ${InventoryIterator.Value.ToItemInfo.Type.NotEqual[Weapon]} && ${InventoryIterator.Value.ToItemInfo.Type.NotEqual[Armor]} && ${InventoryIterator.Value.ToItemInfo.Type.NotEqual[Spell Scroll]}
+					if ${InventoryIterator.Value.ToItemInfo.Type.NotEqual[Shield]} && ${InventoryIterator.Value.ToItemInfo.Type.NotEqual[Ranged Weapon]} && ${InventoryIterator.Value.ToItemInfo.Type.NotEqual[Weapon]} && ${InventoryIterator.Value.ToItemInfo.Type.NotEqual[Armor]} && ${InventoryIterator.Value.ToItemInfo.Type.NotEqual[Spell Scroll]}
 					{
 						if ${Debug}
 							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be transmuted
@@ -1314,7 +1317,7 @@ objectdef RIInventoryObject
 				echo ISXRI: Selling "${Me.Inventory[id,${_ItemID}]}"
 			;return
 			;old way Me.Merchandise["${Me.Inventory[id,${_ItemID}]}"]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=="${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
-			MerchantWindow.MyInventory[${Me.Inventory[id,${_ItemID}].Name}]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=="${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
+			MerchantWindow.MyInventory["${Me.Inventory[id,${_ItemID}].Name}"]:Sell[${Me.Inventory[Query,Location=="Inventory"&&Name=="${Me.Inventory[id,${_ItemID}]}"&&${BagQuery}].Quantity}]
 		}
 		wait 10
 	}
@@ -1684,7 +1687,7 @@ objectdef RIInventoryObject
 					}
 					else
 					{
-						Items:Insert[${Iterator.Key}|${_Action}]
+						Items:Insert["${Iterator.Key}"|${_Action}]
 					}
 				}
 			}

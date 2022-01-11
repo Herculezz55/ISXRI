@@ -28,7 +28,7 @@ function main()
 		RI_Var_Int_RelayGroupSize:Set[${Me.Group}]
 		variable int count=0
 		for(count:Set[1];${count}<=${Me.Group};count:Inc)
-			GroupArray[${count}]:Set[${Me.Group[${Math.Calc[${count}-1]}]}]
+			GroupArray[${count}]:Set[${Me.Group[${Math.Calc[${count}-1]}].Name.Replace["'",""].Replace[" ",""]}]
 		variable int count2=0
 		declare temp string
 		for(count:Set[1];${count}<=${GroupArray.Size};count:Inc)

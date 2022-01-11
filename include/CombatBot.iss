@@ -208,6 +208,7 @@ variable CalcAutoAttackTimerObject CalcAutoAttackTimerObj
 variable DirgeNumberObject DirgeNumObj
 variable(global) RI_Object_CB RI_Obj_CB
 ;Variables
+variable bool MissingHOIconID=FALSE
 variable(global) string RI_Var_String_Charm_1=None
 variable(global) string RI_Var_String_Charm_2=None
 variable bool CombatBotFullDebug=FALSE
@@ -258,6 +259,7 @@ variable index:string istrExportIsGroupAbility
 variable index:string istrExportIsRaidAbility
 variable index:string istrExportIsSelfAbility
 variable index:string istrExportMaxAOETargets
+variable index:string istrExportHOIconID
 variable index:bool iboolExportFeral
 variable index:bool iboolExportSpiritual
 variable index:bool iboolExportAdvantage
@@ -431,6 +433,42 @@ atom(global) RI_Atom_CB_SetUISetting(string _SettingName, string Value)
 }
 objectdef RI_Object_CB
 {
+	member:string GetHOIconIDAbility(int _HOIconID, bool _IsReady=TRUE)
+	{
+		variable string _SpellName
+		variable string _BaseSpellName
+		variable int _ID
+		variable int _i
+		for(_i:Set[0];${_i}<=${istrExportHOIconID.Used};_i:Inc)
+		{
+			;echo ${istrExportHOIconID.Get[${_i}]}
+			;echo ${istrExportHOIconID.Get[${_i}].Equal[${_HOIconID}]} && ${Me.Ability[id,${ConvertAbilityObj.ConvertID["${ConvertAbilityObj.ConvertBaseAbilityName[${istrExport.Get[${_i}]}]}"]}].IsReady}
+			if ${istrExportHOIconID.Get[${_i}].Equal[${_HOIconID}]} && ${istrExportIsABuff.Get[${_i}].NotEqual[TRUE]} && ${Me.Ability[id,${ConvertAbilityObj.ConvertID["${ConvertAbilityObj.ConvertBaseAbilityName[${istrExport.Get[${_i}]}]}"]}].TimeUntilReady}<1 && ${Me.Ability[${ConvertAbilityObj.ConvertBaseAbilityName[${istrExport.Get[${_i}]}]}](exists)}
+			{
+				return ${ConvertAbilityObj.ConvertBaseAbilityName[${istrExport.Get[${_i}]}]}
+			}
+		}
+		return -1
+	}
+	member:bool HOIconIDExists(int _HOIconID)
+	{
+		if ${_HOIconID}==-1
+			return FALSE
+		variable string _SpellName
+		variable string _BaseSpellName
+		variable int _ID
+		variable int _i
+		for(_i:Set[0];${_i}<=${istrExportHOIconID.Used};_i:Inc)
+		{
+			;echo ${istrExportHOIconID.Get[${_i}]}
+			;echo ${istrExportHOIconID.Get[${_i}].Equal[${_HOIconID}]} && ${Me.Ability[id,${ConvertAbilityObj.ConvertID["${ConvertAbilityObj.ConvertBaseAbilityName[${istrExport.Get[${_i}]}]}"]}].IsReady}
+			if ${istrExportHOIconID.Get[${_i}].Equal[${_HOIconID}]}
+			{
+				return TRUE
+			}
+		}
+		return FALSE
+	}
 	member:string ConvertBattleGroundsName(string _Name)
 	{
 		if ${_Name.Find[Halls_of_Fate](exists)}
@@ -1064,7 +1102,8 @@ objectdef RI_Object_CB
 									{
 										_istrAbilityType:Insert[Res]
 										break
-									}		
+									}
+									case CureCurse	
 									case Cure
 									{
 										_istrAbilityType:Insert[Cure]
@@ -2804,7 +2843,7 @@ objectdef RI_Object_CB
 				{
 					UIElement[CastStackSkipAECheckBox@CastStackFrame@CombatBotUI]:Hide
 				}
-				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[3,|].Equal[Hostile]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[3,|].Equal[NamedHostile]} 
+				if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[1,|].Equal[Champion's Interception]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[3,|].Equal[Hostile]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Value.Token[3,|].Equal[NamedHostile]} 
 				{
 					UIElement[CastStackRequiresMaxIncrementsCheckBox@CastStackFrame@CombatBotUI]:Show
 					if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].SelectedItem.Text.Find["| MAX"](exists)}
@@ -4302,6 +4341,68 @@ objectdef RI_Object_CB
 						UIElement[CastStackDissonanceGreaterText@CastStackFrame@CombatBotUI]:Hide
 						UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI]:Hide
 					;}
+					return
+				}
+				if ${istrExport.Get[${ExportPosition}].Find["Champion's Interception"](exists)}
+				{	
+					if ${CombatBotCSCDebug}
+						echo ISXRI: CombatBot: IsBeneficial && IsGroupAbility // CI
+					This:ClearOptions
+					UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:ClearItems
+					
+					if ${istrExportSpellBookType.Get[${ExportPosition}].Equal[6]}
+					{
+						;echo this is an ascension ability
+						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[Hostile]
+						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[NamedHostile]
+					}
+					else
+					{
+						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[Hostile]
+						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[NamedHostile]
+						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[InCombatTargeted]
+						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[Heal]
+						UIElement[CastStackTypeComboBox@CastStackFrame@CombatBotUI]:AddItem[Power]
+					}
+					
+					UIElement[CastStackTargetComboBox@CastStackFrame@CombatBotUI]:Show
+					UIElement[CastStackTargetText@CastStackFrame@CombatBotUI]:Show
+					if ${istrExportMaxDuration.Get[${ExportPosition}]}>0
+						UIElement[CastStackSkipDurationCheckBox@CastStackFrame@CombatBotUI]:Show
+					else
+						UIElement[CastStackSkipDurationCheckBox@CastStackFrame@CombatBotUI]:Hide
+					UIElement[CastStack%Text@CastStackFrame@CombatBotUI]:Show
+					UIElement[CastStack%TextEntry@CastStackFrame@CombatBotUI]:Show
+					UIElement[CastStackRequired#Text@CastStackFrame@CombatBotUI]:Show
+					UIElement[CastStackRequired#TextEntry@CastStackFrame@CombatBotUI]:Show
+					UIElement[CastStackRequiresMaxIncrementsCheckBox@CastStackFrame@CombatBotUI]:Show
+					UIElement[CastStackSkipEncounterCheckBox@CastStackFrame@CombatBotUI]:Hide
+					UIElement[CastStackSkipAECheckBox@CastStackFrame@CombatBotUI]:Hide
+					UIElement[CastStackSkipEncounterCheckBox@CastStackFrame@CombatBotUI]:Hide
+					if ${istrExportSavageryCostPerTick.Get[${ExportPosition}]}>0
+					{
+						UIElement[CastStackSavageryText@CastStackFrame@CombatBotUI]:Show
+						UIElement[CastStackSavageryTextEntry@CastStackFrame@CombatBotUI]:Show
+					}
+					else
+					{
+						UIElement[CastStackSavageryText@CastStackFrame@CombatBotUI]:Hide
+						UIElement[CastStackSavageryTextEntry@CastStackFrame@CombatBotUI]:Hide
+					}
+					if ${istrExportDissonanceCost.Get[${ExportPosition}]}>0
+					{
+						UIElement[CastStackDissonanceLessText@CastStackFrame@CombatBotUI]:Show
+						UIElement[CastStackDissonanceLessTextEntry@CastStackFrame@CombatBotUI]:Show
+						UIElement[CastStackDissonanceGreaterText@CastStackFrame@CombatBotUI]:Show
+						UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI]:Show
+					}
+					else
+					{
+						UIElement[CastStackDissonanceLessText@CastStackFrame@CombatBotUI]:Hide
+						UIElement[CastStackDissonanceLessTextEntry@CastStackFrame@CombatBotUI]:Hide
+						UIElement[CastStackDissonanceGreaterText@CastStackFrame@CombatBotUI]:Hide
+						UIElement[CastStackDissonanceGreaterTextEntry@CastStackFrame@CombatBotUI]:Hide
+					}
 					return
 				}
 				if ${istrExport.Get[${ExportPosition}].Find["Adrenaline Boost"](exists)}
@@ -6172,7 +6273,12 @@ function main()
 	}
 	;add summon mount to abilites list box
 	;UIElement[CastStackExportAbilitiesListBox@CastStackFrame@CombatBotUI]:AddItem[Summon Mount]
-	
+	if ${MissingHOIconID}
+	{
+		MessageBox -skin eq2 -YesNo "Your current AbilityCheck for ${Me.SubClass} is missing HOIconID would you like to rerun AbilityCheck"
+		if ${UserInput.Equal[Yes]}
+			RI_AbilityCheck -RestartCB
+	}
 	while ${CombatBotStarted}
 	{
 		while ${Me.IsCamping}
@@ -6615,7 +6721,7 @@ function main()
 					}
 					elseif ${Target.Type.Equal[PC]}
 					{
-						if ${Target.Target.Type.Equal[NPC]} || ${Target.Target.Type.Equal[NamedNPC]}
+						if ${Target.Target.Type.Equal[NPC]} || ${Target.Target.Type.Equal[NamedNPC]} || ${Target.Target.Name.Equal[Scyphodon]}
 						{
 							KillTargetID:Set[${Target.Target.ID}]
 							if !${RI_Var_Bool_MoveCBImmunity}
@@ -7420,7 +7526,9 @@ function main()
 			;waitframe
 			;CombatBotDebug:Set[TRUE]
 		;}
-		;echo before casting check
+		;echo before casting check 
+		;--gonna have to test out this i think this is stoping cancel cast for group cure, may need
+		;	too just keep checking for spells tocastand check if ${Me.CastingSpell} beforesending another spelltocast
 		if ${Me.CastingSpell}
 		{
 			wait 100 !${Me.CastingSpell} || ${DoCasting}
@@ -8100,7 +8208,17 @@ atom EQ2_FinishedZoning(string TimeInSeconds)
 	}
 	if ${UIElement[SettingsAutoShareMissionsCheckBox@SettingsFrame@CombatBotUI].Checked}
 	{
-		RIMUIObj:ShareMissions["${Zone.Name}",1]
+		if ${Me.Group}==1 || ( ${Me.Group}==2 && ${Me.Group[1].Type.Equal[Mercenary]} )
+		{
+			;echo SOLO
+			noop
+		}
+		else
+		{
+			;echo ${Me.Group}<2 || ( ${Me.Group}==2 && ${Me.Group[1].Type.Equal[Mercenary]} )
+			;echo NOT SOLO
+			RIMUIObj:ShareMissions["${Zone.Name}",1]
+		}
 	}
 }
 ;atom triggered when ChoiceWindow is detected
@@ -9824,8 +9942,34 @@ objectdef CheckAbilitiesObject
 						}
 							
 					}
+					;check if its a pot
+					elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Item:]} && ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Remedy]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find["Cure "]} ) && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].NotEqual[Cure Curse]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].NotEqual[Cure Magic]}  && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].NotEqual[Cure]}
+					{
+						if ${Me.Elemental}>0 && ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Elemental Remedy]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Cure Elemental]} )
+						{
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[10,|]}
+							return TRUE
+						}
+						if ${Me.Arcane}>0 && ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Arcane Remedy]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Cure Arcane]} )
+						{
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[10,|]}
+							return TRUE
+						}
+						if ${Me.Trauma}>0 && ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Trauma Remedy]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Cure Trauma]} )
+						{
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[10,|]}
+							return TRUE
+						}
+						if ${Me.Noxious}>0 && ( ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Noxious Remedy]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Find[Cure Noxious]} )
+						{
+							call CastItem "${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Right[-5]}" ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[10,|]}
+							return TRUE
+						}
+						if ${CombatBotDebug}
+								echo Ignoring Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|]}, My Ailments are: Noxious: ${Me.Noxious} Arcane: ${Me.Arcane} Trauma: ${Me.Trauma} Elemental: ${Me.Elemental}
+					}
 					;check if the cure is cure
-					elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Equal[Cure]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Equal[Cure Magic]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Equal[Shed Skin]}
+					elseif ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Equal[Cure]} || ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|].Equal[Cure Magic]}
 					{
 						;echo we made it
 						if ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[4,|].Equal[@NotSelfGroup]}
@@ -10443,9 +10587,8 @@ objectdef CheckAbilitiesObject
 					;now
 					;check if the ability is an AE, if so check mobs, use 3 for default, -uses ui now
 					; echo AE: ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[9,|].NotEqual[TRUE]} && ${Mobs.CountAE}<3
-					if ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ( ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].NotEqual[TRUE]} || ${istrExportIsSelfAbility.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} ) && ( !${UIElement[SettingsSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || !${UIElement[SettingsInstancedSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || ${UIElement[SettingsDoNotCastAECheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text.NotEqual[FALSE]}
-					{
-						
+					if ${istrExportIsAE.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ( ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].NotEqual[TRUE]} || ${istrExportIsSelfAbility.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} ) && ( !${UIElement[SettingsSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} && !${UIElement[SettingsInstancedSkipAECheckBox@SettingsFrame@CombatBotUI].Checked} || ${UIElement[SettingsDoNotCastAECheckBox@SettingsFrame@CombatBotUI].Checked} ) && ${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text.NotEqual[FALSE]}
+					{	
 						if ${UIElement[SettingsDoNotCastAECheckBox@SettingsFrame@CombatBotUI].Checked}
 						{
 							if ${CombatBotDebug}
@@ -10458,14 +10601,14 @@ objectdef CheckAbilitiesObject
 							if ${AEcount}<${Int[${UIElement[SettingsAE#TextEntry@SettingsFrame@CombatBotUI].Text}]}
 							{
 								if ${CombatBotDebug}
-									echo Ignoring AE Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|]}, not enough mobs
+								echo Ignoring AE Ability: ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[1,|]}, not enough mobs
 								continue
 							}
 						}
 					}
 					;check if the ability is an Encounter, if so check mobs, use 3 for default, -uses ui now
 					;echo Encounter: ${istrExportIsAEncounterHostile.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[8,|].NotEqual[TRUE]} && ${Mobs.CountEncounter[${KillTargetID}]}<3
-					if ${istrExportIsAEncounterHostile.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].NotEqual[TRUE]} && ( !${UIElement[SettingsSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} || !${UIElement[SettingsInstancedSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} || ${UIElement[SettingsDoNotCastEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} )
+					if ${istrExportIsAEncounterHostile.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].Equal[TRUE]} && ${istrExportIsBeneficial.Get[${UIElement[CastStackAbiltiesListBox@CastStackFrame@CombatBotUI].OrderedItem[${mainCount}].Value.Token[2,|]}].NotEqual[TRUE]} && ( !${UIElement[SettingsSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} && !${UIElement[SettingsInstancedSkipEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} || ${UIElement[SettingsDoNotCastEncounterCheckBox@SettingsFrame@CombatBotUI].Checked} )
 					{
 						if ${UIElement[SettingsDoNotCastEncounterCheckBox@SettingsFrame@CombatBotUI].Checked}
 						{
@@ -10927,17 +11070,32 @@ atom CombatBotLoadCastStackExportAbilitiesListBoxOnce()
 
 objectdef ConvertAbilityObject
 {
+	member:string ConvertBaseAbilityName(string _Ability)
+	{
+		if ${_Ability.Right[4].Equal[XIII]} || ${_Ability.Right[1].Equal[VIII]}
+		{
+			return ${_Ability.Left[-5]}
+		}
+		elseif ${_Ability.Right[3].Equal[III]} || ${_Ability.Right[1].Equal[VII]} || ${_Ability.Right[1].Equal[XII]} || ${_Ability.Right[1].Equal[XIV]}
+		{
+			return ${_Ability.Left[-4]}
+		}
+		elseif ${_Ability.Right[2].Equal[II]} || ${_Ability.Right[1].Equal[VI]} || ${_Ability.Right[1].Equal[XI]} || ${_Ability.Right[1].Equal[IV]} || ${_Ability.Right[1].Equal[IX]} || ${_Ability.Right[1].Equal[XV]}
+		{
+			return ${_Ability.Left[-3]}
+		}
+		elseif ${_Ability.Right[1].Equal[I]} || ${_Ability.Right[1].Equal[V]} || ${_Ability.Right[1].Equal[X]}
+		{
+			return ${_Ability.Left[-2]}
+		}
+		else
+		{
+			return ${_Ability}
+		}
+	}
 	member:int Convert(string caAbilityName)
 	{
 		;echo CombatBot: Scanning for ${caAbilityName}
-		if ${caAbilityName.Equal[Septic Strike]} && ${Me.Ability[id,3181529665](exists)}
-		{
-			for(count2:Set[1];${count2}<=${istrExport.Used};count2:Inc)
-			{
-				if ${istrExport.Get[${count2}].Equal[Septic Strike II]}
-					return ${count2}
-			}
-		}
 
 		variable int intTempAbilityLength
 		variable int intTempAbilityExportLength
@@ -10952,7 +11110,71 @@ objectdef ConvertAbilityObject
 		intTempAbilityLength:Set[${caAbilityName.Length}]
 		;echo ${istrAbilities.Get[${aCACount}]} - ${intTempAbilityLength}
 		;search through istrExport for istrAbilities and grab one with largest level
-		intMaxExportAbilityLevel:Set[0]
+		intMaxExportAbilityLevel:Set[-1]
+		for(count2:Set[1];${count2}<=${istrExport.Used};count2:Inc)
+		{
+			;intTempAbilityExportLength:Set[${istrExport.Get[${count2}].Length}]
+			if ${This.ConvertBaseAbilityName[${istrExport.Get[${count2}]}].Equal[${caAbilityName}]}
+			{
+				if ${istrExportSpellBookType.Get[${count2}].Equal[6]} && ${istrExport.Get[${count2}].Right[2].Equal[II]}
+					return ${count2}
+				boolMatchFound:Set[TRUE]
+				;if ${istrExportLevel.Get[${count2}]}<1
+				;	istrExportLevel:Set[${count2}],0]
+				;echo Found Match ${count2} - ${caAbilityName} - ${istrExport.Get[${count2}]} - Level - ${istrExportLevel.Get[${count2}]}
+				intTempExportAbilityLevel:Set[${istrExportLevel.Get[${count2}]}]
+				;echo if ${intTempExportAbilityLevel}>=${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
+				if ${intTempExportAbilityLevel}>${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
+				{
+					intMaxExportAbilityLevel:Set[${intTempExportAbilityLevel}]
+					strExportAbilityMaxLevelMatchedToAbility:Set[${istrExport.Get[${count2}]}]
+					intExportAbilityPosition:Set[${count2}]
+				}
+			}
+			;waitframe
+		}
+		if ${boolMatchFound}
+		{
+			;istrAbilityExportPosition:Insert[${intExportAbilityPosition}]
+			;strDoCastID:Set[${istrExportID.Get[${intExportAbilityPosition}]}]
+			;strDoCastName:Set[${istrExport.Get[${intExportAbilityPosition}]}]
+			;echo CombatBot: Found Highest Level of ${caAbilityName} as ${strExportAbilityMaxLevelMatchedToAbility} at level ${intMaxExportAbilityLevel} with position of ${intExportAbilityPosition} which in index says ${istrExport.Get[${intExportAbilityPosition}]}
+			;boolTBCMatchFound:Set[TRUE]
+			;boolMatchFound:Set[FALSE]
+			return ${intExportAbilityPosition}
+		}
+		else
+		{
+			return 0
+		}
+		;echo CombatBot: Done Scanning Ability
+	}
+	member:int ConvertOLD(string caAbilityName)
+	{
+		;echo CombatBot: Scanning for ${caAbilityName}
+		;if ${caAbilityName.Equal[Septic Strike]} && ${Me.Ability[id,3181529665](exists)}
+		;{
+	;		for(count2:Set[1];${count2}<=${istrExport.Used};count2:Inc)
+	;		{
+	;			if ${istrExport.Get[${count2}].Equal[Septic Strike II]}
+	;				return ${count2}
+	;		}
+	;	}
+
+		variable int intTempAbilityLength
+		variable int intTempAbilityExportLength
+		variable int intTempExportAbilityLevel=0
+		variable int intMaxExportAbilityLevel=0
+		variable int intExportAbilityPosition=0
+		variable string strExportAbilityMaxLevelMatchedToAbility
+		variable bool boolMatchFound=FALSE
+		variable int count2
+		
+		;first set length of caAbilityName
+		intTempAbilityLength:Set[${caAbilityName.Length}]
+		;echo ${istrAbilities.Get[${aCACount}]} - ${intTempAbilityLength}
+		;search through istrExport for istrAbilities and grab one with largest level
+		intMaxExportAbilityLevel:Set[-1]
 		for(count2:Set[1];${count2}<=${istrExport.Used};count2:Inc)
 		{
 			intTempAbilityExportLength:Set[${istrExport.Get[${count2}].Length}]
@@ -10978,7 +11200,7 @@ objectdef ConvertAbilityObject
 				}
 				elseif ${intTempAbilityExportLength}==${Math.Calc[${intTempAbilityLength}+4]}
 				{
-					if ${istrExport.Get[${count2}].Right[3].NotEqual[III]} && ${istrExport.Get[${count2}].Right[3].NotEqual[VII]} && ${istrExport.Get[${count2}].Right[3].NotEqual[XII]}
+					if ${istrExport.Get[${count2}].Right[3].NotEqual[III]} && ${istrExport.Get[${count2}].Right[3].NotEqual[VII]} && ${istrExport.Get[${count2}].Right[3].NotEqual[XII]}  && ${istrExport.Get[${count2}].Right[3].NotEqual[XIV]}
 					{
 						if ${CombatBotDebug}
 							echo ${istrExport.Get[${count2}].Right[3]} is Not Correct Spell Ending, Continuing
@@ -11000,7 +11222,7 @@ objectdef ConvertAbilityObject
 				;echo Found Match - ${caAbilityName} - ${istrExport.Get[${count2}]} - Level - ${istrExportLevel.Get[${count2}]}
 				intTempExportAbilityLevel:Set[${istrExportLevel.Get[${count2}]}]
 				;echo if ${intTempExportAbilityLevel}>=${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
-				if ${intTempExportAbilityLevel}>=${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
+				if ${intTempExportAbilityLevel}>${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
 				{
 					intMaxExportAbilityLevel:Set[${intTempExportAbilityLevel}]
 					strExportAbilityMaxLevelMatchedToAbility:Set[${istrExport.Get[${count2}]}]
@@ -11028,8 +11250,66 @@ objectdef ConvertAbilityObject
 	member:string ConvertID(string caAbilityName)
 	{
 		;echo CombatBot: Scanning for ${caAbilityName}
-		if ${caAbilityName.Equal[Septic Strike]} && ${Me.Ability[id,3181529665](exists)}
-			return "3181529665"
+
+		variable int intTempAbilityLength
+		variable int intTempAbilityExportLength
+		variable int intTempExportAbilityLevel=0
+		variable int intMaxExportAbilityLevel=0
+		variable int intExportAbilityPosition=0
+		variable string strExportAbilityMaxLevelMatchedToAbility
+		variable bool boolMatchFound=FALSE
+		variable bool boolAscension=FALSE
+		variable int count2
+		
+		;first set length of caAbilityName
+		intTempAbilityLength:Set[${caAbilityName.Length}]
+		;echo ${istrAbilities.Get[${aCACount}]} - ${intTempAbilityLength}
+		;search through istrExport for istrAbilities and grab one with largest level
+		intMaxExportAbilityLevel:Set[-1]
+		for(count2:Set[1];${count2}<=${istrExport.Used};count2:Inc)
+		{
+			;intTempAbilityExportLength:Set[${istrExport.Get[${count2}].Length}]
+			if ${This.ConvertBaseAbilityName[${istrExport.Get[${count2}]}].Equal[${caAbilityName}]}
+			{
+				if ${istrExportSpellBookType.Get[${count2}].Equal[6]} && ${istrExport.Get[${count2}].Right[2].Equal[II]}
+					return ${istrExportID.Get[${count2}]}
+				boolMatchFound:Set[TRUE]
+				;if ${istrExportLevel.Get[${count2}]}<1
+				;	istrExportLevel:Set[${count2}],0]
+				;echo Found Match - ${caAbilityName} - ${istrExport.Get[${count2}]} - Level - ${istrExportLevel.Get[${count2}]}
+				intTempExportAbilityLevel:Set[${istrExportLevel.Get[${count2}]}]
+				;echo if ${intTempExportAbilityLevel}>=${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
+				if ${intTempExportAbilityLevel}>${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
+				{
+					intMaxExportAbilityLevel:Set[${intTempExportAbilityLevel}]
+					strExportAbilityMaxLevelMatchedToAbility:Set[${istrExport.Get[${count2}]}]
+					intExportAbilityPosition:Set[${count2}]
+				}
+			}
+			;waitframe
+		}
+		if ${boolMatchFound}
+		{
+			;istrAbilityExportPosition:Insert[${intExportAbilityPosition}]
+			;strDoCastID:Set[${istrExportID.Get[${intExportAbilityPosition}]}]
+			;strDoCastName:Set[${istrExport.Get[${intExportAbilityPosition}]}]
+			;echo CombatBot: Found Highest Level of ${caAbilityName} as ${strExportAbilityMaxLevelMatchedToAbility} at level ${intMaxExportAbilityLevel} with position of ${intExportAbilityPosition} which in index says ${istrExport.Get[${intExportAbilityPosition}]}
+			;boolTBCMatchFound:Set[TRUE]
+			;boolMatchFound:Set[FALSE]
+			;echo \${istrExportID.Get[${intExportAbilityPosition}]} // ${istrExport.Get[${intExportAbilityPosition}]} // ${istrExportID.Get[${intExportAbilityPosition}]}
+			return ${istrExportID.Get[${intExportAbilityPosition}]}
+		}
+		else
+		{
+			return 0
+		}
+		;echo CombatBot: Done Scanning Ability
+	}
+	member:string ConvertIDOLD(string caAbilityName)
+	{
+		;echo CombatBot: Scanning for ${caAbilityName}
+		;if ${caAbilityName.Equal[Septic Strike]} && ${Me.Ability[id,3181529665](exists)}
+		;	return "3181529665"
 
 		variable int intTempAbilityLength
 		variable int intTempAbilityExportLength
@@ -11044,7 +11324,7 @@ objectdef ConvertAbilityObject
 		intTempAbilityLength:Set[${caAbilityName.Length}]
 		;echo ${istrAbilities.Get[${aCACount}]} - ${intTempAbilityLength}
 		;search through istrExport for istrAbilities and grab one with largest level
-		intMaxExportAbilityLevel:Set[0]
+		intMaxExportAbilityLevel:Set[-1]
 		for(count2:Set[1];${count2}<=${istrExport.Used};count2:Inc)
 		{
 			intTempAbilityExportLength:Set[${istrExport.Get[${count2}].Length}]
@@ -11092,7 +11372,7 @@ objectdef ConvertAbilityObject
 				;echo Found Match - ${caAbilityName} - ${istrExport.Get[${count2}]} - Level - ${istrExportLevel.Get[${count2}]}
 				intTempExportAbilityLevel:Set[${istrExportLevel.Get[${count2}]}]
 				;echo if ${intTempExportAbilityLevel}>=${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
-				if ${intTempExportAbilityLevel}>=${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
+				if ${intTempExportAbilityLevel}>${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
 				{
 					intMaxExportAbilityLevel:Set[${intTempExportAbilityLevel}]
 					strExportAbilityMaxLevelMatchedToAbility:Set[${istrExport.Get[${count2}]}]
@@ -11119,6 +11399,62 @@ objectdef ConvertAbilityObject
 		;echo CombatBot: Done Scanning Ability
 	}
 	member:string ConvertName(string caAbilityName)
+	{
+		;echo CombatBot: Scanning for ${caAbilityName}
+		
+		variable int intTempAbilityLength
+		variable int intTempAbilityExportLength
+		variable int intTempExportAbilityLevel=0
+		variable int intMaxExportAbilityLevel=0
+		variable int intExportAbilityPosition=0
+		variable string strExportAbilityMaxLevelMatchedToAbility
+		variable bool boolMatchFound=FALSE
+		variable int count2
+		
+		;first set length of caAbilityName
+		intTempAbilityLength:Set[${caAbilityName.Length}]
+		;echo ${istrAbilities.Get[${aCACount}]} - ${intTempAbilityLength}
+		;search through istrExport for istrAbilities and grab one with largest level
+		intMaxExportAbilityLevel:Set[0]
+		for(count2:Set[1];${count2}<=${istrExport.Used};count2:Inc)
+		{
+			;intTempAbilityExportLength:Set[${istrExport.Get[${count2}].Length}]
+			if ${This.ConvertBaseAbilityName[${istrExport.Get[${count2}]}].Equal[${caAbilityName}]}
+			{
+				if ${istrExportSpellBookType.Get[${count2}].Equal[6]} && ${istrExport.Get[${count2}].Right[2].Equal[II]}
+					return ${istrExport.Get[${count2}]}
+				boolMatchFound:Set[TRUE]
+				;if ${istrExportLevel.Get[${count2}]}<1
+				;	istrExportLevel:Set[${count2}],0]
+				;echo Found Match - ${caAbilityName} - ${istrExport.Get[${count2}]} - Level - ${istrExportLevel.Get[${count2}]}
+				intTempExportAbilityLevel:Set[${istrExportLevel.Get[${count2}]}]
+				;echo if ${intTempExportAbilityLevel}>=${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
+				if ${intTempExportAbilityLevel}>=${intMaxExportAbilityLevel} && ${intTempExportAbilityLevel}<=${intMyLevel}
+				{
+					intMaxExportAbilityLevel:Set[${intTempExportAbilityLevel}]
+					strExportAbilityMaxLevelMatchedToAbility:Set[${istrExport.Get[${count2}]}]
+					intExportAbilityPosition:Set[${count2}]
+				}
+			}
+			;waitframe
+		}
+		if ${boolMatchFound}
+		{
+			;istrAbilityExportPosition:Insert[${intExportAbilityPosition}]
+			;strDoCastID:Set[${istrExportID.Get[${intExportAbilityPosition}]}]
+			;strDoCastName:Set[${istrExport.Get[${intExportAbilityPosition}]}]
+			;echo CombatBot: Found Highest Level of ${caAbilityName} as ${strExportAbilityMaxLevelMatchedToAbility} at level ${intMaxExportAbilityLevel} with position of ${intExportAbilityPosition} which in index says ${istrExport.Get[${intExportAbilityPosition}]}
+			;boolTBCMatchFound:Set[TRUE]
+			;boolMatchFound:Set[FALSE]
+			return ${strExportAbilityMaxLevelMatchedToAbility}
+		}
+		else
+		{
+			return 0
+		}
+		;echo CombatBot: Done Scanning Ability
+	}
+	member:string ConvertNameOLD(string caAbilityName)
 	{
 		;we need to add something to check the spell endings, II III IV etc when same level -- maybe add to abilitycheck
 		;for now lets just return septic strike II for septic strike if we have it
@@ -11677,7 +12013,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 				; break
 		; }
 		;check collision
-		if ${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[id,${CastTarget}].X},${Math.Calc[${Actor[id,${CastTarget}].Y}+1]},${Actor[id,${CastTarget}].Z}]}
+		if ${THISISBROKE} && ${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[id,${CastTarget}].X},${Math.Calc[${Actor[id,${CastTarget}].Y}+1]},${Actor[id,${CastTarget}].Z}]}
 		{
 			if ${CombatBotDebug}
 				echo Ignoring Ability: ${CastNameShort}, TargetID: ${CastTarget}, TargetName: ${Actor[id,${CastTarget}].Name} CheckCollision: ${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[id,${CastTarget}].X},${Math.Calc[${Actor[id,${CastTarget}].Y}+1]},${Actor[id,${CastTarget}].Z}]}
@@ -11712,7 +12048,7 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 				}
 				wait 2 ${Me.CastingSpell} || !${Me.Ability[id,${CastID}].IsReady}
 				;${boolInstantCast} || 
-				if ${boolBuff}
+				if ${boolBuff} || ${CastNameShort.Equal[Champion's Interception]}
 					wait 5
 				if ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal["${CastName}"]}
 					break
@@ -11783,15 +12119,15 @@ function CastAb(string CastNameShort, string CastName, string CastID, string Cas
 						eq2execute usea "${CastName}"
 					elseif ${EQ2.ServerName.Equal[Battlegrounds]}
 						;eq2execute useabilityonplayer ${RI_Obj_CB.ConvertBattleGroundsName[${Actor[id,${CastTarget}].Name}]} "${CastName}"
-						eq2execute useabilityonplayer ${RI_Obj_CB.ConvertBattleGroundsName[${Actor[id,${CastTarget}].Name}]} ${CastID}
+						eq2execute useabilityonplayer "${RI_Obj_CB.ConvertBattleGroundsName[${Actor[id,${CastTarget}].Name}]}" ${CastID}
 					else
 						;eq2execute useabilityonplayer ${Actor[id,${CastTarget}].Name} "${CastName}"
-						eq2execute useabilityonplayer ${Actor[id,${CastTarget}].Name} ${CastID}
+						eq2execute useabilityonplayer \"${Actor[id,${CastTarget}].Name}\" ${CastID}
 					eq2execute clearabilityqueue
 				}
 				wait 2 ${Me.CastingSpell} || !${Me.Ability[id,${CastID}].IsReady} || ${Me.Ability[id,${CastID}].TimeUntilReady}>0 || ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${CastName}]} )
 				;${boolInstantCast} || 
-				if ${boolBuff}
+				if ${boolBuff} || ${CastNameShort.Equal[Champion's Interception]}
 				{
 					;echo buff
 					wait 5
@@ -12733,6 +13069,7 @@ atom IterateItemEffectPairs(settingsetref Set)
 
 atom IterateExport(settingsetref Set, int ExportCount)
 {
+	variable bool _FoundHOIconID=FALSE
 	;echo Iterating Export
 	variable iterator Iterator
 	Set:GetSettingIterator[Iterator]
@@ -12744,6 +13081,10 @@ atom IterateExport(settingsetref Set, int ExportCount)
 		return
 	do
 	{
+		if ${Set.FindSetting[${Iterator.Value}].FindAttribute[HOIconID]}
+		{
+			_FoundHOIconID:Set[1]
+		}
 		exportCount:Inc
 		;first insert FALSES
 		istrExportIsRes:Insert[FALSE]
@@ -12781,6 +13122,7 @@ atom IterateExport(settingsetref Set, int ExportCount)
 		;if ${Set.FindSetting[${Iterator.Value}].FindAttribute[MaxRange]}<=0
 			;echo This Export: ${Iterator.Value} MaxRange is 0
 		istrExportMinRange:Insert[${Set.FindSetting[${Iterator.Value}].FindAttribute[MinRange]}]
+		istrExportHOIconID:Insert[${Set.FindSetting[${Iterator.Value}].FindAttribute[HOIconID]}]
 		istrExportSavageryCost:Insert[${Set.FindSetting[${Iterator.Value}].FindAttribute[SavageryCost]}]
 		istrExportSavageryCostPerTick:Insert[${Set.FindSetting[${Iterator.Value}].FindAttribute[SavageryCostPerTick]}]
 		strTemp:Set[${Set.FindSetting[${Iterator.Value}].FindAttribute[Feral]}]
@@ -12875,6 +13217,10 @@ atom IterateExport(settingsetref Set, int ExportCount)
 		;waitframe
 	}
 	while ${Iterator:Next(exists)}
+	if !${_FoundHOIconID}
+	{
+		MissingHOIconID:Set[1]
+	}
 	;echo Done Iterating Export
 }
 ;object CountSetsObject

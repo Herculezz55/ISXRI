@@ -14,6 +14,6 @@ string PiercingtheDarknessMonumentsofMythicPassage[] = {"Piercing the Darkness: 
 "1257.053345 780.579590 -1608.364746", 
 "1975.463135 480.005920 -871.170471", 
 "Custom", 
-"HailActor \"Taith McJarun\" 2", 
+"HailActor \"Taith McJarun\" 5", 
 "1988.266602 480.005920 -864.268982", 
 };

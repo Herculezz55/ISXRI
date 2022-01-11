@@ -58,36 +58,36 @@ function main()
     
     Script:DisableDebugging
 
-    GOQuest:Insert["Eliminate Venekor|Fabled"]
-    GOQuest:Insert["Retrieval for the Crown|Fabled"]
-    GOQuest:Insert["The Kra'thuk's Magical Properties|Fabled"]
-    GOQuest:Insert["The Word of Thule|Fabled"]
-    GOQuest:Insert["Save the Vision of Vox|Fabled"]
-    GOQuest:Insert["Convince the Guardians|Legendary"]
-    GOQuest:Insert["Eliminate Warlord Ix Acon|Legendary"]
-    GOQuest:Insert["Exact Revenge on the Drakota|Legendary"]
-    GOQuest:Insert["Find the Goblin Banker's Loot|Legendary"]
-    GOQuest:Insert["Find the Golden Idol of the Drafling|Legendary"]
-    GOQuest:Insert["Liberate Lady Laravale|Legendary"]
-    GOQuest:Insert["Reacquire the Idol of Solusek Ro|Legendary"]
-    GOQuest:Insert["Recover the Stolen Scrolls|Legendary"]
-    GOQuest:Insert["Save Orxilia Calogn|Legendary"]
-    GOQuest:Insert["Save the Valkyrie Princess|Legendary"]
-    GOQuest:Insert["The Throne of Emperor Fyst|Legendary"]
-    GOQuest:Insert["A Dark Ceremony|Treasured"]
-    GOQuest:Insert["Captured in Bramble Woods|Treasured"]
-    GOQuest:Insert["Eliminate Klirkan X'Davai|Treasured"]
-    GOQuest:Insert["Eliminate the Gang Lord|Treasured"]
-    GOQuest:Insert["Keeper for the Keep|Treasured"]
-    GOQuest:Insert["Lord Sellwin's Locket|Treasured"]
-    GOQuest:Insert["Rescue Captain Wilcox|Treasured"]
-    GOQuest:Insert["Rob the Fool's Gold Tavern|Treasured"]
-    GOQuest:Insert["Save Lira Singebellows|Treasured"]
-    GOQuest:Insert["Slay the Evol Ew Chieftan|Treasured"]
-    GOQuest:Insert["The Thexian Wizard's Wand|Treasured"]
-    GOQuest:Insert["Thexian Treasure|Treasured"]
-    GOQuest:Insert["Treasure in Shortwine Burrow|Treasured"]
-    GOQuest:Insert["Valuable Runes in a Dirty Place|Treasured"]
+    GOQuest:Insert["Eliminate Venekor|Fabled|1"]
+    GOQuest:Insert["Retrieval for the Crown|Fabled|1"]
+    GOQuest:Insert["The Kra'thuk's Magical Properties|Fabled|1"]
+    GOQuest:Insert["The Word of Thule|Fabled|1"]
+    GOQuest:Insert["Save the Vision of Vox|Fabled|1"]
+    GOQuest:Insert["Convince the Guardians|Legendary|1"]
+    GOQuest:Insert["Eliminate Warlord Ix Acon|Legendary|1"]
+    GOQuest:Insert["Exact Revenge on the Drakota|Legendary|1"]
+    GOQuest:Insert["Find the Goblin Banker's Loot|Legendary|1"]
+    GOQuest:Insert["Find the Golden Idol of the Drafling|Legendary|1"]
+    GOQuest:Insert["Liberate Lady Laravale|Legendary|1"]
+    GOQuest:Insert["Reacquire the Idol of Solusek Ro|Legendary|1"]
+    GOQuest:Insert["Recover the Stolen Scrolls|Legendary|1"]
+    GOQuest:Insert["Save Orxilia Calogn|Legendary|1"]
+    GOQuest:Insert["Save the Valkyrie Princess|Legendary|1"]
+    GOQuest:Insert["The Throne of Emperor Fyst|Legendary|1"]
+    GOQuest:Insert["A Dark Ceremony|Treasured|1"]
+    GOQuest:Insert["Captured in Bramble Woods|Treasured|1"]
+    GOQuest:Insert["Eliminate Klirkan X'Davai|Treasured|1"]
+    GOQuest:Insert["Eliminate the Gang Lord|Treasured|1"]
+    GOQuest:Insert["Keeper for the Keep|Treasured|1"]
+    GOQuest:Insert["Lord Sellwin's Locket|Treasured|1"]
+    GOQuest:Insert["Rescue Captain Wilcox|Treasured|1"]
+    GOQuest:Insert["Rob the Fool's Gold Tavern|Treasured|1"]
+    GOQuest:Insert["Save Lira Singebellows|Treasured|1"]
+    GOQuest:Insert["Slay the Evol Ew Chieftan|Treasured|1"]
+    GOQuest:Insert["The Thexian Wizard's Wand|Treasured|1"]
+    GOQuest:Insert["Thexian Treasure|Treasured|1"]
+    GOQuest:Insert["Treasure in Shortwine Burrow|Treasured|1"]
+    GOQuest:Insert["Valuable Runes in a Dirty Place|Treasured|1"]
 
 
 
@@ -124,6 +124,37 @@ function main()
 
     ;Season 2
 
+
+    GOQuest:Insert["Ancient Spices|Treasured|2"]
+    GOQuest:Insert["Eliminate Harbinger Siyuth|Treasured|2"]
+    GOQuest:Insert["Eliminate Herald Zydul|Treasured|2"]
+    GOQuest:Insert["Eliminate Lady Samiel|Treasured|2"]
+    GOQuest:Insert["Pilfer Tan'ke Rei's Golden Cap|Treasured|2"]
+    GOQuest:Insert["Raja the Sunspeaker's Staff|Treasured|2"]
+    GOQuest:Insert["Rescue Dolloran Arkur from Azhahkar the Gatecaller|Treasured|2"]
+    GOQuest:Insert["Rescue Lady Mirolyn from Gorakhul the Annihilator|Treasured|2"]
+    GOQuest:Insert["Save Lord Pardun from Queen Marrowjaw|Treasured|2"]
+    GOQuest:Insert["Steal Yinderis the Snake Charmer's Jeweled Pipe|Treasured|2"]
+    GOQuest:Insert["The Golden Trowel|Treasured|2"]
+    GOQuest:Insert["The Jeweled Fez|Treasured|2"]
+    GOQuest:Insert["Eliminate Blademaster Thul|Legendary|2"]
+    GOQuest:Insert["Eliminate Meathooks|Legendary|2"]
+    GOQuest:Insert["Pirate Strongbox|Legendary|2"]
+    GOQuest:Insert["Rescue Gumbolt Triggerhand|Legendary|2"]
+    GOQuest:Insert["Save Joana Larr|Legendary|2"]
+    GOQuest:Insert["Save Milo Brownfoot|Legendary|2"]
+    GOQuest:Insert["Shield of Cazel the Mad|Legendary|2"]
+    GOQuest:Insert["The Blackened Scepter|Legendary|2"]
+    GOQuest:Insert["The Broken Lord's Crown|Legendary|2"]
+    GOQuest:Insert["The Golden Tablet|Legendary|2"]
+    GOQuest:Insert["The Priceless Time Monocle|Legendary|2"]
+    GOQuest:Insert["Eliminate Ahk'Mun Rhoen|Fabled|2"]
+    GOQuest:Insert["The Scepter of Life|Fabled|2"]
+    GOQuest:Insert["Retrieve the Golden Scale|Fabled|2"]
+    GOQuest:Insert["Save Xideus Yoatiak|Fabled|2"]
+    GOQuest:Insert["The Platinum Eye|Fabled|2"]
+    GOQuest:Insert["Eliminate the Djinn Master|Celestial|2"]
+    GOQuest:Insert["Ewer of Sul'Dae|Celestial|2"]
 
     Quest:Insert["Ancient Spices|1:30:00|10%|5%|1|Vigilant:Noble|Shrewd|Treasured"]
     Quest:Insert["Eliminate Harbinger Siyuth|1:00:00|5%|5%|1|Strong:Unpredictable|Sly|Treasured"]
@@ -171,6 +202,58 @@ function main()
     Quest:Insert["Scimitar to the Head|4:00:00|5%|10%|1-2|Agile:Sly|Unpredictable|Mishap"]
     Quest:Insert["Wounded by Harpies|6:00:00|5%|5%|1-2|Wise:Agile|Shrewd|Mishap"]
     
+    ;Season 3
+    ;Treasured
+    Quest:Insert["Eliminate Konarr the Despoiler|1:30:00|10%|5%|1|Daring:Stalwart|Impatient|Treasured"]
+    Quest:Insert["Eliminate the Vornerus Tyrant |2:00:00|15%|10%|1|Corrupt|Adventurous|Treasured"]
+    Quest:Insert["Eliminate Queen Bazzt Bzzt the 200th|1:00:00|5%|5%|1|Daring:Inquisitive|Adventurous|Treasured"]
+    Quest:Insert["Pilfer the Beguiler's Gemmed Robe|1:30:00|10%|5%|1|Impatient:Inquisitive|Daring|Treasured"]
+    Quest:Insert["Rescue Constance Cloudpuff from Skymarshal Stormfeather|1:30:00|10%|5%|1|Adventurous:Impatient|Stalwart|Treasured"]
+    Quest:Insert["Rescue Gimdimble Fizzwoddle from the Ravaging Maw|2:00:00|15%|10%|1|Impatient|Corrupt|Treasured"]
+    Quest:Insert["Save Jabber Longwind from The Brood Matron|1:00:00|5%|5%|1|Noble:Tough|Adventurous|Treasured"]
+    Quest:Insert["Steal the Reformation Trinket|1:00:00|5%|5%|1|Daring:Shrewd|Unpredictable|Treasured"]
+    Quest:Insert["Steal the Balefire Blade|2:00:00|15%|10%|1|Stalwart|Inquisitive|Treasured"]
+    Quest:Insert["The Drained Soul Husk|2:00:00|15%|10%|1|Stalwart|Impatient|Treasured"]
+    Quest:Insert["The Emblem of the Lost Gods|1:30:00|10%|5%|1|Cunning:Inquisitive|Honest|Treasured"]
+    Quest:Insert["The Gloompall Gewgaw|1:30:00|10%|5%|1|Stalwart:Unpredictable|Corrupt|Treasured"]
+    ;Legendary
+    Quest:Insert["Eliminate Oracle Tuunza|3:30:00|15%|10%|2|Adventurous:Cautious:Courageous|Devoted:Unpredictable|Legendary"]
+    Quest:Insert["Eliminate the Enmity of Naar'Yora|5:00:00|20%|20%|2|Courageous:Persuasive|Agile:Shrewd|Legendary"]
+    Quest:Insert["Rescue Raluvh|5:00:00|20%|20%|2|Corrupt:Unflappable|Stalwart:Courageous|Legendary"]
+    Quest:Insert["Save Gribbly the Gallant|2:30:00|10%|5%|2|Adventurous:Corrupt:Shrewd:Unpredictable|Tough:Wise|Legendary"]
+    Quest:Insert["Save Turadramin|3:30:00|15%|10%|2|Courageous:Stalwart:Noble|Daring:Adventurous|Legendary"]
+    Quest:Insert["The Crown of X'haviz|2:30:00|10%|5%|2|Daring:Inquisitive:Sly:Stalwart|Impatient:Corrupt|Legendary"]
+    Quest:Insert["The Queen's Trove|2:30:00|10%|5%|2|Agile:Daring:Focused:Sly|Adventurous:Noble|Legendary"]
+    Quest:Insert["The Splitscar Bow|5:00:00|20%|20%|2|Charming:Honest|Corrupt:Daring|Legendary"]
+    Quest:Insert["The Vaults of El'Arad|3:30:00|15%|10%|2|Courageous:Impatient:Unpredictable|Cunning:Strong|Legendary"]
+    Quest:Insert["The Wand of Oblivion|5:00:00|20%|20%|2|Impatient:Manipulative|Inquisitive:Stalwart|Legendary"]
+    Quest:Insert["Treasure in the Halls|5:00:00|20%|20%|2|Stalwart:Righteous|Devoted:Lucky|Legendary"]
+    ;Fabled
+    Quest:Insert["Eliminate Pantrilla|10:00:00|20%|30%|3|Cunning:Daring:Shrewd:Unpredictable:Dexterous|Tough:Sly|Fabled"]
+    Quest:Insert["Gaudralek, Sword of the Sky|10:00:00|20%|30%|3|Persuasive:Unpredictable:Inquisitive:Adventurous:Compassionate|Shrewd:Tough|Fabled"]
+    Quest:Insert["Retrieve the Silver Sword of Rage|10:00:00|20%|30%|3|Adventurous:Diplomatic:Honest:Inquisitive:Lucky|Daring:Unpredictable|Fabled"]
+    Quest:Insert["Save Karnos Van Kellin|10:00:00|20%|30%|3|Adventurous:Corrupt:Daring:Manipulative:Shrewd|Noble:Wise|Fabled"]
+    Quest:Insert["Shield of the White Dragon|10:00:00|20%|30%|3|Adventurous:Courageous:Inquisitive:Stalwart:Strong|Noble:Wise|Fabled"]
+    ;Celestial
+    Quest:Insert["The Blood Ember Breastplate|30:00:00|30%|30%|4|Compassionate:Dexterous:Righteous:Devoted:Inquisitive|Agile:Persuasive:Intelligent|Celestial"]
+    Quest:Insert["The Boots of Terror|15:00:00|25%|30%|3|Charming:Dexterous:Focused:Noble:Wise|Daring:Stalwart|Celestial"]
+    Quest:Insert["Eliminate Vilucidae the Priest of Thule|15:00:00|25%|30%|3|Courageous:Diplomatic:Impatient:Sly:Tough|Honest:Inquisitive|Celestial"]
+    Quest:Insert["Save Fitzpitzle|30:00:00|30%|30%|4|Diplomatic:Intelligent:Manipulative:Corrupt:Shrewd|Unflappable:Devoted|Celestial"]
+    Quest:Insert["Tarinax's Head|30:00:00|30%|30%|4|Compassionate:Courageous:Daring:Unflappable:Vigilant|Impatient:Manipulative:Shrewd|Celestial"]
+    ;Mishap
+    Quest:Insert["Bitten by Dryland Hyena|6:00:00|5%|5%|1|Adventurous:Unpredictable|Inquisitive|Mishap"]
+    Quest:Insert["Captured by Blacktalons|6:00:00|5%|5%|1|Sly:Strong|Daring|Mishap"]
+    Quest:Insert["Captured by Droags|4:00:00|5%|10%|1|Adventurous:Lucky|Daring|Mishap"]
+    Quest:Insert["Captured by Doomwings|6:00:00|5%|10%|1|Inquisitive:Unpredictable|Adventurous|Mishap"]
+    Quest:Insert["Captured by Ravasects|6:00:00|5%|5%|1|Agile:Daring|Adventurous|Mishap"]
+    Quest:Insert["Captured by Strifewings|6:00:00|5%|5%|1|Adventurous:Shrewd|Inquisitive|Mishap"]
+    Quest:Insert["Fallen From Great Heights|6:00:00|5%|5%|1|Noble:Wise|Unpredictable|Mishap"]
+    Quest:Insert["Wounded by Drakes|6:00:00|5%|5%|1|Daring:Lucky|Inquisitive|Mishap"]
+    Quest:Insert["Attacked by Fetid Horrors|6:00:00|5%|5%|1|Daring:Inquisitive|Tough|Mishap"]
+    Quest:Insert["Talons to the Face|6:00:00|5%|5%|1|Tough:Wise|Daring|Mishap"]
+    
+
+
    ;Season 1
     ;Treasured
     Agent:Insert["Bladimir Black|"]
@@ -243,6 +326,45 @@ function main()
     Agent:Insert["Ugar Malshadow, Guardian of the Blades|Dexterous:Persuasive"]
     Agent:Insert["Yalno Accelerato, the Dark Star|Impatient:Righteous"]
 
+    ;Season 3
+    ;Celestial
+    Agent:Insert["Commander Aurabelle Shay, the Eidolon of Marr|Noble:Unflappable"]
+    Agent:Insert["Doxah Eucalia, Champion of the Worthy|Compassionate:Devoted"]
+    Agent:Insert["Lokud Sal'Vara|Impatient:Righteous"]
+    Agent:Insert["Skyking Molad|Courageous:Stalwart"]
+    ;Fabled
+    Agent:Insert["Carnelia Cloudmoon|Adventurous:Persuasive"]
+    Agent:Insert["Edris Thibadou|Cunning:Inquisitive"]
+    Agent:Insert["Emilia Tailor|Adventurous:Cautious"]
+    Agent:Insert["Ilbryen Iarxisys|Inquisitive:Stalwart"]
+    Agent:Insert["Skylord Stormtalon|Honest:Unpredictable"]
+    Agent:Insert["Zophaa Gaza|Daring:Focused"]
+    ;Legendary
+    Agent:Insert["Captain Tim Blair|Daring"]
+    Agent:Insert["Eimi Brightbulb|Inquisitive"]
+    Agent:Insert["Ganor Uryis|Adventurous"]
+    Agent:Insert["Grim Stormshield |Tough"]
+    Agent:Insert["Lark Goldfeather|Strong"]
+    Agent:Insert["Mephis Umbrage|Shrewd"]
+    Agent:Insert["Sal Harid|Unpredictable"]
+    Agent:Insert["Walaric Bunce|Shrewd"]
+    ;Treasured
+    Agent:Insert["Akozag Gaank|"]
+    Agent:Insert["Childebert Bottomhill|"]
+    Agent:Insert["Dalarn Darkmana|"]
+    Agent:Insert["Dirron Emberblood|"]
+    Agent:Insert["Elmo Elmstaff|"]
+    Agent:Insert["Gosunbert Fritzbang|"]
+    Agent:Insert["Glark Bloodtalon|"]
+    Agent:Insert["Guthrie Arlond|"]
+    Agent:Insert["Master Bristles|"]
+    Agent:Insert["Master Jennifer Brightsteel|"]
+    Agent:Insert["Mirah Strong|"]
+    Agent:Insert["Qourn Broadgrog|"]
+    Agent:Insert["Stella Vel'Raza|"]
+    Agent:Insert["Thuskis of Alivan|"]
+
+
     declare count int
 	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/"
 	FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/RIOverseer"]
@@ -270,17 +392,28 @@ function main()
 	if !${FP.FileExists[RIO.xml]}
 	{
 		if ${RI_Var_Bool_Debug}
-			echo ${Time}: Getting RI.XML
+			echo ${Time}: Getting RIO.XML
 		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIO.xml" http://www.isxri.com/RIO.xml
 		wait 50
 	}
-    
+    if !${FP.FileExists[RIOg.xml]}
+	{
+		if ${RI_Var_Bool_Debug}
+			echo ${Time}: Getting RIOg.XML
+		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIOg.xml" http://www.isxri.com/RIOg.xml
+		wait 50
+	}
     ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIO.xml"
-
-    RIOverseerObj:LoadSave
+    ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIOg.xml"
 
     UIElement[RIOverseer]:Hide
+    UIElement[RIOverseerGQ]:Hide
+
+    call RunChecks
+
+    RIOverseerObj:PopulateGQ[2]
+    RIOverseerObj:LoadSave
 
     Event[EQ2_onRewardWindowAppeared]:AttachAtom[EQ2_onRewardWindowAppeared]
     
@@ -293,8 +426,6 @@ function main()
     declarevariable _completecnt int 0
     variable string MAg
     variable int _notraitcnt=1
-
-    call RunChecks
 
     MyName:Set["${Me.Name}"]
 
@@ -790,6 +921,13 @@ function BuyFromVendor(string _VendorName, string _Item, int _Qty)
 }
 function GO()
 {
+    echo ISXRI: Overseer, Running Get Charged Quests
+    if ${UIElement[AddedQuestsListbox@RIOverseerGQ].Items}<1
+    {
+        RIConsole:Echo["You must select quests before we go and get them. Gont forget after adding quests to the Added Quests list to Save either as Toon or Default on the main RI Overseer UI Window"]
+        MessageBox -skin eq2 "You must select quests before we go and get them. Gont forget after adding quests to the Added Quests list to Save either as Toon or Default on the main RI Overseer UI Window"
+        return
+    }
     if ${Zone.Name.Find["Qeynos Province District"]} && ${Me.Distance[972.459473,-25.561602,90.370720]}<20
     {
         call RIMObj.Move 972.459473 -25.561602 90.370720
@@ -861,25 +999,43 @@ function GO()
     variable int _ChargedQuestCount
     variable int _ChargedQuestCounter=0
     _ChargedQuestCount:Set[${Math.Calc[10-${GOChargedCnt.Used}]}]
-    for(_i:Set[1];${_i}<=${GOQuest.Used};_i:Inc)
+    ;for(_i:Set[1];${_i}<=${GOQuest.Used};_i:Inc)
+    ;{
+    ;    if ${GOQuest.Get[${_i}].Token[2,|].Equal[Treasured]} && !${UIElement[GetTreasuredCheckBox@RIOverseer].Checked}
+    ;        continue
+    ;    if ${GOQuest.Get[${_i}].Token[2,|].Equal[Legendary]} && !${UIElement[GetLegendaryCheckBox@RIOverseer].Checked}
+    ;        continue
+    ;    if ${GOQuest.Get[${_i}].Token[2,|].Equal[Fabled]} && !${UIElement[GetFabledCheckBox@RIOverseer].Checked}
+    ;        continue
+    ;    _ChargedCount:Set[${RIOverseerObj.ChargedBuyCount["${GOQuest.Get[${_i}].Token[1,|]}"]}]
+    ;    if ${_ChargedQuestCounter}>=${_ChargedQuestCount} && !${RIOverseerObj.ChargedQuestExists["${GOQuest.Get[${_i}].Token[1,|]}"]}
+    ;    {
+    ;        echo ISXRI: Skipping Buying "${GOQuest.Get[${_i}].Token[1,|]}" because we are at 10 charged quests !${RIOverseerObj.ChargedQuestExists["${GOQuest.Get[${_i}].Token[1,|]}"]}
+    ;        continue
+    ;    }
+    ;    if ${MerchantWindow.MerchantInventory["${GOQuest.Get[${_i}].Token[1,|]}"](exists)} && ${_ChargedCount}>0
+    ;    {
+    ;        echo ISXRI: Buying and Consuming ${_ChargedCount} "${GOQuest.Get[${_i}].Token[1,|]}"
+    ;        call BuyAndConsume "${GOQuest.Get[${_i}].Token[1,|]}" ${RIOverseerObj.ChargedBuyCount["${GOQuest.Get[${_i}].Token[1,|]}"]}
+    ;        if !${RIOverseerObj.ChargedQuestExists["${GOQuest.Get[${_i}].Token[1,|]}"]}
+    ;            _ChargedQuestCounter:Inc
+    ;    }
+    ;}
+    ;${UIElement[AddedQuestsListbox@RIOverseerGQ]
+    for(_i:Set[1];${_i}<=${UIElement[AddedQuestsListbox@RIOverseerGQ].Items};_i:Inc)
     {
-        if ${GOQuest.Get[${_i}].Token[2,|].Equal[Treasured]} && !${UIElement[GetTreasuredCheckBox@RIOverseer].Checked}
-            continue
-        if ${GOQuest.Get[${_i}].Token[2,|].Equal[Legendary]} && !${UIElement[GetLegendaryCheckBox@RIOverseer].Checked}
-            continue
-        if ${GOQuest.Get[${_i}].Token[2,|].Equal[Fabled]} && !${UIElement[GetFabledCheckBox@RIOverseer].Checked}
-            continue
-        _ChargedCount:Set[${RIOverseerObj.ChargedBuyCount["${GOQuest.Get[${_i}].Token[1,|]}"]}]
-        if ${_ChargedQuestCounter}>=${_ChargedQuestCount} && !${RIOverseerObj.ChargedQuestExists["${GOQuest.Get[${_i}].Token[1,|]}"]}
+        ;echo ${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}
+        _ChargedCount:Set[${RIOverseerObj.ChargedBuyCount["${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}"]}]
+        if ${_ChargedQuestCounter}>=${_ChargedQuestCount} && !${RIOverseerObj.ChargedQuestExists["${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}"]}
         {
-            echo ISXRI: Skipping Buying "${GOQuest.Get[${_i}].Token[1,|]}" because we are at 10 charged quests !${RIOverseerObj.ChargedQuestExists["${GOQuest.Get[${_i}].Token[1,|]}"]}
+            echo ISXRI: Skipping Buying "${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}" because we are at 10 charged quests !${RIOverseerObj.ChargedQuestExists["${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}"]}
             continue
         }
-        if ${MerchantWindow.MerchantInventory["${GOQuest.Get[${_i}].Token[1,|]}"](exists)} && ${_ChargedCount}>0
+        if ${MerchantWindow.MerchantInventory["${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}"](exists)} && ${_ChargedCount}>0
         {
-            echo ISXRI: Buying and Consuming ${_ChargedCount} "${GOQuest.Get[${_i}].Token[1,|]}"
-            call BuyAndConsume "${GOQuest.Get[${_i}].Token[1,|]}" ${RIOverseerObj.ChargedBuyCount["${GOQuest.Get[${_i}].Token[1,|]}"]}
-            if !${RIOverseerObj.ChargedQuestExists["${GOQuest.Get[${_i}].Token[1,|]}"]}
+            echo ISXRI: Buying and Consuming ${_ChargedCount} "${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}"
+            call BuyAndConsume "${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}" ${RIOverseerObj.ChargedBuyCount["${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}"]}
+            if !${RIOverseerObj.ChargedQuestExists["${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}"]}
                 _ChargedQuestCounter:Inc
         }
     }
@@ -950,7 +1106,7 @@ function RefreshQuests()
     {
         EQ2UIPage[MainHUD,Minions].Child[Page,AdventuresTabPage].Child[3].Child[2]:ScrollUp
         _scrollcount:Inc
-        if ${_scrollcount}==5
+        if ${_scrollcount}==3
         {
             _scrollcount:Set[0]
             waitframe
@@ -961,7 +1117,7 @@ function RefreshQuests()
     {
         EQ2UIPage[MainHUD,Minions].Child[Page,AdventuresTabPage].Child[3].Child[2]:ScrollDown
         _scrollcount:Inc
-        if ${_scrollcount}==5
+        if ${_scrollcount}==3
         {
             _scrollcount:Set[0]
             waitframe
@@ -981,7 +1137,7 @@ function RefreshQuests()
         _QuestName:Set["${_quest.ReplaceSubstring[" [Charged]",""]}"]
         if !${RIOverseerObj.QuestExists["${_QuestName}"]}
         {
-            echo ISXRI: Quest: ${_QuestName} does not appear to be in our DB, please report to Herculezz or THG immediately
+            echo ISXRI: Quest: "${_QuestName}" does not appear to be in our DB, please report to Herculezz or THG immediately
             continue
         }
         _quest:Concat["|${i}"]
@@ -1019,7 +1175,7 @@ function RefreshQuests()
         _quest:Concat["|${RIOverseerObj.QuestMaxAgents["${_QuestName}"]}"]
         ;"${RIOverseerObj.QuestGoodTraits["${_tempQuestName}"]}","${RIOverseerObj.QuestBadTraits["${_tempQuestName}"]}","${RIOverseerObj.QuestMaxAgents["${_tempQuestName}"]}
         ;${RIOverseerObj.QuestTier["${_QuestName}"]}
-        ;waitframe
+        waitframe
         Quests:Insert["${_quest}"]
     }
     ;now check the quests, and add Ready Quests to our index and sort by token also run Heritage Daily first if ready
@@ -1070,9 +1226,9 @@ function RefreshQuests()
                 {
                     if ${AgentsNoTraitsReady.Used}<${Math.Calc[${Int[${Quests.Get[${i}].Token[9,|]}]}-${Math.Calc[${MAg.Count[:]}+1]}]}
                         continue
-                    echo MAg: ${MAg}
+                    ;echo MAg: ${MAg}
                     MAg:Set["${MAg.Left[-2]}"]
-                    echo MAg: ${MAg}
+                    ;echo MAg: ${MAg}
                     ;need to add notrait agents to get to minimum
                     variable int _matchedagentsmishap=0
                     _matchedagentsmishap:Set[${MAg.Token[2,|]}]
@@ -1189,7 +1345,7 @@ function RefreshAgents()
     {
         EQ2UIPage[MainHUD,Minions].Child[Page,MinionList].Child[3].Child[2]:ScrollUp
         _scrollcount:Inc
-        if ${_scrollcount}==5
+        if ${_scrollcount}==3
         {
             _scrollcount:Set[0]
             waitframe
@@ -1200,7 +1356,7 @@ function RefreshAgents()
     {
         EQ2UIPage[MainHUD,Minions].Child[Page,MinionList].Child[3].Child[2]:ScrollDown
         _scrollcount:Inc
-        if ${_scrollcount}==5
+        if ${_scrollcount}==3
         {
             _scrollcount:Set[0]
             waitframe
@@ -1341,11 +1497,77 @@ objectdef OverseerObj
             }
         }
     }
+    method AddedQuestsListboxRightClick()
+    {
+        if ${UIElement[AddedQuestsListbox@RIOverseerGQ].SelectedItem(exists)}
+		{
+            UIElement[AddedQuestsListbox@RIOverseerGQ]:RemoveItem[${UIElement[AddedQuestsListbox@RIOverseerGQ].SelectedItem.ID}]
+        }
+    }
+    method QuestsListboxClick()
+    {
+        ;echo ${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Text} // ${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Value}
+        if ${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem(exists)}
+		{
+            variable int i=0
+			for(i:Set[1];${i}<=${UIElement[AddedQuestsListbox@RIOverseerGQ].Items};i:Inc)
+			{
+				if ${UIElement[AddedQuestsListbox@RIOverseerGQ].Item[${i}].Text.Equal["${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Text}"]}
+					UIElement[AddedQuestsListbox@RIOverseerGQ]:RemoveItem[${UIElement[AddedQuestsListbox@RIOverseerGQ].Item[${i}].ID}]
+			}
+            if ${UIElement[AddedQuestsListbox@RIOverseerGQ].Items}>=10
+            {
+                RIConsole:Echo["You can only currently have 10 charged quests. Please right click to remove a quest in order to add a new one"]
+                MessageBox -skin eq2 "You can only currently have 10 charged quests. Please right click to remove a quest in order to add a new one"
+                return
+            }
+            if ${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Value.Equal[Celestial]}
+			    UIElement[AddedQuestsListbox@RIOverseerGQ]:AddItem["${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Text}","${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Value}",FF19BB19]
+            elseif ${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Value.Equal[Fabled]}
+			    UIElement[AddedQuestsListbox@RIOverseerGQ]:AddItem["${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Text}","${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Value}",FFFF0BF6]
+            elseif ${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Value.Equal[Legendary]}
+			    UIElement[AddedQuestsListbox@RIOverseerGQ]:AddItem["${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Text}","${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Value}",FFFFFF00]
+            elseif ${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Value.Equal[Treasured]}
+			    UIElement[AddedQuestsListbox@RIOverseerGQ]:AddItem["${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Text}","${UIElement[QuestsListbox@RIOverseerGQ].SelectedItem.Value}",FF0080FF]
+        }
+    }
     method GO()
     {
+        echo ISXRI: Overseer, Queuing Get Charged Quests, this will run after Checks, if checks are running
+        if ${UIElement[AddedQuestsListbox@RIOverseerGQ].Items}<1
+        {
+            RIConsole:Echo["You must select quests before we go and get them. Dont forget after adding quests to the Added Quests list to Save either as Toon or Default on the main RI Overseer UI"]
+            MessageBox -skin eq2 "You must select quests before we go and get them. Dont forget after adding quests to the Added Quests list to Save either as Toon or Default on the main RI Overseer UI"
+            return
+        }
         _GO:Set[1]
         This:HideUI
+        This:HideGQUI
     }
+    method GQ()
+    {
+        UIElement[RIOverseerGQ]:Show
+    }
+    method PopulateGQ(int _Season)
+    {
+        variable int _i
+        UIElement[QuestsListbox@RIOverseerGQ]:ClearItems
+        for(_i:Set[1];${_i}<=${GOQuest.Used};_i:Inc)
+        {
+            if ${GOQuest.Get[${_i}].Token[3,|].Equal[${_Season}]}
+            {
+                if ${GOQuest.Get[${_i}].Token[2,|].Equal[Celestial]}
+                    UIElement[QuestsListbox@RIOverseerGQ]:AddItem["${GOQuest.Get[${_i}].Token[1,|]}","${GOQuest.Get[${_i}].Token[2,|]}",FF19BB19]
+                elseif ${GOQuest.Get[${_i}].Token[2,|].Equal[Fabled]}
+                    UIElement[QuestsListbox@RIOverseerGQ]:AddItem["${GOQuest.Get[${_i}].Token[1,|]}","${GOQuest.Get[${_i}].Token[2,|]}",FFFF0BF6]
+                elseif ${GOQuest.Get[${_i}].Token[2,|].Equal[Legendary]}
+                    UIElement[QuestsListbox@RIOverseerGQ]:AddItem["${GOQuest.Get[${_i}].Token[1,|]}","${GOQuest.Get[${_i}].Token[2,|]}",FFFFFF00]
+                elseif ${GOQuest.Get[${_i}].Token[2,|].Equal[Treasured]}
+                    UIElement[QuestsListbox@RIOverseerGQ]:AddItem["${GOQuest.Get[${_i}].Token[1,|]}","${GOQuest.Get[${_i}].Token[2,|]}",FF0080FF]
+            }
+        }
+    }
+
     member:bool ChargedQuestExists(string _QuestName)
     {
         variable int _i
@@ -1406,9 +1628,6 @@ objectdef OverseerObj
         LavishSettings[RIO]:AddSetting[RunCharged,"${UIElement[RunChargedCheckBox@RIOverseer].Checked}"]
         LavishSettings[RIO]:AddSetting[RunChargedAfterDaily,"${UIElement[RunChargedAfterDailyCheckBox@RIOverseer].Checked}"]
         LavishSettings[RIO]:AddSetting[RunChargedOnly,"${UIElement[RunChargedOnlyCheckBox@RIOverseer].Checked}"]
-        LavishSettings[RIO]:AddSetting[GetTreasured,"${UIElement[GetTreasuredCheckBox@RIOverseer].Checked}"]
-        LavishSettings[RIO]:AddSetting[GetLegendary,"${UIElement[GetLegendaryCheckBox@RIOverseer].Checked}"]
-        LavishSettings[RIO]:AddSetting[GetFabled,"${UIElement[GetFabledCheckBox@RIOverseer].Checked}"]
         LavishSettings[RIO]:AddSetting[LoopOverseer,"${UIElement[LoopOverseerCheckBox@RIOverseer].Checked}"]
         LavishSettings[RIO]:AddSetting[RunImmediately,"${UIElement[RunImmediatelyCheckBox@RIOverseer].Checked}"]
         LavishSettings[RIO]:AddSetting[LoopOverseerMins,"${Int[${UIElement[MinsTextEntry@RIOverseer].Text}]}"]
@@ -1417,6 +1636,14 @@ objectdef OverseerObj
         LavishSettings[RIO]:AddSetting[FabledMinTraits,"${Int[${UIElement[RunFabledTextEntry@RIOverseer].Text}]}"]
         LavishSettings[RIO]:AddSetting[CelestialMinTraits,"${Int[${UIElement[RunCelestialTextEntry@RIOverseer].Text}]}"]
         LavishSettings[RIO]:AddSetting[MishapMinTraits,"${Int[${UIElement[RunMishapTextEntry@RIOverseer].Text}]}"]
+
+        variable int _i
+        for(_i:Set[1];${_i}<=${UIElement[AddedQuestsListbox@RIOverseerGQ].Items};_i:Inc)
+		{
+			;echo Adding ${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text} To Set ${_i}
+            LavishSettings[RIO]:AddSetting[GQ${_i},"${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Text}|${UIElement[AddedQuestsListbox@RIOverseerGQ].OrderedItem[${_i}].Value}"]
+		}
+
         if ${_Toon}
         {
             LavishSettings[RIO]:Export["${LavishScript.HomeDirectory}/Scripts/RI/RIOverseer/RIOSave${Me.Name}.xml"]
@@ -1551,6 +1778,28 @@ objectdef OverseerObj
             UIElement[GetFabledCheckBox@RIOverseer]:SetChecked
         else
             UIElement[GetFabledCheckBox@RIOverseer]:UnsetChecked
+        variable int _i
+        variable int _endi=999999999999999999999
+        variable string _settingText
+        UIElement[AddedQuestsListbox@RIOverseerGQ]:ClearItems
+        for(_i:Set[1];${_i}<${_endi};_i:Inc)
+		{
+            _settingText:Set["${LavishSettings[RIO].FindSetting[GQ${_i}]}"]
+            ;echo checking \${LavishSettings[RIO].FindSetting[GQ${_i}]}: ${LavishSettings[RIO].FindSetting[GQ${_i}]}: ${_settingText}
+            if ${LavishSettings[RIO].FindSetting[GQ${_i}](exists)}
+            {
+                if ${_settingText.Token[2,|].Equal[Celestial]}
+                    UIElement[AddedQuestsListbox@RIOverseerGQ]:AddItem[${_settingText.Token[1,|]},${_settingText.Token[2,|]},FF19BB19]
+                elseif ${_settingText.Token[2,|].Equal[Fabled]}
+                    UIElement[AddedQuestsListbox@RIOverseerGQ]:AddItem[${_settingText.Token[1,|]},${_settingText.Token[2,|]},FFFF0BF6]
+                elseif ${_settingText.Token[2,|].Equal[Legendary]}
+                    UIElement[AddedQuestsListbox@RIOverseerGQ]:AddItem[${_settingText.Token[1,|]},${_settingText.Token[2,|]},FFFFFF00]
+                elseif ${_settingText.Token[2,|].Equal[Treasured]}
+                    UIElement[AddedQuestsListbox@RIOverseerGQ]:AddItem[${_settingText.Token[1,|]},${_settingText.Token[2,|]},FF0080FF]
+            }
+            else
+                _endi:Set[${_i}]
+		}
 	}
     member:bool ZoneChecks()
     {
@@ -1571,6 +1820,10 @@ objectdef OverseerObj
     method HideUI()
     {
         UIElement[RIOverseer]:Hide
+    }
+    method HideGQUI()
+    {
+        UIElement[RIOverseerGQ]:Hide
     }
     function AddMishapAgent()
     {
@@ -2128,4 +2381,5 @@ atom(global) rio()
 function atexit()
 {
     ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIO.xml"
+    ui -unload "${LavishScript.HomeDirectory}/Scripts/RI/RIOg.xml"
 }

@@ -11,16 +11,22 @@ function main(... args)
 	variable index:string AbilityID
 	variable index:int Level
 	variable int LevelGreaterThan=0
-	variable int LevelLessThan=120
+	variable int LevelLessThan=125
 	variable index:string Tier
 	variable string MSC
 	variable int _failcnt=0
 	variable int _acnt=0
+	variable bool RestartCB=FALSE
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	{
 		;echo args ${_acnt} : ${args[${_acnt}]}
 		switch ${args[${_acnt}]}
 		{
+			case -RestartCB
+			{
+				RestartCB:Set[1]
+				break
+			}
 			case -AbilityName
 			{
 				AbilityName:Insert["${args[${Math.Calc[${_acnt}+1]}]}"]
@@ -304,7 +310,7 @@ function main(... args)
 			count:Set[0]
 			for(count:Set[1];${count}<=${AbilitiesIterator.Value.ToAbilityInfo.NumEffects};count:Inc)
 			{
-				echo Effect:Set["${AbilitiesIterator.Value.ToAbilityInfo.Effect[${count}].Desc}"]
+				;echo Effect:Set["${AbilitiesIterator.Value.ToAbilityInfo.Effect[${count}].Desc}"]
 				Effect:Set["${AbilitiesIterator.Value.ToAbilityInfo.Effect[${count}].Desc}"]
 				if ${Effect.Find["targets in area of effect"](exists)} && !${Effect.Find["heals targets in area of effect"](exists)}
 					IsAoE:Set[TRUE]
@@ -559,6 +565,7 @@ function main(... args)
 			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[PowerCost,${AbilitiesIterator.Value.ToAbilityInfo.PowerCost}]
 			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[ConcentrationCost,${AbilitiesIterator.Value.ToAbilityInfo.ConcentrationCost}]
 			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[MainIconID,${AbilitiesIterator.Value.ToAbilityInfo.MainIconID}]
+			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[HOIconID,${AbilitiesIterator.Value.ToAbilityInfo.HOIconID}]
 			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[CastingTime,${AbilitiesIterator.Value.ToAbilityInfo.CastingTime}]
 			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[RecoveryTime,${AbilitiesIterator.Value.ToAbilityInfo.RecoveryTime}]
 			AbilitySet.FindSetting[${CurrentAbilityName}]:AddAttribute[RecastTime,${AbilitiesIterator.Value.ToAbilityInfo.RecastTime}]
@@ -578,6 +585,12 @@ function main(... args)
 	LavishSettings[AbilityCheck]:Clear
 	echo ISXRI: ${Time}: Saved file: "${LavishScript.HomeDirectory}/scripts/RI/CombatBot/AbilityCheck/${MSC}-AbilityCheck.xml"
 	echo ISXRI: ${Time}: Done Scanning
+	if ${RestartCB}
+	{
+		CB End
+		wait 10
+		CB
+	}
 }
 function atexit()
 {

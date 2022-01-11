@@ -368,6 +368,9 @@ Custom
 ZoomCamera 1
 87.949203 24.938801 -68.243538
 Custom
+ZoomCamera 1
+87.949203 24.938801 -68.243538
+Custom
 ClickActor -Actor "A frozen length of ice" -NoRelayToGroup
 87.949203 24.938801 -68.243538
 107.129578 24.627012 -85.801590

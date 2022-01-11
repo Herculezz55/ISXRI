@@ -1,0 +1,5 @@
+string VisionsofVetroviaWeeklyTradeskillMission[] = {"Visions of Vetrovia Weekly Tradeskill Mission", 
+"Custom", 
+"Quest \"Igore's Request: Items for the Far Seas\"", 
+"0 0 0", 
+};

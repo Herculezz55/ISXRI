@@ -45,8 +45,8 @@ objectdef RIWObject
 	}
 	method AddCustom()
 	{
-		LastXYZ:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-		LastXYZC:Set["${Me.X},${Me.Y},${Me.Z}"]
+		LastXYZ:Set["${Me.X.Precision[2]} ${Me.Y.Precision[2]} ${Me.Z.Precision[2]}"]
+		LastXYZC:Set["${Me.X.Precision[2]},${Me.Y.Precision[2]},${Me.Z.Precision[2]}"]
 		UIElement[LocsList@WriteLocs]:AddItem["Custom"]
 		variable int count=0
 		variable string tempcustom=""
@@ -364,12 +364,21 @@ function main(... args)
 		switch ${args[${_count}]}
 		{
 			case -quest
+			case -q
 			{
 				;echo ${args.Used}
 				;echo ${args[2]}
 				_quest:Set[TRUE]
 				UIElement[TEFilename@WriteLocs]:SetText["${args[${Math.Calc[${_count}+1]}].Replace[".",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}.dat"]
 				call Write -quest "${args[${Math.Calc[${_count}+1]}]}"
+				break
+			}
+			case -currentquest
+			case -cq
+			{
+				_quest:Set[TRUE]
+				UIElement[TEFilename@WriteLocs]:SetText["${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Replace[".",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[\",""].Replace[",",""].Replace[":",""]}.dat"]
+				call Write -quest "${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText]}"
 				break
 			}
 			default
@@ -667,8 +676,8 @@ function RP()
 function Write(... _args)
 {
 ;bool Custom, bool ClickActor, bool HailActor, bool Named, bool Wait,
-	LastXYZ:Set["${Me.X} ${Me.Y} ${Me.Z}"]
-	LastXYZC:Set["${Me.X},${Me.Y},${Me.Z}"]
+	LastXYZ:Set["${Me.X.Precision[2]} ${Me.Y.Precision[2]} ${Me.Z.Precision[2]}"]
+	LastXYZC:Set["${Me.X.Precision[2]},${Me.Y.Precision[2]},${Me.Z.Precision[2]}"]
 
 	variable int _count
 	for(_count:Set[1];${_count}<=${_args.Used};_count:Inc)

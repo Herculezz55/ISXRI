@@ -5019,11 +5019,754 @@
 ;						Lockspots toons
 ;						Moves to and clicks the "right" portal
 
-;v6.46 Changes 12-25-20
+;v6.47 Changes 12-25-20
+;************** MERRY CHRISTMAS **************
 ;	RI
+;		Fixed a bug in the path function
 ;		Modified:
 ;			Echo Caverns: Fungal Foray
 ;				Modified Pathing
+;	RQ
+;		Modified
+;			Lost Memories
+;				Fixed a bug that would sometimes miss talking too the memory
+
+;6.48 Changes 1-26-21
+;************** Happy New Year **************
+;	RI_Overseer
+;		Added access for free members to prevent crashing on load of extension
+;	RZ
+;		RZ B or RZ Baubles will move via fast travel or baubles if you have some
+;		and replenish your Baubles to 20
+;		RZ SW or "Savage Weald" will move to Savage Weald using Will of the Weald
+;		RZ FM or "City of Fordel Midst" will move to Echo Caverns atrium using Will of Echo Caverns
+;		RZ SV or "City of Shar Vahl" will move to a common point between both instance doors using Spirit of the Vah Shir
+;			If you are out of any of the above baubles RZ will automatically call RZ Baubles and replenish them for you
+;		Added:
+;			Echo Caverns: Fungal Foray [Solo]
+;			Echo Caverns: Quarry Quandary [Solo]
+;			Echo Caverns: Zelmie Sortie [Solo]
+;			Savage Weald: Chaotic Caverns [Solo]
+;			Savage Weald: Fort Grim [Solo]
+;			Shadeweaver's Thicket: Feral Reserve [Solo]
+;			Shadeweaver's Thicket: Untamed Lands [Solo]
+;			Shar Vahl: Siege Break [Solo]
+;	RQ
+;		Added:
+;			City of Fordel Midst Side Quest Timeline
+;			Paludal Disposal
+;			Trouble in Haven
+;			Pryce On Their Heads
+;			Help for Hildreth
+;			Grains of Truth
+;			Echo Caverns Side Quest Timeline
+;			A Miner Threat
+;			Lichen that Venom
+;			Lives in the Balanzite
+;			Her Celial Theories (This quest may need babysitting, due to the horrible landscape in that area)
+;			Fungus Groove (This quest may need babysitting, due to the horrible landscape in that area)
+;			Savage Weald Side Quest Timeline
+;			Every Rosg Has Its Thorn
+;			Savage Camo
+;			Shadeweaver's Thicket SidequestTimeline
+;			Fleshless Tongue Untied
+;				-Make sure you have Open on Loot set for Shinys
+;			Fortune Fails the Bold
+;		Modified
+;			Reign of Shadows: Vexing Challenge
+;				Fixed a bug that would sometimes not end path function for runes
+;	RI
+;		Added WFLNC to all Last Nameds
+;		Added:
+;			Shar Vahl: Siege Break
+;				pathing throughout zone
+;				Added:
+;					Obscura Zun'Xakra (RI Pull Obscura)
+;						Lockspots toons
+;						Autotargets adds
+;					Do'om Calamitus (RI Pull Calamitus)
+;						Lockspots toons
+;						Moves to and kill's 9 of 10 Adds
+;					An'Kaas Fer'Zethon (RI Pull Zethon)
+;						Lockspots toons
+;						Autotargets adds
+;						Moves back to hallway on port
+;					Venomess Tshakez (RI Pull Tshakez)
+;						Lockspots toons
+;						Autotargets adds
+;					Enforcer Yisith (RI Pull Yisith)
+;						Lockspots toons
+;						Autotargets adds
+;						Moves away from posion circles
+;				Echo Caverns: Zelmie Sortie
+;					pathing throughout zone
+;					Added:
+;						Kwillix Quickshot (RI Pull Kwillix)
+;							Lockspots toons
+;							Autotargets adds
+;						Steena Dragonflyer (RI Pull Steena)
+;							Lockspots toons
+;							Autotargets adds
+;							Moves behing as needed
+;						Frindel Sporemiser (RI Pull Frindel)
+;							Lockspots toons
+;							Autotargets adds
+;							Moves out of circles		
+;		Modified:
+;			Savage Weald: Fort Grim
+;				Modified:
+;					Ulcine Nacisroc (RI Pull Nacisroc)
+;						Now jousts white circles			
+;					 Chief Gadzuuks (RI Pull Gadzuuks)
+;						Now jousts white circles
+;					 Felnir the Shadow Prowler (RI Pull Felnir)
+;						Moves behind as needed
+;			Savage Weald: Chaotic Caverns
+;				modified pathing
+;			Echo Caverns: Fungal Foray
+;				modified pathing to avoid the cart
+;			Echo Caverns: Quarry Quandary
+;				Modified:
+;					Scyphodon
+;						Fixed a bug that would sometimes reapply buff too early
+;						Changed coding for the changes DBG Made to the cane
+;			Savage Weald: Untamed Lands
+;				Modified
+;					Sotek
+;						Will not cast Hostile or Named Hostile until we are back at lockspot
+;						Healers will prioritize cures above all else
+;						Will cancel lockspot while you or your partner (real or merc) are Inflicted with Arcane 
+;						Will now use arcane cure regardless if you have merc (those slow bastards)
+;						Will not send pets in for attack and will have pets stay back at lock spot
+
+;v6.49 Changes 9-21-21
+;	RQ
+;		Added:
+;			YunZi
+;				Traveler's Holidays - Getting a Feel For Frostfell
+
+;v6.50 Changes 9-21-21
+;	RQ
+;		Modified:
+;			Familiars Wild
+;				Changed the code to match the Fast Travel change to The Blinding
+;					- I am confident there are several to a few dozen other quests
+;					  That are broken by this change by DBG, if anyone knows them
+;					  please let me know or post in the bugs channel
+;			YunZi
+;				Traveler's Holidays - Getting a Feel For Frostfell
+;					Moved the quest to the top of the list box for easier access
+
+;v6.51 Changes 9-28-21
+;	RQ
+;		Added:
+;			YunZi
+;				Traveler's Holidays - Evoking Love
+;	RI_Overseer
+;		Updated for Season 3 (May be missing some Agents, will be added as i get the data)
+
+;v6.52 Changes 9-29-21
+;	RI_Overseer
+;		Added remaining Agents for Season 3
+
+;v6.53 Changes 10-5-21
+;	RQ
+;		Added:
+;			YunZi
+;				Traveler's Holidays - More than Beer?
+;	RZ
+;		Modified RZ Baubles or RZ B
+;			Now uses Fast Travel
+;			Fixed a pathing bug
+;			Will call to guild hall when done to avoid stacks of bots
+;		Added:
+;			Echo Caverns: Quarry Quandary [Heroic]
+;			Echo Caverns: Quarry Quandary [Expert]
+;			Savage Weald: Chaotic Caverns [Heroic]
+;			Savage Weald: Chaotic Caverns [Expert]
+;			Shadeweaver's Thicket: Untamed Lands [Heroic]
+;			Shadeweaver's Thicket: Untamed Lands [Expert]
+;			Echo Caverns: Zelmie Sortie [Event Heroic]
+;			Echo Caverns: Zelmie Sortie [Expert Event]
+;	RI
+;		Modified
+;			Echo Caverns: Quarry Quandary
+;				Added Heroic and Expert to RI
+;				The Needlite Queen
+;					Fixed a targeting bug
+;					Fixed a bug that was not dispelling on mages
+;				Scyphodon
+;					Modified so only MainToon will cast Magic Sugar while others target through them
+;			Savage Weald: Chaotic Caverns
+;				Added Heroic and Expert to RI
+;				Brutal Bloodbath
+;					Toons will no longer move behind
+;					Mages and Wardens will now dispel
+;					Appropriate toon will joust
+;				Spelobanzeothitem
+;					Mages and Wardens will now dispel
+;					Now jousts reel
+;					Morbigog
+;					Toons will no longer move behind
+;					Now jousts down under
+;				Tashakhi
+;					Changed lockspot
+;					Toons will now move to correct bubble
+;					Correct toon will be cured
+;			Shadeweaver's Thicket: Untamed Lands
+;				Added Heroic and Expert to RI
+;				Sotek
+;					Now auto targets a Gor Taku raider
+;				Spiritist Karina
+;					Turned off cures
+;					Now destroys the jawbone if in your inventory
+;				Desolator
+;					Will now move to safe spots near the port spots
+;					Will repair weapon
+;					Jousts 
+;					Mages and Wardens will now dispel
+;			Echo Caverns: Zelmie Sortie
+;				Added Event Heroic and Expert Event to RI
+;				Steena Dragonflyer
+;					Fixed a bug that was not always moving behind
+;					Changed targeting to Ants
+;				Frindel Sporemiser
+;					Will now target self during death cap
+
+;v6.54 Changes 10-14-21
+;	RQ
+;		Added:
+;			YunZi
+;				Traveler's Holidays - The Meaning of Mischief
+;	RI_Overseer or RIO
+;		Added a few missing quests
+;	RIW
+;		Added Arguments:
+;			riw -currentquest or -cq
+;				will load RIW using quest mode with the current active eq2 quest
+
+;v6.55 Changes 11-2-21
+;	RQ
+;		Added:
+;			YunZi
+;				Traveler's Holidays - Oceans for the Oceanless
+;				Traveler's Holidays - Under a Burning Sky
+;				Traveler's Holidays - Gears and Gadgets
+;	RI_Overseer or RIO
+;		Modified Grab Charged Quests to now pull from a list on a Grab Quests Window
+;			Please click Choose Quests and add which quests you want to add
+;				Dont forget to Save as either Default or Toon on the main RI_Overseer window
+;	CombatBot
+;		Fixed an issue that would not cast on Certain mercs
+;	RII
+;		Fixed an issue with items that have [] in the name
+;	RI
+;		Fixed a bug in the HailActor Function that would sometimes not set the correct Actor
+;		when using -NumberofResponses or -ResponseNumber Arguments
+;		Added:
+;			Shadeweaver's Thicket: Loda Kai Isle
+;				Pathing throughout zone
+;				Killmaster Kayzen
+;					Moves to correct spots to kill shadeweavers
+;					Moves to next shadweaver as needed
+;					Autotargets grunts
+;				Nimble Rodderick
+;					Just kills him
+;				Taja Verath
+;					Jousts out to cure arcane
+;					Autotargets Tigers
+;			Vasty Deep
+;				Pathing throughout zone (turn on grabshinies to complete daily and weekly quests)
+;				Palovina
+;					Auto targets adds
+;					Moves to correct tube to get cured
+;				Vulgrat
+;					Auto targets adds
+;					Jousts
+;					Pulls spiders
+;				Francine
+;					Auto targets adds
+;					Picks up and moves cauldron to next room (Solo && Heroic I)
+;					Interrupts and needs manual movement of cauldron (Heroic II)
+;				Viktor
+;					Auto targets and kills correct book
+;					Moves to portal and ports to finish him off
+;					Handles familiars (Heroic II)
+;				Nogrovska
+;					Moves to cyclone and changes Golem
+;					Moves back and kills golem
+;					Moves to land or water to get cured
+;					Cures correct curse
+;				Labomination (Not coded for Heroic II)
+;					Cures correct curse (Heroic II)
+;					Moves to, spawns and engages correct add to get correct damage type
+;					Kills current add before moving to next (Not coded for HO and Heroic II)
+;		Modified:
+;			Shar Vahl: Siege Break
+;				An'Kaas Fer'Zethon
+;					Bard will move to grab and place crates on fire
+;				Venomess Tshakez
+;					MainToon will stand 20m away from rest of group to avoid AoE
+;			Echo Caverns: Quarry Quandary
+;				Chief Broglyn
+;					Moved his LockSpot
+;				Scyphodon
+;					Fixed a bug that was not turning off AE's
+;			Savage Weald: Chaotic Caverns
+;				Spelobanzeothitem
+;					Fixed a bug that was targeting a random whirling at the end of the fight
+;			Shadeweaver's Thicket: Feral Reserve
+;				Modified pathing
+;				The Poached Poacher
+;					will now ask pets to back off and stay here while spawning poacher
+;			Echo Caverns: Fungal Foray
+;				Now uses puffballs to spawn Zugu
+;				Vinzerah Ral'Moor
+;					Now targets and kills crystals and anima's
+;				Fungus King Cremini
+;					Now uses puffballs to spawn and throughout fight
+;				
+;	RZ
+;		Added RZ LopingPlains or RZ LP
+;			will move you and your group to loping plains vasty deep portal using fast travel
+;		Added:
+;			Shadeweaver's Thicket: Loda Kai Isle [Solo]
+;			Shadeweaver's Thicket: Loda Kai Isle [Event Heroic]
+;			Shadeweaver's Thicket: Loda Kai Isle [Expert Event]
+;			Echo Caverns: Fungal Foray [Heroic]
+;			Echo Caverns: Fungal Foray [Expert]
+;			Savage Weald: Fort Grim [Event Heroic]
+;			Savage Weald: Fort Grim [Expert Event]
+;			Shadeweaver's Thicket: Feral Reserve [Heroic]
+;			Shadeweaver's Thicket: Feral Reserve [Expert]
+;			Shar Vahl: Siege Break [Heroic]
+;			Shar Vahl: Siege Break [Expert]
+;			Vasty Deep [Solo]
+;			Vasty Deep [Heroic I]
+;			Vasty Deep [Heroic II]
+
+;v6.56 Changes 11-11-21
+;	RQ
+;		Added:
+;			YunZi
+;				Traveler's Holidays - Deadly Nights
+;	CombatBot
+;		Fixed a bug that was ignoring Skip AE checks and Skip Enc checks on Settings Tab
+;	RI
+;		Modified
+;			Echo Caverns: Fungal Foray
+;				Will now wait for Zugu's spawn mobs to appear then kill them
+;			Savage Weald: Fort Grim
+;				Fix a bug that was skipping named coding for Nacisroc
+;				Felnir the Shadow Prowler
+;					will now wait until a moor wolf is within 10 before targeting
+;					to ensure they are near pire when they die
+;	Overseer
+;		Fixed a bug with loading saves on first time logging in
+
+;v6.57 Changes 11-20-21
+;	CombatBot
+;		Fixed a bug that was not using Cure Potions AKA ... Remedy or Cure ... correctly
+;	RQ
+;		Added:
+;			YunZi
+;				Traveler's Holidays - We Need a Hero!
+;		Modified:
+;			The Grandiose Wordsmith Pursuance
+;				Fixed a word spell correction from DBG that was not triggering conclusion of the fables
+;	RI
+;		Modified
+;			Echo Caverns: Fungal Foray
+;				Fixed a looping pathing bug
+;			Shadeweaver's Thicket: Untamed Lands
+;				Sotek
+;					Will now make sure to turn Hostile and NamedHostile's back on at the end of the fight
+;				Desolator
+;					Now will only joust if Desolator is within 30 and will cast while moving
+;			Shadeweaver's Thicket: Loda Kai Isle
+;				Killmaster Kayzen
+;					Will now wait to target Kayzen until he is within 10 of each designated Lockspot for each stage
+;			Savage Weald: Fort Grim
+;				Modified Pathing
+;					This should fix a bug that was not engaging Nacisroc Coding
+
+;v6.58 Changes 12-5-21
+;	Beta Build
+
+;v6.59 Changes 12-5-21
+;	RQ
+;		Added
+;			Visions of Vetrovia Tradeskill Timeline
+;				(Start in the Guild Hall near your 
+;				fuel and harvesting depots or in
+;				Svarni Expanse if you have all the
+;				Resources you need)
+;				(This requires you have the resources available
+;				either on you or in your depot or the timeline
+;				may fail, and the quest in game will require extra quest 
+;				steps, you can find a list of needed resources on 
+;				https://eq2.fandom.com/wiki/Visions_of_Vetrovia_Crafting_Timeline)
+;				Were is the Messenger: Local Living
+;				Were is the Messenger: Different Tastes
+;				Were is the Messenger: Find the Father
+;				Were is the Messenger: Simple Gifts
+;				Were is the Messenger: Covers and Crunchies
+;				Were is the Messenger: Say Cheese
+;				Were is the Messenger: Wild Ride
+;				Were is the Messenger: Mad Machinations
+;				Were is the Messenger: 'Ware the Were
+;				Were is the Messenger: Where the Weres Are
+;					(Make sure you watch this one as it can sometimes get stuck on geometry
+;					With CheckCollision broken in ISXEQ2 and Amadeus not wanting or not willing
+;					to fix it, I have done my best to work around it but its not perfect)
+;	AbilityCheck
+;		Increased scan to Level 125
+;		Now accepts argument -RestartCB
+;			will restart CB when finished with AbilityCheck
+;		Now records HOIconID
+;			If your AbilityCheck file does not include HOIconID
+;			CombatBot will prompt you to run a new one everytime 
+;			it is ran until you do so
+;	RI
+;		Will now AutoCraft when called too (No longer requires EQ2Craft)
+; 		Tweaked and improved the AvoidActors function
+;		Will now Dispell any Custom Named's Mortal Coil when increments are 1 or higher
+;		Added Shaman's Scourge and Warden's Serene Symbol to Dispell function
+;		Modified
+;			Vasty Deep: Toil and Trouble
+;				Vulgrat Vilebones
+;					Removed some erroneous debug spam
+;				Nogrovska Vodlak
+;					Fixed some pathing bugs
+;					Removed some erroneous debug spam
+;			Savage Weald: Chaotic Caverns
+;				Brutal Bloodbath
+;					Fixed a targeting bug
+;				The Spelobanzeothitem
+;					Fixed a targeting bug
+;				Forblarg the Foul
+;					Toons will now move to Light to get cured
+;			Savage Weald: Fort Grim
+;				Nacisroc
+;					Will now joust Shared Suffering
+;			Shar Vahl: Siege Break
+;				Enforcer Yisith
+;					Fixed a movement bug
+;			Echo Caverns: Fungal Foray
+;				Corrupted Contruct
+;					Now turns off Cures, except curse
+;	Overseer
+;		Removed erroneous Echo spam with Mishap quests
+;	WriteLocs
+;		Now writes Coordinates with a precision of 2 after the decimal
+
+;v6.60 Changes 12-6-21
+;	RQ
+;		Added:
+;			Visions of Vetrovia Daily Tradeskill Mission
+;				These will have to be added everday until RI
+;				has all 7
+;			Visions of Vetrovia Weekly Tradeskill Mission
+;				Does not matter where you start these it will port to basement
+;				Make sure you have fuel on you, i just recommend getting a stack 
+;				of each it will last you for a while, the weekly will also run
+;				the daily simultaneously
+;		Modified
+;			Were is the Messenger: Where the Weres Are			
+;				Tweaked pathing more to avoid collisions
+;	RI
+;		Path Function
+;			Removed a 5s wait after each Actor
+
+;v6.61 Changes 12-8-21
+;	RQ
+;		Modified
+;			Were is the Messenger: Where the Weres Are
+;				Fixed pathing where DBG added furniture
+;			Visions of Vetrovia Daily Tradeskill Mission
+;				Fixed pathing where DBG added furniture
+;				Added
+;					Basement Building: Feeding Renfry
+;			Visions of Vetrovia Weekly Tradeskill Mission		
+;				Fixed pathing where DBG added furniture
+;	RelayGroup
+;		Fixed a bug that would cause troubles with Mercenaries with space and ' in the name
+
+;v6.62 Changes 12-10-21
+;	RQ
+;		Modified
+;			Visions of Vetrovia Daily Tradeskill Mission
+;				Added
+;					Basement Building: Forlorn Furnishings
+;	RII
+;		Fixed a bug that would not transmute shield
+
+;v6.63 Changes 12-25-21
+;************** MERRY CHRISTMAS **************
+;	RQ
+;		Modified
+;			Familiar's Wild
+;				Updated for level 125
+;			Visions of Vetrovia Daily Tradeskill Mission
+;				Added
+;					Basement Building: Treats for Ziggy
+;		Added
+;			Guide Quest: Guide's Guide to Visions of Vetrovia
+;			Visions of Vetrovia Timeline
+;				Flotsam For the Boatswain
+;				How Broken Shore Bay Got Its Name
+;				Savage Defense Force
+;				Small Plunder
+;				Visions of Vetrovia: Time in Kamapor
+;				Visions of Vetrovia: Keeping Secrets
+;				Visions of Vetrovia: Into the Keep
+;				Visions of Vetrovia: Welcome to the Jungle
+;				Visions of Vetrovia: Pygmy Problems Aplenty
+;				Visions of Vetrovia: Evil Dedraka
+;				Visions of Vetrovia: Wastes Not, Want Not
+;				Visions of Vetrovia: Handle with Scare
+;				Visions of Vetrovia: Forlorn That Way
+;				Visions of Vetrovia: A Smashing Success
+;				Visions of Vetrovia: Vacrul Intentions
+;				Visions of Vetrovia: Eyes on Vacrul Throne
+;				Visions of Vetrovia: News Far and Wide
+;	RI
+;		Added
+;			(All the Following are only coded for Solo, for now)
+;			Karuupa Jungle: Heart of Conflict
+;				Pathing throughout zone
+;				Added:
+;					 Mean Green (RI Pull Green)
+;						Lockspots toons	
+;						Moves around killing adds then named					
+;					 Agrodemus and Sumedorga (RI Pull Agrodemus)
+;						Lockspots toons
+;						Autotargets adds
+;					 Nakka Nakka (RI Pull Nakka)
+;						Lockspots toons
+;						Autotargets adds
+;					 Gharaka (RI Pull Gharaka)
+;						Lockspots toons
+;					 Ugweepai (RI Pull Ugweepai)
+;						Lockspots toons
+;						Targets correct adds at correct timing
+;			Karuupa Jungle: Dedraka's Descent
+;				Pathing throughout zone
+;				Added:
+;					 Zaag the Unburied (RI Pull Zaag)
+;						Lockspots toons
+;						Autotargets adds
+;						Moves to named					
+;					 Scarfeather (RI Pull Scarfeather)
+;						Lockspots toons
+;					 Krelburn (RI Pull Krelburn)
+;						Lockspots toons
+;						Autotargets adds
+;						Jousts
+; 					 Cannibrea (RI Pull Cannibrea)
+;						Lockspots toons
+;						Autotargets adds
+;						Jousts
+;					 Elder Gromekus (RI Pull Gromekus)
+;						Lockspots toons
+;						Autotargets adds
+;			Mahngavi Wastes: Phantasmal Shades
+;				Pathing throughout zone
+;				Added:
+;					 Bartus Morrand (RI Pull Bartus)
+;						Lockspots toons		
+;						Autotargets adds				
+;					 Soul Eater Muhg (RI Pull Muhg)
+;						Lockspots toons
+;						Autotargets adds
+;					 Dremaera Forsaken (RI Pull Dremaera)
+;						Lockspots toons
+;						Autotargets adds
+;					 Rune Protector Gorok (RI Pull Gorok)
+;						Lockspots toons
+;						Autotargets adds
+;					 Esmerelda Everghast (RI Pull Esmerelda)
+;						Lockspots toons
+;						Autotargets adds
+;			Castle Vacrul: Rosy Reverie
+;				Pathing throughout zone
+;				Autotargeting bloodrose bouquets as needed
+;				Added:
+;					 Kartur (RI Pull Kartur)
+;						Lockspots toons		
+;						Autotargets adds
+;						Auto places artifacts			
+;					 T'valla Rilayne (RI Pull Rilayne)
+;						Lockspots toons
+;						Autotargets adds
+;					 Vhenex the Werefather (RI Pull Vhenex)
+;						Lockspots toons
+;						Autotargets adds
+;					 The Black King (RI Pull King)
+;						Lockspots toons
+;						Autotargets adds
+;					 Thornblood and Roseblood (RI Pull Thornblood)
+;						Lockspots toons
+;						Autotargets adds
+;						Turns on Totem of the Otter if you have them
+;						Moves to Roseblood after killing Thonrblood
+;			Castle Vacrul: Caverns of the Forsaken
+;				Pathing throughout zone
+;				Added:
+;					 Sypheria the Shackled (RI Pull Sypheria)
+;						Lockspots toons	
+;						Autotargets adds					
+;					 Skelegore the Regurgitated (RI Pull Skelegore)
+;						Lockspots toons
+;						Autotargets adds
+;					 Mazza Zanzeer (RI Pull Mazza)
+;						Lockspots toons
+;						Autotargets adds
+;					 Lysander Mistmoore (RI Pull Lysander)
+;						Lockspots toons
+;						Autotargets adds
+;					 Vorigan Mistmoore (RI Pull Vorigan)
+;						Lockspots toons
+;						Autotargets adds
+;						Moves to and pops boils
+;						Jousts Vampiric Hemorrhage
+;			Castle Vacrul: Throne of the Ydal
+;				Pathing throughout zone
+;				Added:
+;					 Zabrina Selymes (RI Pull Zabrina)
+;						Lockspots toons				
+;						Kill correct sigil		
+;					 Veldahn Keyven (RI Pull Veldahn)
+;						Lockspots toons
+;						Kills correct adds in correct order
+;					 Lord Mayong Mistmoore (RI Pull Mayong)
+;						Lockspots toons
+;						Pulls Vishra into pool to kill her
+;						Moves to and kills adds
+;			Svarni Expanse: Carrion Crag
+;				Pathing throughout zone
+;				Added:
+;					 High Shikari Olyxa (RI Pull Olyxa)
+;						Lockspots toons	
+;						Moves to within the shields				
+;					 Skulkor (RI Pull Skulkor)
+;						Lockspots toons
+;						Autotargets adds
+;					 Corpsetalon (RI Pull Corpsetalon)
+;						Lockspots toons
+;						Autotargets adds
+;						Moves to knock her out of air
+;					 Gangrerious and Necrodaverus (RI Pull Gangrerious)
+;						Lockspots toons
+;					 Grumblugtin (RI Pull Grumblugtin)
+;						Lockspots toons
+;						Autotargets add without Unleashed
+
+;v6.64 Changes 1-9-21
+;	CombatBot
+;		Fixed a bug that was immediately toggleing off Champion's Interception
+;			(if anyone notices any other abilities behaving in this way please report to Herculezz, THG or Bor)
+;		Fixed a bug that was not recognising the II level of Ascension Abilities
+;	RQ
+;		Modified
+;			A Stitch in Time, Part II: Lightning Strikes
+;				Fixed a bug that was not moving on after collecting the ice
+;				Fixed a bug that was not placing the ice
+;				Fixed a bug that was not avoiding the lightning
+;	RZ
+;		Added
+;			RZ SE 
+;				Moves to Svarni Expanse Instance
+;			RZ KJHC
+;				Moves to Karuupa Jungle Heart of Conflict
+;			RZ KJDD
+;				Moves to Karuupa Jungle Dedraka's Descent
+;			RZ KJPP
+;				Moves to Karuupa Jungle Predator's Perch
+;			RZ MW
+;				Moves to Mahngavi Wastes Instance
+;			RZ MWG
+;				Moves to Mahngavi Wastes Ghoulinda's Lair
+;			RZ FG
+;				Moves to Forlorn Gist Instances
+;			Svarni Expanse: Carrion Crag [Solo]
+;			Karuupa Jungle: Dedraka's Descent [Solo]
+;			Karuupa Jungle: Predator's Perch [Solo]
+;			Mahngavi Wastes: Warpwood Cairn [Solo]
+;			Castle Vacrul: Caverns of the Forsaken [Solo]
+;			Karuupa Jungle: Heart of Conflict [Solo]
+;			Mahngavi Wastes: Phantasmal Shades [Solo]
+;			Castle Vacrul: Rosy Reverie [Solo]
+;			Forlorn Gist: Nightmares of Old [Solo]
+;			Castle Vacrul: Suite of Screams [Solo]
+;	RI
+;		Modified
+;			Karuupa Jungle: Heart of Conflict
+;				Modified:
+;					 Mean Green (RI Pull Green)
+;						Fixed a bug that cause movement issues in Duo or Heroic
+;		Added
+;			Mahngavi Wastes: Warpwood Cairn
+;				Pathing throughout zone
+;				Added:
+;					 Krel Korek Mal (RI Pull Krel)
+;						Lockspots toons
+;					 Warlock Ren Bolor (RI Pull Bolor)
+;						Lockspots toons
+;						Autotargets adds
+;					 Oororr the Corrupted (RI Pull Oororr)
+;						Lockspots toons
+;						Autotargets adds
+;	   				 Felazhor Khan (RI Pull Felazhor)
+;						Lockspots toons
+;						Autotargets adds
+;					 Lagrecia Vyl'Tayne(RI Pull Lagrecia)
+;						Lockspots toons
+;						Autotargets adds
+;			Forlorn Gist: Nightmares of Old
+;				Pathing throughout zone
+;				Added:
+;					 Lavec Conun'Stah (RI Pull Lavec)
+;						Lockspots toons	
+;						Autotargets adds					
+;					 Krinas Bledso (RI Pull Krinas)
+;						Lockspots toons
+;					 Stenkannreif, the Monster (RI Pull Stenkannreif)
+;						Lockspots toons
+;						Autotargets adds
+;					 Perisha, the Mistress of Flies (RI Pull Perisha)
+;						Lockspots toons
+;						Autotargets adds
+;					 Aga-Yagaba (RI Pull Aga)
+;						Lockspots toons
+;						Autotargets adds
+;			Castle Vacrul: Suite of Screams
+;				Pathing throughout zone
+;				Added:
+;					 Bloodlord Durogan (RI Pull Durogan)
+;						Lockspots toons
+;						Gets drunk			
+;					 Taskmistress Devioth (RI Pull Devioth)
+;						Lockspots toons
+;						Clicks correct bookshelf
+;					 Bloodmaiden Syvanti (RI Pull Syvanti)
+;						Lockspots toons
+;						Goes to correct circle for correct cure
+;						Kills shrieking
+;			Karuupa Jungle: Predator's Perch
+;				Pathing throughout zone
+;				Added:
+;					 Pterrordax (RI Pull Pterrordax)
+;						Lockspots toons				
+;						Jousts Circles
+;						Uses HO's		
+;					 Gilan and Ribon (RI Pull Gilan)
+;						Lockspots toons
+;					 Hinokawu (RI Pull Hinokawu)
+;						Lockspots toons
+;						Uses HO's
+
+;RunQuest - Runs a quest with RQ\n\nArgument 1: For Who\nArgument 2: Quest Name]
 
 ;156 432 336
 ;						
@@ -5053,7 +5796,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.46
+variable(global) float RI_Var_Float_Version=6.64
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -5084,9 +5827,11 @@ variable(global) string RI_Var_String_Poison4Name="Expert Marked Target"
 variable(global) string RI_Var_String_Poison5Name="Expert Warding Ebb"
 variable(global) string RI_Var_String_FoodName="Stormborn Souffle"
 variable(global) string RI_Var_String_DrinkName="Monsoon"
+variable(global) bool RI_Var_Bool_CraftDebug=FALSE
 variable(global) bool RI_Var_Bool_RIMUICommandsEchoToConsole=TRUE
 variable(global) bool RI_Var_Bool_WaitForHealth=TRUE
 variable(global) bool RI_Var_Bool_Debug=FALSE
+variable(global) bool RI_Var_Bool_ShinyDebug=FALSE
 variable(global) bool RI_Var_Bool_LootDebug=FALSE
 variable(global) bool RI_Var_Bool_AcceptTrades=TRUE
 variable(global) bool RI_Var_Bool_SkipCheckToons=FALSE
@@ -5094,6 +5839,8 @@ variable(global) bool RI_Var_Bool_SkipLoot=FALSE
 variable(global) bool RI_Var_Bool_BalanceTrash=TRUE
 variable(global) bool RI_Var_Bool_GrabShinys=FALSE
 variable(global) bool RI_Var_Bool_WaitForShinys=FALSE
+variable(global) bool RI_Var_Bool_BackOffMerc=TRUE
+variable(global) bool RI_Var_Bool_Moving=FALSE
 variable(global) index:string RI_Index_String_AvailableRIMUICommands
 variable(global) index:string RI_Index_String_AvailableRIMUICommandsDescription
 variable(global) bool RI_Var_Bool_CancelMovement=FALSE
@@ -5113,7 +5860,7 @@ variable bool IStartedTrade=FALSE
 variable(global) RILootObject RILootObj
 variable int Precision=2
 variable(global) int RI_Var_Int_BSReadyCount=0
-variable(global) int RI_Var_Int_ShinyMoveDistance=2
+variable(global) int RI_Var_Int_ShinyMoveDistance=3
 variable(global) bool RI_Var_Bool_IgnoreShinyY=FALSE
 ;RIMovementUI by Herculezz v1
 ;
@@ -5126,6 +5873,9 @@ variable(global) int RI_Var_Int_MoveMaxDistance=500
 
 variable(global) index:int RI_Var_IndexInt_InvalidChest
 variable(global) index:int RI_Var_IndexInt_InvalidShiny
+variable(global) index:string RI_Var_IndexString_ShinyNames
+variable(global) string RI_Var_String_Query="Name=-\"?\""
+variable(global) int RI_Var_Int_ShinyClosestPointScanPoints=100
 variable bool LoadRIMUI=FALSE
 variable bool RIMUILoaded=FALSE
 variable bool CommandQ=FALSE
@@ -6714,6 +7464,8 @@ function main()
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RIFollowChange - Changes min of RIFollow\n\nArgument 1: For Who (Default: ALL)\nArgument 2: Change(#)]
 	RI_Index_String_AvailableRIMUICommands:Insert[RIFollowPop]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RIFollowPop - Pops up the RIFollow UI\n\nArgument 1: ForWho To Show UI\n\nArgument 2(Optional): For Who To Execute After UI]
+	RI_Index_String_AvailableRIMUICommands:Insert[RunQuest]
+	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RunQuest - Runs a quest with RQ\n\nArgument 1: For Who\nArgument 2: Quest Name]
 	RI_Index_String_AvailableRIMUICommands:Insert[RunScript]
 	RI_Index_String_AvailableRIMUICommandsDescription:Insert[RunScript - Runs a script\n\nArgument 1: For Who\nArgument 2: Script Name]
 	RI_Index_String_AvailableRIMUICommands:Insert[ScribeBook]
@@ -7794,6 +8546,7 @@ objectdef RIMovementObject
 		variable bool _IWasFlying=FALSE
 		if (${Me.InCombat} || ${Me.IsHated}) && ${RI_Var_Bool_Start} && !${RI_Var_Bool_GlobalOthers}
 		{
+			RI_Var_Bool_Moving:Set[0]
 			;check if we are paused
 			;call CheckPause
 			if ${RI_Var_Bool_Debug}
@@ -7847,6 +8600,14 @@ objectdef RIMovementObject
 						Me.Inventory["Icecrete Shield"]:Use
 						wait 10
 						RI_CMD_PauseCombatBots 0
+					}
+				}
+				if ${Zone.Name.Find["Castle Vacrul: Rosy Reverie"]}
+				{
+					if ${Actor[Query, Name=="bloodrose bouquet" && Distance<=12 && IsDead=FALSE](exists)} && ${RIMUIObj.MainIconIDExists[${Me.ID},476]}>0
+					{
+						Actor[Query, Name=="bloodrose bouquet" && Distance<=12 && IsDead=FALSE]:DoTarget
+						return
 					}
 				}
 				wait 1
@@ -7925,7 +8686,7 @@ objectdef RIMovementObject
 			return
 		if ${Actor["Gooey Hoard",radius,100].Name.EqualCS["Gooey Hoard"]} && ${Math.Distance[${Actor["Gooey Hoard Chest",radius,100].Loc},${Me.Loc}]}>5
 			return
-		if ${Actor[Chest,radius,100](exists)} && ${Me.WaterDepth}==0 && !${Me.FlyingUsingMount}
+		if ${Actor[Chest,radius,100](exists)} && ( ${Me.WaterDepth}==0 || !${Me.IsSwimming} ) && !${Me.FlyingUsingMount}
 		;&& !${Me.CheckCollision[${Actor[Chest].X},${Actor[Chest].Z}]}
 		{
 			;chest's id
@@ -7942,7 +8703,7 @@ objectdef RIMovementObject
 					echo ISXRI: Chest ${ChestID}:${Actor[Chest,radius,100].Name} at ${Actor[Chest,radius,100].Distance} is BAD leaving function
 				return
 			}
-			
+			RI_Var_Bool_Moving:Set[0]
 			;stop moving
 			press -release ${RI_Var_String_ForwardKey}
 
@@ -8065,6 +8826,7 @@ objectdef RIMovementObject
 			echo ISXRI: ${Time}: Starting CheckPause
 		if ${RI_Var_Bool_Paused}
 		{
+			RI_Var_Bool_Moving:Set[0]
 			if ${Me.FlyingUsingMount}
 				call This.StopAutoRun
 			else
@@ -8084,6 +8846,7 @@ objectdef RIMovementObject
 	}
 	function CheckShiny()
 	{
+		variable int _ClosestPoint
 		;; need to do a couple things here in this order, 1 - if Shiny's X is more than 1.5 > than Me.X then face shiny and do jump up function, -- DONE
 		;; 2 - record the amount of times this function is called (after the closest point return) on the same Shiny ID (use globalvar), if>5 then 
 		;; add to ignore index (which we will reset everytime you zone like the chest index) -- DONE
@@ -8098,24 +8861,39 @@ objectdef RIMovementObject
 		;echo ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[?,radius,${ShinyScanDistance}].Loc}"]}!=${MainArrayCounter}
 		;if ChestID is 0 leave function
 		
-		if ${RI_Var_Bool_Debug}
+		if ${RI_Var_Bool_ShinyDebug}
 			echo ISXRI: ${Time}: Starting CheckShiny
-		if ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].X}==-123.940010 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Y}==180.789993 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Z}==-211.589996
+
+		
+		if ${RI_Var_Bool_ShinyDebug}
+			echo Query: ${RI_Var_String_Query}
+
+		;this is where we put ignore shinys that are retardedly placed gonna make it an index but this works for now
+		if ( ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].X}==-123.940010 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Y}==180.789993 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Z}==-211.589996 ) || ( ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].X}==-131.169998 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Y}==62.639999 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Z}==-397.750000 )
 			RI_Var_Int_ShinyID:Set[0]
 		else
-			RI_Var_Int_ShinyID:Set[${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].ID}]
+			RI_Var_Int_ShinyID:Set[${Actor[Query, ${RI_Var_String_Query} && Distance<=${ShinyScanDistance}].ID}]
+
+		_ClosestPoint:Set[${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${RI_Var_Int_ShinyID}].Loc}",${RI_Var_Int_ShinyClosestPointScanPoints}]}]
+
+		if ${RI_Var_Bool_ShinyDebug}
+			echo Shiny Found: ${Actor[id, ${RI_Var_Int_ShinyID}]}: ${Actor[id, ${RI_Var_Int_ShinyID}].ID} // ${RI_Var_Int_ShinyID} // ${Actor[id,${RI_Var_Int_ShinyID}].Loc} // ${_ClosestPoint}!=${MainArrayCounter} 
+
 		if ${RI_Var_Int_ShinyID}==0 || ${RIMUIObj.InvalidShinyCheck[${RI_Var_Int_ShinyID}]}
 		{
-			if ${RI_Var_Loot_Debug}
+			if ${RI_Var_Bool_ShinyDebug}
 				echo ISXRI: Shiny ${RI_Var_Int_ShinyID}:${Actor[id,${RI_Var_Int_ShinyID}].Name} at ${Actor[id,${RI_Var_Int_ShinyID}].Distance} is BAD leaving function
 			return
 		}
 		if !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[${RI_Var_Int_ShinyID}].X},${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+1]},${Actor[${RI_Var_Int_ShinyID}].Z}]}
 		{
-			if ${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${RI_Var_Int_ShinyID}].Loc}"]}!=${MainArrayCounter}
+			if ${_ClosestPoint}!=${MainArrayCounter}
 			{
+				if ${RI_Var_Bool_ShinyDebug}
+					echo closest point doesnt match // ${_ClosestPoint}!=${MainArrayCounter}
 				return
 			}
+
 			if ${RI_Var_Int_ShinyID}==${RI_Var_Int_LastShinyID}
 			{
 				RI_Var_Int_SameShinyCount:Inc
@@ -8129,15 +8907,19 @@ objectdef RIMovementObject
 				RI_Var_Int_SameShinyCount:Set[0]
 			RI_Var_Int_LastShinyID:Set[${RI_Var_Int_ShinyID}]
 			GrabingShinys:Set[1]
-			if ${Devel.Equal[TRUE]}
+			if ${Devel.Equal[TRUE]} && ${Actor[id,${RI_Var_Int_ShinyID}].Name.Equal["?"]} 
 				RIMUIObj:LootOptions[ALL,RR]
 			if ${RI_Var_Bool_Debug}
 				echo ${Time}: Shiny is close enough being ${Actor[${RI_Var_Int_ShinyID}].Distance}
 			press -release ${RI_Var_String_ForwardKey}
 			Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
 			wait 1
-			if ${Me.TargetLOS}
+			if ${Me.TargetLOS} || ${Actor[id,${RI_Var_Int_ShinyID}].Name.NotEqual["?"]}
 			{
+				relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[1]
+				LootWindow:Close
+				wait 2
+				LootWindow:Close
 				if ${RI_Var_Bool_Debug}
 					echo ${Time}: Shiny is in LOS
 				wait 2
@@ -8157,7 +8939,7 @@ objectdef RIMovementObject
 				;check our shinys Y position vs ours
 				if !${RI_Var_Bool_IgnoreShinyY}
 				{
-					if ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1 && ${Actor[id,${RI_Var_Int_ShinyID}].Y}>${Me.Y}
+					if ${Actor[id,${RI_Var_Int_ShinyID}].Name.Equal["?"]} && ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1 && ${Actor[id,${RI_Var_Int_ShinyID}].Y}>${Me.Y}
 					{
 						Actor[id,${RI_Var_Int_ShinyID}]:DoFace
 						wait 1
@@ -8204,8 +8986,8 @@ objectdef RIMovementObject
 					wait 5
 					EQ2UIPage[Journals,JournalsQuest]:Close
 				}
+				relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
 				call This.Move ${TempX} ${TempY} ${TempZ} ${Precision} 10 TRUE TRUE TRUE FALSE TRUE
-				
 			}
 			else
 			{
@@ -8260,6 +9042,7 @@ objectdef RIMovementObject
 					}
 					if !${_IStopped}
 					{
+						RI_Var_Bool_Moving:Set[0]
 						if ${Me.FlyingUsingMount}
 							call RIMObj.StopAutoRun
 						else
@@ -8276,6 +9059,7 @@ objectdef RIMovementObject
 		}
 		if (${Me.Group[1].IsDead} || ${Me.Group[2].IsDead} || ${Me.Group[3].IsDead} || ${Me.Group[4].IsDead} || ${Me.Group[5].IsDead})
 		{
+			RI_Var_Bool_Moving:Set[0]
 			if ${RI_Var_Bool_MovingBehind}
 			{
 				IWasMB:Set[TRUE]
@@ -8299,6 +9083,7 @@ objectdef RIMovementObject
 			wait 10
 		if ( ${Me.Group[1].Distance}>60 && ${Me.Group[1].Type.Equal[PC]} ) || ( ${Me.Group[2].Distance}>60 && ${Me.Group[2].Type.Equal[PC]} ) || ( ${Me.Group[3].Distance}>60 && ${Me.Group[3].Type.Equal[PC]} ) || ( ${Me.Group[4].Distance}>60 && ${Me.Group[4].Type.Equal[PC]} ) || ( ${Me.Group[5].Distance}>60 && ${Me.Group[5].Type.Equal[PC]} ) || ( ${Me.Group[1].IsRooted} && ${Me.Group[1].Type.Equal[PC]} ) || ( ${Me.Group[2].IsRooted} && ${Me.Group[2].Type.Equal[PC]} ) || ( ${Me.Group[3].IsRooted} && ${Me.Group[3].Type.Equal[PC]} ) || ( ${Me.Group[4].IsRooted} && ${Me.Group[4].Type.Equal[PC]} ) || ( ${Me.Group[5].IsRooted} && ${Me.Group[5].Type.Equal[PC]} )
 		{
+			RI_Var_Bool_Moving:Set[0]
 			if ${Me.FlyingUsingMount}
 			{
 				press ${RI_Var_String_BackwardKey}
@@ -8384,6 +9169,21 @@ objectdef RIMovementObject
 		}
 		return ${_AllHere}
 	}
+	method BuildShinyQuery()
+	{
+		;here we need to build our query if there are any names added
+		if ${RI_Var_IndexString_ShinyNames.Used}>0
+		{
+			RI_Var_String_Query:Set["( Name=-\"?\" "]
+			for(declarevariable i int 1;${i}<=${RI_Var_IndexString_ShinyNames.Used};i:Inc)
+			{
+				RI_Var_String_Query:Concat[" ||  Name=-\"${RI_Var_IndexString_ShinyNames.Get[${i}]}\" "]
+			}
+			RI_Var_String_Query:Concat[")"]
+		}
+		else
+			RI_Var_String_Query:Set["Name=-\"?\""]
+	}
 	member(bool) AllGroupWithinRange(float _Distance)
 	{
 		if ${EQ2.Zoning}
@@ -8399,6 +9199,8 @@ objectdef RIMovementObject
 	}
 	function Move(float X1, float Y1, float Z1, int MPrecision=2, int PauseLength=0, bool ClearTarget=FALSE, bool StopForCombat=FALSE, bool SkipCheck=TRUE, bool KeepMoving=FALSE, bool UseRI_Var_String_ForwardKey=TRUE, bool SkipCollisionCheck=TRUE)
 	{
+		if ${X1}==0.000000 && ${Y1}==1.000000 && ${Z1}==0.000000
+			return
 		if ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]}>${RI_Var_Int_MoveMaxDistance}
 		{
 			if ${RI_Var_Bool_Debug}
@@ -8426,24 +9228,12 @@ objectdef RIMovementObject
 		variable int _LastFaceTime=0
 		variable int _LastChecksTime=0
 		RIMUIObj:SetLockSpot[OFF]
-		if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+		if ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) )
 			MPrecision:Set[${Math.Calc[${_Precision}+2]}]
 		else
 			MPrecision:Set[${_Precision}]
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Moving : Move(float X1=${X1}, float Y1=${Y1}, float Z1=${Z1}, int MPrecision=${MPrecision}, int PauseLength=${PauseLength}, bool ClearTarget=${ClearTarget}, bool StopForCombat=${StopForCombat}, bool SkipCheck=${SkipCheck}, bool KeepMoving=${KeepMoving}, bool UseRI_Var_String_ForwardKey=${UseRI_Var_String_ForwardKey}=TRUE, bool SkipCollisionCheck=${SkipCollisionCheck}=FALSE)	
-		;check for a Shiny if set
-		if ${RI_Var_Bool_GrabShinys} && !${RI_Var_Bool_QuestMode} && ${StopForCombat} && !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && ${Actor[?,radius,${ShinyScanDistance}](exists)} 
-		{
-			if ( !${Actor[NamedNPC,radius,50](exists)} || ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}>10 ) && ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Me.Y}]}<3
-			{
-				RI_Var_Int_ShinyID:Set[${Actor[?,radius,${ShinyScanDistance}].ID}]
-				if ${RI_Var_Bool_Debug}
-					echo ${Time}: Closest Shiny ID: ${RI_Var_Int_ShinyID} @ ${Actor[${RI_Var_Int_ShinyID}].X} ${Actor[${RI_Var_Int_ShinyID}].Y} ${Actor[${RI_Var_Int_ShinyID}].Z} Which is ${Actor[${RI_Var_Int_ShinyID}].Distance} Away
-				;press -release ${RI_Var_String_ForwardKey}
-				call This.CheckShiny
-			}
-		}
 		if ${X1}==0 && ${Y1}==0 && ${Z1}==0
 		{
 			;echo ${Time}: Our movement position is 0,0,0, skipping, please check to make sure this is intended.
@@ -8463,14 +9253,14 @@ objectdef RIMovementObject
 				echo In If Statement
 			;pause a bit before each move
 			wait ${PauseLength}
-			if ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+			if ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) )
 			{
 				;echo we are there lets stop flying up or down
 				press -release ${RI_Var_String_FlyUpKey}
 				press -release ${RI_Var_String_FlyDownKey}
 				;wait 1
 			}
-			if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+			if ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) )
 				MPrecision:Set[${Math.Calc[${_Precision}+1]}]
 			else
 				MPrecision:Set[${_Precision}]
@@ -8481,17 +9271,19 @@ objectdef RIMovementObject
 				echo ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}>${MPrecision} && ${RI_Var_Bool_Start} && !${RI_Var_Bool_CancelMovement} && "${_Zone}" "${Zone.Name}" // ${_Zone.Equal["${Zone.Name}"]}
 			while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]}<${RI_Var_Int_MoveMaxDistance} && ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}>${MPrecision} && ( ${RI_Var_Bool_Start} || !${Script[${RI_Var_String_RunInstancesScriptName}](exists)} ) && !${RI_Var_Bool_CancelMovement} && ${_Zone.Equal["${Zone.Name}"]}
 			{
+				RI_Var_Bool_Moving:Set[1]
 				if ${RI_Var_Bool_Debug}
 					echo ${Time}: We are at ${Me.X} ${Me.Y} ${Me.Z} which is ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]} away from ${X1},${Y1},${Z1} and the precision is set to ${MPrecision}
 				if ${EQ2.Zoning}!=0
 				{
+					RI_Var_Bool_Moving:Set[0]
 					press -release ${RI_Var_String_FlyUpKey}
 					press -release ${RI_Var_String_FlyDownKey}
 					press -release ${RI_Var_String_ForwardKey}
 					wait 5
 					continue
 				}
-				if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+				if ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) )
 					MPrecision:Set[${Math.Calc[${_Precision}+1]}]
 				else
 					MPrecision:Set[${_Precision}]
@@ -8504,32 +9296,23 @@ objectdef RIMovementObject
 					;check toons
 					if !${SkipCheck}
 						call This.checktoons
+					RI_Var_Bool_Moving:Set[1]
 					;check if we are paused
 					call This.CheckPause
-
+					RI_Var_Bool_Moving:Set[1]
 					;check if in combat
 					if ${StopForCombat}
 						call This.CheckCombat
+					RI_Var_Bool_Moving:Set[1]
 					;clear target while moving
 					if ${Target(exists)} && ${ClearTarget} && !${RI_Var_Bool_GlobalOthers}
 						eq2execute target_none
 					;Follow
 					if ${RI_Var_Bool_Follow} && !${RI_Var_Bool_GlobalOthers} && !(${Me.InCombat} || ${Me.IsHated})
 						call This.follow
-					;check for a Shiny if set
-					if ${RI_Var_Bool_GrabShinys} && !${RI_Var_Bool_QuestMode} && ${StopForCombat} && !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && ${Actor[?,radius,${ShinyScanDistance}](exists)}
-					{
-						if ( !${Actor[NamedNPC,radius,50](exists)} || ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}>10 ) && ${Math.Distance[${Actor[?,radius,${ShinyScanDistance}].Y},${Me.Y}]}<3
-						{
-							RI_Var_Int_ShinyID:Set[${Actor[?,radius,${ShinyScanDistance}].ID}]
-							if ${RI_Var_Bool_Debug}
-								echo ${Time}: Closest Shiny ID: ${RI_Var_Int_ShinyID} @ ${Actor[${RI_Var_Int_ShinyID}].X} ${Actor[${RI_Var_Int_ShinyID}].Y} ${Actor[${RI_Var_Int_ShinyID}].Z} Which is ${Actor[${RI_Var_Int_ShinyID}].Distance} Away
-							;press -release ${RI_Var_String_ForwardKey}
-							call This.CheckShiny
-						}
-					}
 					if !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && !${RI_Var_Bool_SkipLoot}
 						call This.LootChest
+					RI_Var_Bool_Moving:Set[1]
 				}
 				;echo after checks
 				;first check our height if farther than ${Precision} away press and hold space as long as we are flying
@@ -8543,21 +9326,21 @@ objectdef RIMovementObject
 					press -release ${RI_Var_String_FlyUpKey}
 				}
 				;echo now check if we are above or below desired height
-				if ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && !${RI_Var_Bool_PauseMovement}
+				if ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -hold ${RI_Var_String_FlyDownKey}
 					;wait 1
 				}
 				;echo above move up
-				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && !${RI_Var_Bool_PauseMovement}
+				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyDownKey}
 					press -hold ${RI_Var_String_FlyUpKey}
 					;wait 1
 				}
 				;echo below move down
-				elseif ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+				elseif ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) )
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -release ${RI_Var_String_FlyDownKey}
@@ -8579,47 +9362,47 @@ objectdef RIMovementObject
 				;	Face ${X1} ${Z1}
 				;}
 				
-				if !${Me.IsMoving} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) )
+				if !${Me.IsMoving} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) ) )
 				{
 					;echo pressing autorun
 					press ${RI_Var_String_AutoRunKey}
 					wait 2
 				}
-				; if ${Me.IsMoving} && ${Input.Button[${PauseMovementKey}].Pressed} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) )
+				; if ${Me.IsMoving} && ${Input.Button[${PauseMovementKey}].Pressed} && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) ) )
 					; call This.StopAutoRun
-				if ${UseRI_Var_String_ForwardKey} && !${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && ${Me.WaterDepth}==0
+				if ${UseRI_Var_String_ForwardKey} && !${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && ( ${Me.WaterDepth}==0 || !${Me.IsSwimming} )
 					press -hold ${RI_Var_String_ForwardKey}
-				if ${UseRI_Var_String_ForwardKey} && ${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && ${Me.WaterDepth}==0
+				if ${UseRI_Var_String_ForwardKey} && ${RI_Var_Bool_PauseMovement} && !${Me.FlyingUsingMount} && ( ${Me.WaterDepth}==0 || !${Me.IsSwimming} )
 					press -release ${RI_Var_String_ForwardKey}
-				if ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) )
+				if ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) ) )
 					press -release ${RI_Var_String_ForwardKey}
 				;wait 5 ( ${Math.Distance[${Me.Heading},${Me.HeadingTo[${X1},${Me.Y},${Z1}]}]}>1 || ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}<=${MPrecision} )
 				;echo execute queued commands
 				call This.ExecuteQueued
 				;echo after execute queued
-				if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+				if ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.IsSwimming} ) )
 					wait 2
 				else
 					waitframe
 				;echo end while
 			}
-			if ${Math.Distance[${Me.Y},${Y1}]}>5 && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) )
+			if ${Math.Distance[${Me.Y},${Y1}]}>5 && ( !${UseRI_Var_String_ForwardKey} || ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) ) )
 			{
 				press ${RI_Var_String_BackwardKey}
 				press ${RI_Var_String_BackwardKey}
 				press ${RI_Var_String_BackwardKey}
 			}
-			if ${Math.Distance[${Me.Y},${Y1}]}>5 && !${UseRI_Var_String_ForwardKey} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+			if ${Math.Distance[${Me.Y},${Y1}]}>5 && !${UseRI_Var_String_ForwardKey} && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) )
 			{
 				press ${RI_Var_String_BackwardKey}
 				press ${RI_Var_String_BackwardKey}
 				press ${RI_Var_String_BackwardKey}
 			}
-			elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${UseRI_Var_String_ForwardKey} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+			elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${UseRI_Var_String_ForwardKey} && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) )
 				press -release ${RI_Var_String_ForwardKey}
 			
 			if ${RI_Var_Bool_Debug}
-				echo ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.Y}>${Y1} ) || ( ${Me.WaterDepth}>0 && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
+				echo ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}>${Y1} ) || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
 				
 			if !${Me.FlyingUsingMount} && ${Me.Y}<${Y1} && ${Math.Distance[${Me.Y},${Y1}]}>25 && !${Me.InCombat} && !${RI_Var_Bool_PauseMovement}
 			{
@@ -8628,10 +9411,11 @@ objectdef RIMovementObject
 				press -release ${RI_Var_String_FlyUpKey}
 			}	
 				
-			while ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.Y}>${Y1} ) || ( ${Me.WaterDepth}>0 && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
+			while ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}>${Y1} ) || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
 			{
 				if ${EQ2.Zoning}!=0
 				{
+					RI_Var_Bool_Moving:Set[0]
 					press -release ${RI_Var_String_FlyUpKey}
 					press -release ${RI_Var_String_FlyDownKey}
 					press -release ${RI_Var_String_ForwardKey}
@@ -8641,9 +9425,11 @@ objectdef RIMovementObject
 				;echo flyup or down only while
 				;check if we are paused
 				call This.CheckPause
+				RI_Var_Bool_Moving:Set[1]
 				;check if in combat
 				if ${StopForCombat}
 					call This.CheckCombat
+				RI_Var_Bool_Moving:Set[1]
 				;first check our height if farther than ${Precision} away press and hold space as long as we are flying
 				;we need to get to the correct height for current position we are ${Math.Distance[${Me.Y},${YHeight}]} away
 				;check if we are even flying at all, if not start flight
@@ -8654,21 +9440,21 @@ objectdef RIMovementObject
 					press -release ${RI_Var_String_FlyUpKey}
 				}
 				;now check if we are above or below desired height
-				if  ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && !${RI_Var_Bool_PauseMovement}
+				if  ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}>${Y1} && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyUpKey}
 					press -hold ${RI_Var_String_FlyDownKey}
 					;wait 1
 				}
 				;above move up
-				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.WaterDepth}<1 ) ) && !${RI_Var_Bool_PauseMovement}
+				elseif ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Me.Y}<${Y1} && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.WaterDepth}<1 ) ) && !${RI_Var_Bool_PauseMovement}
 				{
 					press -release ${RI_Var_String_FlyDownKey}
 					press -hold ${RI_Var_String_FlyUpKey}
 					;wait 1
 				}
 				;below move down
-				elseif ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && !${KeepMoving}
+				elseif ${Math.Distance[${Me.Y},${Y1}]}<5 && ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) ) && !${KeepMoving}
 				{
 					;echo we are there lets stop flying up or down
 					press -release ${RI_Var_String_FlyUpKey}
@@ -8676,7 +9462,7 @@ objectdef RIMovementObject
 					;wait 1
 				}
 				;wait 5 ${Math.Distance[${Me.Y},${Y1}]}<=5
-				if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 )
+				if ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) )
 					wait 2
 				else
 					waitframe
@@ -8684,6 +9470,7 @@ objectdef RIMovementObject
 			;stop flying up or down
 			if !${KeepMoving}
 			{
+				RI_Var_Bool_Moving:Set[0]
 				if ${RI_Var_Bool_Debug}
 					echo ISXRI: Stoping Move since KeepMoving: ${KeepMoving}
 				press -release ${RI_Var_String_FlyUpKey}
@@ -8697,12 +9484,24 @@ objectdef RIMovementObject
 					press ${RI_Var_String_BackwardKey}
 				}
 			}
+			;check for a Shiny if set
+			if ${RI_Var_Bool_GrabShinys} && !${RI_Var_Bool_QuestMode} && ${StopForCombat} && !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && ${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}](exists)} 
+			{
+				if ( !${Actor[NamedNPC,radius,50](exists)} || ${Math.Distance[${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}>10 ) && ${Math.Distance[${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}].Y},${Me.Y}]}<10
+				{
+					RI_Var_Int_ShinyID:Set[${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}].ID}]
+					if ${RI_Var_Bool_ShinyDebug}
+						echo ${Time}: Closest Shiny ID: ${RI_Var_Int_ShinyID} @ ${Actor[${RI_Var_Int_ShinyID}].X} ${Actor[${RI_Var_Int_ShinyID}].Y} ${Actor[${RI_Var_Int_ShinyID}].Z} Which is ${Actor[${RI_Var_Int_ShinyID}].Distance} Away
+					;press -release ${RI_Var_String_ForwardKey}
+					call This.CheckShiny
+				}
+			}
 			;press autorun key (stop move)
-			; if ${UseRI_Var_String_ForwardKey} && !${Me.FlyingUsingMount} && ${Me.WaterDepth}==0
+			; if ${UseRI_Var_String_ForwardKey} && !${Me.FlyingUsingMount} && 
 			; {
 				; if !${KeepMoving}
 					; press -release ${RI_Var_String_ForwardKey}
-				; elseif ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && ( ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}<${MPrecision} )
+				; elseif ( ${Me.FlyingUsingMount} || ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) ) && ( ${Math.Distance[${Me.Y},${Y1}]}>5 && ${Math.Distance[${Me.X},${Me.Z},${X1},${Z1}]}<${MPrecision} )
 					; press -release ${RI_Var_String_ForwardKey}
 				; wait 1
 				; if ${Me.IsMoving} && !${KeepMoving}
@@ -8728,11 +9527,12 @@ objectdef RIMovementObject
 		}
 		else
 		{
+			RI_Var_Bool_Moving:Set[0]
 			if ${RI_Var_Bool_Debug} 
 				echo ${Time}: We are ${Math.Distance[${Me.X},${Me.Y},${Me.Z},${X1},${Y1},${Z1}]} away from ${X1} ${Y1} ${Z1} and our Collision Check is ${Me.CheckCollision[${Me.X},${Me.Y},${Me.Z},${X1},${Y1}${Z1}]}
 			; if ${Me.IsMoving} && !${UseRI_Var_String_ForwardKey}
 				; call This.StopAutoRun
-			; elseif ${UseRI_Var_String_ForwardKey} || ( !${Me.FlyingUsingMount} && ${Me.WaterDepth}==0 )
+			; elseif ${UseRI_Var_String_ForwardKey} || ( !${Me.FlyingUsingMount} &&  )
 				; press -release ${RI_Var_String_ForwardKey}
 			press -release ${RI_Var_String_FlyUpKey}
 			press -release ${RI_Var_String_FlyDownKey}
@@ -8884,7 +9684,12 @@ objectdef RIMovementObject
 			wait 20
 		}
 		;echo RIMUIObj:TravelMap[${Me.Name},${_ZoneToZoneName},${_ZoneOption}]
-		RIMUIObj:TravelMap[${Me.Name},${_ZoneToZoneName},${_ZoneOption}]
+		variable int _fcnt=0
+		while !${EQ2.Zoning} && ${_fcnt:Inc}<10
+		{
+			RIMUIObj:TravelMap[${Me.Name},${_ZoneToZoneName},${_ZoneOption}]
+			wait 5
+		}
 		if ${_ZoneOption}==-1
 		{
 			wait 50 ${Me.IsMoving}
@@ -9034,6 +9839,14 @@ objectdef RIConsoleObject
 }
 objectdef RIMUIObject
 {
+	method RunQuest(string _ForWho=ALL, string _QuestName)
+	{
+		if ${This.ForWhoCheck[${_ForWho}]}
+		{
+			RI_RunInstances "QUEST-${_QuestName}"
+			TimedCommand 5 RIObj:Start
+		}
+	}
 	method OverseerRunNow(string _ForWho=ALL)
 	{
 		if ${This.ForWhoCheck[${_ForWho}]}
@@ -9257,7 +10070,7 @@ objectdef RIMUIObject
 		variable int _ItemCount=0
 		variable int _count2
 		_Items:Clear
-		Me:QueryInventory[_Items, ( Location=="Inventory" || Location=="Unknown" ) && Name=-"${_Item}"]
+		Me:QueryInventory[_Items, ( Location=="Inventory" || Location=="Unknown" || Location=="Harvest Bag") && Name=-"${_Item}"]
 		;echo ${_Items.Used}
 		for(_count2:Set[1];${_count2}<=${_Items.Used};_count2:Inc)
 		{
@@ -10265,6 +11078,15 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Yun Zi]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Getting a Feel For Frostfell"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Evoking Love"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - More than Beer?"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - The Meaning of Mischief"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Oceans for the Oceanless"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Under a Burning Sky"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Gears and Gadgets"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Deadly Nights"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - We Need a Hero!"]
 				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Oasis For Your Thoughts"]
 				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - In a Kingdom Far Away"]
@@ -10362,7 +11184,6 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Reign of Shadows]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["Familiars Wild"]
 				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows Timeline,0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Grown Up Solution]
 				UIElement[QuestsListBox@RI]:AddItem[Never Let You Echo]
@@ -10386,6 +11207,69 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem[The Grandiose Wordsmith Pursuance]
 				UIElement[QuestsListBox@RI]:AddItem[Ennoblement of Penitence]
 				UIElement[QuestsListBox@RI]:AddItem[Dark Side of the Dark Side]
+				UIElement[QuestsListBox@RI]:AddItem[City of Fordel Midst Side Quest Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Paludal Disposal]
+				UIElement[QuestsListBox@RI]:AddItem[Trouble in Haven]
+				UIElement[QuestsListBox@RI]:AddItem[Pryce On Their Heads]
+				UIElement[QuestsListBox@RI]:AddItem[Help for Hildreth]
+				UIElement[QuestsListBox@RI]:AddItem[Grains of Truth]
+				UIElement[QuestsListBox@RI]:AddItem[Echo Caverns Side Quest Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[A Miner Threat]
+				UIElement[QuestsListBox@RI]:AddItem[Lichen that Venom]
+				UIElement[QuestsListBox@RI]:AddItem[Lives in the Balanzite]
+				UIElement[QuestsListBox@RI]:AddItem[Her Celial Theories]
+				UIElement[QuestsListBox@RI]:AddItem[Fungus Groove]
+				UIElement[QuestsListBox@RI]:AddItem[Savage Weald Side Quest Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Every Rosg Has Its Thorn]
+				UIElement[QuestsListBox@RI]:AddItem[Savage Camo]
+				UIElement[QuestsListBox@RI]:AddItem[Shadeweaver's Thicket Side Quest Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Fleshless Tongue Untied]
+				UIElement[QuestsListBox@RI]:AddItem[Fortune Fails the Bold]
+			}
+			elseif ${_CatName.Equal[Visions of Vetrovia]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["Familiars Wild"]
+				UIElement[QuestsListBox@RI]:AddItem[Guide Quest: Guide's Guide to Visions of Vetrovia]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Flotsam For the Boatswain]
+				UIElement[QuestsListBox@RI]:AddItem[How Broken Shore Bay Got Its Name]
+				UIElement[QuestsListBox@RI]:AddItem[Savage Defense Force]
+				UIElement[QuestsListBox@RI]:AddItem[Small Plunder]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Time in Kamapor]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Keeping Secrets]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Into the Keep]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Welcome to the Jungle]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Pygmy Problems Aplenty]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Evil Dedraka]
+				UIElement[QuestsListBox@RI]:AddItem["Visions of Vetrovia: Wastes Not, Want Not"]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Handle with Scare]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Forlorn That Way]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: A Smashing Success]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Vacrul Intentions]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Eyes on Vacrul Throne]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: News Far and Wide]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia Weekly Tradeskill Mission]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia Daily Tradeskill Mission]
+				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia Tradeskill Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Local Living]
+				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Different Tastes]
+				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Find the Father]
+				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Simple Gifts]
+				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Covers and Crunchies]
+				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Say Cheese]
+				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Wild Ride]
+				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Mad Machinations]
+				UIElement[QuestsListBox@RI]:AddItem["Were is the Messenger: 'Ware the Were"]
+				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Where the Weres Are]
+				;UIElement[QuestsListBox@RI]:AddItem[Svarni Expanse Side Quest Timeline,0,FFE8E200]
+				;UIElement[QuestsListBox@RI]:AddItem[Nadavir's Golden Eggs]
+				;UIElement[QuestsListBox@RI]:AddItem[For Your Dyes Only]
+				;UIElement[QuestsListBox@RI]:AddItem[Live and Let Dye,Repeatable,FF00b33c]
+				;UIElement[QuestsListBox@RI]:AddItem[Savage Path to Follow]
+				;UIElement[QuestsListBox@RI]:AddItem[Trouble for Camp Naradasa]
+				;UIElement[QuestsListBox@RI]:AddItem[Undead Reckoning,Repeatable,FF00b33c]
+				;UIElement[QuestsListBox@RI]:AddItem[Grumblugtin's Last Hope]
 			}
 		}
 	}
@@ -10420,8 +11304,9 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:AddItem[Reign of Shadows]
 			UIElement[CategoryComboBox@RI]:AddItem[Sokokar Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Terrors of Thalumbra Crafting]
+			UIElement[CategoryComboBox@RI]:AddItem[Visions of Vetrovia]
 			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
-			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Reign of Shadows].ID}]
+			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Visions of Vetrovia].ID}]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FF5DA5CF]
@@ -14603,6 +15488,25 @@ atom(global) ri(... args)
 							RI_Var_Bool_TordenShort:Set[0];echo ISXRI: Turning OFF TordenShort
 						else
 							RI_Var_Bool_TordenShort:Set[1];echo ISXRI: Turning ON TordenShort
+					}
+					break
+				}
+				case GRABSHINYS
+				case GS
+				{
+					if ${args.Size}==2
+					{
+						if ${args[2].Equal[ON]} || ${Int[${args[2]}]}==1
+							RI_Var_Bool_GrabShinys:Set[1];echo ISXRI: Turning ON GrabShinys
+						elseif ${args[2].Equal[OFF]} || ${Int[${args[2]}]}==0
+							RI_Var_Bool_GrabShinys:Set[0];echo ISXRI: Turning OFF GrabShinys
+					}
+					else
+					{
+						if ${RI_Var_Bool_GrabShinys}
+							RI_Var_Bool_GrabShinys:Set[0];echo ISXRI: Turning OFF GrabShinys
+						else
+							RI_Var_Bool_GrabShinys:Set[1];echo ISXRI: Turning ON GrabShinys
 					}
 					break
 				}

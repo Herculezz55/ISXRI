@@ -128,7 +128,7 @@ function main()
 		else
 		{
 			;echo 	${RI_Var_Bool_LockSpotting} && !${RI_Var_Bool_Paused} && ${RI_Var_Float_LockSpotX} != 0 && ${Me.GetGameData[Self.ZoneName].Label.Equal["${RI_Var_String_LockSpotZoneName}"]} && !${Me.FlyingUsingMount} && ( !${Script[Buffer:CombatBot](exists)} || ( ${UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} ) ) 
-			if ${RI_Var_Bool_LockSpotting} && !${RI_Var_Bool_Paused} && ${RI_Var_Float_LockSpotX} !=0 && ${Me.GetGameData[Self.ZoneName].Label.Equal["${RI_Var_String_LockSpotZoneName}"]} && ( ( !${Me.FlyingUsingMount} && !${Me.WaterDepth}>0 ) ||  ${RI_Var_Float_LockSpotY}!=0 ) && ( !${Script[Buffer:CombatBot](exists)} || ( ${UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} ) ) 
+			if ${RI_Var_Bool_LockSpotting} && !${RI_Var_Bool_Paused} && ${RI_Var_Float_LockSpotX} !=0 && ${Me.GetGameData[Self.ZoneName].Label.Equal["${RI_Var_String_LockSpotZoneName}"]} && ( ( !${Me.FlyingUsingMount} && !${Me.WaterDepth}>1 ) ||  ${RI_Var_Float_LockSpotY}!=0 ) && ( !${Script[Buffer:CombatBot](exists)} || ( ${UIElement[SettingsInstancedLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} && ${UIElement[SettingsLockSpottingCheckBox@SettingsFrame@CombatBotUI].Checked} ) ) 
 			{
 				;echo calling RILockSpot
 				call RILockSpot
@@ -618,7 +618,7 @@ function CheckSwimming()
 ; }
 function RILockSpot()
 {
-	if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && ${RI_Var_Float_LockSpotY}>0 && ${Math.Distance[${Me.Y},${RI_Var_Float_LockSpotY}]}>3
+	if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>1 ) && ${RI_Var_Float_LockSpotY}>0 && ${Math.Distance[${Me.Y},${RI_Var_Float_LockSpotY}]}>3
 	{
 		;for Lockspotting while flying
 		;check our height vs our lockspots y height
@@ -665,7 +665,7 @@ function RILockSpot()
 			;call CheckSwimming
 			
 			;for Lockspotting while flying
-			if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>0 ) && ${RI_Var_Float_LockSpotY}>0
+			if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>1 ) && ${RI_Var_Float_LockSpotY}!=0
 			{
 				;check our height vs our lockspots y height
 				;now check if we are above or below desired height
@@ -702,14 +702,35 @@ function RILockSpot()
 				eq2ex stopfollow
 			;face location
 			Face ${RI_Var_Float_LockSpotX} ${RI_Var_Float_LockSpotZ}
-			;if we are not already, hold ${RI_Var_String_ForwardKey}
-			if !${Input.Button[${RI_Var_String_ForwardKey}].Pressed}
-				press -hold ${RI_Var_String_ForwardKey}
-			;press -release ${RI_Var_String_BackwardKey}
+			if ( ${Me.FlyingUsingMount} || ${Me.WaterDepth}>1 )
+			{
+				if !${Me.IsMoving}
+				{
+					press ${RI_Var_String_AutoRunKey}
+					wait 2
+				}
+			}
+			else
+			{
+				;if we are not already, hold ${RI_Var_String_ForwardKey}
+				if !${Input.Button[${RI_Var_String_ForwardKey}].Pressed}
+					press -hold ${RI_Var_String_ForwardKey}
+				;press -release ${RI_Var_String_BackwardKey}
+			}
 			wait 1
 		}
+
 		;release ${RI_Var_String_ForwardKey}
+		press -release ${RI_Var_String_FlyUpKey}
+		press -release ${RI_Var_String_FlyDownKey}
 		press -release ${RI_Var_String_ForwardKey}
+		wait 1
+		if ${Me.IsMoving}
+		{
+			press ${RI_Var_String_BackwardKey}
+			press ${RI_Var_String_BackwardKey}
+			press ${RI_Var_String_BackwardKey}
+		}
 		;press -release ${RI_Var_String_BackwardKey}
 		
 		;turn on FaceNPC
@@ -724,7 +745,7 @@ function RIFollow()
 	;while we are following, our following target exists and we are within the min and max range
 	;Temp workaround for IsSwimming not working
 	;while !${RI_Var_Bool_Paused} && !${EQ2.Zoning} && ${RI_Var_Bool_RIFollowing} && ${RI_Var_Int_RIFollowTargetID} > 0 && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} < ${RI_Var_Int_RIFollowMaxDistance} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} > ${RI_Var_Int_RIFollowMinDistance} && !${RI_Var_Bool_LockSpotting} && !${Actor[id,${RI_Var_Int_RIFollowTargetID}].FlyingUsingMount} && !${Actor[id,${RI_Var_Int_RIFollowTargetID}].IsSwimming} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}](exists)}
-	while !${RI_Var_Bool_Paused} && !${EQ2.Zoning} && ${RI_Var_Bool_RIFollowing} && ${RI_Var_Int_RIFollowTargetID} > 0 && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} < ${RI_Var_Int_RIFollowMaxDistance} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} > ${RI_Var_Int_RIFollowMinDistance} && !${RI_Var_Bool_LockSpotting} && !${Actor[id,${RI_Var_Int_RIFollowTargetID}].FlyingUsingMount} && ${Me.WaterDepth}==0 && ${Actor[id,${RI_Var_Int_RIFollowTargetID}](exists)}
+	while !${RI_Var_Bool_Paused} && !${EQ2.Zoning} && ${RI_Var_Bool_RIFollowing} && ${RI_Var_Int_RIFollowTargetID} > 0 && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} < ${RI_Var_Int_RIFollowMaxDistance} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} > ${RI_Var_Int_RIFollowMinDistance} && !${RI_Var_Bool_LockSpotting} && !${Actor[id,${RI_Var_Int_RIFollowTargetID}].FlyingUsingMount} && ${Me.WaterDepth}<=1 && ${Actor[id,${RI_Var_Int_RIFollowTargetID}](exists)}
 	{
 		if !${Actor[id,${RI_Var_Int_RIFollowTargetID}].FlyingUsingMount} && ${Me.FlyingUsingMount} && ${Math.Distance[${Me.X},${Me.Z},${Actor[id,${RI_Var_Int_RIFollowTargetID}].X},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Z}]} <= ${Math.Calc[${RI_Var_Int_RIFollowMinDistance}+7]}
 			press -hold ${RI_Var_String_FlyDownKey}
@@ -761,7 +782,7 @@ function RIFollow()
 		}
 	}
 	;if ${Actor[id,${RI_Var_Int_RIFollowTargetID}].IsSwimming} && ${Me.WhoFollowingID}!=${RI_Var_Int_RIFollowTargetID} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}](exists)}
-	if ${Me.WaterDepth}>0 && ${Me.WhoFollowingID}!=${RI_Var_Int_RIFollowTargetID} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}](exists)}
+	if ${Me.WaterDepth}>1 && ${Me.WhoFollowingID}!=${RI_Var_Int_RIFollowTargetID} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}](exists)}
 	{
 		if ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance}<69 && ${GrpChk.InMyActualGroup[${RI_Var_Int_RIFollowTargetID}]}
 		{
@@ -867,7 +888,7 @@ function RIFlyFollow()
 function RISwimFollow()
 {
 	;while !${RI_Var_Bool_Paused} && !${EQ2.Zoning} && ${RI_Var_Bool_RIFollowing} && ${RI_Var_Int_RIFollowTargetID} > 0 && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} < ${RI_Var_Int_RIFollowMaxDistance} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} > ${Math.Calc[${RI_Var_Int_RIFollowMinDistance}+6]} && !${RI_Var_Bool_LockSpotting} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].IsSwimming}
-	while !${RI_Var_Bool_Paused} && !${EQ2.Zoning} && ${RI_Var_Bool_RIFollowing} && ${RI_Var_Int_RIFollowTargetID} > 0 && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} < ${RI_Var_Int_RIFollowMaxDistance} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} > ${Math.Calc[${RI_Var_Int_RIFollowMinDistance}+6]} && !${RI_Var_Bool_LockSpotting} && ${Me.WaterDepth}>0
+	while !${RI_Var_Bool_Paused} && !${EQ2.Zoning} && ${RI_Var_Bool_RIFollowing} && ${RI_Var_Int_RIFollowTargetID} > 0 && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} < ${RI_Var_Int_RIFollowMaxDistance} && ${Actor[id,${RI_Var_Int_RIFollowTargetID}].Distance} > ${Math.Calc[${RI_Var_Int_RIFollowMinDistance}+6]} && !${RI_Var_Bool_LockSpotting} && ${Me.WaterDepth}>1
 	{
 		if ${RI_Var_Bool_Debug}
 			echo ${Time}: Our Main Swim Loop
@@ -875,14 +896,14 @@ function RISwimFollow()
 		Actor[id,${RI_Var_Int_RIFollowTargetID}]:DoFace
 		
 		;press our autorunkey
-		if !${Me.IsMoving} && ${Me.WaterDepth}>0 && ${Math.Distance[${Me.X},${Me.Z},${Actor[id,${RI_Var_Int_RIFollowTargetID}].X},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Z}]}>${Math.Calc[${RI_Var_Int_RIFollowMinDistance}+6]} && !${RI_Var_Bool_AutoRunning}
+		if !${Me.IsMoving} && ${Me.WaterDepth}>1 && ${Math.Distance[${Me.X},${Me.Z},${Actor[id,${RI_Var_Int_RIFollowTargetID}].X},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Z}]}>${Math.Calc[${RI_Var_Int_RIFollowMinDistance}+6]} && !${RI_Var_Bool_AutoRunning}
 		{
 			;echo ${Time}: we are ${Math.Distance[${Me.X},${Me.Z},${Actor[id,${RI_Var_Int_RIFollowTargetID}].X},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Z}]} away from our target 2d so hitting autorunkey
 			press ${RI_Var_String_AutoRunKey}
 			RI_Var_Bool_AutoRunning:Set[TRUE]
 			;wait 2
 		}
-		elseif ${Me.IsMoving} && ${Me.WaterDepth}>0 && ${Math.Distance[${Me.X},${Me.Z},${Actor[id,${RI_Var_Int_RIFollowTargetID}].X},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Z}]}<=${Math.Calc[${RI_Var_Int_RIFollowMinDistance}+6]} && ${RI_Var_Bool_AutoRunning}
+		elseif ${Me.IsMoving} && ${Me.WaterDepth}>1 && ${Math.Distance[${Me.X},${Me.Z},${Actor[id,${RI_Var_Int_RIFollowTargetID}].X},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Z}]}<=${Math.Calc[${RI_Var_Int_RIFollowMinDistance}+6]} && ${RI_Var_Bool_AutoRunning}
 		{
 			;echo ${Time}: we are ${Math.Distance[${Me.X},${Me.Z},${Actor[id,${RI_Var_Int_RIFollowTargetID}].X},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Z}]} away from our target 2d so stopping autorunkey
 			press -hold ${RI_Var_String_ForwardKey}
@@ -896,7 +917,7 @@ function RISwimFollow()
 		;check our height vs our follows height
 		;now check if we are above or below desired height
 		;below move down
-		if  ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y}]}>3 && ${Me.Y}>${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y} && ${Me.WaterDepth}>0
+		if  ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y}]}>3 && ${Me.Y}>${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y} && ${Me.WaterDepth}>1
 		{
 			;echo ${Time}: SwimDown
 			press -release ${RI_Var_String_FlyUpKey}
@@ -904,7 +925,7 @@ function RISwimFollow()
 			;wait 1
 		}
 		;above move up
-		elseif ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y}]}>3 && ${Me.Y}<${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y} && ${Me.WaterDepth}>0
+		elseif ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y}]}>3 && ${Me.Y}<${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y} && ${Me.WaterDepth}>1
 		{
 			;echo ${Time}: SwimUp
 			press -release ${RI_Var_String_FlyDownKey}
@@ -912,7 +933,7 @@ function RISwimFollow()
 			;wait 1
 		}
 		;stop moveup or down
-		elseif ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y}]}<=3 && ${Me.WaterDepth}>0
+		elseif ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_RIFollowTargetID}].Y}]}<=3 && ${Me.WaterDepth}>1
 		{
 			;echo ${Time}: we are there lets stop Swimming up or down
 			press -release ${RI_Var_String_FlyUpKey}

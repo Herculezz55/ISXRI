@@ -14,6 +14,7 @@ variable index:bool ZoneUnlocked
 variable index:int ZoneSetTime
 variable index:int ZoneUnlockTime
 variable index:string AddedZonesList
+variable index:string _PathFile
 variable bool _SoloMode=FALSE
 variable bool _HeroicMode=FALSE
 variable(global) bool RZ_Var_Bool_Start=FALSE
@@ -1184,13 +1185,142 @@ atom BuildIndexes(string _Expac)
 			ZoneExit:Insert["!NONE!"]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["special"]
+			ZoneEntrance:Insert["The Icy Door"]
 			ZoneEntranceLoc:Insert[""]
 			ZonePathFile:Insert[0]
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
 			ZoneUnlockTime:Insert[300]
 
+			;Zone
+			_Zone:Insert["Sanctus Seru: Echelon of Order [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Solo]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Echelon of Order [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Heroic]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Echelon of Order [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Expert]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Solo]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Heroic]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Expert]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
+			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Sanctus Seru: Arx Aeturnus [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Arx Aeturnus [Solo]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Arx Seru"]
+			ZoneEntranceLoc:Insert[-193.214371 188.161240 -0.116349]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Arx Aeturnus [Event Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Arx Aeturnus [Event Heroic]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Arx Seru"]
+			ZoneEntranceLoc:Insert[-193.214371 188.161240 -0.116349]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			_Zone:Insert["Sanctus Seru: Arx Aeturnus [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Arx Aeturnus [Expert]"]
+			ZoneFrom:Insert["Sanctus Seru [City]"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Arx Seru"]
+			ZoneEntranceLoc:Insert[-193.214371 188.161240 -0.116349]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
 			;Zone
 			_Zone:Insert["Aurelian Coast: Sambata Village [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Aurelian Coast: Sambata Village [Solo]"]
@@ -1323,135 +1453,6 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlockTime:Insert[5400]
 			
 			;Zone
-			_Zone:Insert["Sanctus Seru: Echelon of Order [Solo]"]
-			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Solo]"]
-			ZoneFrom:Insert["Sanctus Seru [City]"]
-			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
-			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
-			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
-			ZonePathFile:Insert[0]
-			ZoneUnlocked:Insert[TRUE]
-			ZoneSetTime:Insert[0]
-			ZoneUnlockTime:Insert[5400]
-			
-			_Zone:Insert["Sanctus Seru: Echelon of Order [Heroic]"]
-			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Heroic]"]
-			ZoneFrom:Insert["Sanctus Seru [City]"]
-			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
-			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
-			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
-			ZonePathFile:Insert[0]
-			ZoneUnlocked:Insert[TRUE]
-			ZoneSetTime:Insert[0]
-			ZoneUnlockTime:Insert[5400]
-			
-			_Zone:Insert["Sanctus Seru: Echelon of Order [Expert]"]
-			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Order [Expert]"]
-			ZoneFrom:Insert["Sanctus Seru [City]"]
-			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
-			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
-			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
-			ZonePathFile:Insert[0]
-			ZoneUnlocked:Insert[TRUE]
-			ZoneSetTime:Insert[0]
-			ZoneUnlockTime:Insert[5400]
-			
-			;Zone
-			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Solo]"]
-			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Solo]"]
-			ZoneFrom:Insert["Sanctus Seru [City]"]
-			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
-			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
-			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
-			ZonePathFile:Insert[0]
-			ZoneUnlocked:Insert[TRUE]
-			ZoneSetTime:Insert[0]
-			ZoneUnlockTime:Insert[5400]
-			
-			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Heroic]"]
-			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Heroic]"]
-			ZoneFrom:Insert["Sanctus Seru [City]"]
-			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
-			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
-			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
-			ZonePathFile:Insert[0]
-			ZoneUnlocked:Insert[TRUE]
-			ZoneSetTime:Insert[0]
-			ZoneUnlockTime:Insert[5400]
-			
-			_Zone:Insert["Sanctus Seru: Echelon of Divinity [Expert]"]
-			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Echelon of Divinity [Expert]"]
-			ZoneFrom:Insert["Sanctus Seru [City]"]
-			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
-			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["Zone to Sanctus Seru dungeons 1 and 2"]
-			ZoneEntranceLoc:Insert[-280.440002 180.720001 0.310000]
-			ZonePathFile:Insert[0]
-			ZoneUnlocked:Insert[TRUE]
-			ZoneSetTime:Insert[0]
-			ZoneUnlockTime:Insert[5400]
-			
-			;Zone
-			_Zone:Insert["Sanctus Seru: Arx Aeturnus [Solo]"]
-			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Arx Aeturnus [Solo]"]
-			ZoneFrom:Insert["Sanctus Seru [City]"]
-			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
-			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["Zone to Arx Seru"]
-			ZoneEntranceLoc:Insert[-193.214371 188.161240 -0.116349]
-			ZonePathFile:Insert[0]
-			ZoneUnlocked:Insert[TRUE]
-			ZoneSetTime:Insert[0]
-			ZoneUnlockTime:Insert[5400]
-			
-			_Zone:Insert["Sanctus Seru: Arx Aeturnus [Event Heroic]"]
-			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Arx Aeturnus [Event Heroic]"]
-			ZoneFrom:Insert["Sanctus Seru [City]"]
-			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
-			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["Zone to Arx Seru"]
-			ZoneEntranceLoc:Insert[-193.214371 188.161240 -0.116349]
-			ZonePathFile:Insert[0]
-			ZoneUnlocked:Insert[TRUE]
-			ZoneSetTime:Insert[0]
-			ZoneUnlockTime:Insert[5400]
-			
-			_Zone:Insert["Sanctus Seru: Arx Aeturnus [Expert]"]
-			UIElement[ZonesAvail@RZ]:AddItem["Sanctus Seru: Arx Aeturnus [Expert]"]
-			ZoneFrom:Insert["Sanctus Seru [City]"]
-			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
-			ZoneExitPopupSelection:Insert[0]
-			ZoneExitLoc:Insert[""]
-			ZoneEntrance:Insert["Zone to Arx Seru"]
-			ZoneEntranceLoc:Insert[-193.214371 188.161240 -0.116349]
-			ZonePathFile:Insert[0]
-			ZoneUnlocked:Insert[TRUE]
-			ZoneSetTime:Insert[0]
-			ZoneUnlockTime:Insert[5400]
-			
-			;Zone
 			_Zone:Insert["Fordel Midst: The Listless Spires [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: The Listless Spires [Solo]"]
 			ZoneFrom:Insert["Aurelian Coast"]
@@ -1499,7 +1500,7 @@ atom BuildIndexes(string _Expac)
 			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: Wayward Manor [Solo]"]
 			ZoneFrom:Insert["Aurelian Coast"]
 			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
+			ZoneExit:Insert["Aurelian Coast"]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_fordel_midst"]
@@ -1513,7 +1514,7 @@ atom BuildIndexes(string _Expac)
 			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: Wayward Manor [Heroic]"]
 			ZoneFrom:Insert["Aurelian Coast"]
 			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
+			ZoneExit:Insert["Aurelian Coast"]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_fordel_midst"]
@@ -1527,7 +1528,7 @@ atom BuildIndexes(string _Expac)
 			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: Wayward Manor [Expert]"]
 			ZoneFrom:Insert["Aurelian Coast"]
 			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
+			ZoneExit:Insert["Aurelian Coast"]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_fordel_midst"]
@@ -1542,7 +1543,7 @@ atom BuildIndexes(string _Expac)
 			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: Bizarre Bazaar [Solo]"]
 			ZoneFrom:Insert["Aurelian Coast"]
 			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
+			ZoneExit:Insert["Aurelian Coast"]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_fordel_midst"]
@@ -1556,7 +1557,7 @@ atom BuildIndexes(string _Expac)
 			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: Bizarre Bazaar [Heroic]"]
 			ZoneFrom:Insert["Aurelian Coast"]
 			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
+			ZoneExit:Insert["Aurelian Coast"]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_fordel_midst"]
@@ -1570,7 +1571,7 @@ atom BuildIndexes(string _Expac)
 			UIElement[ZonesAvail@RZ]:AddItem["Fordel Midst: Bizarre Bazaar [Expert]"]
 			ZoneFrom:Insert["Aurelian Coast"]
 			ZoneTimer:Insert[90]
-			ZoneExit:Insert["Exit"]
+			ZoneExit:Insert["Aurelian Coast"]
 			ZoneExitPopupSelection:Insert[0]
 			ZoneExitLoc:Insert[""]
 			ZoneEntrance:Insert["zone_to_fordel_midst"]
@@ -1712,6 +1713,609 @@ atom BuildIndexes(string _Expac)
 			
 			break
 		}
+		case Reign of Shadows
+		{
+			;Zone
+			_Zone:Insert["Echo Caverns: Fungal Foray [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Echo Caverns: Fungal Foray [Solo]"]
+			ZoneFrom:Insert["City of Fordel Midst"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Echo Caverns"]
+			ZoneEntranceLoc:Insert["397.221436 -35.983528 748.467163"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Echo Caverns: Fungal Foray [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Echo Caverns: Fungal Foray [Heroic]"]
+			ZoneFrom:Insert["City of Fordel Midst"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Echo Caverns"]
+			ZoneEntranceLoc:Insert["397.221436 -35.983528 748.467163"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Echo Caverns: Fungal Foray [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Echo Caverns: Fungal Foray [Expert]"]
+			ZoneFrom:Insert["City of Fordel Midst"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Echo Caverns"]
+			ZoneEntranceLoc:Insert["397.221436 -35.983528 748.467163"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Echo Caverns: Quarry Quandary [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Echo Caverns: Quarry Quandary [Solo]"]
+			ZoneFrom:Insert["City of Fordel Midst"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Echo Caverns"]
+			ZoneEntranceLoc:Insert["397.221436 -35.983528 748.467163"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Echo Caverns: Quarry Quandary [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Echo Caverns: Quarry Quandary [Heroic]"]
+			ZoneFrom:Insert["City of Fordel Midst"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Echo Caverns"]
+			ZoneEntranceLoc:Insert["397.221436 -35.983528 748.467163"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Echo Caverns: Quarry Quandary [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Echo Caverns: Quarry Quandary [Expert]"]
+			ZoneFrom:Insert["City of Fordel Midst"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Echo Caverns"]
+			ZoneEntranceLoc:Insert["397.221436 -35.983528 748.467163"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Savage Weald: Chaotic Caverns [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Savage Weald: Chaotic Caverns [Solo]"]
+			ZoneFrom:Insert["Savage Weald Chaotic Caverns"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["To Grimling Caves"]
+			ZoneEntranceLoc:Insert["-896.098450 75.165260 -375.025940"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Savage Weald: Chaotic Caverns [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Savage Weald: Chaotic Caverns [Heroic]"]
+			ZoneFrom:Insert["Savage Weald Chaotic Caverns"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["To Grimling Caves"]
+			ZoneEntranceLoc:Insert["-896.098450 75.165260 -375.025940"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Savage Weald: Chaotic Caverns [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Savage Weald: Chaotic Caverns [Expert]"]
+			ZoneFrom:Insert["Savage Weald Chaotic Caverns"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["To Grimling Caves"]
+			ZoneEntranceLoc:Insert["-896.098450 75.165260 -375.025940"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Savage Weald: Fort Grim [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Savage Weald: Fort Grim [Solo]"]
+			ZoneFrom:Insert["Savage Weald Fort Grim"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["To Fort Grim"]
+			ZoneEntranceLoc:Insert["-81.374565 20.860985 -259.299744"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Savage Weald: Fort Grim [Event Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Savage Weald: Fort Grim [Event Heroic]"]
+			ZoneFrom:Insert["Savage Weald Fort Grim"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["To Fort Grim"]
+			ZoneEntranceLoc:Insert["-81.374565 20.860985 -259.299744"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Savage Weald: Fort Grim [Expert Event]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Savage Weald: Fort Grim [Expert Event]"]
+			ZoneFrom:Insert["Savage Weald Fort Grim"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["To Fort Grim"]
+			ZoneEntranceLoc:Insert["-81.374565 20.860985 -259.299744"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Shadeweaver's Thicket: Feral Reserve [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shadeweaver's Thicket: Feral Reserve [Solo]"]
+			ZoneFrom:Insert["City of Shar Vahl Feral Reserve"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Shadeweaver's Thicket"]
+			ZoneEntranceLoc:Insert["-357.383545 91.861389 179.837708"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Shadeweaver's Thicket: Feral Reserve [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shadeweaver's Thicket: Feral Reserve [Heroic]"]
+			ZoneFrom:Insert["City of Shar Vahl Feral Reserve"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Shadeweaver's Thicket"]
+			ZoneEntranceLoc:Insert["-357.383545 91.861389 179.837708"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Shadeweaver's Thicket: Feral Reserve [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shadeweaver's Thicket: Feral Reserve [Expert]"]
+			ZoneFrom:Insert["City of Shar Vahl Feral Reserve"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Shadeweaver's Thicket"]
+			ZoneEntranceLoc:Insert["-357.383545 91.861389 179.837708"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			;Zone
+			_Zone:Insert["Shadeweaver's Thicket: Untamed Lands [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shadeweaver's Thicket: Untamed Lands [Solo]"]
+			ZoneFrom:Insert["City of Shar Vahl Untamed Lands"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Shadeweaver's Thicket 02"]
+			ZoneEntranceLoc:Insert["-139.178238 32.386150 244.650986"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Shadeweaver's Thicket: Untamed Lands [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shadeweaver's Thicket: Untamed Lands [Heroic]"]
+			ZoneFrom:Insert["City of Shar Vahl Untamed Lands"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Shadeweaver's Thicket 02"]
+			ZoneEntranceLoc:Insert["-139.178238 32.386150 244.650986"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Shadeweaver's Thicket: Untamed Lands [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shadeweaver's Thicket: Untamed Lands [Expert]"]
+			ZoneFrom:Insert["City of Shar Vahl Untamed Lands"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Shadeweaver's Thicket 02"]
+			ZoneEntranceLoc:Insert["-139.178238 32.386150 244.650986"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Shar Vahl: Siege Break [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shar Vahl: Siege Break [Solo]"]
+			ZoneFrom:Insert["Shadeweaver's Thicket"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to City of Shar Vahl"]
+			ZoneEntranceLoc:Insert["-544.688782 161.518738 -753.726624"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Shar Vahl: Siege Break [Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shar Vahl: Siege Break [Heroic]"]
+			ZoneFrom:Insert["Shadeweaver's Thicket"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to City of Shar Vahl"]
+			ZoneEntranceLoc:Insert["-544.688782 161.518738 -753.726624"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Shar Vahl: Siege Break [Expert]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shar Vahl: Siege Break [Expert]"]
+			ZoneFrom:Insert["Shadeweaver's Thicket"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to City of Shar Vahl"]
+			ZoneEntranceLoc:Insert["-544.688782 161.518738 -753.726624"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Echo Caverns: Zelmie Sortie [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Echo Caverns: Zelmie Sortie [Solo]"]
+			ZoneFrom:Insert["Echo Caverns"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Zelmie Sortie"]
+			ZoneEntranceLoc:Insert["615.701111 25.766819 -439.633423"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Echo Caverns: Zelmie Sortie [Event Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Echo Caverns: Zelmie Sortie [Event Heroic]"]
+			ZoneFrom:Insert["Echo Caverns"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Zelmie Sortie"]
+			ZoneEntranceLoc:Insert["615.701111 25.766819 -439.633423"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Echo Caverns: Zelmie Sortie [Expert Event]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Echo Caverns: Zelmie Sortie [Expert Event]"]
+			ZoneFrom:Insert["Echo Caverns"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Zelmie Sortie"]
+			ZoneEntranceLoc:Insert["615.701111 25.766819 -439.633423"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Shadeweaver's Thicket: Loda Kai Isle [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shadeweaver's Thicket: Loda Kai Isle [Solo]"]
+			ZoneFrom:Insert["Shadeweaver's Thicket Loda Kai Isle"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone to loda kai isle dungeon"]
+			ZoneEntranceLoc:Insert["632.874634 13.072926 316.680420"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Shadeweaver's Thicket: Loda Kai Isle [Event Heroic]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shadeweaver's Thicket: Loda Kai Isle [Event Heroic]"]
+			ZoneFrom:Insert["Shadeweaver's Thicket Loda Kai Isle"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone to loda kai isle dungeon"]
+			ZoneEntranceLoc:Insert["632.874634 13.072926 316.680420"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Shadeweaver's Thicket: Loda Kai Isle [Expert Event]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Shadeweaver's Thicket: Loda Kai Isle [Expert Event]"]
+			ZoneFrom:Insert["Shadeweaver's Thicket Loda Kai Isle"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone to loda kai isle dungeon"]
+			ZoneEntranceLoc:Insert["632.874634 13.072926 316.680420"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Vasty Deep: Toil and Trouble [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Vasty Deep: Toil and Trouble [Solo]"]
+			ZoneFrom:Insert["Loping Plains"]
+			ZoneTimer:Insert[1080]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Entrance"]
+			ZoneEntranceLoc:Insert["-312.051636,15.470000,4.626971"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[64800]
+
+			;Zone
+			_Zone:Insert["Vasty Deep: Toil and Trouble [Heroic I]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Vasty Deep: Toil and Trouble [Heroic I]"]
+			ZoneFrom:Insert["Loping Plains"]
+			ZoneTimer:Insert[1080]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Entrance"]
+			ZoneEntranceLoc:Insert["-312.051636,15.470000,4.626971"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[64800]
+
+			;Zone
+			_Zone:Insert["Vasty Deep: Toil and Trouble [Heroic II]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Vasty Deep: Toil and Trouble [Heroic II]"]
+			ZoneFrom:Insert["Loping Plains"]
+			ZoneTimer:Insert[1080]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Entrance"]
+			ZoneEntranceLoc:Insert["-312.051636,15.470000,4.626971"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[64800]
+
+			break
+		}
+		case Visions of Vetrovia
+		{
+			;Zone
+			_Zone:Insert["Svarni Expanse: Carrion Crag [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Svarni Expanse: Carrion Crag [Solo]"]
+			ZoneFrom:Insert["Svarni Expanse"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone to svarni dungeon 01"]
+			ZoneEntranceLoc:Insert[""]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Karuupa Jungle: Heart of Conflict [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Karuupa Jungle: Heart of Conflict [Solo]"]
+			ZoneFrom:Insert["Karuupa Jungle Heart of Conflict"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Karuupa Jungle: Heart of Conflict dungeons"]
+			ZoneEntranceLoc:Insert[""]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Karuupa Jungle: Dedraka's Descent [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Karuupa Jungle: Dedraka's Descent [Solo]"]
+			ZoneFrom:Insert["Karuupa Jungle Dedrakas Descent"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Karuupa Jungle: Dedraka's Descent dungeons"]
+			ZoneEntranceLoc:Insert[""]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Karuupa Jungle: Predator's Perch [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Karuupa Jungle: Predator's Perch [Solo]"]
+			ZoneFrom:Insert["Karuupa Jungle Predators Perch"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Karuupa Jungle: Predator's Perch dungeons"]
+			ZoneEntranceLoc:Insert[""]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Mahngavi Wastes: Phantasmal Shades [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Mahngavi Wastes: Phantasmal Shades [Solo]"]
+			ZoneFrom:Insert["Mahngavi Wastes"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Mahngavi Heroics Doorit"]
+			ZoneEntranceLoc:Insert["647.31 48.82 -445.64"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Mahngavi Wastes: Warpwood Cairn [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Mahngavi Wastes: Warpwood Cairn [Solo]"]
+			ZoneFrom:Insert["Mahngavi Wastes"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Mahngavi Heroics Doorit"]
+			ZoneEntranceLoc:Insert["647.31 48.82 -445.64"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			;Zone
+			_Zone:Insert["Castle Vacrul: Rosy Reverie [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Castle Vacrul: Rosy Reverie [Solo]"]
+			ZoneFrom:Insert["Forlorn Gist"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Vacrul heroic and solo"]
+			ZoneEntranceLoc:Insert["439.47 109.07 267.70"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			;Zone
+			_Zone:Insert["Castle Vacrul: Caverns of the Forsaken [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Castle Vacrul: Caverns of the Forsaken [Solo]"]
+			ZoneFrom:Insert["Forlorn Gist"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Vacrul heroic and solo"]
+			ZoneEntranceLoc:Insert["439.47 109.07 267.70"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Castle Vacrul: Suite of Screams [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Castle Vacrul: Suite of Screams [Solo]"]
+			ZoneFrom:Insert["Forlorn Gist"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Vacrul heroic and solo"]
+			ZoneEntranceLoc:Insert["439.47 109.07 267.70"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Forlorn Gist: Nightmares of Old [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Forlorn Gist: Nightmares of Old [Solo]"]
+			ZoneFrom:Insert["Forlorn Gist"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Crypt of Forlorn"]
+			ZoneEntranceLoc:Insert["460.81 109.83 249.52"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+		}
 	}
 	
 }
@@ -1852,11 +2456,13 @@ function main(... args)
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml"
 	RZObj:Maximize
 	RZObj:LoadSave
+	UIElement[ExpacComboBox@RZ]:AddItem["Visions of Vetrovia"]
+	UIElement[ExpacComboBox@RZ]:AddItem["Reign of Shadows"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Blood of Luclin"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Chaos Descending"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Planes of Prophecy"]
 	UIElement[ExpacComboBox@RZ]:SelectItem[1]
-	BuildIndexes "Blood of Luclin"
+	BuildIndexes "Visions of Vetrovia"
 	
 	;start RIMovement if it is not running
 	relay all -noredirect ${If[!${Script[Buffer:RIMovement](exists)},RIMovement,noop]}
@@ -2102,16 +2708,79 @@ function BuyFromVendor(string _VendorName, string _Item, int _Qty)
 	wait 5
 	RI_CMD_PauseCombatBots 0
 }
-function BuyWills(string _WhichWill)
+function BuyBauble(string _VendorName, string _Which)
 {
 	variable int GUCnt=0
 	GUCnt:Set[0]
-	while ${RIMUIObj.InventoryQuantity["${_WhichWill}"]}<20 && ${GUCnt:Inc}<10
-		call BuyFromVendor "Haylise Madorus" "${_WhichWill}" ${Math.Calc[20-${RIMUIObj.InventoryQuantity["${_WhichWill}"]}].Precision[0]}
+	while ${RIMUIObj.InventoryQuantity["${_Which}"]}<20 && ${GUCnt:Inc}<10
+		call BuyFromVendor "${_VendorName}" "${_Which}" ${Math.Calc[20-${RIMUIObj.InventoryQuantity["${_Which}"]}].Precision[0]}
 }
 function Goto(string _WhereToGo)
 {
 	wait 10
+	if ${_WhereToGo.Upper.Equal[MWG]}
+	{
+		_WhereToGo:Set["Mahngavi Wastes Ghoulinda"]
+	}
+	if ${_WhereToGo.Upper.Equal[SE]}
+	{
+		_WhereToGo:Set["Svarni Expanse"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SEO
+	}
+	if ${_WhereToGo.Upper.Equal[SEO]}
+	{
+		_WhereToGo:Set["Svarni Expanse"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[KJDD]}
+	{
+		_WhereToGo:Set["Karuupa Jungle Dedrakas Descent"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ KJO
+	}
+	if ${_WhereToGo.Upper.Equal[KJHC]}
+	{
+		_WhereToGo:Set["Karuupa Jungle Heart of Conflict"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ KJO
+	}
+	if ${_WhereToGo.Upper.Equal[KJPP]}
+	{
+		_WhereToGo:Set["Karuupa Jungle Predators Perch"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ KJO
+	}
+	if ${_WhereToGo.Upper.Equal[KJ]}
+	{
+		_WhereToGo:Set["Karuupa Jungle"]
+	}
+	if ${_WhereToGo.Upper.Equal[KJO]}
+	{
+		_WhereToGo:Set["Karuupa Jungle"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[MW]}
+	{
+		_WhereToGo:Set["Mahngavi Wastes"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ MWO
+	}
+	if ${_WhereToGo.Upper.Equal[MWO]}
+	{
+		_WhereToGo:Set["Mahngavi Wastes"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[FG]}
+	{
+		_WhereToGo:Set["Forlorn Gist"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ FGO
+	}
+	if ${_WhereToGo.Upper.Equal[FGO]}
+	{
+		_WhereToGo:Set["Forlorn Gist"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[B]}
+	{
+		_WhereToGo:Set["Baubles"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ B
+	}
 	if ${_WhereToGo.Upper.Equal[AC]}
 	{
 		_WhereToGo:Set["Aurelian Coast"]
@@ -2142,18 +2811,173 @@ function Goto(string _WhereToGo)
 		_WhereToGo:Set["Wracklands"]
 		Others:Set[TRUE]
 	}
+	if ${_WhereToGo.Upper.Equal[SVO]}
+	{
+		_WhereToGo:Set["City of Shar Vahl"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[SV]}
+	{
+		_WhereToGo:Set["City of Shar Vahl"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SVO
+	}
+	if ${_WhereToGo.Upper.Equal[SVUL]}
+	{
+		_WhereToGo:Set["City of Shar Vahl Untamed Lands"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SVO
+	}
+	if ${_WhereToGo.Upper.Equal[SVFR]}
+	{
+		_WhereToGo:Set["City of Shar Vahl Feral Reserve"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SVO
+	}
+	if ${_WhereToGo.Upper.Equal[SWO]}
+	{
+		_WhereToGo:Set["Savage Weald"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[SW]}
+	{
+		_WhereToGo:Set["Savage Weald"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SWO
+	}
+	if ${_WhereToGo.Upper.Equal[SWFG]}
+	{
+		_WhereToGo:Set["Savage Weald Fort Grim"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SWO
+	}
+	if ${_WhereToGo.Upper.Equal[SWCC]}
+	{
+		_WhereToGo:Set["Savage Weald Chaotic Caverns"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SWO
+	}
+	if ${_WhereToGo.Upper.Equal[FMO]}
+	{
+		_WhereToGo:Set["City of Fordel Midst"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[FM]}
+	{
+		_WhereToGo:Set["City of Fordel Midst"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ FMO
+	}
+	if ${_WhereToGo.Upper.Equal[STO]}
+	{
+		_WhereToGo:Set["Shadeweaver's Thicket"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[ST]}
+	{
+		_WhereToGo:Set["Shadeweaver's Thicket"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ STO
+	}
+	if ${_WhereToGo.Upper.Equal[STLKI]}
+	{
+		_WhereToGo:Set["Shadeweaver's Thicket Loda Kai Isle"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ STO
+	}
+	if ${_WhereToGo.Upper.Equal[ECO]}
+	{
+		_WhereToGo:Set["Echo Caverns"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[EC]}
+	{
+		_WhereToGo:Set["Echo Caverns"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ ECO
+	}
+	if ${_WhereToGo.Upper.Equal[LPO]}
+	{
+		_WhereToGo:Set["Loping Plains"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[LP]}
+	{
+		_WhereToGo:Set["Loping Plains"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ LPO
+	}
 	variable string _WhereToGoShort
-	_WhereToGoShort:Set["${_WhereToGo.Replace[" ",""].Replace["[",""].Replace["]",""]}"]
+	_WhereToGoShort:Set["${_WhereToGo.Replace[" ",""].Replace["[",""].Replace["]",""].Replace["'",""]}"]
 	
-	if ( ${_WhereToGoShort.NotEqual[AurelianCoast]} && ${_WhereToGoShort.NotEqual[SanctusSeruCity]} && ${_WhereToGoShort.NotEqual[Wracklands]})
+	if ( !${_WhereToGoShort.Find[MahngaviWastesGhoulinda](exists)} && !${_WhereToGoShort.Find[KaruupaJunglePredatorsPerch](exists)} && !${_WhereToGoShort.Find[KaruupaJungleDedrakasDescent](exists)} && !${_WhereToGoShort.Find[KaruupaJungleHeartofConflict](exists)} && !${_WhereToGoShort.Find[KaruupaJungle](exists)} && !${_WhereToGoShort.Find[MahngaviWastes](exists)} && !${_WhereToGoShort.Find[SvarniExpanse](exists)} && !${_WhereToGoShort.Find[ForlornGist](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicketLodaKaiIsle](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicket](exists)} && ${_WhereToGoShort.NotEqual[LopingPlains]} && ${_WhereToGoShort.NotEqual[EchoCaverns]} && ${_WhereToGoShort.NotEqual[CityofFordelMidst]} && !${_WhereToGoShort.Find[SavageWeald](exists)} && !${_WhereToGoShort.Find[CityofSharVahl](exists)} && ${_WhereToGoShort.NotEqual[Baubles]} && ${_WhereToGoShort.NotEqual[AurelianCoast]} && ${_WhereToGoShort.NotEqual[SanctusSeruCity]} && ${_WhereToGoShort.NotEqual[Wracklands]})
 	{
 		;echo ${_WhereToGoShort}
 		echo ISXRI: ${_WhereToGo} is not a Predetermined Goto Location
 		return
 	}
 	variable string _WhereFrom=NONE
-	;first determine where we are at 
-	if ${Zone.Name.Find[Aurelian Coast]} && ${Me.Distance[113.730003,57.369999,-657.119995]}<20
+	;first determine where we are at
+	if ${Zone.Name.Find[Svarni Expanse]} && ${Me.Distance[-523.72,89.88,-533.43]}<55
+	{
+		;we are at Svarni Expanse
+		_WhereFrom:Set["Svarni Expanse"]
+	}
+	elseif ${Zone.Name.Find[Karuupa Jungle]} && ${Me.Distance[-232.49,109.59,-691.35]}<55
+	{
+		;we are at Karuupa Jungle Dedrakas Descent
+		_WhereFrom:Set["Karuupa Jungle Dedrakas Descent"]
+	}
+	elseif ${Zone.Name.Find[Karuupa Jungle]} && ${Me.Distance[745.53,168.17,-388.38]}<55
+	{
+		;we are at Karuupa Jungle Heart of Conflict
+		_WhereFrom:Set["Karuupa Jungle Heart of Conflict"]
+	}
+	elseif ${Zone.Name.Find[Karuupa Jungle]} && ${Me.Distance[-746.00,197.57,-284.76]}<55
+	{
+		;we are at Karuupa Jungle Predators Perch
+		_WhereFrom:Set["Karuupa Jungle Predators Perch"]
+	}
+	elseif ${Zone.Name.Find[Mahngavi Wastes]} && ${Me.Distance[645.20,48.73,-446.90]}<55
+	{
+		;we are at Mahngavi Wastes
+		_WhereFrom:Set["Mahngavi Wastes"]
+	}
+	elseif ${Zone.Name.Find[Forlorn Gist]} && ${Me.Distance[434.29,108.74,205.00]}<75
+	{
+		;we are at ForlornGist
+		_WhereFrom:Set["Forlorn Gist"]
+	}
+	elseif ${Zone.Name.Find[Loping Plains]} && ${Me.Distance[-312.051636,15.470000,4.626971]}<55
+	{
+		;we are at VD Entrance
+		_WhereFrom:Set["Loping Plains"]
+	}
+	elseif ${Zone.Name.Find[Echo Caverns]} && ${Me.Distance[615.701111,25.766819,-439.633423]}<55
+	{
+		;we are at Zelmie Sortie Entrance
+		_WhereFrom:Set["Echo Caverns"]
+	}
+	elseif ${Zone.Name.Find[Shadeweaver's Thicket]} && ${Me.Distance[632.874634,13.072926,316.680420]}<55
+	{
+		;we are at Loda Kai Isle Entrance
+		_WhereFrom:Set["Shadeweaver's Thicket Loda Kai Isle"]
+	}
+	elseif ${Zone.Name.Find[Shadeweaver's Thicket]} && ${Me.Distance[-544.688782,161.518738,-753.726624]}<55
+	{
+		;we are at Shar Vahl Entrance
+		_WhereFrom:Set["Shadeweaver's Thicket"]
+	}
+	elseif ${Zone.Name.Find[Savage Weald]} && ${Me.Distance[-896.098450,75.165260,-375.025940]}<55
+	{
+		;we are at Chaotic Caverns Entrance
+		_WhereFrom:Set["SavageWealdChaoticCaverns"]
+	}
+	elseif ${Zone.Name.Find[Savage Weald]} && ${Me.Distance[-81.374565,20.860985,-259.299744]}<55
+	{
+		;we are at FortGrim Entrance
+		_WhereFrom:Set["SavageWealdFortGrim"]
+	}
+	elseif ${Zone.Name.Find[City of Shar Vahl]} && ${Me.Distance[-132.810455,30.998365,241.039520]}<20
+	{
+		;we are at Untamed Lands Entrance
+		_WhereFrom:Set["CityofSharVahlUntamedLands"]
+	}
+	elseif ${Zone.Name.Find[City of Shar Vahl]} && ${Me.Distance[-353.669128,91.861382,178.725586]}<55
+	{
+		;we are at Feral Reserve Entrance
+		_WhereFrom:Set["CityofSharVahlFeralReserve"]
+	}
+	elseif ${Zone.Name.Find[Aurelian Coast]} && ${Me.Distance[113.730003,57.369999,-657.119995]}<20
 	{
 		;we are at Sambata Entrance, Move from here
 		_WhereFrom:Set["Aurelian Coast"]
@@ -2161,8 +2985,8 @@ function Goto(string _WhereToGo)
 	elseif ${Zone.Name.Find[Aurelian Coast]} && ${Me.Distance[169.061646,61.921852,-682.376831]}<20
 	{
 		;we are at Foredel Mist Entrance, Move from here
-		call RIMObj.Move 187.207016 61.893368 -662.309143  2 0 0 0 1 1 1 1
-		call RIMObj.Move 164.109650 61.839806 -637.346558  2 0 0 0 1 1 1 1
+		call RIMObj.Move 187.207016 61.893368 -662.309143 2 0 0 0 1 1 1 1
+		call RIMObj.Move 164.109650 61.839806 -637.346558 2 0 0 0 1 1 1 1
 		_WhereFrom:Set["Aurelian Coast"]
 	}
 	elseif ${Zone.Name.Find[Aurelian Coast]} && ${Me.Distance[113.153946,66.675789,-622.250977]}<20
@@ -2195,7 +3019,7 @@ function Goto(string _WhereToGo)
 		return
 	
 	variable string _WhereFromShort
-	_WhereFromShort:Set["${_WhereFrom.Replace[" ",""].Replace["[",""].Replace["]",""]}"]
+	_WhereFromShort:Set["${_WhereFrom.Replace[" ",""].Replace["[",""].Replace["]",""].Replace["'",""]}"]
 	
 	if ${_WhereFromShort.Equal["${_WhereToGoShort}"]}
 	{
@@ -2204,70 +3028,380 @@ function Goto(string _WhereToGo)
 	}
 	;echo ${_WhereFromShort.Equal["${_WhereToGoShort}"]} // ${_WhereFromShort} // ${_WhereToGoShort}
 	
-	
-	if ${_WhereToGoShort.Equal[SanctusSeruCity]} && ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of Seru"](exists)}
+	if ${_WhereToGoShort.Equal[MahngaviWastesGhoulinda]}
+	{
+		call UseBauble "Renfry's Basement Bauble" "Renfry's Basement"
+		call RenfrysBasementMahngaviWastesEntrance
+		call MahngaviWastesEntranceMahngaviWastesGhoulinda
+	}
+	elseif ${_WhereToGoShort.Equal[SvarniExpanse]}
+	{
+		RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+		wait 5
+		RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+		wait 50 ${EQ2.Zoning}==1
+		wait 600 ${EQ2.Zoning}==0
+		wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
+		if !${Others}
+			call SvarniExpanseSvarniGatewaySvarniExpanseInstances
+	}
+	elseif ${_WhereToGoShort.Equal[KaruupaJungle]}
+	{
+		if ${_WhereFromShort.Equal[SvarniExpanse]}
+		{
+			call SvarniExpanseInstancesKaruupaJunglePad
+		}
+		else
+		{
+			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+			wait 5
+			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+			wait 50 ${EQ2.Zoning}==1
+			wait 600 ${EQ2.Zoning}==0
+			wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
+			call SvarniExpanseSvarniGatewayKaruupaJunglePad
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[KaruupaJungleHeartofConflict]}
+	{
+		if ${_WhereFromShort.Equal[KaruupaJungleDedrakasDescent]}
+		{
+			if !${Others}
+				call KaruupaJungleDedrakasDescentKaruupaJungleHeartofConflict
+		}
+		elseif ${_WhereFromShort.Equal[KaruupaJunglePredatorsPerch]}
+		{
+			if !${Others}
+				call KaruupaJunglePredatorsPerchKaruupaJungleHeartofConflict
+		}
+		elseif ${_WhereFromShort.Equal[SvarniExpanse]}
+		{
+			call SvarniExpanseInstancesKaruupaJunglePad
+			if !${Others}
+				call KaruupaJunglePadKaruupaJungleHeartofConflict
+		}
+		else
+		{
+			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+			wait 5
+			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+			wait 50 ${EQ2.Zoning}==1
+			wait 600 ${EQ2.Zoning}==0
+			wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
+			call SvarniExpanseSvarniGatewayKaruupaJunglePad
+			if !${Others}
+				call KaruupaJunglePadKaruupaJungleHeartofConflict
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[KaruupaJungleDedrakasDescent]}
+	{
+		if ${_WhereFromShort.Equal[KaruupaJungleHeartofConflict]}
+		{
+			if !${Others}
+				call KaruupaJungleHeartofConflictKaruupaJungleDedrakasDescent
+		}
+		elseif ${_WhereFromShort.Equal[KaruupaJunglePredatorsPerch]}
+		{
+			if !${Others}
+				call KaruupaJunglePredatorsPerchKaruupaJungleDedrakasDescent
+		}
+		elseif ${_WhereFromShort.Equal[SvarniExpanse]}
+		{
+			call SvarniExpanseInstancesKaruupaJunglePad
+			if !${Others}
+				call KaruupaJunglePadKaruupaJungleDedrakasDescent
+		}
+		else
+		{
+			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+			wait 5
+			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+			wait 50 ${EQ2.Zoning}==1
+			wait 600 ${EQ2.Zoning}==0
+			wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
+			call SvarniExpanseSvarniGatewayKaruupaJunglePad
+			if !${Others}
+				call KaruupaJunglePadKaruupaJungleDedrakasDescent
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[KaruupaJunglePredatorsPerch]}
+	{
+		if ${_WhereFromShort.Equal[KaruupaJungleHeartofConflict]}
+		{
+			if !${Others}
+				call KaruupaJungleHeartofConflictKaruupaJunglePredatorsPerch
+		}
+		elseif ${_WhereFromShort.Equal[KaruupaJungleDedrakasDescent]}
+		{
+			if !${Others}
+				call KaruupaJungleDedrakasDescentKaruupaJunglePredatorsPerch
+		}
+		elseif ${_WhereFromShort.Equal[SvarniExpanse]}
+		{
+			call SvarniExpanseInstancesKaruupaJunglePad
+			if !${Others}
+				call KaruupaJunglePadKaruupaJunglePredatorsPerch
+		}
+		else
+		{
+			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+			wait 5
+			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
+			wait 50 ${EQ2.Zoning}==1
+			wait 600 ${EQ2.Zoning}==0
+			wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
+			call SvarniExpanseSvarniGatewayKaruupaJunglePad
+			if !${Others}
+				call KaruupaJunglePadKaruupaJunglePredatorsPerch
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[MahngaviWastes]}
+	{
+		call UseBauble "Renfry's Basement Bauble" "Renfry's Basement"
+		call RenfrysBasementMahngaviWastesEntrance
+		if !${Others}
+			call MahngaviWastesEntranceMahngaviWastesInstances
+	}
+	elseif ${_WhereToGoShort.Equal[ForlornGist]}
+	{
+		call UseBauble "Renfry's Basement Bauble" "Renfry's Basement"
+		call RenfrysBasementForlornGistInstances
+	}
+	elseif ${_WhereToGoShort.Equal[LopingPlains]}
+	{
+		RIMUIObj:FastTravel[${Me.Name},"City of Fordel Midst"]
+		wait 5
+		RIMUIObj:FastTravel[${Me.Name},"City of Fordel Midst"]
+		wait 50 ${EQ2.Zoning}==1
+		wait 600 ${EQ2.Zoning}==0
+		wait 50 ${Zone.ShortName.Find[exp17_dun_fordel_midst](exists)}
+		call RIMObj.Move 263.477509 -27.628996 778.244385
+		call Door 10 "Ulteran Spire Portal" 1
+		wait 20
+		call RIMObj.TravelMap "Loping Plains"
+		wait 5
+		if ${Zone.Name.Find[Loping Plains]}==0
+			call RIMObj.TravelMap "Loping Plains"	
+		;if !${Others} -- because of quest giver
+			call LopingPlainsSpiresLopingPlainsVDEntrance
+	}
+	elseif ${_WhereToGoShort.Equal[EchoCaverns]}
+	{
+		if ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of Echo Caverns"](exists)}
+		{
+			call UseBauble "Will of Echo Caverns" "Echo Caverns"
+			call EchoCavernsZoneEntranceEchoCavernsZelmieSortie
+		}
+		else
+		{
+			call Goto Baubles
+			call Goto ${_WhereToGoShort}
+			return
+		}
+	}
+	elseif ${_WhereToGoShort.Find[ShadeweaversThicket]}
+	{
+		if ${_WhereFromShort.Equal[ShadeweaversThicket]}
+			noop
+		else
+		{
+			if ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of Shadeweaver's Thicket"](exists)}
+			{
+				call UseBauble "Will of Shadeweaver's Thicket" "Shadeweaver's Thicket"
+			}
+			else
+			{
+				call Goto Baubles
+				call Goto ${_WhereToGoShort}
+				return
+			}
+		}
+		if ${_WhereToGoShort.Find[LodaKaiIsle]}
+		{
+			;echo cc
+			call ShadeweaversThicketZoneEntranceShadeweaversThicketLodaKaiIsle
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[CityofFordelMidst]}
+	{
+		if ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of Echo Caverns"](exists)}
+		{
+			call UseBauble "Will of Echo Caverns" "Echo Caverns"
+			call RIMObj.Move 36.298523 161.036072 -142.215561
+			call ZoneDoor Exit
+		}
+		else
+		{
+			call Goto Baubles
+			call Goto ${_WhereToGoShort}
+			return
+		}
+	}
+	elseif ${_WhereToGoShort.Find[SavageWeald]}
+	{
+		if ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of the Weald"](exists)}
+		{
+			if ${_WhereFromShort.Find[ChaoticCaverns]}
+			{
+				call SavageWealdChaoticCavernsSavageWealdCommonPoint
+			}
+			elseif ${_WhereFromShort.Find[FortGrim]}
+			{
+				call SavageWealdFortGrimSavageWealdCommonPoint
+			}
+			else
+			{
+				call UseBauble "Will of the Weald" "Savage Weald"
+				if ${Others}
+					Script:End
+				call WilloftheWealdSavageWealdCommonPoint
+			}
+		}
+		else
+		{
+			call Goto Baubles
+			call Goto ${_WhereToGoShort}
+			return
+		}
+		if ${_WhereToGoShort.Find[ChaoticCaverns]}
+		{
+			;echo cc
+			call SavageWealdCommonPointSavageWealdChaoticCaverns
+		}
+		elseif ${_WhereToGoShort.Find[FortGrim]}
+		{
+			;echo fort grim
+			call SavageWealdCommonPointSavageWealdFortGrim
+		}
+	}
+	elseif ${_WhereToGoShort.Find[CityofSharVahl]}
+	{
+		if ${Me.Inventory[Query, Location=="Inventory" && Name=="Spirit of the Vah Shir"](exists)}
+		{
+			if ${_WhereFromShort.Find[UntamedLands]}
+			{
+				call RIMObj.Move -130.397598 30.134352 210.108673 2 0 0 0 1 0 1 1
+				call RIMObj.Move -168.059021 31.653652 187.523453
+			}
+			elseif ${_WhereFromShort.Find[FeralReserve]}
+			{
+				call CityofSharVahlEntrance2CityofSharVahlCommonPoint2
+				call CityofSharVahlCommonPoint2CityofSharVahlCommonPoint
+			}
+			else
+			{
+				call UseBauble "Spirit of the Vah Shir" "City of Shar Vahl"
+				if ${Others}
+					Script:End
+				call CityofSharVahlEntranceCityofSharVahlCommonPoint
+			}
+		}
+		else
+		{
+			call Goto Baubles
+			call Goto ${_WhereToGoShort}
+			return
+		}
+		if ${_WhereToGoShort.Find[UntamedLands]}
+		{
+			;echo untamed
+			call RIMObj.Move -130.397598 30.134352 210.108673 2 0 0 0 1 0 1 1
+			call RIMObj.Move -134.994446 31.610161 241.719650
+		}
+		elseif ${_WhereToGoShort.Find[FeralReserve]}
+		{
+			;echo feral
+			call CityofSharVahlCommonPointCityofSharVahlCommonPoint2
+			call CityofSharVahlCommonPoint2CityofSharVahlEntrance2
+			call RIMObj.Move -354.965240 91.861389 179.189774
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[SanctusSeruCity]} && ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of Seru"](exists)}
 	{
 		echo ISXRI: Moving to ${_WhereToGo} with Will of Seru
+		call UseBauble "Will of Seru" "Sanctus Seru [City]"
+
+		call RIMObj.Move 9.140417 180.650330 177.574127 2 0 0 0 1 0 1 1		
 		;pause bots
 		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory[Query, Name=-"Will of Seru" && Location=="Inventory"]:Use
-		wait 5
-		Me.Inventory[Query, Name=-"Will of Seru" && Location=="Inventory"]:Use
-		wait 50 ${EQ2.Zoning}
-		wait 600 !${EQ2.Zoning}
-		wait 50 ${Zone.Name.Equal["Sanctus Seru [City]"]}
-		call RIMObj.Move 9.140417 180.650330 177.574127 2 0 0 0 1 0 1 1
 		
-		call BuyWills "Will of Seru"
-		call BuyWills "Will of the Wracklands"
-		call BuyWills "Will of the Coast"
-		call BuyWills "Will of The Blinding"
-
+		call BuyBauble "Haylise Madorus" "Will of Seru"
+		call BuyBauble "Haylise Madorus" "Will of the Wracklands"
+		call BuyBauble "Haylise Madorus" "Will of the Coast"
+		call BuyBauble "Haylise Madorus" "Will of The Blinding"
+		MerchantWindow:Close
 		;unpause bots
 		RI_CMD_PauseCombatBots 0
 		eq2ex target_none
+
 		if !${Others}
 			call WillofSeruToSanctusSeruCity
 	}
 	elseif ${_WhereToGoShort.Equal[AurelianCoast]} && ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of the Coast"](exists)}
 	{
 		echo ISXRI: Moving to ${_WhereToGo} with Will of the Coast
-		;pause bots
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory[Query, Name=-"Will of the Coast" && Location=="Inventory"]:Use
-		wait 5
-		Me.Inventory[Query, Name=-"Will of the Coast" && Location=="Inventory"]:Use
-		wait 50 ${EQ2.Zoning}
-		wait 600 !${EQ2.Zoning}
-		wait 50 ${Zone.Name.Equal["Aurelian Coast"]}
-		;unpause bots
-		RI_CMD_PauseCombatBots 0
+		call UseBauble "Will of the Coast" "Aurelian Coast"
 		if !${Others}
 			call WilloftheCoastToAurelianCoast
 	}
 	elseif ${_WhereToGoShort.Equal[Wracklands]} && ${Me.Inventory[Query, Location=="Inventory" && Name=="Will of the Wracklands"](exists)}
 	{
 		echo ISXRI: Moving to ${_WhereToGo} with Will of the Wracklands
-		;pause bots
-		RI_CMD_PauseCombatBots 1
-		eq2ex cancel_spellcast
-		wait 2
-		Me.Inventory[Query, Name=-"Will of the Wracklands" && Location=="Inventory"]:Use
-		wait 5
-		Me.Inventory[Query, Name=-"Will of the Wracklands" && Location=="Inventory"]:Use
-		wait 50 ${EQ2.Zoning}
-		wait 600 !${EQ2.Zoning}
-		wait 50 ${Zone.Name.Equal["Wracklands"]}
-		;unpause bots
-		RI_CMD_PauseCombatBots 0
+		call UseBauble "Will of the Wracklands" "Wracklands"
 		if !${Others}
 			call WilloftheWracklandsToWracklands
 	}
-	else
+	elseif ${_WhereToGoShort.Equal[Baubles]}
+	{
+		;if ${RIMUIObj.InventoryQuantity["Will of Echo Caverns"]}==0
+		;{
+			RIMUIObj:FastTravel[${Me.Name},"City of Fordel Midst"]
+			wait 50 ${EQ2.Zoning}==1
+			wait 600 ${EQ2.Zoning}==0
+			wait 50 ${Zone.ShortName.Find[exp17_dun_fordel_midst](exists)}
+			;call RIMObj.Move 631.461609 428.167542 -580.186646
+			;call Door 10 "Ulteran Spire Portal" 1
+			;wait 5
+			;call RIMObj.TravelMap "City of Fordel Midst"
+			call CityofFordelMidstZoneEntranceCityofFordelMidstBauble
+			call BuyBauble "Sarah Polson" "Will of Echo Caverns"
+			call BuyBauble "Sarah Polson" "Will of Shadeweaver's Thicket"
+			call BuyBauble "Sarah Polson" "Will of the Weald"
+			MerchantWindow:Close
+		;}
+		;elseif ${RIMUIObj.InventoryQuantity["Will of Echo Caverns"]}<20 || ${RIMUIObj.InventoryQuantity["Will of Shadeweaver's Thicket"]}<20 || ${RIMUIObj.InventoryQuantity["Will of the Weald"]}<20
+		;{
+		;	call UseBauble "Will of Echo Caverns" "Echo Caverns"
+		;	call WillofEchoCavernsCityofFordelMidstBauble
+		;	call BuyBauble "Sarah Polson" "Will of Echo Caverns"
+		;	call BuyBauble "Sarah Polson" "Will of Shadeweaver's Thicket"
+		;	call BuyBauble "Sarah Polson" "Will of the Weald"
+		;	MerchantWindow:Close
+		;}
+		if ${RIMUIObj.InventoryQuantity["Spirit of the Vah Shir"]}==0
+		{
+			call UseBauble "Will of Shadeweaver's Thicket" "Shadeweaver's Thicket"
+			call RIMObj.Move -542.492981 161.079468 -753.425476
+			Call ZoneDoor "Zone to City of Shar Vahl" 1
+			call CityofSharVahlEntrance2CityofSharVahlCommonPoint2
+			call CityofSharVahlCommonPoint2CityofSharVahlBauble
+			call BuyBauble Chiallar "Spirit of the Vah Shir"
+			MerchantWindow:Close
+		}
+		elseif ${RIMUIObj.InventoryQuantity["Spirit of the Vah Shir"]}<20
+		{
+			call UseBauble "Spirit of the Vah Shir" "City of Shar Vahl"
+			call SpiritoftheVahShirCityofSharVahlBauble
+			call BuyBauble Chiallar "Spirit of the Vah Shir"
+			MerchantWindow:Close
+		}
+		if ${Me.Ability[id,3266969222].IsReady}
+		{
+			;call to guild hall
+			call RIMObj.CallToGuildHall 1
+		}
+	}
+	elseif ${DeprecatedBYHERC}
 	{	
 		;could not detect where we are, calling to guild hall and determining if we can go from there, unless we are in the guildhall
 		if ${RIMUIObj.MainIconIDExists[${Me.ID},955,0]}
@@ -2291,6 +3425,1451 @@ function Goto(string _WhereToGo)
 		call ${_WhereFromShort}${_WhereToGoShort}
 	}
 	
+}
+function UseBauble(string _Which, string _ZoneName)
+{
+	;pause bots
+	RI_CMD_PauseCombatBots 1
+	eq2ex cancel_spellcast
+	wait 2
+	Me.Inventory[Query, Name=-"${_Which}" && Location=="Inventory"]:Use
+	wait 5
+	Me.Inventory[Query, Name=-"${_Which}" && Location=="Inventory"]:Use
+	wait 50 ${EQ2.Zoning}
+	wait 600 !${EQ2.Zoning}
+	wait 50 ${Zone.Name.Equal["${_ZoneName}"]}
+	;unpause bots
+	RI_CMD_PauseCombatBots 0
+}
+function RenfrysBasementForlornGistInstances()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-0.18 0.02 28.59]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[Custom|ZoneDoor|zone_from_forlorn_tradeskill]
+	if !${Others}
+	{
+		_PathFile:Insert[-326.30 13.94 52.29]
+		_PathFile:Insert[Custom|HailActor|a forlorn stable master|2]
+		_PathFile:Insert[Custom|WaitWhileMoving]
+	}
+	
+	call NavigatePath
+}
+function SvarniExpanseInstancesKaruupaJunglePad()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-546.48 81.45 -525.99]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-546.48 131.57 -525.99]
+	_PathFile:Insert[-530.42 138.79 -478.99]
+	_PathFile:Insert[-514.25 138.79 -431.67]
+	_PathFile:Insert[-481.23 138.79 -393.60]
+	_PathFile:Insert[-446.08 138.79 -357.64]
+	_PathFile:Insert[-411.53 138.79 -321.05]
+	_PathFile:Insert[-377.10 138.79 -284.57]
+	_PathFile:Insert[-342.64 138.79 -248.06]
+	_PathFile:Insert[-308.27 138.79 -211.65]
+	_PathFile:Insert[-273.87 138.79 -175.22]
+	_PathFile:Insert[-239.30 138.79 -138.59]
+	_PathFile:Insert[-204.87 138.79 -102.12]
+	_PathFile:Insert[-170.49 138.79 -65.69]
+	_PathFile:Insert[-136.05 138.79 -29.21]
+	_PathFile:Insert[-101.60 138.79 7.28]
+	_PathFile:Insert[-67.13 138.79 43.80]
+	_PathFile:Insert[-32.78 138.79 80.19]
+	_PathFile:Insert[1.67 138.79 116.69]
+	_PathFile:Insert[13.32 138.79 165.47]
+	_PathFile:Insert[16.61 138.79 215.77]
+	_PathFile:Insert[11.54 138.79 265.59]
+	_PathFile:Insert[5.13 128.92 314.45]
+	_PathFile:Insert[-0.68 115.74 362.33]
+	_PathFile:Insert[-6.51 102.51 410.35]
+	_PathFile:Insert[-12.36 89.25 458.52]
+	_PathFile:Insert[-18.19 76.04 506.50]
+	_PathFile:Insert[-23.35 64.34 548.98]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-31.22 52.50 551.82]
+	_PathFile:Insert[Custom|HailActor|a plumedrake keeper|2]
+	_PathFile:Insert[Custom|TravelMap|Karuupa Jungle]
+	_PathFile:Insert[Custom|WaitWhileMoving]
+	
+	call NavigatePath
+}
+function MahngaviWastesEntranceMahngaviWastesGhoulinda()
+{
+	_PathFile:Clear
+	_PathFile:Insert[568.00 142.90 530.19]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[568.00 192.98 530.19]
+	_PathFile:Insert[527.52 199.83 501.57]
+	_PathFile:Insert[510.72 216.69 457.33]
+	_PathFile:Insert[498.01 216.69 408.76]
+	_PathFile:Insert[504.91 205.09 360.43]
+	_PathFile:Insert[513.85 184.64 315.57]
+	_PathFile:Insert[523.12 159.72 273.05]
+	_PathFile:Insert[532.48 131.44 232.67]
+	_PathFile:Insert[542.69 99.24 177.94]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[540.73 95.51 166.05]
+	_PathFile:Insert[Custom|ZoneDoor|Ghoulinda's Lair]
+	_PathFile:Insert[-70.07 -3.04 -117.79]
+	_PathFile:Insert[-69.66 -3.04 -121.21]
+	_PathFile:Insert[Custom|Wait|20]
+	
+	call NavigatePath
+}
+function MahngaviWastesEntranceMahngaviWastesInstances()
+{
+	_PathFile:Clear
+	_PathFile:Insert[559.21 141.63 531.92]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[559.21 191.66 531.92]
+	_PathFile:Insert[540.77 225.69 500.06]
+	_PathFile:Insert[517.75 222.95 455.52]
+	_PathFile:Insert[494.69 222.95 410.92]
+	_PathFile:Insert[484.49 222.95 361.89]
+	_PathFile:Insert[477.89 222.95 312.14]
+	_PathFile:Insert[472.44 222.95 262.31]
+	_PathFile:Insert[469.31 222.95 212.32]
+	_PathFile:Insert[466.19 222.95 162.29]
+	_PathFile:Insert[463.06 222.95 112.19]
+	_PathFile:Insert[459.94 222.95 62.16]
+	_PathFile:Insert[456.81 222.95 11.95]
+	_PathFile:Insert[453.69 222.95 -38.02]
+	_PathFile:Insert[450.56 222.95 -88.04]
+	_PathFile:Insert[447.43 222.95 -138.21]
+	_PathFile:Insert[468.19 212.84 -182.65]
+	_PathFile:Insert[492.26 197.17 -223.87]
+	_PathFile:Insert[517.70 176.55 -262.00]
+	_PathFile:Insert[542.39 154.95 -300.00]
+	_PathFile:Insert[566.38 127.96 -334.68]
+	_PathFile:Insert[595.06 99.76 -364.49]
+	_PathFile:Insert[609.58 69.86 -402.27]
+	_PathFile:Insert[631.30 60.71 -447.31]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[645.20 48.73 -446.90]
+	_PathFile:Insert[Custom|Wait|20]
+	
+	call NavigatePath
+}
+function RenfrysBasementMahngaviWastesEntrance()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-0.12 0.02 28.71]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[Custom|ZoneDoor|zone_from_forlorn_tradeskill]
+	_PathFile:Insert[-349.92 13.21 56.56]
+	_PathFile:Insert[-345.51 13.23 47.52]
+	_PathFile:Insert[-341.21 13.59 38.49]
+	_PathFile:Insert[-336.73 13.80 29.31]
+	_PathFile:Insert[-332.03 12.55 20.22]
+	_PathFile:Insert[-323.64 8.00 16.11]
+	_PathFile:Insert[-314.42 6.76 11.75]
+	_PathFile:Insert[-319.09 5.72 2.57]
+	_PathFile:Insert[-323.37 4.76 -6.43]
+	_PathFile:Insert[-327.40 3.40 -15.77]
+	_PathFile:Insert[-330.61 2.36 -25.23]
+	_PathFile:Insert[-333.76 1.81 -34.87]
+	_PathFile:Insert[-336.92 1.14 -44.65]
+	_PathFile:Insert[-339.61 0.90 -54.48]
+	_PathFile:Insert[-342.26 0.61 -64.18]
+	_PathFile:Insert[-344.93 -0.01 -73.94]
+	_PathFile:Insert[-347.66 -0.13 -83.91]
+	_PathFile:Insert[-350.36 0.29 -93.78]
+	_PathFile:Insert[-353.60 0.32 -103.43]
+	_PathFile:Insert[-357.10 0.32 -112.96]
+	_PathFile:Insert[-360.83 0.53 -122.38]
+	_PathFile:Insert[-364.84 0.50 -131.76]
+	_PathFile:Insert[-369.08 0.49 -141.07]
+	_PathFile:Insert[-373.61 0.32 -150.24]
+	_PathFile:Insert[-379.27 0.32 -158.60]
+	_PathFile:Insert[-385.99 0.32 -166.05]
+	_PathFile:Insert[-393.68 -0.17 -172.68]
+	_PathFile:Insert[-402.00 -0.23 -178.70]
+	_PathFile:Insert[-410.91 -0.06 -183.88]
+	_PathFile:Insert[-419.90 0.20 -188.30]
+	_PathFile:Insert[-429.34 0.39 -192.24]
+	_PathFile:Insert[-438.97 0.75 -195.25]
+	_PathFile:Insert[-449.04 1.27 -196.94]
+	_PathFile:Insert[-459.33 1.74 -196.82]
+	_PathFile:Insert[-469.47 1.95 -196.40]
+	_PathFile:Insert[-479.65 2.22 -196.25]
+	_PathFile:Insert[-489.84 2.13 -196.09]
+	_PathFile:Insert[-500.10 2.13 -195.94]
+	_PathFile:Insert[-510.17 2.15 -196.10]
+	_PathFile:Insert[-520.38 2.15 -196.84]
+	_PathFile:Insert[-536.65 1.73 -199.30]
+	_PathFile:Insert[Custom|ZoneDoor|Zone to Mahngavi Wastes]
+	
+	call NavigatePath
+}
+function KaruupaJunglePredatorsPerchKaruupaJungleDedrakasDescent()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-743.86 196.38 -270.56]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-743.86 229.62 -270.56]
+	_PathFile:Insert[-703.68 229.62 -240.58]
+	_PathFile:Insert[-703.68 279.71 -240.58]
+	_PathFile:Insert[-680.99 314.64 -268.59]
+	_PathFile:Insert[-652.20 324.15 -308.39]
+	_PathFile:Insert[-620.13 324.15 -347.01]
+	_PathFile:Insert[-586.95 324.15 -384.47]
+	_PathFile:Insert[-553.63 324.15 -422.08]
+	_PathFile:Insert[-520.39 324.15 -459.61]
+	_PathFile:Insert[-487.03 324.15 -497.27]
+	_PathFile:Insert[-453.77 324.15 -534.83]
+	_PathFile:Insert[-420.33 324.15 -572.58]
+	_PathFile:Insert[-386.92 324.15 -609.95]
+	_PathFile:Insert[-351.03 324.15 -645.09]
+	_PathFile:Insert[-309.18 322.17 -673.00]
+	_PathFile:Insert[-264.72 304.09 -688.05]
+	_PathFile:Insert[-236.59 295.35 -692.65]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]]
+	_PathFile:Insert[-233.14 109.54 -691.85]
+	_PathFile:Insert[Custom|Wait|20]
+	
+	call NavigatePath
+}
+
+function KaruupaJunglePredatorsPerchKaruupaJungleHeartofConflict()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-760.23 195.91 -258.13]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-760.23 246.08 -258.13]
+	_PathFile:Insert[-724.53 281.15 -258.10]
+	_PathFile:Insert[-682.31 307.97 -258.06]
+	_PathFile:Insert[-632.04 307.97 -258.02]
+	_PathFile:Insert[-581.89 307.97 -257.98]
+	_PathFile:Insert[-531.88 307.97 -254.88]
+	_PathFile:Insert[-482.19 309.43 -248.76]
+	_PathFile:Insert[-432.31 309.43 -242.80]
+	_PathFile:Insert[-382.47 309.43 -236.84]
+	_PathFile:Insert[-332.54 309.43 -230.87]
+	_PathFile:Insert[-282.83 308.32 -225.04]
+	_PathFile:Insert[-234.14 297.10 -220.31]
+	_PathFile:Insert[-185.55 285.91 -215.60]
+	_PathFile:Insert[-136.91 274.71 -210.89]
+	_PathFile:Insert[-87.89 267.41 -203.22]
+	_PathFile:Insert[-39.40 263.83 -191.13]
+	_PathFile:Insert[9.31 260.20 -178.98]
+	_PathFile:Insert[57.83 256.54 -166.89]
+	_PathFile:Insert[106.32 252.88 -154.80]
+	_PathFile:Insert[154.95 251.12 -142.67]
+	_PathFile:Insert[203.48 251.12 -130.56]
+	_PathFile:Insert[253.01 251.12 -122.14]
+	_PathFile:Insert[293.37 251.12 -151.69]
+	_PathFile:Insert[332.53 251.12 -182.83]
+	_PathFile:Insert[374.44 251.12 -210.53]
+	_PathFile:Insert[418.58 251.12 -234.13]
+	_PathFile:Insert[462.78 251.12 -257.79]
+	_PathFile:Insert[507.09 251.12 -281.50]
+	_PathFile:Insert[551.14 244.23 -304.60]
+	_PathFile:Insert[594.79 231.68 -325.98]
+	_PathFile:Insert[638.68 218.53 -346.78]
+	_PathFile:Insert[681.09 204.54 -369.34]
+	_PathFile:Insert[724.60 187.17 -387.62]
+	_PathFile:Insert[746.69 180.93 -395.40]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[745.70 168.18 -387.30]
+	_PathFile:Insert[Custom|Wait|20]
+	
+	call NavigatePath
+}
+
+function KaruupaJunglePadKaruupaJunglePredatorsPerch()
+{
+	_PathFile:Clear
+	_PathFile:Insert[752.83 194.47 -777.65]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[752.83 244.62 -777.65]
+	_PathFile:Insert[721.90 245.60 -738.16]
+	_PathFile:Insert[690.86 245.60 -698.54]
+	_PathFile:Insert[659.96 245.60 -659.08]
+	_PathFile:Insert[629.07 245.60 -619.64]
+	_PathFile:Insert[598.08 245.60 -580.06]
+	_PathFile:Insert[567.20 245.60 -540.64]
+	_PathFile:Insert[536.33 245.60 -501.23]
+	_PathFile:Insert[505.31 245.60 -461.62]
+	_PathFile:Insert[474.28 245.60 -422.00]
+	_PathFile:Insert[443.45 245.60 -382.63]
+	_PathFile:Insert[412.58 245.60 -343.23]
+	_PathFile:Insert[381.47 245.60 -303.49]
+	_PathFile:Insert[350.51 245.60 -263.96]
+	_PathFile:Insert[319.57 245.60 -224.46]
+	_PathFile:Insert[288.72 245.60 -185.07]
+	_PathFile:Insert[257.73 245.60 -145.50]
+	_PathFile:Insert[226.76 245.60 -105.95]
+	_PathFile:Insert[176.82 245.60 -100.12]
+	_PathFile:Insert[129.28 245.60 -115.66]
+	_PathFile:Insert[81.75 245.60 -131.19]
+	_PathFile:Insert[34.17 245.60 -146.74]
+	_PathFile:Insert[-14.19 245.60 -160.17]
+	_PathFile:Insert[-62.48 245.60 -173.57]
+	_PathFile:Insert[-110.94 245.60 -187.01]
+	_PathFile:Insert[-159.12 245.60 -200.38]
+	_PathFile:Insert[-207.47 245.60 -213.79]
+	_PathFile:Insert[-256.71 245.60 -224.16]
+	_PathFile:Insert[-306.24 245.60 -232.30]
+	_PathFile:Insert[-355.73 245.60 -240.43]
+	_PathFile:Insert[-405.33 245.60 -248.59]
+	_PathFile:Insert[-409.79 298.17 -249.48]
+	_PathFile:Insert[-458.52 304.29 -259.25]
+	_PathFile:Insert[-508.07 304.29 -266.73]
+	_PathFile:Insert[-558.14 304.29 -269.56]
+	_PathFile:Insert[-608.29 304.29 -272.26]
+	_PathFile:Insert[-658.35 304.29 -274.96]
+	_PathFile:Insert[-706.11 297.44 -261.41]
+	_PathFile:Insert[-733.24 286.40 -220.60]
+	_PathFile:Insert[-761.65 245.30 -225.52]
+	_PathFile:Insert[-755.23 210.37 -260.71]
+	_PathFile:Insert[-752.67 202.92 -269.55]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-746.29 197.41 -284.27]
+	_PathFile:Insert[Custom|Wait|20]
+	
+	call NavigatePath
+}
+function KaruupaJungleHeartofConflictKaruupaJunglePredatorsPerch()
+{
+	_PathFile:Clear
+	_PathFile:Insert[748.43 168.32 -395.57]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[748.43 218.50 -395.57]
+	_PathFile:Insert[702.83 224.43 -375.30]
+	_PathFile:Insert[656.90 224.43 -354.89]
+	_PathFile:Insert[610.96 224.43 -334.47]
+	_PathFile:Insert[565.11 224.43 -314.10]
+	_PathFile:Insert[524.78 248.42 -296.17]
+	_PathFile:Insert[481.62 265.61 -276.99]
+	_PathFile:Insert[439.47 285.35 -258.26]
+	_PathFile:Insert[393.64 285.35 -237.89]
+	_PathFile:Insert[348.65 277.50 -217.28]
+	_PathFile:Insert[304.22 266.45 -196.72]
+	_PathFile:Insert[259.77 255.39 -176.14]
+	_PathFile:Insert[214.16 250.83 -155.53]
+	_PathFile:Insert[168.27 250.83 -135.14]
+	_PathFile:Insert[122.56 250.83 -114.83]
+	_PathFile:Insert[74.04 250.83 -127.46]
+	_PathFile:Insert[26.25 250.83 -142.91]
+	_PathFile:Insert[-20.41 261.81 -157.42]
+	_PathFile:Insert[-68.54 265.43 -171.04]
+	_PathFile:Insert[-116.87 269.01 -183.70]
+	_PathFile:Insert[-164.76 278.80 -194.89]
+	_PathFile:Insert[-212.71 288.47 -205.46]
+	_PathFile:Insert[-261.70 292.85 -214.84]
+	_PathFile:Insert[-311.12 292.85 -223.96]
+	_PathFile:Insert[-360.42 292.85 -233.06]
+	_PathFile:Insert[-410.26 292.85 -238.62]
+	_PathFile:Insert[-460.49 292.85 -240.07]
+	_PathFile:Insert[-510.49 289.65 -240.55]
+	_PathFile:Insert[-558.07 278.25 -230.15]
+	_PathFile:Insert[-602.97 258.28 -219.83]
+	_PathFile:Insert[-649.08 239.75 -213.11]
+	_PathFile:Insert[-696.09 227.47 -201.06]
+	_PathFile:Insert[-729.79 213.38 -235.25]
+	_PathFile:Insert[-751.18 202.00 -269.73]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-746.05 197.63 -285.22]
+	_PathFile:Insert[Custom|Wait|20]
+	
+	call NavigatePath
+}
+function KaruupaJungleDedrakasDescentKaruupaJunglePredatorsPerch()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-239.49 109.81 -682.80]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-239.49 160.02 -682.80]
+	_PathFile:Insert[-261.31 202.98 -669.29]
+	_PathFile:Insert[-292.03 238.24 -651.02]
+	_PathFile:Insert[-326.96 268.39 -631.66]
+	_PathFile:Insert[-360.99 300.26 -612.80]
+	_PathFile:Insert[-400.95 320.59 -590.65]
+	_PathFile:Insert[-441.03 340.96 -568.28]
+	_PathFile:Insert[-479.26 340.96 -535.64]
+	_PathFile:Insert[-517.34 340.96 -503.08]
+	_PathFile:Insert[-553.07 358.43 -472.53]
+	_PathFile:Insert[-591.31 358.43 -439.83]
+	_PathFile:Insert[-605.84 346.60 -393.46]
+	_PathFile:Insert[-614.50 341.52 -344.48]
+	_PathFile:Insert[-624.76 326.77 -297.63]
+	_PathFile:Insert[-629.37 308.28 -251.31]
+	_PathFile:Insert[-660.44 274.87 -230.62]
+	_PathFile:Insert[-698.30 244.80 -216.67]
+	_PathFile:Insert[-744.00 240.31 -196.17]
+	_PathFile:Insert[-750.20 227.09 -244.29]
+	_PathFile:Insert[-750.57 223.98 -268.64]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-746.00 197.57 -284.76]
+	_PathFile:Insert[Custom|Wait|20]
+	
+	call NavigatePath
+}
+function KaruupaJungleHeartofConflictKaruupaJungleDedrakasDescent()
+{
+	_PathFile:Clear
+	_PathFile:Insert[749.65 168.32 -397.32]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[749.65 218.47 -397.32]
+	_PathFile:Insert[703.94 222.46 -377.18]
+	_PathFile:Insert[657.95 222.46 -356.91]
+	_PathFile:Insert[611.72 222.46 -336.54]
+	_PathFile:Insert[565.50 222.46 -316.17]
+	_PathFile:Insert[519.27 222.46 -295.80]
+	_PathFile:Insert[473.08 222.46 -275.44]
+	_PathFile:Insert[426.86 222.46 -255.07]
+	_PathFile:Insert[380.87 222.46 -234.80]
+	_PathFile:Insert[334.75 222.46 -214.48]
+	_PathFile:Insert[288.53 222.46 -194.11]
+	_PathFile:Insert[242.32 222.46 -173.75]
+	_PathFile:Insert[196.56 221.05 -153.36]
+	_PathFile:Insert[150.53 221.05 -133.08]
+	_PathFile:Insert[104.72 221.05 -112.89]
+	_PathFile:Insert[54.78 220.76 -117.75]
+	_PathFile:Insert[20.79 220.67 -154.44]
+	_PathFile:Insert[-10.54 220.57 -193.61]
+	_PathFile:Insert[-37.28 220.48 -236.12]
+	_PathFile:Insert[-63.93 220.39 -278.48]
+	_PathFile:Insert[-90.56 220.30 -320.81]
+	_PathFile:Insert[-117.21 220.21 -363.19]
+	_PathFile:Insert[-144.01 220.11 -405.78]
+	_PathFile:Insert[-170.65 220.02 -448.13]
+	_PathFile:Insert[-197.37 219.93 -490.60]
+	_PathFile:Insert[-218.69 205.10 -533.57]
+	_PathFile:Insert[-232.61 184.63 -577.32]
+	_PathFile:Insert[-239.16 162.02 -621.72]
+	_PathFile:Insert[-235.21 137.79 -665.61]
+	_PathFile:Insert[-234.06 125.48 -686.28]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-232.49 109.59 -691.35]
+	_PathFile:Insert[Custom|Wait|20]
+	
+	call NavigatePath
+}
+function KaruupaJungleDedrakasDescentKaruupaJungleHeartofConflict()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-235.41 106.44 -667.19]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-235.41 156.71 -667.19]
+	_PathFile:Insert[-227.67 191.24 -631.56]
+	_PathFile:Insert[-217.27 195.01 -582.60]
+	_PathFile:Insert[-206.85 195.01 -533.57]
+	_PathFile:Insert[-196.45 195.01 -484.60]
+	_PathFile:Insert[-186.04 195.01 -435.60]
+	_PathFile:Insert[-175.60 195.01 -386.44]
+	_PathFile:Insert[-165.20 195.01 -337.48]
+	_PathFile:Insert[-143.74 188.32 -292.79]
+	_PathFile:Insert[-110.69 187.52 -255.00]
+	_PathFile:Insert[-77.75 187.52 -217.33]
+	_PathFile:Insert[-43.80 187.52 -180.43]
+	_PathFile:Insert[-4.81 187.52 -148.84]
+	_PathFile:Insert[35.37 187.52 -118.66]
+	_PathFile:Insert[83.49 187.52 -104.06]
+	_PathFile:Insert[131.38 187.52 -89.52]
+	_PathFile:Insert[179.32 187.52 -74.97]
+	_PathFile:Insert[229.24 187.62 -78.28]
+	_PathFile:Insert[274.32 187.62 -100.44]
+	_PathFile:Insert[319.32 187.62 -122.56]
+	_PathFile:Insert[364.34 187.62 -144.68]
+	_PathFile:Insert[407.32 198.37 -168.24]
+	_PathFile:Insert[448.63 202.31 -196.31]
+	_PathFile:Insert[490.23 202.31 -224.56]
+	_PathFile:Insert[532.15 202.31 -252.21]
+	_PathFile:Insert[574.49 202.31 -279.04]
+	_PathFile:Insert[616.93 202.31 -305.93]
+	_PathFile:Insert[659.17 202.31 -332.70]
+	_PathFile:Insert[701.49 202.29 -359.52]
+	_PathFile:Insert[739.22 181.54 -385.32]
+	_PathFile:Insert[747.70 175.57 -397.53]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[745.79 168.17 -388.36]
+	_PathFile:Insert[Custom|Wait|20]
+	
+	call NavigatePath
+}
+function KaruupaJunglePadKaruupaJungleDedrakasDescent()
+{
+	;echo KaruupaJunglePadKaruupaJungleDedrakasDescent
+	_PathFile:Clear
+	_PathFile:Insert[752.57 194.47 -777.80]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[752.57 240.38 -777.80]
+	_PathFile:Insert[721.57 240.38 -738.19]
+	_PathFile:Insert[690.61 240.38 -698.65]
+	_PathFile:Insert[659.62 240.38 -659.07]
+	_PathFile:Insert[628.61 240.38 -619.46]
+	_PathFile:Insert[597.79 240.38 -580.09]
+	_PathFile:Insert[566.91 240.38 -540.65]
+	_PathFile:Insert[535.96 240.38 -501.11]
+	_PathFile:Insert[505.03 240.38 -461.61]
+	_PathFile:Insert[474.60 230.86 -422.71]
+	_PathFile:Insert[445.73 215.03 -384.81]
+	_PathFile:Insert[416.92 199.23 -346.99]
+	_PathFile:Insert[388.16 183.46 -309.25]
+	_PathFile:Insert[359.40 167.69 -271.50]
+	_PathFile:Insert[325.42 151.83 -238.05]
+	_PathFile:Insert[290.77 136.03 -205.52]
+	_PathFile:Insert[255.87 120.90 -172.95]
+	_PathFile:Insert[218.19 120.19 -139.67]
+	_PathFile:Insert[168.24 120.19 -136.64]
+	_PathFile:Insert[118.07 120.19 -139.77]
+	_PathFile:Insert[74.48 120.19 -164.60]
+	_PathFile:Insert[37.41 120.19 -198.44]
+	_PathFile:Insert[-4.05 120.19 -227.04]
+	_PathFile:Insert[-45.21 120.19 -255.44]
+	_PathFile:Insert[-86.56 120.19 -283.97]
+	_PathFile:Insert[-111.28 120.19 -327.47]
+	_PathFile:Insert[-132.88 120.19 -372.88]
+	_PathFile:Insert[-157.16 124.66 -414.59]
+	_PathFile:Insert[-182.22 124.66 -458.10]
+	_PathFile:Insert[-207.25 125.64 -501.56]
+	_PathFile:Insert[-225.57 159.62 -533.37]
+	_PathFile:Insert[-234.07 159.62 -582.98]
+	_PathFile:Insert[-234.40 149.11 -632.02]
+	_PathFile:Insert[-233.80 127.32 -677.26]
+	_PathFile:Insert[-232.65 122.76 -684.40]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-231.94 109.64 -691.18]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+	;echo KaruupaJunglePadKaruupaJungleDedrakasDescent END
+}
+function KaruupaJunglePadKaruupaJungleHeartofConflict()
+{
+	;echo KaruupaJunglePadKaruupaJungleHeartofConflict
+	_PathFile:Clear
+	_PathFile:Insert[752.86 194.48 -777.95]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[752.86 238.03 -777.95]
+	_PathFile:Insert[755.85 238.03 -727.93]
+	_PathFile:Insert[757.96 238.03 -677.89]
+	_PathFile:Insert[759.97 228.69 -628.52]
+	_PathFile:Insert[762.01 214.20 -580.54]
+	_PathFile:Insert[764.05 199.71 -532.55]
+	_PathFile:Insert[758.85 191.23 -483.23]
+	_PathFile:Insert[752.05 186.95 -433.52]
+	_PathFile:Insert[747.14 186.94 -397.70]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[745.53 168.17 -388.38]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+	;echo KaruupaJunglePadKaruupaJungleHeartofConflict END
+}
+function SvarniExpanseSvarniGatewayKaruupaJunglePad()
+{
+	;echo SvarniExpanseSvarniGatewayKaruupaJunglePad
+	_PathFile:Clear
+	_PathFile:Insert[703.56 5.60 520.86]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[703.56 55.68 520.86]
+	_PathFile:Insert[656.85 73.99 520.10]
+	_PathFile:Insert[606.76 73.99 519.28]
+	_PathFile:Insert[556.48 73.99 518.46]
+	_PathFile:Insert[506.40 73.99 518.80]
+	_PathFile:Insert[458.37 87.82 521.97]
+	_PathFile:Insert[408.43 87.82 524.90]
+	_PathFile:Insert[358.23 87.82 527.71]
+	_PathFile:Insert[308.22 87.82 530.51]
+	_PathFile:Insert[258.14 87.82 533.31]
+	_PathFile:Insert[208.21 87.82 536.10]
+	_PathFile:Insert[158.00 87.82 538.90]
+	_PathFile:Insert[107.94 87.82 540.41]
+	_PathFile:Insert[58.48 80.85 544.02]
+	_PathFile:Insert[10.13 68.92 548.59]
+	_PathFile:Insert[-23.76 59.14 551.38]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-30.34 52.50 552.47]
+	_PathFile:Insert[Custom|HailActor|a plumedrake keeper|2]
+	_PathFile:Insert[Custom|TravelMap|Karuupa Jungle]
+	_PathFile:Insert[Custom|WaitWhileMoving]
+
+	call NavigatePath
+	;echo SvarniExpanseSvarniGatewayKaruupaJunglePad END
+}
+function SvarniExpanseSvarniGatewaySvarniExpanseInstances()
+{
+	_PathFile:Clear
+	_PathFile:Insert[743.32 2.48 518.81]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[743.32 52.83 518.81]
+	_PathFile:Insert[712.79 54.11 479.04]
+	_PathFile:Insert[684.82 74.27 442.61]
+	_PathFile:Insert[655.46 89.69 405.15]
+	_PathFile:Insert[623.40 89.69 366.40]
+	_PathFile:Insert[585.97 89.69 333.07]
+	_PathFile:Insert[546.14 89.69 302.64]
+	_PathFile:Insert[507.25 89.69 270.86]
+	_PathFile:Insert[469.20 101.58 240.24]
+	_PathFile:Insert[428.90 101.58 210.49]
+	_PathFile:Insert[388.62 101.58 180.76]
+	_PathFile:Insert[348.15 101.58 150.89]
+	_PathFile:Insert[307.74 101.58 121.07]
+	_PathFile:Insert[267.50 101.58 91.37]
+	_PathFile:Insert[225.97 101.58 63.17]
+	_PathFile:Insert[183.40 101.58 36.49]
+	_PathFile:Insert[140.77 101.58 10.05]
+	_PathFile:Insert[97.99 101.58 -16.48]
+	_PathFile:Insert[55.27 101.58 -42.97]
+	_PathFile:Insert[12.64 101.58 -69.41]
+	_PathFile:Insert[-29.84 101.58 -96.19]
+	_PathFile:Insert[-70.87 108.38 -123.95]
+	_PathFile:Insert[-112.42 108.38 -152.06]
+	_PathFile:Insert[-154.05 108.38 -180.22]
+	_PathFile:Insert[-195.55 108.38 -208.30]
+	_PathFile:Insert[-237.15 108.38 -236.44]
+	_PathFile:Insert[-278.83 108.38 -264.64]
+	_PathFile:Insert[-320.10 114.13 -292.56]
+	_PathFile:Insert[-361.78 114.13 -320.76]
+	_PathFile:Insert[-403.31 114.13 -348.86]
+	_PathFile:Insert[-444.96 114.13 -377.04]
+	_PathFile:Insert[-486.53 114.13 -405.16]
+	_PathFile:Insert[-522.26 114.29 -429.26]
+	_PathFile:Insert[-536.04 105.08 -476.76]
+	_PathFile:Insert[-540.78 102.76 -528.55]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-523.72 89.88 -533.43]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function LopingPlainsSpiresLopingPlainsVDEntrance()
+{
+	_PathFile:Clear
+	_PathFile:Insert[61.994144 94.930382 -307.442352]
+	_PathFile:Insert[22.198353 94.930382 -276.838165]
+	_PathFile:Insert[-17.629810 94.930382 -246.209381]
+	_PathFile:Insert[-57.394810 94.930382 -215.627579]
+	_PathFile:Insert[-97.112411 94.930382 -185.082123]
+	_PathFile:Insert[-136.956161 94.930382 -154.439728]
+	_PathFile:Insert[-176.705948 94.930382 -123.870132]
+	_PathFile:Insert[-216.425049 91.054092 -93.283119]
+	_PathFile:Insert[-248.828217 70.268761 -60.863991]
+	_PathFile:Insert[-278.461731 46.897869 -27.843304]
+	_PathFile:Insert[-300.660034 27.695969 -8.953033]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-311.031647 14.667850 -2.022032]
+	_PathFile:Insert[Custom|Wait|1]
+	call NavigatePath
+}
+function ShadeweaversThicketZoneEntranceShadeweaversThicketLodaKaiIsle()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-530.327087 160.488647 -750.221619]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-530.327087 210.653091 -750.221619]
+	_PathFile:Insert[-496.062500 224.012604 -716.068970]
+	_PathFile:Insert[-461.529266 236.379547 -681.648254]
+	_PathFile:Insert[-426.057251 236.379547 -646.291321]
+	_PathFile:Insert[-390.585175 236.379547 -610.934509]
+	_PathFile:Insert[-353.400696 236.379547 -577.471008]
+	_PathFile:Insert[-315.354919 236.379547 -544.610535]
+	_PathFile:Insert[-277.666992 236.379547 -511.380951]
+	_PathFile:Insert[-240.084076 236.379547 -478.245331]
+	_PathFile:Insert[-202.397064 236.379547 -445.017670]
+	_PathFile:Insert[-164.665329 236.379547 -411.750519]
+	_PathFile:Insert[-127.022629 236.379547 -378.562317]
+	_PathFile:Insert[-89.141228 236.379547 -345.163818]
+	_PathFile:Insert[-51.259811 236.379547 -311.765320]
+	_PathFile:Insert[-13.378311 236.379547 -278.366821]
+	_PathFile:Insert[24.249792 236.379547 -245.191727]
+	_PathFile:Insert[61.178482 236.379547 -211.096130]
+	_PathFile:Insert[94.980942 226.044266 -175.297516]
+	_PathFile:Insert[127.652878 208.947464 -141.435135]
+	_PathFile:Insert[161.564987 192.123306 -108.461243]
+	_PathFile:Insert[194.798615 175.233231 -74.746078]
+	_PathFile:Insert[227.988968 158.349777 -41.014130]
+	_PathFile:Insert[263.141785 155.671661 -5.277254]
+	_PathFile:Insert[298.374481 155.671661 30.543013]
+	_PathFile:Insert[333.752228 155.671661 66.214401]
+	_PathFile:Insert[368.433746 149.213028 101.866028]
+	_PathFile:Insert[401.304779 135.563889 137.020035]
+	_PathFile:Insert[436.007355 121.973488 170.700516]
+	_PathFile:Insert[472.936340 120.350365 204.447998]
+	_PathFile:Insert[510.010834 120.350365 238.328842]
+	_PathFile:Insert[546.525146 103.045258 268.193024]
+	_PathFile:Insert[601.394226 44.704529 266.591064]
+	_PathFile:Insert[620.763489 27.282532 287.452240]
+	_PathFile:Insert[633.387695 17.084553 317.249481]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[632.874634 13.072926 316.680420]
+	_PathFile:Insert[Custom|Wait|1]
+	call NavigatePath
+}
+function EchoCavernsZoneEntranceEchoCavernsZelmieSortie()
+{
+	_PathFile:Clear
+	_PathFile:Insert[31.124825 158.263321 -90.925606]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[31.124825 208.361938 -90.925606]
+	_PathFile:Insert[-1.107052 239.532562 -78.611145]
+	_PathFile:Insert[-46.626476 252.256027 -61.549988]
+	_PathFile:Insert[-93.390923 259.057800 -44.756596]
+	_PathFile:Insert[-113.490158 257.729095 -39.120945]
+	_PathFile:Insert[-122.788521 260.333313 -58.822769]
+	_PathFile:Insert[-132.357025 264.393921 -60.561466]
+	_PathFile:Insert[-164.064835 282.697723 -47.961308]
+	_PathFile:Insert[-184.171631 284.389404 -75.830444]
+	_PathFile:Insert[-122.939934 280.241272 -125.721039]
+	_PathFile:Insert[-208.068283 275.958069 -119.149620]
+	_PathFile:Insert[-244.414719 282.122528 -151.605484]
+	_PathFile:Insert[-206.450470 281.835052 -184.567764]
+	_PathFile:Insert[-171.973846 267.895905 -218.255936]
+	_PathFile:Insert[-143.941498 236.968826 -250.911011]
+	_PathFile:Insert[-121.578659 202.086700 -279.392151]
+	_PathFile:Insert[-95.779114 176.089706 -313.826721]
+	_PathFile:Insert[-66.291924 153.095749 -347.358002]
+	_PathFile:Insert[-31.146122 135.067963 -378.470520]
+	_PathFile:Insert[10.760967 121.721725 -402.459045]
+	_PathFile:Insert[53.251289 122.907921 -428.961975]
+	_PathFile:Insert[98.325142 122.907921 -450.935577]
+	_PathFile:Insert[148.511566 122.907921 -454.209991]
+	_PathFile:Insert[198.743210 122.907921 -453.105865]
+	_PathFile:Insert[248.006653 122.907921 -461.785095]
+	_PathFile:Insert[298.027313 122.907921 -462.235107]
+	_PathFile:Insert[348.192535 122.907921 -458.784698]
+	_PathFile:Insert[398.397217 122.907921 -455.989136]
+	_PathFile:Insert[448.501434 122.907921 -453.511078]
+	_PathFile:Insert[497.633026 115.447037 -447.293976]
+	_PathFile:Insert[533.055969 83.276955 -432.760529]
+	_PathFile:Insert[569.610474 50.119179 -426.383148]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[609.422424 25.679279 -442.085327]
+	_PathFile:Insert[Custom|Wait|1]
+	call NavigatePath
+}
+function WilloftheWealdSavageWealdCommonPoint()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-415.062805 95.353996 -335.544525]
+	_PathFile:Insert[-424.733704 97.925049 -316.905548]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[-424.733704 178.056351 -316.905548]
+	call NavigatePath
+}
+function SavageWealdCommonPointSavageWealdChaoticCaverns()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-424.733704 178.056351 -316.905548]
+	_PathFile:Insert[-474.786377 178.056351 -321.350342]
+	_PathFile:Insert[-524.714355 178.056351 -325.784271]
+	_PathFile:Insert[-574.663086 178.056351 -330.220001]
+	_PathFile:Insert[-624.473206 178.056351 -334.643402]
+	_PathFile:Insert[-674.303040 178.056351 -339.068390]
+	_PathFile:Insert[-718.208801 159.139557 -354.081146]
+	_PathFile:Insert[-760.013245 136.192154 -370.050293]
+	_PathFile:Insert[-803.343201 113.994545 -382.401245]
+	_PathFile:Insert[-848.686157 113.580528 -404.129242]
+	_PathFile:Insert[-857.998840 109.528954 -418.773254]
+	_PathFile:Insert[Custom|RIMObj.FlyDown|0]
+	_PathFile:Insert[-891.849243 74.603668 -379.232208]
+	_PathFile:Insert[Custom|Wait|1]
+	call NavigatePath
+}
+function SavageWealdChaoticCavernsSavageWealdCommonPoint()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-857.998840 74.528954 -418.773254]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[Custom|FlyUp|5]
+	_PathFile:Insert[-848.686157 113.580528 -404.129242]
+	_PathFile:Insert[-803.343201 113.994545 -382.401245]
+	_PathFile:Insert[-760.013245 136.192154 -370.050293]
+	_PathFile:Insert[-718.208801 159.139557 -354.081146]
+	_PathFile:Insert[-674.303040 178.056351 -339.068390]
+	_PathFile:Insert[-624.473206 178.056351 -334.643402]
+	_PathFile:Insert[-574.663086 178.056351 -330.220001]
+	_PathFile:Insert[-524.714355 178.056351 -325.784271]
+	_PathFile:Insert[-474.786377 178.056351 -321.350342]
+	_PathFile:Insert[-424.733704 178.056351 -316.905548]
+	call NavigatePath
+}
+function SavageWealdCommonPointSavageWealdFortGrim()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-424.733704 178.056351 -316.905548]
+	_PathFile:Insert[-371.362427 174.596619 -313.218567]
+	_PathFile:Insert[-322.410065 168.087936 -305.321899]
+	_PathFile:Insert[-280.488892 142.493011 -294.759644]
+	_PathFile:Insert[-238.230804 117.975853 -283.819550]
+	_PathFile:Insert[-195.943726 93.359047 -273.040161]
+	_PathFile:Insert[-153.621933 68.627686 -262.571014]
+	_PathFile:Insert[-111.011963 44.169472 -252.249969]
+	_PathFile:Insert[-84.251228 30.642805 -247.387405]
+	_PathFile:Insert[Custom|RIMObj.FlyDown|0]
+	_PathFile:Insert[-81.817772 20.752132 -258.149445]
+	_PathFile:Insert[Custom|Wait|1]
+	call NavigatePath
+}
+function SavageWealdFortGrimSavageWealdCommonPoint()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-84.251228 20.642805 -247.387405]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[Custom|FlyUp|5]
+	_PathFile:Insert[-111.011963 44.169472 -252.249969]
+	_PathFile:Insert[-153.621933 68.627686 -262.571014]
+	_PathFile:Insert[-195.943726 93.359047 -273.040161]
+	_PathFile:Insert[-238.230804 117.975853 -283.819550]
+	_PathFile:Insert[-280.488892 142.493011 -294.759644]
+	_PathFile:Insert[-322.410065 168.087936 -305.321899]
+	_PathFile:Insert[-371.362427 174.596619 -313.218567]
+	_PathFile:Insert[-424.733704 178.056351 -316.905548]
+	call NavigatePath
+}
+function SpiritoftheVahShirCityofSharVahlBauble()
+{
+	call CityofSharVahlEntranceCityofSharVahlCommonPoint
+	call CityofSharVahlCommonPointCityofSharVahlCommonPoint2
+	call CityofSharVahlCommonPoint2CityofSharVahlBauble
+}
+function WillofEchoCavernsCityofFordelMidstBauble()
+{
+	call RIMObj.Move 36.298523 161.036072 -142.215561
+	call ZoneDoor Exit
+	call EchoCavernsZoneEntranceCityofFordelMidstZoneEntrance
+	call CityofFordelMidstZoneEntranceCityofFordelMidstBauble
+}
+function CityofSharVahlEntrance2CityofSharVahlCommonPoint2()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-327.763550 85.146912 175.342087]
+	_PathFile:Insert[-311.384155 82.610184 187.859863]
+	_PathFile:Insert[-300.919556 76.825539 208.695419]
+	_PathFile:Insert[-290.271942 71.488731 223.541260]
+	_PathFile:Insert[-268.743835 69.841331 234.716049]
+	_PathFile:Insert[-247.512390 70.765724 249.229996]
+	_PathFile:Insert[-232.728394 69.963013 258.790405]
+	_PathFile:Insert[-218.498581 70.047356 269.017365]
+	call NavigatePath
+}
+function CityofSharVahlCommonPoint2CityofSharVahlEntrance2()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-218.498581 70.047356 269.017365]
+	_PathFile:Insert[-232.728394 69.963013 258.790405]
+	_PathFile:Insert[-247.512390 70.765724 249.229996]
+	_PathFile:Insert[-268.743835 69.841331 234.716049]
+	_PathFile:Insert[-290.271942 71.488731 223.541260]
+	_PathFile:Insert[-300.919556 76.825539 208.695419]
+	_PathFile:Insert[-311.384155 82.610184 187.859863]
+	_PathFile:Insert[-327.763550 85.146912 175.342087]
+	call NavigatePath
+}
+function CityofSharVahlEntranceCityofSharVahlCommonPoint()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-187.550003 41.994850 -407.000000]
+	_PathFile:Insert[-183.492813 41.663296 -397.526764]
+	_PathFile:Insert[-179.469620 41.663296 -388.203369]
+	_PathFile:Insert[-175.162201 42.018311 -378.613190]
+	_PathFile:Insert[-170.828461 39.565750 -369.406189]
+	_PathFile:Insert[-166.575912 36.571030 -360.490601]
+	_PathFile:Insert[-162.400391 33.057316 -351.736389]
+	_PathFile:Insert[-158.053711 31.286343 -342.623474]
+	_PathFile:Insert[-153.589127 31.286343 -333.214600]
+	_PathFile:Insert[-149.995209 31.286343 -323.834900]
+	_PathFile:Insert[-149.210602 31.286343 -313.460480]
+	_PathFile:Insert[-149.452850 31.286343 -302.593018]
+	_PathFile:Insert[-150.190735 31.286343 -291.846588]
+	_PathFile:Insert[-151.295456 31.286343 -281.251312]
+	_PathFile:Insert[-152.770096 31.286343 -271.024567]
+	_PathFile:Insert[-154.996323 31.286343 -260.712616]
+	_PathFile:Insert[-157.974854 31.286343 -250.816086]
+	_PathFile:Insert[-161.164841 31.286343 -240.464767]
+	_PathFile:Insert[-164.329590 31.286343 -230.835510]
+	_PathFile:Insert[-167.542770 31.286343 -221.347931]
+	_PathFile:Insert[-171.034210 31.286343 -211.494110]
+	_PathFile:Insert[-174.551727 31.286343 -202.030518]
+	_PathFile:Insert[-178.241516 31.286343 -192.291534]
+	_PathFile:Insert[-181.804535 31.286343 -182.887100]
+	_PathFile:Insert[-185.888641 31.286343 -172.107315]
+	_PathFile:Insert[-189.444611 31.860718 -162.721466]
+	_PathFile:Insert[-193.239990 31.862347 -152.703705]
+	_PathFile:Insert[-196.945145 32.150356 -142.610504]
+	_PathFile:Insert[-200.057373 32.438351 -132.964340]
+	_PathFile:Insert[-203.168564 32.726345 -122.734413]
+	_PathFile:Insert[-206.030823 32.709843 -112.762527]
+	_PathFile:Insert[-208.920197 32.631809 -102.343758]
+	_PathFile:Insert[-212.064529 32.658173 -91.005684]
+	_PathFile:Insert[-214.871902 32.714615 -80.832321]
+	_PathFile:Insert[-217.509460 33.760517 -70.860138]
+	_PathFile:Insert[-219.844604 34.445980 -60.716496]
+	_PathFile:Insert[-220.404846 35.538235 -50.770329]
+	_PathFile:Insert[-211.525620 35.317623 -43.204041]
+	_PathFile:Insert[-216.397385 34.806271 -30.353971]
+	_PathFile:Insert[-216.307007 34.175179 -19.999495]
+	_PathFile:Insert[-216.159485 33.164322 -10.003817]
+	_PathFile:Insert[-215.411118 32.685249 0.561573]
+	_PathFile:Insert[-214.190948 32.626263 11.243955]
+	_PathFile:Insert[-211.895218 32.641701 22.306681]
+	_PathFile:Insert[-209.112839 32.694649 32.918865]
+	_PathFile:Insert[-206.326431 32.722046 43.139217]
+	_PathFile:Insert[-203.581299 32.726345 53.288368]
+	_PathFile:Insert[-200.808670 32.726345 63.635979]
+	_PathFile:Insert[-198.041199 32.438351 73.964386]
+	_PathFile:Insert[-195.309723 32.426014 84.158394]
+	_PathFile:Insert[-192.209808 31.574352 95.591064]
+	_PathFile:Insert[-189.406906 31.286343 105.745056]
+	_PathFile:Insert[-186.623764 31.286343 115.780792]
+	_PathFile:Insert[-183.877274 31.286343 125.764763]
+	_PathFile:Insert[-181.178940 31.286343 135.700089]
+	_PathFile:Insert[-178.447464 31.286343 145.894073]
+	_PathFile:Insert[-175.626511 31.286343 156.537292]
+	_PathFile:Insert[-172.905960 31.286343 166.960297]
+	_PathFile:Insert[-170.491150 31.286343 176.988571]
+	_PathFile:Insert[-168.059021 31.653652 187.523453]
+	call NavigatePath
+}
+function CityofSharVahlCommonPoint2CityofSharVahlCommonPoint()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-218.498581 70.047356 269.017365]
+	_PathFile:Insert[-209.454269 68.479408 265.639679]
+	_PathFile:Insert[-202.616745 65.512688 258.497772]
+	_PathFile:Insert[-196.109894 61.832634 251.755234]
+	_PathFile:Insert[-189.564896 57.491634 244.741730]
+	_PathFile:Insert[-183.509583 52.437405 238.044235]
+	_PathFile:Insert[-176.696976 47.211323 232.076721]
+	_PathFile:Insert[-169.770706 42.635132 225.905304]
+	_PathFile:Insert[-164.467117 37.673660 217.250656]
+	_PathFile:Insert[-163.145035 34.189014 207.641739]
+	_PathFile:Insert[-165.615692 32.262459 197.545013]
+	_PathFile:Insert[-168.059021 31.653652 187.523453]
+	call NavigatePath
+}
+function CityofSharVahlCommonPointCityofSharVahlCommonPoint2()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-165.615692 32.262459 197.545013]
+	_PathFile:Insert[-163.145035 34.189014 207.641739]
+	_PathFile:Insert[-164.467117 37.673660 217.250656]
+	_PathFile:Insert[-169.770706 42.635132 225.905304]
+	_PathFile:Insert[-176.696976 47.211323 232.076721]
+	_PathFile:Insert[-183.509583 52.437405 238.044235]
+	_PathFile:Insert[-189.564896 57.491634 244.741730]
+	_PathFile:Insert[-196.109894 61.832634 251.755234]
+	_PathFile:Insert[-202.616745 65.512688 258.497772]
+	_PathFile:Insert[-209.454269 68.479408 265.639679]
+	_PathFile:Insert[-218.498581 70.047356 269.017365]
+	call NavigatePath
+}
+function CityofSharVahlCommonPoint2CityofSharVahlBauble()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-214.119232 74.190125 284.684845]
+	_PathFile:Insert[-213.382660 77.559181 294.630402]
+	_PathFile:Insert[-212.671387 80.914665 304.374329]
+	_PathFile:Insert[-210.190201 82.429886 314.071045]
+	_PathFile:Insert[-203.223389 84.371117 321.895142]
+	_PathFile:Insert[-196.271652 88.027031 329.044281]
+	_PathFile:Insert[-188.622116 88.853607 336.094360]
+	_PathFile:Insert[-178.759567 88.852379 338.694550]
+	_PathFile:Insert[-168.790787 88.851967 340.859009]
+	_PathFile:Insert[-158.237915 89.467575 343.116638]
+	_PathFile:Insert[-148.803299 93.266052 344.961243]
+	_PathFile:Insert[-138.612640 94.048523 346.453461]
+	_PathFile:Insert[-128.786057 94.048523 344.217590]
+	_PathFile:Insert[-118.934288 94.048225 341.806885]
+	_PathFile:Insert[-108.471031 94.048050 339.246521]
+	_PathFile:Insert[-97.943214 94.047882 336.309174]
+	_PathFile:Insert[-87.897888 94.047546 333.343384]
+	_PathFile:Insert[-78.210625 94.046928 330.163513]
+	_PathFile:Insert[-68.342133 94.045639 327.324921]
+	_PathFile:Insert[-57.603085 94.044579 325.382507]
+	_PathFile:Insert[-48.450119 94.478394 329.859222]
+	_PathFile:Insert[-48.277153 95.300529 343.743866]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[Custom|ZoneDoor|zone_to_palace_interior]
+	_PathFile:Insert[-48.421341 -189.808365 429.402802]
+	_PathFile:Insert[-48.392567 -189.808517 430.924988]
+	_PathFile:Insert[-56.102077 -190.082336 437.320221]
+	_PathFile:Insert[-64.569954 -190.082336 442.730438]
+	_PathFile:Insert[-73.541420 -189.875671 447.190979]
+	_PathFile:Insert[-83.713211 -189.845520 449.524719]
+	_PathFile:Insert[-93.967018 -189.883011 450.440399]
+	_PathFile:Insert[-104.646622 -189.843842 451.280884]
+	_PathFile:Insert[-115.008118 -189.845520 452.615387]
+	_PathFile:Insert[-125.143433 -189.909760 455.658112]
+	_PathFile:Insert[-131.111404 -189.900345 464.324219]
+	_PathFile:Insert[-131.382965 -189.915466 474.736450]
+	_PathFile:Insert[-130.891449 -189.915466 485.474518]
+	_PathFile:Insert[-130.677109 -189.849136 495.668152]
+	_PathFile:Insert[-130.490524 -189.915466 506.359283]
+	_PathFile:Insert[-129.725449 -189.829590 516.703491]
+	_PathFile:Insert[-129.769577 -189.879501 527.594238]
+	_PathFile:Insert[-130.079132 -189.879639 537.725769]
+	_PathFile:Insert[-130.388077 -189.895935 547.837524]
+	_PathFile:Insert[-130.820496 -189.915466 558.799255]
+	_PathFile:Insert[-131.491791 -189.915466 568.921997]
+	_PathFile:Insert[-137.394714 -189.951233 577.129150]
+	_PathFile:Insert[-147.360229 -191.645081 576.781128]
+	_PathFile:Insert[-157.786469 -194.516815 576.456970]
+	_PathFile:Insert[-167.681015 -197.242203 576.380371]
+	_PathFile:Insert[-178.284851 -197.979996 576.800171]
+	_PathFile:Insert[-184.680954 -198.194962 584.776794]
+	_PathFile:Insert[-187.121262 -198.037689 594.536743]
+	_PathFile:Insert[Custom|Wait|20]
+	call NavigatePath
+}
+function EchoCavernsZoneEntranceCityofFordelMidstZoneEntrance()
+{
+	_PathFile:Clear
+	_PathFile:Insert[364.429993 -36.132404 756.140015]
+	_PathFile:Insert[353.189423 -35.848942 767.678833]
+	_PathFile:Insert[338.920197 -36.122105 782.326599]
+	_PathFile:Insert[326.272034 -36.151951 795.310364]
+	_PathFile:Insert[320.545074 -36.137768 791.936890]
+	_PathFile:Insert[308.362061 -34.980869 784.760559]
+	_PathFile:Insert[302.679657 -33.632568 781.413391]
+	_PathFile:Insert[294.635315 -29.585173 779.767395]
+	_PathFile:Insert[290.685944 -27.929811 778.939758]
+	_PathFile:Insert[277.814148 -27.531759 778.771423]
+	_PathFile:Insert[262.963562 -27.632025 778.576965]
+	_PathFile:Insert[263.915649 -27.630001 778.271362]
+	call NavigatePath
+}
+function CityofFordelMidstZoneEntranceCityofFordelMidstBauble()
+{
+	_PathFile:Clear
+	_PathFile:Insert[263.915649 -27.630001 778.271362]
+	_PathFile:Insert[253.065353 -27.694517 778.450562]
+	_PathFile:Insert[243.046722 -27.775564 778.538086]
+	_PathFile:Insert[233.179260 -29.160624 777.499634]
+	_PathFile:Insert[224.261993 -33.723534 775.276550]
+	_PathFile:Insert[214.922211 -35.730816 770.844727]
+	_PathFile:Insert[206.003799 -36.151924 765.020752]
+	_PathFile:Insert[196.634293 -36.122105 770.480225]
+	_PathFile:Insert[188.819778 -36.122105 778.063904]
+	_PathFile:Insert[181.669479 -36.021763 785.716614]
+	_PathFile:Insert[174.297867 -35.848759 793.761292]
+	_PathFile:Insert[165.594803 -36.132366 800.046082]
+	_PathFile:Insert[154.871170 -36.132328 802.608643]
+	_PathFile:Insert[144.865265 -36.190830 804.802979]
+	_PathFile:Insert[134.468369 -36.190830 807.299011]
+	_PathFile:Insert[130.209503 -35.981697 808.301819]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[Custom|Door|10|door_from_nexus_to_shadow_haven]
+	_PathFile:Insert[-670.549988 -1.520000 103.320000]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[-670.549988 -1.520000 103.320000]
+	_PathFile:Insert[-660.549377 -1.521521 102.794144]
+	_PathFile:Insert[-650.116455 -1.521512 102.245552]
+	_PathFile:Insert[-648.608337 -1.521534 102.166252]
+	_PathFile:Insert[-648.581665 -1.521533 91.690186]
+	_PathFile:Insert[-648.125183 -1.521538 81.067154]
+	_PathFile:Insert[-648.112549 -1.521538 70.952896]
+	_PathFile:Insert[-648.351624 -1.521534 60.083897]
+	_PathFile:Insert[-648.571899 -1.521531 50.069321]
+	_PathFile:Insert[-648.759705 -1.521528 39.716297]
+	_PathFile:Insert[-648.609436 -1.521530 29.681572]
+	_PathFile:Insert[-647.829529 -1.521542 18.499243]
+	_PathFile:Insert[-645.468689 -1.521557 7.630901]
+	_PathFile:Insert[-643.157593 -1.521535 -2.121373]
+	_PathFile:Insert[-640.217346 -1.521532 -12.215434]
+	_PathFile:Insert[-637.260254 -1.521574 -22.367033]
+	_PathFile:Insert[-634.221069 -1.521602 -32.780102]
+	_PathFile:Insert[-631.179565 -1.466406 -42.888439]
+	_PathFile:Insert[-628.328064 -1.466406 -52.677486]
+	_PathFile:Insert[-625.348633 -1.521645 -62.905422]
+	_PathFile:Insert[-622.194824 -1.521645 -72.676895]
+	_PathFile:Insert[-615.832947 -1.521645 -81.163658]
+	_PathFile:Insert[-607.151001 -1.521645 -87.604462]
+	_PathFile:Insert[-598.748779 -1.521645 -93.202736]
+	_PathFile:Insert[-589.882141 -1.521645 -98.963020]
+	_PathFile:Insert[-580.948425 -1.521645 -105.010269]
+	_PathFile:Insert[-575.090576 -1.521645 -113.386826]
+	_PathFile:Insert[-572.978271 -1.521645 -124.084221]
+	_PathFile:Insert[-572.458374 -1.521645 -134.623260]
+	_PathFile:Insert[-572.279114 -1.521645 -144.996475]
+	_PathFile:Insert[-572.100525 -1.108428 -155.329941]
+	_PathFile:Insert[-571.925720 -0.063744 -165.444794]
+	_PathFile:Insert[-571.742981 1.843848 -176.016724]
+	_PathFile:Insert[-571.564087 1.843080 -186.370041]
+	_PathFile:Insert[-571.349365 1.841742 -197.139999]
+	_PathFile:Insert[-570.971252 1.835369 -207.845947]
+	_PathFile:Insert[-570.374390 1.830348 -218.322845]
+	_PathFile:Insert[-569.859253 1.839864 -228.525070]
+	_PathFile:Insert[-569.236328 2.759103 -239.396301]
+	_PathFile:Insert[-568.137512 2.759531 -249.592590]
+	_PathFile:Insert[-565.268066 2.759855 -259.244324]
+	_PathFile:Insert[-555.038879 2.759226 -261.531342]
+	_PathFile:Insert[-548.607117 2.756661 -261.368317]
+	_PathFile:Insert[-537.340637 2.753154 -261.468597]
+	_PathFile:Insert[-526.979736 2.753154 -261.560822]
+	_PathFile:Insert[-519.207336 2.753154 -261.630035]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[Custom|Door|10|door_from_shadow_haven_to_midst]
+	_PathFile:Insert[447.570007 -23.719999 -580.580017]
+	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[458.164154 -23.719316 -580.580017]
+	_PathFile:Insert[469.037231 -23.709459 -580.580017]
+	_PathFile:Insert[479.232697 -23.697718 -580.580017]
+	_PathFile:Insert[489.905609 -23.685423 -580.588196]
+	_PathFile:Insert[500.002075 -23.452467 -580.632141]
+	_PathFile:Insert[510.774200 -23.446840 -580.679138]
+	_PathFile:Insert[521.407227 -22.096102 -580.725525]
+	_PathFile:Insert[531.722229 -22.081114 -580.770508]
+	_PathFile:Insert[543.229553 -22.081114 -580.703674]
+	_PathFile:Insert[553.367981 -22.081114 -579.580139]
+	_PathFile:Insert[557.487366 -22.522936 -570.243713]
+	_PathFile:Insert[560.708801 -23.429367 -560.418823]
+	_PathFile:Insert[564.018982 -23.477221 -550.716858]
+	_PathFile:Insert[570.415405 -23.002123 -542.674683]
+	_PathFile:Insert[577.247986 -22.099480 -535.050171]
+	_PathFile:Insert[578.441467 -22.099638 -533.158569]
+	_PathFile:Insert[578.467529 -21.295500 -522.232483]
+	_PathFile:Insert[578.705933 -17.518921 -512.713928]
+	_PathFile:Insert[578.705933 -17.518921 -512.713928]
+	_PathFile:Insert[588.421814 -14.251518 -512.387329]
+	_PathFile:Insert[593.062744 -13.750305 -512.447998]
+	_PathFile:Insert[593.226807 -9.627720 -521.598389]
+	_PathFile:Insert[593.414429 -8.371559 -531.970886]
+	_PathFile:Insert[593.453857 -8.646982 -534.227173]
+	_PathFile:Insert[593.500610 -8.613430 -536.904724]
+	_PathFile:Insert[603.657776 -8.613430 -537.939697]
+	_PathFile:Insert[612.936340 -8.601758 -541.985046]
+	_PathFile:Insert[617.670471 -8.652793 -550.888123]
+	_PathFile:Insert[620.482788 -8.654295 -560.667847]
+	_PathFile:Insert[626.539795 -8.654413 -568.780518]
+	_PathFile:Insert[636.665222 -8.654509 -568.878479]
+	_PathFile:Insert[641.912964 -8.654533 -567.809387]
+	_PathFile:Insert[640.975708 -8.395555 -547.572205]
+	_PathFile:Insert[640.861084 -8.646975 -522.815552]
+	_PathFile:Insert[635.749939 -8.578337 -520.537476]
+	_PathFile:Insert[Custom|Wait|20]
+	call NavigatePath
+}
+function HailActor(... args)
+{
+
+	;move to HailActor location
+	;stop follow
+	;string _Actor, bool _LoopUntilNoHighlightOnMouseHover=0, bool _LoopUntilDNE=0, int _GiveUpCNT=50
+	;echo ClickActor(string _Actor=${_Actor}, int _LoopUntilNoHighlightOnMouseHover=0=${_LoopUntilNoHighlightOnMouseHover}, int _GiveUpCNT=50=${_GiveUpCNT})
+	;move to ClickActor location
+	;stop follow
+	
+	variable string _Actor
+	variable int _NumberOfResponses=1
+	variable int _ResponseNumber=1
+	variable int _CameraTime=15
+	variable bool _Hail=TRUE
+	variable int _acnt=0
+	variable bool _Follow=FALSE
+	variable bool _ExactName=FALSE
+	variable bool _RelayToGroup=FALSE
+	variable string _Relay
+
+	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
+	{
+		;backwards compatibility
+		if ${_acnt}==1 && ${args[1].Left[1].NotEqual[-]}
+		{
+			_Actor:Set["${args[1]}"]
+			continue
+		}
+		if ${args[2].Left[1].NotEqual[-]} && ${_acnt}==2
+		{
+			_NumberOfResponses:Set[${Int[${args[2]}]}]
+			continue
+		}
+		if ${args[3].Left[1].NotEqual[-]} && ${_acnt}==3
+		{
+			_ResponseNumber:Set[${Int[${args[3]}]}]
+			continue
+		}
+		if ${args[4].Left[1].NotEqual[-]} && ${_acnt}==4
+		{
+			_Hail:Set[${args[4]}]
+			continue
+		}
+		if ${args[5].Left[1].NotEqual[-]} && ${_acnt}==5
+		{
+			_Follow:Set[${args[5]}]
+			continue
+		}
+		if ${args[6].Left[1].NotEqual[-]} && ${_acnt}==6
+		{
+			_ExactName:Set[${args[6]}]
+			continue
+		}
+		if ${args[7].Left[1].NotEqual[-]} && ${_acnt}==7
+		{
+			_CameraTime:Set[${args[7]}]
+			continue
+		}
+		;echo args ${_acnt} : ${args[${_acnt}]}
+		switch ${args[${_acnt}]}
+		{
+			case -Actor
+			{
+				_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -NumberofResponses
+			{
+				_NumberOfResponses:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -ResponseNumber
+			{
+				_ResponseNumber:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -NoHail
+			{
+				_Hail:Set[FALSE]
+				break
+			}
+			case -NoFollow
+			{
+				_Follow:Set[FALSE]
+				break
+			}
+			case -ExactName
+			{
+				_ExactName:Set[TRUE]
+				break
+			}
+			case -CameraTime
+			{
+				_CameraTime:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -NoRelayToGroup
+			{
+				_RelayToGroup:Set[FALSE]
+				break
+			}
+		}
+	}
+	if ${_RelayToGroup}
+		_Relay:Set["${RI_Var_String_RelayGroup}"]
+	else
+		_Relay:Set["${Session}"]
+
+	if ${_Actor.Left[6].Upper.Equal[GUILD-]}
+		_Actor:Set["guild,${_Actor.Right[-6]}"]
+	if ${_Actor.Left[6].Upper.Equal[QUERY-]}
+		_Actor:Set["Query,${_Actor.Right[-6].Replace["`","\""]}"]
+
+	;echo HailActor(string _Actor=${_Actor}, int _NumberOfResponses=1=${_NumberOfResponses}, int _ResponseNumber=1=${_ResponseNumber}, bool _Hail=TRUE=${_Hail})
+	;echo after move
+	if ${_Hail}
+	{
+		wait 20
+	}
+	if ${_Follow}
+		call RIMObj.stopfollow
+	if ${Me.FlyingUsingMount}
+		call FlyDown
+	;make sure _Actor exists so we do not go through the motions for nothign
+	;echo \${Actor[${_Actor}](exists)}  //  ${Actor[${_Actor}](exists)}
+	if ${Actor[${_Actor}](exists)}
+	{
+		variable int _ID
+		if ${_ExactName}
+			_ID:Set[${Actor[Query, Name=="${_Actor}"].ID}]
+		else
+			_ID:Set[${Actor[${_Actor}].ID}]
+		;echo ${_ID}
+		;wait until we are out of combat
+		if ${StopForCombat}
+			call RIMObj.CheckCombat
+		
+		if ${_Hail}
+		{
+			wait 10
+			;pause bots
+			
+			relay ${_Relay} -noredirect RI_CMD_PauseCombatBots 1
+			;wait 5
+			;change camera
+			relay ${_Relay} -noredirect Press -hold ${RI_Var_String_LookDownKey}
+			wait ${_CameraTime}
+			;change camera
+			relay ${_Relay} -noredirect Press -release ${RI_Var_String_LookDownKey}
+			relay ${_Relay} -noredirect Press -hold ${RI_Var_String_LookUpKey}
+			wait 3
+			relay ${_Relay} -noredirect Press -release ${RI_Var_String_LookUpKey}
+			
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoFace
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoFace
+			wait 5
+			;scroll the mouse wheel
+			relay ${_Relay} -noredirect MouseWheel -10000
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoTarget
+			wait 2
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoTarget
+			wait 2
+			relay ${_Relay} -noredirect Actor[${_ID}]:DoTarget
+			wait 5
+			relay ${_Relay} -noredirect eq2execute hail
+			wait 2
+			relay ${_Relay} -noredirect eq2execute hail
+			wait 2
+		}
+		variable int count
+		variable string _tempbtntxt
+		variable int NoReplyExistsCount=-1
+		;echo before for
+		for(count:Set[1];${count}<=${_NumberOfResponses};count:Inc)
+		{
+			;echo for count: ${count}
+			if !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
+				NoReplyExistsCount:Inc
+			else
+				NoReplyExistsCount:Set[0]
+			
+			if ${NoReplyExistsCount}>2
+			{
+				waitframe
+				continue	
+			}
+			
+			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText]}"]
+			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
+				relay ${_Relay} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}]:LeftClick
+			wait 5
+			wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]}
+			;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
+		}
+		;unpause bots
+		relay ${_Relay} -noredirect RI_CMD_PauseCombatBots 0
+	}
+	;echo after for
+	if ${StopForCombat}
+		call RIMObj.CheckCombat
+	;follow
+	if ${_Follow}
+	{
+		;echo follow
+		call RIMObj.follow
+	}
+	;echo end of function
+}
+function TravelMap(string _Zone)
+{
+	;echo Travel Map
+	call RIMObj.TravelMap "${_Zone}"
+	;echo Travel Map End
+}
+
+function WaitWhileMoving(int _Wait=600)
+{
+	;echo WaitWhileMoving
+	wait ${_Wait} ${Me.IsMoving}
+	wait ${_Wait} !${Me.IsMoving}
+	;echo WaitWhileMoving End
+}
+function WaitForZoning(int _Wait=600)
+{
+	wait ${_Wait} ${EQ2.Zoning}==1
+	wait ${_Wait} ${EQ2.Zoning}==0
+}
+function FlyUp(float _HoldTime=1, bool HoldTimeIsYLoc=FALSE)
+{
+	if !${Me.FlyingUsingMount}
+	{
+		press -hold ${RI_Var_String_FlyUpKey}
+		if ${HoldTimeIsYLoc}
+			wait 1200 ${Math.Distance[${Me.Y},${_HoldTime}]}<5
+		else
+			wait ${_HoldTime}
+		press -release ${RI_Var_String_FlyUpKey}
+	}
+}
+
+function Door(int distance=10, string _ActorName=NONE, bool _Interactable=FALSE)
+{
+	wait 10
+	;if ${RI_Var_Bool_Debug}
+		;echo ISXRI: ${Time} Opening any doors within ${distance}
+
+	relay ${RI_Var_String_RelayGroup} RI_CMD_PauseCombatBots 1	
+
+	if ${_ActorName.Equal[NONE]}
+	{
+		variable index:actor Actors
+		variable iterator ActorIterator
+		
+		EQ2:QueryActors[Actors, Type !="NPC" && Type !="NamedNPC" && Type !="Pet" && Type !="PC" && Type !="Mercenary" && Type !="Me" && Name !="${Me.Name}" && Distance <= ${distance}]
+		Actors:GetIterator[ActorIterator]
+	
+		if ${ActorIterator:First(exists)}
+		{
+			do
+			{
+				relay ${RI_Var_String_RelayGroup} Actor[${ActorIterator.Value}]:DoubleClick
+				relay ${RI_Var_String_RelayGroup} Actor[id,${ActorIterator.Value.ID}]:DoubleClick
+				waitframe
+				relay ${RI_Var_String_RelayGroup} Actor[${ActorIterator.Value}]:DoubleClick
+				relay ${RI_Var_String_RelayGroup} Actor[id,${ActorIterator.Value.ID}]:DoubleClick
+				waitframe
+				relay ${RI_Var_String_RelayGroup} Actor[${ActorIterator.Value}]:DoubleClick
+				relay ${RI_Var_String_RelayGroup} Actor[id,${ActorIterator.Value.ID}]:DoubleClick
+			}
+			while ${ActorIterator:Next(exists)}
+		}
+	}
+	else
+	{
+		variable int _ActorID
+		if ${_Interactable}
+			_ActorID:Set[${Actor[Query, Name=-"${_ActorName}" && Interactable=TRUE].ID}]
+		else
+			_ActorID:Set[${Actor[Query, Name=-"${_ActorName}"].ID}]
+		relay ${RI_Var_String_RelayGroup} Actor[${_ActorName}]:DoubleClick
+		relay ${RI_Var_String_RelayGroup} Actor[id,${_ActorID}]:DoubleClick
+		waitframe
+		relay ${RI_Var_String_RelayGroup} Actor[${_ActorName}]:DoubleClick
+		relay ${RI_Var_String_RelayGroup} Actor[id,${_ActorID}]:DoubleClick
+		waitframe
+		relay ${RI_Var_String_RelayGroup} Actor[${_ActorName}]:DoubleClick
+		relay ${RI_Var_String_RelayGroup} Actor[id,${_ActorID}]:DoubleClick
+	}
+	relay ${RI_Var_String_RelayGroup} RI_CMD_PauseCombatBots 0
+}
+function Wait(int _WaitTime=0)
+{
+	wait ${_WaitTime}
+}
+function NavigatePath()
+{
+	variable int _i
+	;echo ${_PathFile.Get[1]}
+	;echo ${_PathFile.Get[2]}
+	for(_i:Set[1];${_i}<=${_PathFile.Used};_i:Inc)
+	{
+		if ${_PathFile.Get[${_i}].Left[6].Equal[Custom]}
+		{
+			if ${_PathFile.Get[${_i}].Count[|]}>2
+				call ${_PathFile.Get[${_i}].Token[2,|]} "${_PathFile.Get[${_i}].Token[3,|]}" "${_PathFile.Get[${_i}].Token[4,|]}"
+			elseif ${_PathFile.Get[${_i}].Count[|]}>1
+				call ${_PathFile.Get[${_i}].Token[2,|]} "${_PathFile.Get[${_i}].Token[3,|]}"
+			else
+				call ${_PathFile.Get[${_i}].Token[2,|]}
+		}
+		else
+		{
+			if ${_PathFile.Get[${Math.Calc[${_i}+1]}].Left[6].Equal[Custom]}
+			{
+				;echo call RIMObj.Move ${_PathFile.Get[${_i}]}
+				call RIMObj.Move ${_PathFile.Get[${_i}]}
+			}
+			else
+			{
+				;echo call RIMObj.Move ${_PathFile.Get[${_i}]} 2 0 0 0 1 1 1 1
+				call RIMObj.Move ${_PathFile.Get[${_i}]} 2 0 0 0 1 1 1 1
+			}
+		}
+	}
 }
 function TheBlindingZoneEntranceWracklandsEntrance()
 {
@@ -2742,7 +5321,7 @@ function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlig
 	}
 	relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
 	
-	if ${Int[{_DoorOption}]}==-1
+	if ${Int[${_DoorOption}]}==-1
 		noop
 	else
 		call DoorOption "${_DoorOption}"
@@ -2789,6 +5368,7 @@ function DoorOption(string _Door)
 ;Zone function
 function Zone(int _IndexPosition)
 {
+	;echo ${_IndexPosition} // ${ZoneFrom.Get[${_IndexPosition}]}
 	wait 60 !${EQ2.Zoning}
 	wait 5
 	wait 60 !${EQ2.Zoning}
@@ -2954,22 +5534,86 @@ function Zone(int _IndexPosition)
 	if ${ZoneFrom.Get[${_IndexPosition}].Find[Aurelian Coast](exists)} && ( !${Zone.Name.Find[Aurelian Coast](exists)} || ( ${Me.Distance[113.730003,57.369999,-657.119995]}>45 && ${Me.Distance[161.188644,62.000786,-631.729248]}>45 )
 	{
 		echo ISXRI: We are not in Aurelian Coast we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
-		;relay "other ${RI_Var_String_RelayGroup}" RZ ACO
 		call Goto AC
 	}
 	if ${ZoneFrom.Get[${_IndexPosition}].Find["Sanctus Seru [City]"](exists)} && ( !${Zone.Name.Find["Sanctus Seru [City]"](exists)} || ${Me.Distance[-239.133438,179.756027,-1.253709]}>55 )
 	{
 		echo ISXRI: We are not in Sanctus Seru [City] we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
-		;relay "other ${RI_Var_String_RelayGroup}" RZ SSCO
 		call Goto SSC
 	}
 	if ${ZoneFrom.Get[${_IndexPosition}].Find["Wracklands"](exists)} && ( !${Zone.Name.Find["Wracklands"](exists)} || ${Me.Distance[726.633362,77.960884,664.408203]}>55 )
 	{
 		echo ISXRI: We are not in Wracklands we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
-		;relay "other ${RI_Var_String_RelayGroup}" RZ SSCO
 		call Goto WL
 	}
-	
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["City of Fordel Midst"](exists)} && ( !${Zone.Name.Find["City of Fordel Midst"](exists)} || ${Me.Distance[397.221436,-35.983528,748.467163]}>55 )
+	{
+		;echo ISXRI: We are not in City of Fordel Midst we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto FM
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["City of Shar Vahl"](exists)} && ( !${Zone.Name.Find["City of Shar Vahl"](exists)} || ( ${Me.Distance[-139.178238,32.386150,244.650986]}>20 && ${ZoneFrom.Get[${_IndexPosition}].Find["Untamed Lands"](exists)} ) || ( ${Me.Distance[-357.383545,91.861389,179.837708]}>55 && ${ZoneFrom.Get[${_IndexPosition}].Find["Feral Reserve"](exists)} ) )
+	{
+		;echo ISXRI: We are not in City of Shar Vahl we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		if ${ZoneFrom.Get[${_IndexPosition}].Find["Feral Reserve"]}
+			call Goto SVFR
+		if ${ZoneFrom.Get[${_IndexPosition}].Find["Untamed Lands"]}
+			call Goto SVUL
+	}
+	;echo ${ZoneFrom.Get[${_IndexPosition}]} // ${ZoneFrom.Get[${_IndexPosition}].Find["Savage Weald"](exists)} && ( !${Zone.Name.Find["Savage Weald"](exists)} || ( ${Me.Distance[-896.098450,75.165260,-375.025940]}>55 && ${ZoneFrom.Get[${_IndexPosition}].Find["Chaotic Caverns"](exists)} ) || ( ${Me.Distance[-81.374565,20.860985,-259.299744]}>55 && ${ZoneFrom.Get[${_IndexPosition}].Find["Fort Grim"](exists)} ) ) 
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Savage Weald"](exists)} && ( !${Zone.Name.Find["Savage Weald"](exists)} || ( ${Me.Distance[-896.098450,75.165260,-375.025940]}>55 && ${ZoneFrom.Get[${_IndexPosition}].Find["Chaotic Caverns"](exists)} ) || ( ${Me.Distance[-81.374565,20.860985,-259.299744]}>55 && ${ZoneFrom.Get[${_IndexPosition}].Find["Fort Grim"](exists)} ) )
+	{
+		;echo ISXRI: We are not in Savage Weald we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		if ${ZoneFrom.Get[${_IndexPosition}].Find["Fort Grim"]}
+			call Goto SWFG
+		if ${ZoneFrom.Get[${_IndexPosition}].Find["Chaotic Caverns"]}
+			call Goto SWCC
+	}
+	;echo ${ZoneFrom.Get[${_IndexPosition}].Find["Shadeweaver's Thicket"](exists)} && ( !${Zone.Name.Find["Shadeweaver's Thicket"](exists)} || ( ${Me.Distance[-544.688782,161.518738,-753.726624]}>55 && ${ZoneFrom.Get[${_IndexPosition}].Equal["Shadeweaver's Thicket"]} ) ) || ( !${Zone.Name.Find["Shadeweaver's Thicket"](exists)} || ( ${Me.Distance[632.874634,13.072926,316.680420]}>55 && ${ZoneFrom.Get[${_IndexPosition}].Find["Loda Kai Isle"](exists)} ) )
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Shadeweaver's Thicket"](exists)} && ( !${Zone.Name.Find["Shadeweaver's Thicket"](exists)} || ( ${Me.Distance[-544.688782,161.518738,-753.726624]}>55 && ${ZoneFrom.Get[${_IndexPosition}].Equal["Shadeweaver's Thicket"]} ) || ( !${Zone.Name.Find["Shadeweaver's Thicket"](exists)} || ( ${Me.Distance[632.874634,13.072926,316.680420]}>55 && ${ZoneFrom.Get[${_IndexPosition}].Find["Loda Kai Isle"](exists)} ) )
+	{
+		;echo ${ZoneFrom.Get[${_IndexPosition}]}
+		;echo ${ZoneFrom.Get[${_IndexPosition}].Equal["Shadeweaver's Thicket"]}
+		;echo ISXRI: We are not in Shadeweaver's Thicket we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		if ${ZoneFrom.Get[${_IndexPosition}].Find["Loda Kai Isle"](exists)}
+			call Goto STLKI
+		else
+			call Goto ST
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Echo Caverns"](exists)} && ( !${Zone.Name.Find["Echo Caverns"](exists)} || ${Me.Distance[615.701111,25.766819,-439.633423]}>55 )
+	{
+		;echo ISXRI: We are not in Echo Caverns we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto EC
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Svarni Expanse"](exists)} && ( !${Zone.Name.Find["Svarni Expanse"](exists)} )
+	{
+		;echo ISXRI: We are not in Svarni Expanse we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto SE
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Karuupa Jungle Heart of Conflict"](exists)} && ( !${Zone.Name.Find["Karuupa Jungle"](exists)} || ${Me.Distance[645.20,48.73,-446.90]}>55 )
+	{
+		;echo ISXRI: We are not in Karuupa Jungle Heart of Conflict we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto KJHC
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Karuupa Jungle Dedrakas Descent"](exists)} && ( !${Zone.Name.Find["Karuupa Jungle"](exists)} || ${Me.Distance[-232.49,109.59,-691.35]}>55 )
+	{
+		;echo ISXRI: We are not in Karuupa Jungle Dedrakas Descent we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto KJDD
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Mahngavi Wastes"](exists)} && ( !${Zone.Name.Find["Mahngavi Wastes"](exists)} || ${Me.Distance[645.20,48.73,-446.90]}>55 )
+	{
+		;echo ISXRI: We are not in Mahngavi Wastes we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto MW
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Forlorn Gist"](exists)} && ( !${Zone.Name.Find["Forlorn Gist"](exists)} || ${Me.Distance[434.29,108.74,205.00]}>75 )
+	{
+		;echo ISXRI: We are not in Forlorn Gist we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto FG
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Karuupa Jungle Predators Perch"](exists)} && ( !${Zone.Name.Find["Karuupa Jungle"](exists)} || ${Me.Distance[-746.00,197.57,-284.76]}>55 )
+	{
+		;echo ISXRI: We are not in Forlorn Gist we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto KJPP
+	}
 	wait 6000 ${RIMObj.AllGroupInZone}
 	wait 20
 	
@@ -2986,7 +5630,13 @@ function Zone(int _IndexPosition)
 	
 	;click Zone1 Zone in
 	if ${_Zone.Get[${_IndexPosition}].Equal["The Icy Keep (Hard)"]}
-		relay ${RI_Var_String_RelayGroup} Actor["${ZoneEntrance.Get[${_IndexPosition}]}"]:DoubleClick
+	{
+		relay ${RI_Var_String_RelayGroup} Actor[id,${Actor[Query, Name=="The Icy Door"].ID}]:DoubleClick
+		wait 2
+		relay ${RI_Var_String_RelayGroup} Actor[id,${Actor[Query, Name=="The Icy Door"].ID}]:DoubleClick
+		wait 2
+		relay ${RI_Var_String_RelayGroup} Actor[id,${Actor[Query, Name=="The Icy Door"].ID}]:DoubleClick
+	}
 	else	
 		Actor["${ZoneEntrance.Get[${_IndexPosition}]}"]:DoubleClick
 	wait 10
