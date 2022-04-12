@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.64 1-9-21"
-double EXTVER = 6.64;
+#define EXTENSION_VERSION "6.65 4-11-21"
+double EXTVER = 6.65;
 #include "ISXRI.h"
 
 
@@ -41201,48 +41201,48 @@ int __cdecl CMD_PoisonConsume(int argc, char *argv[])
 		//cast argv[1] to an int for checking
 		int intArg = atoi(argv[1]);
 		char charPoison1Buffer[10];
-		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison1Name}\"].AutoConsumeOn}", charPoison1Buffer, sizeof(charPoison1Buffer));
+		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison1Name}\"].AutoConsumeOn}", charPoison1Buffer, sizeof(charPoison1Buffer));
 		string strPoison1Buffer = charPoison1Buffer;
 		char charPoison2Buffer[10];
-		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison2Name}\"].AutoConsumeOn}", charPoison2Buffer, sizeof(charPoison2Buffer));
+		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison2Name}\"].AutoConsumeOn}", charPoison2Buffer, sizeof(charPoison2Buffer));
 		string strPoison2Buffer = charPoison2Buffer;
 		char charPoison3Buffer[10];
-		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison3Name}\"].AutoConsumeOn}", charPoison3Buffer, sizeof(charPoison3Buffer));
+		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison3Name}\"].AutoConsumeOn}", charPoison3Buffer, sizeof(charPoison3Buffer));
 		string strPoison3Buffer = charPoison3Buffer;
 		char charPoison4Buffer[10];
-		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison4Name}\"].AutoConsumeOn}", charPoison4Buffer, sizeof(charPoison4Buffer));
+		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison4Name}\"].AutoConsumeOn}", charPoison4Buffer, sizeof(charPoison4Buffer));
 		string strPoison4Buffer = charPoison4Buffer;
 		char charPoison5Buffer[10];
-		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison3Name}\"].AutoConsumeOn}", charPoison5Buffer, sizeof(charPoison5Buffer));
+		pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison3Name}\"].AutoConsumeOn}", charPoison5Buffer, sizeof(charPoison5Buffer));
 		string strPoison5Buffer = charPoison5Buffer;
 		//if intArg is 1 turn poison's on
 		if (intArg == 1)
 		{
 			if (strPoison1Buffer == "FALSE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison1Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison1Name}\"]:ToggleAutoConsume");
 			if (strPoison2Buffer == "FALSE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison2Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison2Name}\"]:ToggleAutoConsume");
 			if (strPoison3Buffer == "FALSE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison3Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison3Name}\"]:ToggleAutoConsume");
 			if (strPoison4Buffer == "FALSE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison4Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison4Name}\"]:ToggleAutoConsume");
 			if (strPoison5Buffer == "FALSE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison5Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison5Name}\"]:ToggleAutoConsume");
 		}
 
 		//else if intArg is 0 turn poison's off
 		else if (intArg == 0)
 		{
 			if (strPoison1Buffer == "TRUE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison1Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison1Name}\"]:ToggleAutoConsume");
 			if (strPoison2Buffer == "TRUE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison2Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison2Name}\"]:ToggleAutoConsume");
 			if (strPoison3Buffer == "TRUE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison3Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison3Name}\"]:ToggleAutoConsume");
 			if (strPoison4Buffer == "TRUE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison4Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison4Name}\"]:ToggleAutoConsume");
 			if (strPoison5Buffer == "TRUE")
-				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_Poison5Name}\"]:ToggleAutoConsume");
+				pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_Poison5Name}\"]:ToggleAutoConsume");
 		}
 		else
 			printf("ISXRI: Wrong Arg, %s Usage : RI_CMD_PoisonConsume int OnOff  1 == On 0 = Off", argv[1]);
@@ -41270,12 +41270,12 @@ int __cdecl CMD_PotionConsume(int argc, char *argv[])
 			//if (strArchetypeBuffer == "fighter")
 		//	{
 				char charPotionBuffer[10];
-				pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_PotionName}\"].AutoConsumeOn}", charPotionBuffer, sizeof(charPotionBuffer));
+				pISInterface->DataParse("${Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_PotionName}\"].AutoConsumeOn}", charPotionBuffer, sizeof(charPotionBuffer));
 				string strPotionBuffer = charPotionBuffer;
 				if (strPotionBuffer == "FALSE")
 				{
 					//printf("TurnOn");
-					pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name==\"${RI_Var_String_PotionName}\"]:ToggleAutoConsume");
+					pISInterface->ExecuteTimedCommand(1, "Me.Inventory[Query, Location==\"Inventory\" && Name=-\"${RI_Var_String_PotionName}\"]:ToggleAutoConsume");
 				}
 			/*}
 			if (strArchetypeBuffer == "priest")

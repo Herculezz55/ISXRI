@@ -2184,8 +2184,38 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlockTime:Insert[5400]
 
 			;Zone
+			_Zone:Insert["Svarni Expanse: Carrion Crag [Heroic I]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Svarni Expanse: Carrion Crag [Heroic I]"]
+			ZoneFrom:Insert["Svarni Expanse"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone to svarni dungeon 01"]
+			ZoneEntranceLoc:Insert[""]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
 			_Zone:Insert["Karuupa Jungle: Heart of Conflict [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Karuupa Jungle: Heart of Conflict [Solo]"]
+			ZoneFrom:Insert["Karuupa Jungle Heart of Conflict"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Karuupa Jungle: Heart of Conflict dungeons"]
+			ZoneEntranceLoc:Insert[""]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			;Zone
+			_Zone:Insert["Karuupa Jungle: Heart of Conflict [Heroic I]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Karuupa Jungle: Heart of Conflict [Heroic I]"]
 			ZoneFrom:Insert["Karuupa Jungle Heart of Conflict"]
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
@@ -2201,6 +2231,21 @@ atom BuildIndexes(string _Expac)
 			;Zone
 			_Zone:Insert["Karuupa Jungle: Dedraka's Descent [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Karuupa Jungle: Dedraka's Descent [Solo]"]
+			ZoneFrom:Insert["Karuupa Jungle Dedrakas Descent"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Karuupa Jungle: Dedraka's Descent dungeons"]
+			ZoneEntranceLoc:Insert[""]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Karuupa Jungle: Dedraka's Descent [Heroic I]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Karuupa Jungle: Dedraka's Descent [Heroic I]"]
 			ZoneFrom:Insert["Karuupa Jungle Dedrakas Descent"]
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
@@ -2244,6 +2289,21 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlockTime:Insert[5400]
 
 			;Zone
+			_Zone:Insert["Mahngavi Wastes: Phantasmal Shades [Heroic I]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Mahngavi Wastes: Phantasmal Shades [Heroic I]"]
+			ZoneFrom:Insert["Mahngavi Wastes"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Mahngavi Heroics Doorit"]
+			ZoneEntranceLoc:Insert["647.31 48.82 -445.64"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
 			_Zone:Insert["Mahngavi Wastes: Warpwood Cairn [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Mahngavi Wastes: Warpwood Cairn [Solo]"]
 			ZoneFrom:Insert["Mahngavi Wastes"]
@@ -2257,6 +2317,23 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
 			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Mahngavi Wastes: Warpwood Cairn [Heroic I]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Mahngavi Wastes: Warpwood Cairn [Heroic I]"]
+			ZoneFrom:Insert["Mahngavi Wastes"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Mahngavi Heroics Doorit"]
+			ZoneEntranceLoc:Insert["647.31 48.82 -445.64"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+			
+			
 			;Zone
 			_Zone:Insert["Castle Vacrul: Rosy Reverie [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Castle Vacrul: Rosy Reverie [Solo]"]
@@ -2271,9 +2348,40 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
 			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Castle Vacrul: Rosy Reverie [Heroic I]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Castle Vacrul: Rosy Reverie [Heroic I]"]
+			ZoneFrom:Insert["Forlorn Gist"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Vacrul heroic and solo"]
+			ZoneEntranceLoc:Insert["439.47 109.07 267.70"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
 			;Zone
 			_Zone:Insert["Castle Vacrul: Caverns of the Forsaken [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Castle Vacrul: Caverns of the Forsaken [Solo]"]
+			ZoneFrom:Insert["Forlorn Gist"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Vacrul heroic and solo"]
+			ZoneEntranceLoc:Insert["439.47 109.07 267.70"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Castle Vacrul: Caverns of the Forsaken [Heroic I]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Castle Vacrul: Caverns of the Forsaken [Heroic I]"]
 			ZoneFrom:Insert["Forlorn Gist"]
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
@@ -2304,6 +2412,21 @@ atom BuildIndexes(string _Expac)
 			;Zone
 			_Zone:Insert["Forlorn Gist: Nightmares of Old [Solo]"]
 			UIElement[ZonesAvail@RZ]:AddItem["Forlorn Gist: Nightmares of Old [Solo]"]
+			ZoneFrom:Insert["Forlorn Gist"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Crypt of Forlorn"]
+			ZoneEntranceLoc:Insert["460.81 109.83 249.52"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Forlorn Gist: Nightmares of Old [Heroic I]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Forlorn Gist: Nightmares of Old [Heroic I]"]
 			ZoneFrom:Insert["Forlorn Gist"]
 			ZoneTimer:Insert[90]
 			ZoneExit:Insert["Exit"]
@@ -3036,11 +3159,7 @@ function Goto(string _WhereToGo)
 	}
 	elseif ${_WhereToGoShort.Equal[SvarniExpanse]}
 	{
-		RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-		wait 5
-		RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-		wait 50 ${EQ2.Zoning}==1
-		wait 600 ${EQ2.Zoning}==0
+		call FastTravel "Svarni Expanse"
 		wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
 		if !${Others}
 			call SvarniExpanseSvarniGatewaySvarniExpanseInstances
@@ -3051,13 +3170,13 @@ function Goto(string _WhereToGo)
 		{
 			call SvarniExpanseInstancesKaruupaJunglePad
 		}
+		if ${_WhereFromShort.Find[KaruupaJungle]} || ${Zone.Name.Find[Karuupa Jungle]}
+		{
+			return
+		}
 		else
 		{
-			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-			wait 5
-			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-			wait 50 ${EQ2.Zoning}==1
-			wait 600 ${EQ2.Zoning}==0
+			call FastTravel "Svarni Expanse"
 			wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
 			call SvarniExpanseSvarniGatewayKaruupaJunglePad
 		}
@@ -3082,11 +3201,7 @@ function Goto(string _WhereToGo)
 		}
 		else
 		{
-			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-			wait 5
-			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-			wait 50 ${EQ2.Zoning}==1
-			wait 600 ${EQ2.Zoning}==0
+			call FastTravel "Svarni Expanse"
 			wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
 			call SvarniExpanseSvarniGatewayKaruupaJunglePad
 			if !${Others}
@@ -3113,11 +3228,7 @@ function Goto(string _WhereToGo)
 		}
 		else
 		{
-			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-			wait 5
-			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-			wait 50 ${EQ2.Zoning}==1
-			wait 600 ${EQ2.Zoning}==0
+			call FastTravel "Svarni Expanse"
 			wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
 			call SvarniExpanseSvarniGatewayKaruupaJunglePad
 			if !${Others}
@@ -3144,11 +3255,7 @@ function Goto(string _WhereToGo)
 		}
 		else
 		{
-			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-			wait 5
-			RIMUIObj:FastTravel[${Me.Name},"Svarni Expanse"]
-			wait 50 ${EQ2.Zoning}==1
-			wait 600 ${EQ2.Zoning}==0
+			call FastTravel "Svarni Expanse"
 			wait 50 ${Zone.ShortName.Find[exp18_rgn_svarni_expanse](exists)}
 			call SvarniExpanseSvarniGatewayKaruupaJunglePad
 			if !${Others}
@@ -3445,7 +3552,9 @@ function RenfrysBasementForlornGistInstances()
 {
 	_PathFile:Clear
 	_PathFile:Insert[-0.18 0.02 28.59]
-	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[Custom|Wait|40]
+	_PathFile:Insert[-0.18 0.02 28.59]
+	_PathFile:Insert[Custom|Wait|10]
 	_PathFile:Insert[Custom|ZoneDoor|zone_from_forlorn_tradeskill]
 	if !${Others}
 	{
@@ -3557,7 +3666,9 @@ function RenfrysBasementMahngaviWastesEntrance()
 {
 	_PathFile:Clear
 	_PathFile:Insert[-0.12 0.02 28.71]
-	_PathFile:Insert[Custom|Wait|20]
+	_PathFile:Insert[Custom|Wait|40]
+	_PathFile:Insert[-0.12 0.02 28.71]
+	_PathFile:Insert[Custom|Wait|10]
 	_PathFile:Insert[Custom|ZoneDoor|zone_from_forlorn_tradeskill]
 	_PathFile:Insert[-349.92 13.21 56.56]
 	_PathFile:Insert[-345.51 13.23 47.52]
@@ -5232,6 +5343,28 @@ function Teleporter(float _x, float _y, float _z, int _precision=1, int _maxdist
 	wait 20
 	if !${Script[Buffer:CoT]}
 		RI_CoT
+}
+function FastTravel(string _ZoneName, string _DoorOption=0)
+{	
+	;echo FastTravel(string _ZoneName=${_ZoneName}, int _RelayToGroup=${_RelayToGroup}, string _DoorOption=${_DoorOption})
+	if ${RIMUIObj.MainIconIDExists[${Me.ID},955,0]}==0
+	{
+		call MessageBox "You must be gold to use the FastTravel feature required for this quest Pausing RQ please resume in ${_ZoneName} at the location FastTravel would normally take you"
+	}
+	else
+	{
+		RIMUIObj:FastTravel[${Me.Name},"${_ZoneName}","${_DoorOption}"]
+		wait 50 ${EQ2.Zoning}==1
+		if ${EQ2.Zoning}==0
+		{
+			if ${EQ2UIPage[popup,ZoneTeleporter].IsVisible}
+				call DoorOption 0;wait 10
+			if ${ChoiceWindow(exists)}
+				ChoiceWindow:DoChoice1
+		}
+		wait 600 ${EQ2.Zoning}==1
+		wait 600 ${EQ2.Zoning}==0
+	}
 }
 function ZoneDoor(string _Actor, string _DoorOption=-1, bool _LoopUntilNoHighlightOnMouseHover=0, int _GiveUpCNT=50, bool _ExactName=1)
 {

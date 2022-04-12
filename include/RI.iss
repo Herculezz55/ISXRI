@@ -5766,6 +5766,78 @@
 ;						Lockspots toons
 ;						Uses HO's
 
+;v6.65 Changes 4-11-21
+;	RI Inventory
+;		Fixed a bug that was attempting to transmute/salvage merc only gear
+;	AbilityCheck
+;		Will now add Mount, Familiar and Mercenary Infusion abilities to your check file
+;		Will now add Both Feathered Stalkers to your Check file
+;			You can add these ability without having to redo your entire file with:
+;				RI_AbilityCheck -AbilityName "Aurous Feathered Stalker"   or
+;				RI_AbilityCheck -AbilityName "Viridescent Feathered Stalker"
+;					.... etc etc etc (Just make sure the Ability Name is Exact)
+;	RZ
+;		Modified some pathing
+;		Fixed a bug that was not selecting instance when multiple exists
+;		Added:
+;			Svarni Expanse: Carrion Crag [Heroic I]
+;			Karuupa Jungle: Heart of Conflict [Heroic I]
+;			Karuupa Jungle: Dedraka's Descent [Heroic I]
+;			Mahngavi Wastes: Phantasmal Shades [Heroic I]
+;			Mahngavi Wastes: Warpwood Cairn [Heroic I]
+;			Castle Vacrul: Rosy Reverie [Heroic I]
+;			Castle Vacrul: Caverns of the Forsaken [Heroic I]
+;			Forlorn Gist: Nightmares of Old [Heroic I]
+;	RI
+;		Modified
+;			Svarni Expanse: Carrion Crag
+;				Modified:
+;					High Shikari Olyxa
+;						Tweaked movement a little
+;					Skulkor
+;						Modified LockSpot
+;					Gangrerious
+;						Modified LockSpot
+;						Now Jousts Searches
+;			Karuupa Jungle: Heart of Conflict
+;				Modified Pathing
+;				Now Attempts DonkeyKong, But Fails Frequently, when this happens just revive and get up yourself.
+;				Modified:
+;					Nakka
+;						Now waits until mob exists AND is aggro before enaging his script
+;						Now pulls Nakka through bubbles as needed
+;			Mahngavi Wastes: Phantasmal Shades
+;				Modified Pathing
+;			Castle Vacrul: Caverns of the Forsaken
+;				Modified Pathing
+;				Sypheria the Shackled
+;					Now will move to correct circle when she ports
+;					Now Turns off AE and Encounter, and Turns on Singular Focus/Focused Offensive
+;				Skelegore the Regurgitated
+;					Now moves to and cures ported toon
+;			Castle Vacrul: Rosy Reverie
+;				Modified Pathing
+;				Kartur
+;					Fixed script for the misspell DBG corrected
+;				Rilayne
+;					Modified Pulling
+;			Castle Vacrul: Suite of Screams
+;				Bloodmaiden Syvanti
+;					Fixed a bug with the Arcane
+;			Karuupa Jungle: Dedraka's Descent
+;				Cannibrea
+;					Tweaked Lockspots
+;			Mahngavi Wastes: Warpwood Cairn
+;				Worlock Ren Bolor
+;					Moved lockspot into tent
+;			Forlorn Gist: Nightmares of Old
+;				Lavec Conun'Stah
+;					Moved lockspot
+;					Now jousts 
+;				Stenkannreif
+;					Now Walks for fight
+
+
 ;RunQuest - Runs a quest with RQ\n\nArgument 1: For Who\nArgument 2: Quest Name]
 
 ;156 432 336
@@ -5796,7 +5868,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.64
+variable(global) float RI_Var_Float_Version=6.65
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -5819,12 +5891,12 @@ variable(global) string RI_Var_String_SwimUpKey=Home
 variable(global) string RI_Var_String_SwimDownKey=End
 variable(global) string RI_Var_String_JumpKey=space
 variable(global) string RI_Var_String_CrouchKey=z
-variable(global) string RI_Var_String_PotionName="Thaumic Elixir of "
-variable(global) string RI_Var_String_Poison1Name="Exemplar's Hemotoxin"
-variable(global) string RI_Var_String_Poison2Name="Expert Acidic Blast"
-variable(global) string RI_Var_String_Poison3Name="Expert Ignorant Bliss"
-variable(global) string RI_Var_String_Poison4Name="Expert Marked Target"
-variable(global) string RI_Var_String_Poison5Name="Expert Warding Ebb"
+variable(global) string RI_Var_String_PotionName="Elixir of "
+variable(global) string RI_Var_String_Poison1Name="Hemotoxin"
+variable(global) string RI_Var_String_Poison2Name="Acidic Blast"
+variable(global) string RI_Var_String_Poison3Name="Ignorant Bliss"
+variable(global) string RI_Var_String_Poison4Name="Marked Target"
+variable(global) string RI_Var_String_Poison5Name="Warding Ebb"
 variable(global) string RI_Var_String_FoodName="Stormborn Souffle"
 variable(global) string RI_Var_String_DrinkName="Monsoon"
 variable(global) bool RI_Var_Bool_CraftDebug=FALSE

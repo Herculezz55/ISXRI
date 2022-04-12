@@ -1051,6 +1051,9 @@ UseItem "Electric Manaetic Device (EMD)"
 Custom
 ExecuteCommand "face 240"
 -12.854324 -7.243563 -446.337097
+Wait
+20
+-12.854324 -7.243563 -446.337097
 Custom
 UseItem "Electric Manaetic Device (EMD)"
 -12.854324 -7.243563 -446.337097
@@ -1062,6 +1065,9 @@ UseItem "Electric Manaetic Device (EMD)"
 -22.271690 -7.131387 -395.625153
 Custom
 ExecuteCommand "face 290"
+-15.866292 -7.243566 -397.658386
+Wait
+20
 -15.866292 -7.243566 -397.658386
 Custom
 UseItem "Electric Manaetic Device (EMD)"
@@ -1096,6 +1102,9 @@ UseItem "Electric Manaetic Device (EMD)"
 67.060043 -7.243563 -391.701782
 Custom
 ExecuteCommand "face 60"
+60.154991 -7.243563 -397.480072
+Wait
+20
 60.154991 -7.243563 -397.480072
 Custom
 UseItem "Electric Manaetic Device (EMD)"

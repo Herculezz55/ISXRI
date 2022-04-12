@@ -5037,7 +5037,7 @@ objectdef RI_Object_CB
 					}
 				}
 				;echo if ( ${istrExportIsAE.Get[${ExportPosition}].Equal[TRUE]} || ${istrExportMaxAOETargets.Get[${ExportPosition}]}>0 ) && ${istrExportIsBeneficial.Get[${ExportPosition}].Equal[TRUE]} && ( ${istrExportIsSelfAbility.Get[${ExportPosition}].Equal[TRUE]} || ${istrExportIsRaidAbility.Get[${ExportPosition}].Equal[TRUE]} )
-				if ( ${istrExportIsAE.Get[${ExportPosition}].Equal[TRUE]} || ${istrExportMaxAOETargets.Get[${ExportPosition}]}>0 ) && ${istrExportIsBeneficial.Get[${ExportPosition}].Equal[TRUE]} && ( ${istrExportIsSelfAbility.Get[${ExportPosition}].Equal[TRUE]} || ${istrExportIsRaidAbility.Get[${ExportPosition}].Equal[TRUE]} )
+				if ${istrExport.Get[${ExportPosition}].Find[Mount Infusion]} && ${istrExport.Get[${ExportPosition}].Find[Mercenary Infusion]} && ${istrExport.Get[${ExportPosition}].Find[Familiar Infusion]} && ( ${istrExportIsAE.Get[${ExportPosition}].Equal[TRUE]} || ${istrExportMaxAOETargets.Get[${ExportPosition}]}>0 ) && ${istrExportIsBeneficial.Get[${ExportPosition}].Equal[TRUE]} && ( ${istrExportIsSelfAbility.Get[${ExportPosition}].Equal[TRUE]} || ${istrExportIsRaidAbility.Get[${ExportPosition}].Equal[TRUE]} )
 				{
 					if ${CombatBotCSCDebug}
 						echo ISXRI: CombatBot: IsAE and Beneficial, Spells like Defile/Porcupine

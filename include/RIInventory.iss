@@ -896,7 +896,18 @@ objectdef RIInventoryObject
 							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be transmuted
 						continue
 					}
-					
+					if ${InventoryIterator.Value.ToItemInfo.NoTransmute}
+					{
+						if ${Debug}
+							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be transmuted
+						continue
+					}
+					if ${InventoryIterator.Value.ToItemInfo.MercOnly}
+					{
+						if ${Debug}
+							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be transmuted
+						continue
+					}
 					if ${InventoryIterator.Value.ToItemInfo.NoValue} || ${InventoryIterator.Value.ToItemInfo.Level}<=0 
 					{
 						if ${Debug}
@@ -1114,7 +1125,18 @@ objectdef RIInventoryObject
 							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be Salvaged
 						continue
 					}
-					
+					if ${InventoryIterator.Value.ToItemInfo.NoSalvage}
+					{
+						if ${Debug}
+							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be Salvaged
+						continue
+					}
+					if ${InventoryIterator.Value.ToItemInfo.MercOnly}
+					{
+						if ${Debug}
+							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be Salvaged
+						continue
+					}
 					if ${InventoryIterator.Value.ToItemInfo.NoValue} || ${InventoryIterator.Value.ToItemInfo.Level}<=0 
 					{
 						if ${Debug}
@@ -1244,7 +1266,12 @@ objectdef RIInventoryObject
 							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be Extracted
 						continue
 					}
-					
+					if ${InventoryIterator.Value.ToItemInfo.MercOnly}
+					{
+						if ${Debug}
+							echo ISXRI: Skipping: ${InventoryIterator.Value.Name}, because it can not be Extracted
+						continue
+					}
 					if ${InventoryIterator.Value.ToItemInfo.NoValue} || ${InventoryIterator.Value.ToItemInfo.Level}<=100 
 					{
 						if ${Debug}

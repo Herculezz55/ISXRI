@@ -533,6 +533,7 @@ atom EQ2_onQuestOffered(string Name, string Description, int Level, int StatusRe
 	}
 	TimedCommand 15 relay ${RI_Var_String_RelayGroup} RewardWindow:AcceptReward
 	TimedCommand 17 relay ${RI_Var_String_RelayGroup} EQ2:AcceptPendingQuest
+	TimedCommand 19 relay ${RI_Var_String_RelayGroup} RewardWindow:AcceptReward
 	TimedCommand 20 QuestJournalWindow.ActiveQuest[${Name}]:Share
 }
 ;atom triggered when an announcement is detected
@@ -620,7 +621,11 @@ atom EQ2_onRewardWindowAppeared()
 	if ${RI_Var_Bool_AcceptRewards}
 	{
 		if ${EQ2.PendingQuestName.Equal[None]} && ${RewardWindow.NumRewards}<2
-			TimedCommand 5 RewardWindow:AcceptReward
+		{
+			TimedCommand 15 RewardWindow:AcceptReward
+			TimedCommand 18 RewardWindow:AcceptReward
+			TimedCommand 20 RewardWindow:AcceptReward
+		}
 	}
 	;relay ${RI_Var_String_RelayGroup} -noredirect 
 }
@@ -1797,6 +1802,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Forlorn Gist: Nightmares of Old [Solo]
+		case Forlorn Gist: Nightmares of Old [Heroic I]
 		{
 			RI_CMD_Hidden_AddTLO ForlornGistNightmaresofOld
 			LoadedTLO:Set[TRUE]
@@ -1807,6 +1813,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Svarni Expanse: Carrion Crag [Solo]
+		case Svarni Expanse: Carrion Crag [Heroic I]
 		{
 			RI_CMD_Hidden_AddTLO SvarniExpanseCarrionCrag
 			LoadedTLO:Set[TRUE]
@@ -1817,6 +1824,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Karuupa Jungle: Heart of Conflict [Solo]
+		case Karuupa Jungle: Heart of Conflict [Heroic I]
 		{
 			RI_CMD_Hidden_AddTLO KaruupaJungleHeartofConflict
 			LoadedTLO:Set[TRUE]
@@ -1827,6 +1835,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Karuupa Jungle: Dedraka's Descent [Solo]
+		case Karuupa Jungle: Dedraka's Descent [Heroic I]
 		{
 			RI_CMD_Hidden_AddTLO KaruupaJungleDedrakasDescent
 			LoadedTLO:Set[TRUE]
@@ -1847,6 +1856,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Mahngavi Wastes: Phantasmal Shades [Solo]
+		case Mahngavi Wastes: Phantasmal Shades [Heroic I]
 		{
 			RI_CMD_Hidden_AddTLO MahngaviWastesPhantasmalShades
 			LoadedTLO:Set[TRUE]
@@ -1857,6 +1867,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Mahngavi Wastes: Warpwood Cairn [Solo]
+		case Mahngavi Wastes: Warpwood Cairn [Heroic I]
 		{
 			RI_CMD_Hidden_AddTLO MahngaviWastesWarpwoodCairn
 			LoadedTLO:Set[TRUE]
@@ -1867,6 +1878,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Castle Vacrul: Rosy Reverie [Solo]
+		case Castle Vacrul: Rosy Reverie [Heroic I]
 		{
 			RI_CMD_Hidden_AddTLO CastleVacrulRosyReverie
 			LoadedTLO:Set[TRUE]
@@ -1877,6 +1889,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			break
 		}
 		case Castle Vacrul: Caverns of the Forsaken [Solo]
+		case Castle Vacrul: Caverns of the Forsaken [Heroic I]
 		{
 			RI_CMD_Hidden_AddTLO CastleVacrulCavernsoftheForsaken
 			LoadedTLO:Set[TRUE]
@@ -18174,6 +18187,7 @@ variable int CurrentProgress=0
 variable int CurrentDurability=0
 variable int TotalDurability=0
 variable string CurrentReactive=""
+variable string CurrentReactiveMID=""
 variable int ChangeinDur=0
 variable index:string ReactionAbility
 variable index:string DurabilitySkills
@@ -18188,18 +18202,204 @@ variable int tempdur
 variable int tempkey
 variable bool complete=FALSE
 variable bool cancel=FALSE
-
+variable bool craftingready=FALSE
 function Farseas()
 {
 	call CraftIt "Far Seas Crafting Station" 1
 }
 
-function RICraftIt(string _Recipe, int _Amount=1)
+function RICraftIt(string _Recipe, int _Amount=1, bool _CheckQTY=FALSE, string _ItemName=!SAME!, int _ItemQTY=-1)
 {
-	call CraftIt "${_Recipe}" ${_Amount}
+	if ${_CheckQTY}
+	{
+		if ${_ItemQTY}==-1
+			_ItemQTY:Set[${_Amount}]
+		if ${_ItemName.Equal["!SAME!"]}
+			_ItemName:Set["${_Recipe}"]
+		while ${RIMUIObj.InventoryQuantity[${_ItemName}]}<${_ItemQTY}
+		{
+			call CraftIt "${_Recipe}" ${_Amount}
+			wait 5
+		}
+	}
+	else
+		call CraftIt "${_Recipe}" ${_Amount}
 }
-
-function CraftIt(string _Recipe, int _Amount=1)
+function Justreact()
+{
+	call CraftIt 0 0 1 0 1
+}
+function Justreacte()
+{
+	call CraftIt 0 0 1 1 1
+}
+function RICraftSkills(string _Technique)
+{
+	switch ${_Technique}
+	{
+		case Experimentation
+		{
+			;echo exp
+			_Experimentation:Set[1]
+			;Focus (These have 6 different reactives as the dur and prog abilities are not matching icons)
+			ReactionAbility:Insert[Scattered Method|11|410]
+			ReactionAbility:Insert[Bad Habit|12|415]
+			ReactionAbility:Insert[Fixed Clasp|13|421]
+			ReactionAbility:Insert[Mental Rut|21|422]
+			ReactionAbility:Insert[Deranged Measurements|22|404]
+			ReactionAbility:Insert[Debased Material|23|424]
+			ProgressSkills:Insert[Experimentation|1|Edit|410|2951775897]
+			ProgressSkills:Insert[Experimentation|2|Tweak|415|2952886293]
+			ProgressSkills:Insert[Experimentation|3|Enhance|421|3704970367]
+			DurabilitySkills:Insert[Experimentation|1|Revise|422|688400815]
+			DurabilitySkills:Insert[Experimentation|2|Calibrate|404|922343203]
+			DurabilitySkills:Insert[Experimentation|3|Augment|424|1172049349]
+			break
+		}
+		case Focus
+		{
+			_6Reactives:Set[1]
+			;Focus (These have 6 different reactives as the dur and prog abilities are not matching icons)
+			ReactionAbility:Insert[Sudden Spark|11]
+			ReactionAbility:Insert[Butter Fingers|12]
+			ReactionAbility:Insert[Brain Flatulence|13]
+			ReactionAbility:Insert[Thermal Accident|21]
+			ReactionAbility:Insert[Caught Sleeping|22]
+			ReactionAbility:Insert[Squirrel!|23]
+			ProgressSkills:Insert[Focus|1|Grounded]
+			ProgressSkills:Insert[Focus|2|Pop Knuckles]
+			ProgressSkills:Insert[Focus|3|Hold It]
+			DurabilitySkills:Insert[Focus|1|Extinguish]
+			DurabilitySkills:Insert[Focus|2|Awaken]
+			DurabilitySkills:Insert[Focus|3|Concentrate Hard]
+			break
+		}
+		case Geocraft
+		{
+			ReactionAbility:Insert[Dense Material|1]
+			ReactionAbility:Insert[Major Dense Material|1]
+			ReactionAbility:Insert[Minor Dense Material|1]
+			ReactionAbility:Insert[Rough Edges|2]
+			ReactionAbility:Insert[Minor Rough Edges|2]
+			ReactionAbility:Insert[Major Rough Edges|2]
+			ReactionAbility:Insert[Dull Luster|3]
+			ReactionAbility:Insert[Minor Dull Luster|3]
+			ReactionAbility:Insert[Major Dull Luster|3]
+			ReactionAbility:Insert[Critical Channelling Instability|2]
+			ReactionAbility:Insert[Lethal Flaws|2]
+			ReactionAbility:Insert[Lethal Meltdown|3]
+			ReactionAbility:Insert[Major Power Overload|3]
+			ReactionAbility:Insert[Critical Channelling|2]
+			ReactionAbility:Insert[Dark Matter|2]
+			ReactionAbility:Insert[Chronoseal Spillage|1]
+			ReactionAbility:Insert[Temporal Paradox|3]
+			ProgressSkills:Insert[Geomancy|1|Fabricate|41|1159210129]
+			ProgressSkills:Insert[Geomancy|2|Mold|416|445791132]
+			ProgressSkills:Insert[Geomancy|3|Infuse|425|889428983]
+			DurabilitySkills:Insert[Geomancy|1|Contrive|411|3692131627]
+			DurabilitySkills:Insert[Geomancy|2|Shape|416|2208000550]
+			DurabilitySkills:Insert[Geomancy|3|Permeate|425|2886388301]
+			break
+		}
+		case Geomancy
+		{
+			ReactionAbility:Insert[Dense Material|1]
+			ReactionAbility:Insert[Major Dense Material|1]
+			ReactionAbility:Insert[Minor Dense Material|1]
+			ReactionAbility:Insert[Rough Edges|2]
+			ReactionAbility:Insert[Minor Rough Edges|2]
+			ReactionAbility:Insert[Major Rough Edges|2]
+			ReactionAbility:Insert[Dull Luster|3]
+			ReactionAbility:Insert[Minor Dull Luster|3]
+			ReactionAbility:Insert[Major Dull Luster|3]
+			ReactionAbility:Insert[Critical Channelling Instability|2]
+			ReactionAbility:Insert[Lethal Flaws|2]
+			ReactionAbility:Insert[Lethal Meltdown|3]
+			ReactionAbility:Insert[Major Power Overload|3]
+			ReactionAbility:Insert[Critical Channelling|2]
+			ReactionAbility:Insert[Dark Matter|2]
+			ReactionAbility:Insert[Chronoseal Spillage|1]
+			ReactionAbility:Insert[Temporal Paradox|3]
+			ProgressSkills:Insert[Geomancy|1|Fabricate|41|1159210129]
+			ProgressSkills:Insert[Geomancy|2|Mold|416|445791132]
+			ProgressSkills:Insert[Geomancy|3|Infuse|425|889428983]
+			DurabilitySkills:Insert[Geomancy|1|Contrive|411|3692131627]
+			DurabilitySkills:Insert[Geomancy|2|Shape|416|2208000550]
+			DurabilitySkills:Insert[Geomancy|3|Permeate|425|2886388301]
+			break
+		}
+		case Weaponry
+		{
+			ReactionAbility:Insert[Water Quench|1|427]
+			ReactionAbility:Insert[Saltwater Quench|1|427]
+			ReactionAbility:Insert[Oil Quench|1|427]
+			ReactionAbility:Insert[Minor Soft Metal|1|427]
+			ReactionAbility:Insert[Soft Metal|1|427]
+			ReactionAbility:Insert[Extensive Soft Metal|1|427]
+			ReactionAbility:Insert[Brittle hardening|1|427]
+			ReactionAbility:Insert[Severe brittle hardening|1|427]
+			ReactionAbility:Insert[Red Hot Material|2|404]
+			ReactionAbility:Insert[Red Hot Metal|2|404]
+			ReactionAbility:Insert[Orange Hot Material|2|404]
+			ReactionAbility:Insert[Orange Hot Metal|2|404]
+			ReactionAbility:Insert[White Hot Material|2|404]
+			ReactionAbility:Insert[White Hot Metal|2|404]
+			ReactionAbility:Insert[Hasty tempering|2|404]
+			ReactionAbility:Insert[Severe hasty tempering|2|404]
+			ReactionAbility:Insert[Minor Hardened Metal|3|426]
+			ReactionAbility:Insert[Hardened Metal|3|426]
+			ReactionAbility:Insert[Extensive Hardened Metal|3|426]
+			ReactionAbility:Insert[Weak annealling|3|426]
+			ReactionAbility:Insert[Severe weak annealing|3|426]
+			ReactionAbility:Insert[Weaponsmith's Insight|3|426]
+			ReactionAbility:Insert[Flawless Hardening|1|427]
+			ReactionAbility:Insert[Favor of Innovation|2|404]
+			ReactionAbility:Insert[Far Seas Innovation|2|404]
+			ProgressSkills:Insert[Weaponry|1|Hardening|427]
+			ProgressSkills:Insert[Weaponry|2|Tempering|428]
+			ProgressSkills:Insert[Weaponry|3|Anneal|426]
+			DurabilitySkills:Insert[Weaponry|1|Set|427]
+			DurabilitySkills:Insert[Weaponry|2|Strengthening|428]
+			DurabilitySkills:Insert[Weaponry|3|Compress|426]
+			break
+		}
+		case Runecraft
+		{
+			;echo rune
+			ReactionAbility:Insert[Water Quench|1|427]
+			ReactionAbility:Insert[Minor Magical Anomaly|1|]
+			ReactionAbility:Insert[Magical Anomaly|1|]
+			ReactionAbility:Insert[Major Magical Anomaly|1|]
+			ReactionAbility:Insert[Minor Magical Influx|1|]
+			ReactionAbility:Insert[Magical Influx|1|]
+			ReactionAbility:Insert[Major Magical Influx|1|]
+			ReactionAbility:Insert[Bad instinct|1|]
+			ReactionAbility:Insert[Severe bad instinct|1|]
+			ReactionAbility:Insert[Minor Paradigm Shift|2|]
+			ReactionAbility:Insert[Paradigm Shift|2|]
+			ReactionAbility:Insert[Major Paradigm Shift|2|]
+			ReactionAbility:Insert[Loss of focus|2|]
+			ReactionAbility:Insert[Severe loss of focus|2|]
+			ReactionAbility:Insert[Small Impurities|3|]
+			ReactionAbility:Insert[Impurities|3|]
+			ReactionAbility:Insert[Major Impurities|3|]
+			ReactionAbility:Insert[Uneven cut|3|]
+			ReactionAbility:Insert[Severe uneven cut|3|]
+			ReactionAbility:Insert[Jeweler's Insight|2|]
+			ReactionAbility:Insert[Flawless Faceting|3|]
+			ReactionAbility:Insert[Far Seas Innovation|1|]
+			ProgressSkills:Insert[Runecraft|1|Mind Over Matter|419|376467363]
+			ProgressSkills:Insert[Runecraft|2|Focus of Spirit|422|3469213844]
+			ProgressSkills:Insert[Runecraft|3|Faceting|421|779566264]
+			DurabilitySkills:Insert[Runecraft|1|Sixth Sense|419|2407087641]
+			DurabilitySkills:Insert[Runecraft|2|Center of Spirit|422|1472287022]
+			DurabilitySkills:Insert[Runecraft|3|Round Cut|421|3078515970]
+			break
+		}
+		
+	}
+}
+function CraftIt(string _Recipe, int _Amount=1, bool _KeepWindow=FALSE, bool _Experimentation=FALSE, bool _JustReact=FALSE)
 {
 	variable bool _6Reactives=FALSE
 	variable string _Technique
@@ -18208,10 +18408,12 @@ function CraftIt(string _Recipe, int _Amount=1)
 	cancel:Set[FALSE]
 	Round:Set[FALSE]
 	chktotdur:Set[FALSE]
+	craftingready:Set[FALSE]
 	CurrentProgress:Set[0]
 	CurrentDurability:Set[0]
 	TotalDurability:Set[0]
 	CurrentReactive:Set[""]
+	CurrentReactiveMID:Set[""]
 	ChangeinDur:Set[0]
 	ReactionAbility:Clear
 	DurabilitySkills:Clear
@@ -18245,8 +18447,78 @@ function CraftIt(string _Recipe, int _Amount=1)
 		; }
 		; wait 5
 	; }
+
 	variable int _counter
 	_counter:Set[1]
+	while ${_JustReact}
+	{
+		waitframe
+		Event[EQ2_onCraftRoundResult]:AttachAtom[EQ2_onCraftRoundResult]
+
+		if ${complete}
+		{
+			Debug:Echo["CRAFT DETECTED COMPLETE -- clearing."]
+			wait 10
+			complete:Set[FALSE]
+			Round:Set[FALSE]
+		}
+		if ${Round} && !${craftingready}
+		{
+		; Need to initialize our variables here.
+		; Knowledge var, TSSpell var
+			Debug:Echo[Round started, but we're not ready.]
+			if ${EQ2UIPage[Tradeskills,Tradeskills].Child[text,Tradeskills.TabPages.Craft.Create.RecipeName](exists)}
+			{
+				if !${_Experimentation}
+				{
+					_Recipe:Set[${EQ2UIPage[Tradeskills,Tradeskills].Child[text,Tradeskills.TabPages.Craft.Create.RecipeName].GetProperty[LocalText]}]
+					_Technique:Set[${Me.Recipe[${_Recipe}].Knowledge}]
+				}
+				else
+					_Technique:Set[Experimentation]
+				wait 2
+				echo ${_Technique}
+
+				call RICraftSkills ${_Technique}
+				
+				craftingready:Set[TRUE]
+				CurrentQuality:Set[0]
+				chktotdur:Set[TRUE]
+				RICraft:InitCraftSkills[${_Technique}]
+				echo RICraft:InitCraftSkills[${_Technique}]
+				TotalDurability:Set[${Math.Calc[${CurrentDurability}-${ChangeinDur}]}]
+			}
+		}
+		if ${Round} && ${craftingready}
+		{
+			Debug:Echo[CraftLite Starting to craft!]
+			while ${CurrentQuality}<4 && !${complete} && !${cancel}
+			{
+				if ${Round}
+				{
+					Round:Set[FALSE]
+					if ${chktotdur}
+					{
+						TotalDurability:Set[${Math.Calc[${CurrentDurability}-${ChangeinDur}]}]
+						chktotdur:Set[FALSE]
+						;echo setting TotalDurability to ${TotalDurability}
+					}
+					tempdur:Set[((${CurrentDurability}/${TotalDurability}*100)-80)/20*100]
+					if ${_Experimentation}
+						counter:Set[${RICraft.ReactionAbilityMID[${CurrentReactiveMID}]}]
+					else
+						counter:Set[${RICraft.ReactionAbility[${CurrentReactive}]}]
+					echo Counter1:${counter}
+					waitframe
+					echo Counter2:${counter}
+					call CastReactions ${counter} ${_Experimentation}
+					CurrentReactive:Set[""]
+				}
+				waitframe
+			}
+		}
+		
+	}
 	if !${Me.Recipe["${_Recipe}"](exists)} && !${Me.Recipe[1](exists)}
 	{
 		EQ2Execute /toggletradeskills
@@ -18257,7 +18529,7 @@ function CraftIt(string _Recipe, int _Amount=1)
 	
 	while !${Me.Recipe["${_Recipe}"](exists)} && ${_counter:Inc}<=6
 	{
-        ;echo recipe dne
+		;echo recipe dne
 		EQ2Execute /toggletradeskills
 		wait 50 ${Me.Recipe["${_Recipe}"](exists)}
 		EQ2Execute /toggletradeskills
@@ -18326,89 +18598,12 @@ function CraftIt(string _Recipe, int _Amount=1)
 	{
 		call MessageBox "Can not find Recipe: ${_Recipe} open your recipe book to the recipe and resume"
 	}
+
 	_Technique:Set[${Me.Recipe[${_Recipe}].Technique}]
 	wait 2
 	;echo ${_Technique}
-	switch ${_Technique}
-	{
-		case Focus
-		{
-			_6Reactives:Set[1]
-			;Focus (These have 6 different reactives as the dur and prog abilities are not matching icons)
-			ReactionAbility:Insert[Sudden Spark|11]
-			ReactionAbility:Insert[Butter Fingers|12]
-			ReactionAbility:Insert[Brain Flatulence|13]
-			ReactionAbility:Insert[Thermal Accident|21]
-			ReactionAbility:Insert[Caught Sleeping|22]
-			ReactionAbility:Insert[Squirrel!|23]
-			ProgressSkills:Insert[Focus|1|Grounded]
-			ProgressSkills:Insert[Focus|2|Pop Knuckles]
-			ProgressSkills:Insert[Focus|3|Hold It]
-			DurabilitySkills:Insert[Focus|1|Extinguish]
-			DurabilitySkills:Insert[Focus|2|Awaken]
-			DurabilitySkills:Insert[Focus|3|Concentrate Hard]
-			break
-		}
-		case Geocraft
-		{
-			ReactionAbility:Insert[Dense Material|1]
-			ReactionAbility:Insert[Major Dense Material|1]
-			ReactionAbility:Insert[Minor Dense Material|1]
-			ReactionAbility:Insert[Rough Edges|2]
-			ReactionAbility:Insert[Minor Rough Edges|2]
-			ReactionAbility:Insert[Major Rough Edges|2]
-			ReactionAbility:Insert[Dull Luster|3]
-			ReactionAbility:Insert[Minor Dull Luster|3]
-			ReactionAbility:Insert[Major Dull Luster|3]
-			ReactionAbility:Insert[Critical Channelling Instability|2]
-			ReactionAbility:Insert[Lethal Flaws|2]
-			ReactionAbility:Insert[Lethal Meltdown|3]
-			ReactionAbility:Insert[Major Power Overload|3]
-			ReactionAbility:Insert[Critical Channelling|2]
-			ReactionAbility:Insert[Dark Matter|2]
-			ReactionAbility:Insert[Chronoseal Spillage|1]
-			ReactionAbility:Insert[Temporal Paradox|3]
-			ProgressSkills:Insert[Geocraft|1|Fabricate]
-			ProgressSkills:Insert[Geocraft|2|Mold]
-			ProgressSkills:Insert[Geocraft|3|Infuse]
-			DurabilitySkills:Insert[Geocraft|1|Contrive]
-			DurabilitySkills:Insert[Geocraft|2|Shape]
-			DurabilitySkills:Insert[Geocraft|3|Permeate]
-			break
-		}
-		case Geomancy
-		{
-			ReactionAbility:Insert[Dense Material|1]
-			ReactionAbility:Insert[Major Dense Material|1]
-			ReactionAbility:Insert[Minor Dense Material|1]
-			ReactionAbility:Insert[Rough Edges|2]
-			ReactionAbility:Insert[Minor Rough Edges|2]
-			ReactionAbility:Insert[Major Rough Edges|2]
-			ReactionAbility:Insert[Dull Luster|3]
-			ReactionAbility:Insert[Minor Dull Luster|3]
-			ReactionAbility:Insert[Major Dull Luster|3]
-			ReactionAbility:Insert[Critical Channelling Instability|2]
-			ReactionAbility:Insert[Lethal Flaws|2]
-			ReactionAbility:Insert[Lethal Meltdown|3]
-			ReactionAbility:Insert[Major Power Overload|3]
-			ReactionAbility:Insert[Critical Channelling|2]
-			ReactionAbility:Insert[Dark Matter|2]
-			ReactionAbility:Insert[Chronoseal Spillage|1]
-			ReactionAbility:Insert[Temporal Paradox|3]
-			ProgressSkills:Insert[Geomancy|1|Fabricate]
-			ProgressSkills:Insert[Geomancy|2|Mold]
-			ProgressSkills:Insert[Geomancy|3|Infuse]
-			DurabilitySkills:Insert[Geomancy|1|Contrive]
-			DurabilitySkills:Insert[Geomancy|2|Shape]
-			DurabilitySkills:Insert[Geomancy|3|Permeate]
-			break
-		}
-	}
-
-	;start craft lite no ui
-	;if !${Script[Buffer:Craft](exists)} && !${Script[EQ2Craft](exists)}
-	;	run eq2craft -lite -hideui
-	
+	call RICraftSkills ${_Technique}
+		
 	if !${Me.Recipe[1](exists)}
 		wait 60
 	else
@@ -18451,10 +18646,10 @@ function CraftIt(string _Recipe, int _Amount=1)
 		;echo after begin
 
 		Event[EQ2_onCraftRoundResult]:AttachAtom[EQ2_onCraftRoundResult]
-		if !${_6Reactives}
+		;if !${_6Reactives}
 			call InitialRound
-		else
-			wait 20
+		;else
+		;	wait 20
 
         chktotdur:Set[TRUE]
 		wait 50 ${CurrentQuality}<4
@@ -18471,217 +18666,14 @@ function CraftIt(string _Recipe, int _Amount=1)
                     ;echo setting TotalDurability to ${TotalDurability}
                 }
                 tempdur:Set[((${CurrentDurability}/${TotalDurability}*100)-80)/20*100]
-                counter:Set[${RICraft.ReactionAbility[${CurrentReactive}]}]
-               	;echo Counter1:${counter}
-				waitframe
-                if ${counter}>0
-                {
-                    ;echo Counter2:${counter}
-                    if ${counter}>3
-                    {
-						if ${_6Reactives}
-						{
-							if ${counter}==11
-							{
-								call CastReaction 1 1
-								call CastReaction 1 2
-								if ${Me.Power}>${Durability[${tempvar},3]}
-									call CastReaction 1 3 
-							}
-							if ${counter}==12
-							{
-								call CastReaction 1 2
-								call CastReaction 1 1
-								if ${Me.Power}>${Durability[${tempvar},3]}
-									call CastReaction 1 3 
-							}
-							if ${counter}==13
-							{
-								call CastReaction 1 3
-								call CastReaction 1 1
-								call CastReaction 1 2 
-							}
-							if ${counter}==21
-							{
-								call CastReaction 2 1
-								if ${tempdur}>${Durability[2,2]}
-								{
-									call CastReaction 1 2
-									if ${Me.Power}>${Durability[${tempvar},3]}
-										call CastReaction 1 3     
-								}
-								else
-								{
-									call CastReaction 2 2
-									if ${Me.Power}>${Durability[${tempvar},3]}
-										call CastReaction 2 3 
-								}
-							}
-							if ${counter}==22
-							{
-								call CastReaction 2 2
-								if ${tempdur}>${Durability[2,2]}
-								{
-									call CastReaction 1 1
-									if ${Me.Power}>${Durability[${tempvar},3]}
-										call CastReaction 1 3 
-								}
-								else
-								{
-									call CastReaction 2 1
-									if ${Me.Power}>${Durability[${tempvar},3]}
-										call CastReaction 2 3 
-								}
-							}
-							if ${counter}==23
-							{
-								call CastReaction 2 3
-								if ${tempdur}>${Durability[2,2]}
-								{
-									call CastReaction 1 1
-									call CastReaction 1 2 
-								}
-								else
-								{
-									call CastReaction 2 1
-									call CastReaction 2 2 
-								}
-							}
-						}
-						else
-						{
-							if ${tempdur}>${Durability[2,2]}
-							{
-								call CastReaction 1 ${counter}
-							}
-							else
-							{
-								call CastReaction 2 ${counter}
-							}
-
-							if ${counter}==1
-							{
-								if ${tempdur}>${Durability[2,2]}
-								{
-									call CastReaction 1 2
-								}
-								else
-								{
-									call CastReaction 2 2
-								}
-
-								if ${tempdur}<${Durability[2,1]} && ${Me.Power}>${Durability[2,3]}
-								{
-									call CastReaction 2 3
-								}
-								elseif ${Me.Power}${Durability[2,3]}
-								{
-									call CastReaction 1 3
-								}
-							}
-
-							if ${counter}==2
-							{
-								if ${tempdur}>${Durability[2,2]}
-								{
-									call CastReaction 1 1
-								}
-								else
-								{
-									call CastReaction 2 1
-								}
-
-								if ${tempdur}<${Durability[2,1]} && ${Me.Power}>${Durability[2,3]}
-								{
-									call CastReaction 2 3
-								}
-								elseif ${Me.Power}${Durability[2,3]}
-								{
-									call CastReaction 1 3
-								}
-							}
-							if ${counter}==3
-							{
-								if ${tempdur}>${Durability[2,2]}
-								{
-									call CastReaction 1 1
-									call CastReaction 1 2
-								}
-								else
-								{
-									call CastReaction 2 1
-									call CastReaction 2 2
-								}
-							}
-						}
-                    }
-                    else
-                    {
-                        if ${tempdur}>${Durability[2,2]}
-                        {
-                            call CastReaction 1 ${counter}
-                        }
-                        else
-                        {
-                            call CastReaction 2 ${counter}
-                        }
-
-                        if ${counter}==1
-                        {
-                            if ${tempdur}>${Durability[2,2]}
-                            {
-                                call CastReaction 1 2
-                            }
-                            else
-                            {
-                                call CastReaction 2 2
-                            }
-
-                            if ${tempdur}<${Durability[2,1]} && ${Me.Power}>${Durability[2,3]}
-                            {
-                                call CastReaction 2 3
-                            }
-							elseif ${Me.Power}>${Durability[2,3]}
-                                call CastReaction 1 3
-                        }
-
-                        if ${counter}==2
-                        {
-                            if ${tempdur}>${Durability[2,2]}
-                            {
-                                call CastReaction 1 1
-                            }
-                            else
-                            {
-                                call CastReaction 2 1
-                            }
-
-                            if ${tempdur}<${Durability[2,1]} && ${Me.Power}>${Durability[2,3]}
-                            {
-                                call CastReaction 2 3
-                            }
-							elseif ${Me.Power}>${Durability[2,3]}
-                                call CastReaction 1 3
-                        }
-                        if ${counter}==3
-                        {
-                            if ${tempdur}>${Durability[2,2]}
-                            {
-                                call CastReaction 1 1
-                                call CastReaction 1 2
-                            }
-                            else
-                            {
-                                call CastReaction 2 1
-                                call CastReaction 2 2
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    call ProcessArts
-                }
+				if ${_Experimentation}
+                	counter:Set[${RICraft.ReactionAbilityMID[${CurrentReactiveMID}]}]
+				else
+					counter:Set[${RICraft.ReactionAbility[${CurrentReactive}]}]
+				echo Counter1:${counter}
+               	waitframe
+				echo Counter2:${counter}
+				call CastReactions ${counter} ${_Experimentation}
 				CurrentReactive:Set[""]
             }
             waitframe
@@ -18691,7 +18683,8 @@ function CraftIt(string _Recipe, int _Amount=1)
         wait 10
 	}
 
-	relay "${RI_Var_String_RelayGroup}" eq2ex /hide_window TradeSkills.TradeSkills
+	if !${_KeepWindow}
+		relay "${RI_Var_String_RelayGroup}" eq2ex /hide_window TradeSkills.TradeSkills
     Event[EQ2_onCraftRoundResult]:DetachAtom[EQ2_onCraftRoundResult]
 }
 
@@ -18757,54 +18750,160 @@ function ProgressCombo()
 		call CastReaction 1 3
 	}
 }
-function CastReaction(int xability, int xtimer)
+;gonna rewrite this to be a function that takes in the reaction and the time allowed (4s for experiment) 
+;and will cast abilities based on those and durability and power
+function CastReactions(int _ReactiveArt, bool _Exp=FALSE)
 {
-	if ${RI_Var_Bool_CraftDebug}
-		echo ISXRI: Casting Reaction: ${TSSpell[${xability},${xtimer}]}
 	variable uint skilltimer=${Script.RunningTime}
+	variable int roundtimer=3750
+	variable int _CastedReactions=0
+	variable int _DurProg=1
+	variable int _DurTarget=50
+	variable string _CastOrder
+	if ${_Exp}
+	{
+		if ${Math.Calc[(${CurrentDurability}*2)+${CurrentProgress}]}<2000
+			_DurProg:Set[2]
+		else
+			_DurProg:Set[1]
+	}
+	else
+	{
+		if ${CurrentDurability}<50
+			_DurProg:Set[2]
+		else
+			_DurProg:Set[1]
+	}
+	if ${_ReactiveArt}!=0
+	{
+		if ${_ReactiveArt}<=3
+		{
+			
+			switch ${_ReactiveArt}
+			{
+				case 1
+				{
+					_CastOrder:Set[${_DurProg} 1|${_DurProg} 2|${_DurProg} 3]
+					break
+				}
+				case 2
+				{
+					_CastOrder:Set[${_DurProg} 2|${_DurProg} 1|${_DurProg} 3]
+					break
+				}
+				case 3
+				{
+					_CastOrder:Set[${_DurProg} 3|${_DurProg} 1|${_DurProg} 2]
+					break
+				}
+			}
+		}
+		else
+		{
+			switch ${_ReactiveArt}
+			{
+				case 11
+				{
+					_CastOrder:Set[1 1|${_DurProg} 2|${_DurProg} 3]
+					break
+				}
+				case 12
+				{
+					_CastOrder:Set[1 2|${_DurProg} 1|${_DurProg} 3]
+					break
+				}
+				case 13
+				{
+					_CastOrder:Set[1 3|${_DurProg} 1|${_DurProg} 2]
+					break
+				}
+				case 21
+				{
+					_CastOrder:Set[2 1|${_DurProg} 2|${_DurProg} 3]
+					break
+				}
+				case 22
+				{
+					_CastOrder:Set[2 2|${_DurProg} 1|${_DurProg} 3]
+					break
+				}
+				case 23
+				{
+					_CastOrder:Set[2 3|${_DurProg} 1|${_DurProg} 2]
+					break
+				}
+			}
+		}
+	}
+	else
+	{
+		_CastOrder:Set[${_DurProg} 1|${_DurProg} 2|${_DurProg} 3]
+	}
+	variable int _i
+	for(_i:Set[1];${_i}<=3;_i:Inc)
+	{
+		if ${Script.RunningTime}>${Math.Calc[${skilltimer}+${roundtimer}]} || ${Round}
+			return
+		if ${_i}<3
+			call CastReaction ${_CastOrder.Token[${_i},|]} ${Math.Calc[${skilltimer}+${roundtimer}]}
+		else
+		{
+			if ${Me.Power}>30
+				call CastReaction ${_CastOrder.Token[${_i},|]} ${Math.Calc[${skilltimer}+${roundtimer}]}
+		}
+	}
+}
+function CastReaction(int xability, int xtimer, int _timer=99999999999999999999999999999999999999999999999999999999999999999999)
+{
+	;if ${RI_Var_Bool_CraftDebug}
+		echo ISXRI: Casting Reaction: ${TSSpell[${xability},${xtimer}].Token[1,|]} // ${_timer}
 	variable int _failcnt
 	do
 	{
 		if ${Round}
 		{
+			eq2ex clearabilityqueue
 			return
 		}
 
-		if ${Script.RunningTime}-${skilltimer}>${xtimer}*1900
+		if ${Script.RunningTime}>${_timer}
 		{
+			eq2ex clearabilityqueue
 			return
 		}
 	}
-	while !${Me.Ability[${TSSpell[${xability},${xtimer}]}].IsReady}
+	while !${Me.Ability[id,${TSSpell[${xability},${xtimer}].Token[2,|]}].IsReady}
 	_failcnt:Set[0]
 	
 	do
 	{
 		if ${Round}
 		{
+			eq2ex clearabilityqueue
 			return
 		}
 
-		if ${Script.RunningTime}-${skilltimer}>${xtimer}*1900
+		if ${Script.RunningTime}>${_timer}
 		{
+			eq2ex clearabilityqueue
 			return
 		}
 
-		if ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${TSSpell[${xability},${xtimer}]}]} ) || ${Me.Ability[${TSSpell[${xability},${xtimer}]}].TimeUntilReady}>0
-			noop
-		else
-			Me.Ability[${TSSpell[${xability},${xtimer}]}]:Use
-		wait 2 ${Me.CastingSpell}
+		;if ( ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[${TSSpell[${xability},${xtimer}].Token[1,|]}]} ) || ${Me.Ability[id,${TSSpell[${xability},${xtimer}]}].TimeUntilReady}>0
+		;	noop
+		;else
+			Me.Ability[id,${TSSpell[${xability},${xtimer}].Token[2,|]}]:Use
+		wait 1
 	}
-	while ${Me.Ability[${TSSpell[${xability},${xtimer}]}].TimeUntilReady}==0 && ${_failcnt:Inc}<=5
+	while ${Me.Ability[id,${TSSpell[${xability},${xtimer}].Token[2,|]}].TimeUntilReady}==0 && ${_failcnt:Inc}<=5
 	
 	eq2ex clearabilityqueue
 
-	wait 5 ${Me.Maintained[${TSSpell[${xability},${xtimer}]}](exists)} || ${Me.Ability[${TSSpell[${xability},${xtimer}]}].TimeUntilReady}>0
+	wait 5 ${Me.Maintained[${TSSpell[${xability},${xtimer}].Token[1,|]}](exists)} || ${Me.Ability[id,${TSSpell[${xability},${xtimer}]}].TimeUntilReady}>0 || ${Script.RunningTime}>${_timer}
 	
 	eq2ex clearabilityqueue
-	if ${RI_Var_Bool_CraftDebug}
-		echo ISXRI: Done Casting Reaction: ${TSSpell[${xability},${xtimer}]}
+	;if ${RI_Var_Bool_CraftDebug}
+		echo ISXRI: Done Casting Reaction: ${TSSpell[${xability},${xtimer}].Token[1,|]}
 }
 function CastReactionOLD(int xability, int xtimer)
 {
@@ -18854,6 +18953,7 @@ function DurabilityCombo()
 atom(script) EQ2_onCraftRoundResult()
 {
 	CurrentReactive:Set[${Crafting.Message}]
+	CurrentReactiveMID:Set[${Crafting.MainIconID}]
 	CurrentQuality:Set[${Crafting.Quality}]
 	CurrentProgress:Set[${Crafting.Progress}]
 	CurrentDurability:Set[${Crafting.Durability}]
@@ -18865,11 +18965,23 @@ objectdef RICraftObject
 {
     member:int ReactionAbility(string _ReactionName)
     {
-		;echo ${_ReactionName}
+		;echo ReactionName: ${_ReactionName}
         variable int _i
         for(_i:Set[0];${_i}<=${ReactionAbility.Used};_i:Inc)
         {
             if ${ReactionAbility.Get[${_i}].Token[1,|].Equal[${_ReactionName}]}
+                return ${Int[${ReactionAbility.Get[${_i}].Token[2,|]}]}
+        }
+        return 0
+    }
+	member:int ReactionAbilityMID(string _ReactionMID)
+    {
+		;echo ReactionMID: ${_ReactionMID}
+        variable int _i
+        for(_i:Set[0];${_i}<=${ReactionAbility.Used};_i:Inc)
+        {
+			;echo ${ReactionAbility.Get[${_i}]}
+            if ${ReactionAbility.Get[${_i}].Token[3,|].Equal[${_ReactionMID}]}
                 return ${Int[${ReactionAbility.Get[${_i}].Token[2,|]}]}
         }
         return 0
@@ -18883,7 +18995,7 @@ objectdef RICraftObject
             {
                 ;echo ${ProgressSkills.Get[${_i}].Token[1,|]} .Equal[${_Skill}]} && ${Int[${ProgressSkills.Get[${_i}].Token[2,|]}]}==${_Type} 
                 if ${ProgressSkills.Get[${_i}].Token[1,|].Equal[${_Skill}]} && ${Int[${ProgressSkills.Get[${_i}].Token[2,|]}]}==${_Type}
-                    return ${ProgressSkills.Get[${_i}].Token[3,|]}
+                    return "${ProgressSkills.Get[${_i}].Token[3,|]}|${ProgressSkills.Get[${_i}].Token[5,|]}"
             }
         }
         else
@@ -18892,7 +19004,7 @@ objectdef RICraftObject
             {
                 ;echo ${DurabilitySkills.Get[${_i}].Token[1,|]} .Equal[${_Skill}]} && ${Int[${DurabilitySkills.Get[${_i}].Token[2,|]}]}==${_Type} 
                 if ${DurabilitySkills.Get[${_i}].Token[1,|].Equal[${_Skill}]} && ${Int[${DurabilitySkills.Get[${_i}].Token[2,|]}]}==${_Type}
-                    return ${DurabilitySkills.Get[${_i}].Token[3,|]}
+                    return "${DurabilitySkills.Get[${_i}].Token[3,|]}|${DurabilitySkills.Get[${_i}].Token[5,|]}"
             }
         }
     }
@@ -18901,14 +19013,19 @@ objectdef RICraftObject
 		; TSSpell[<1=Progress & 2=Durability>,<type>] Where type refers to
 		; Type 1: 1=+Progress -Durability, 2=+Progress -Success, 3=+Progress -Power
 		; Type 2: 1=+Durability -Progress, 2=+Durability -Success, 3=+Durability -Power
-
+		echo Skill: ${_Skill}
+		echo TSSpell[1,1]:Set["${This.SkillSpell[${_Skill},1,1]}"]
+		echo TSSpell[1,2]:Set["${This.SkillSpell[${_Skill},1,2]}"]
+		echo TSSpell[1,3]:Set["${This.SkillSpell[${_Skill},1,3]}"]
+		echo TSSpell[2,1]:Set["${This.SkillSpell[${_Skill},2,1]}"]
+		echo TSSpell[2,2]:Set["${This.SkillSpell[${_Skill},2,2]}"]
+		echo TSSpell[2,3]:Set["${This.SkillSpell[${_Skill},2,3]}"]
 		TSSpell[1,1]:Set["${This.SkillSpell[${_Skill},1,1]}"]
 		TSSpell[1,2]:Set["${This.SkillSpell[${_Skill},1,2]}"]
 		TSSpell[1,3]:Set["${This.SkillSpell[${_Skill},1,3]}"]
 		TSSpell[2,1]:Set["${This.SkillSpell[${_Skill},2,1]}"]
 		TSSpell[2,2]:Set["${This.SkillSpell[${_Skill},2,2]}"]
 		TSSpell[2,3]:Set["${This.SkillSpell[${_Skill},2,3]}"]
-
 		return
 	}
     method Completed(string Line, string itemcreated)
@@ -18920,7 +19037,7 @@ objectdef RICraftObject
 	}
     method Canceled(string Line, string itemcreated)
 	{
-        echo ISXRI: RI Craft: You cancelled the combine! was that intended?
+        echo ISXRI: RI Craft: You cancelled the combine! Was that intended?
 		cancel:Set[TRUE]
 		;chktotdur:Set[TRUE]
 		;roundstart:Set[TRUE]
@@ -29374,6 +29491,7 @@ function WaitForScript(string _ScriptName)
 }
 function LockAndClickActor(... args)
 {
+	;echo start
 	variable string _XYZ="${Me.Loc}"
 	variable string _Actor
 	variable int _Precision=1
@@ -29459,9 +29577,10 @@ function LockAndClickActor(... args)
 			}
 		}
 	}
-	if ${_RelayToGroup}
+	if ${_RelayToGroup} && !${RI_Var_Bool_GlobalOthers}
 	{
-		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call LockAndClickActor \"${_Args}\""]
+		relay "other ${RI_Var_String_RelayGroup}" -noredirect Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call LockAndClickActor ${_Args}"]
+		relay "other ${RI_Var_String_RelayGroup}" RIMUIObj:SetRIFollow[OFF]
 	}
 	if ${_ForWho.NotEqual["!NA!"]} && !${RIMUIObj.ForWhoCheck[${_ForWho}]}
 		return
@@ -29481,22 +29600,28 @@ function LockAndClickActor(... args)
 	if ${_AllGroupWithinRange}>0
 		wait ${_WaitAGWR} ${RIMObj.AllGroupWithinRange[${_AllGroupWithinRange}]}
 	CustomLoc:Set[0 0 0]
+	wait ${_WaitAfter}
 	if ${_ClickUntilIMove}
 	{
 		_MyLoc:Set["${Me.Loc}"]
 		while ${Me.Distance[${_MyLoc}]}<1
 		{
 			Actor[${_Actor}]:DoubleClick
-			waitframe
+			wait 1
 		}
 		eq2ex cancel_spellcast
 	}
 	else
 		call ClickActor -Actor "${_Actor}"	
 	
-	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,OFF]
+	RIMUIObj:SetLockSpot[ALL,OFF]
+	
 	if ${_AllGroupWithinRange}>0
 		wait ${_WaitAGWR} ${RIMObj.AllGroupWithinRange[${_AllGroupWithinRange}]}
+	wait ${WaitAfter}
+	if !${RI_Var_Bool_GlobalOthers}
+		call RIMObj.follow
+	;echo end
 }
 function LockAndWait(... args)
 {
@@ -47586,10 +47711,10 @@ function NogrovskaMove(int _Stage=0, string _Charge, string _Cyclone)
 	{
 		RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,1]
 	}
-	;echo Cyclone: ${_Cyclone}
-	;echo Charge: ${_Charge}
-	;echo nogrovska move
-	variable index:string _Locs
+		;echo Cyclone: ${_Cyclone}
+		;echo Charge: ${_Charge}
+		;echo nogrovska move
+		variable index:string _Locs
 		variable int _i
 		variable int _f
 		variable int _ClosestDistance
@@ -48719,7 +48844,147 @@ function Agrodemus()
 }
 function Nakka()
 {
-	call CustomNamed "Nakka Nakka" "635.41,60.47,-57.83" NONE dedraka
+	call CustomNamed "Nakka Nakka" "635.41,60.47,-57.83" NakkaCustom
+}
+function NakkaCustom(int _NamedID)
+{
+	call RIObj.Target ${_NamedID}
+	;569 Solid Ground
+	if ${RIMUIObj.MainIconIDExists[${_NamedID},569]}
+	{
+		wait 300 ${Actor[Query, Name=="" && Overlay=="design_boiling_disease_warning"].ID}>0
+		variable int _BubblesID
+		_BubblesID:Set[${Actor[Query, Name=="" && Overlay=="design_boiling_disease_warning"].ID}]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${RIMUIObj.3rdPointLine[${Actor[id,${_NamedID}].X},${Actor[id,${_NamedID}].Z},${Actor[id,${_BubblesID}].X},${Actor[id,${_BubblesID}].Z},9].Token[1,"\,"]},${Me.Y},${RIMUIObj.3rdPointLine[${Actor[id,${_NamedID}].X},${Actor[id,${_NamedID}].Z},${Actor[id,${_BubblesID}].X},${Actor[id,${_BubblesID}].Z},9].Token[2,"\,"]}]
+	}
+	else
+		RIMUIObj:SetLockSpot[ALL,635.41,60.47,-57.83]
+}
+function Dk()
+{
+	if ${RI_Var_Bool_GlobalOthers}
+		return
+	call VoVHCDK
+}
+function VoVHCDK()
+{
+	if ${Zone.Name.Find[Solo]}
+	{
+		call LockAndWait -Loc "273.12,44.94,33.54" -RelayToGroup
+		call LockAndWait -Loc "270.66,43.98,23.68" -RelayToGroup
+		call LockAndWait -Loc "268.26,45.67,14.08" -RelayToGroup
+		call LockAndWait -Loc "265.28,47.26,4.58" -RelayToGroup
+		call LockAndWait -Loc "262.73,48.11,-5.13" -RelayToGroup
+		call LockAndWait -Loc "262.28,48.02,-7.20" -RelayToGroup
+		wait 50
+		CustomLoc:Set["0 0 0"]
+		call ClickActor "boss 4 event bypass portal"
+	}
+	else
+	{
+		RI_CMD_PauseCombatBots 1
+		StopForCombat:Set[FALSE]
+		RIMUIObj:StopMove[ALL]
+		wait 1
+		RIMUIObj:ComeOn[${Me.Name}]
+		call LockAndWaitDK "271.21,48.77,-11.12"
+		call LockAndWaitDK "287.20,48.65,-40.92"
+		while ${Actor[Query, Name=="boss 4 hammer clicky" && Distance<5](exists)}
+		{
+			Actor[Query, Name=="boss 4 hammer clicky" && Distance<5]:DoubleClick
+			wait 1
+		}
+		call LockAndWaitDK "290.19,48.65,-37.49"
+		call LockAndWaitDK "294.86,48.65,-33.72"
+		call LockAndWaitDK "299.48,48.65,-29.43"
+		call LockAndWaitDK "302.93,48.65,-25.90"
+		call LockAndWaitDK "303.39,48.67,-21.77"
+		call LockAndWaitDK "304.11,48.75,-17.05"
+		call LockAndWaitDK "314.12,51.07,-10.10"
+		call LockAndWaitDK "322.07,54.01,-4.69"
+		call LockAndWaitDK "329.72,55.31,0.52"
+		call LockAndWaitDK "335.04,55.76,4.14"
+		while ${Actor[Query, Name=="boss 4 hammer clicky" && Distance<5](exists)}
+		{
+			Actor[Query, Name=="boss 4 hammer clicky" && Distance<5]:DoubleClick
+			wait 1
+		}
+		call LockAndWaitDK "335.31,55.62,-6.14"
+ 		call LockAndWaitDK "336.56,55.76,-15.69"
+ 		call LockAndWaitDK "337.20,57.31,-20.60"
+		call LockAndWaitDK "337.65,59.20,-24.06"
+		call LockAndWaitDK "336.55,65.08,-33.14"
+		call LockAndWaitDK "335.55,70.41,-42.16"
+		call LockAndWaitDK "335.16,72.74,-45.86"
+		call LockAndWaitDK "334.68,75.68,-49.97"
+		call LockAndWaitDK "333.71,79.09,-55.24"
+		call LockAndWaitDK "332.94,81.16,-59.15"
+		call LockAndWaitDK "338.18,81.77,-62.01"
+		call LockAndWaitDK "342.58,82.63,-64.26"
+		call LockAndWaitDK "346.54,83.72,-66.33"
+		while ${Actor[Query, Name=="boss 4 hammer clicky" && Distance<5](exists)}
+		{
+			Actor[Query, Name=="boss 4 hammer clicky" && Distance<5]:DoubleClick
+			wait 1
+		}
+		call LockAndWaitDK "349.33,84.49,-67.31"
+		call LockAndWaitDK "352.34,85.44,-68.29"
+		call LockAndWaitDK "358.13,84.12,-60.57"
+		call LockAndWaitDK "363.07,85.74,-54.10"
+		call LockAndWaitDK "365.40,87.08,-51.05"
+		call LockAndWaitDK "366.94,88.00,-49.04"
+		call LockAndWaitDK "371.52,89.45,-48.73"
+		call LockAndWaitDK "374.97,90.49,-48.54"
+		call LockAndWaitDK "379.33,91.77,-48.27"
+		call LockAndWaitDK "383.26,92.83,-48.02"
+		call LockAndWaitDK "387.20,93.82,-47.77"
+		call LockAndWaitDK "392.04,94.91,-47.46"
+		while ${Actor[Query, Name=="boss 4 hammer clicky" && Distance<5](exists)}
+		{
+			Actor[Query, Name=="boss 4 hammer clicky" && Distance<5]:DoubleClick
+			wait 1
+		}
+		call LockAndWaitDK "391.33,95.03,-54.37"
+		call LockAndWaitDK "390.91,96.42,-58.81"
+		call LockAndWaitDK "390.63,97.81,-61.88"
+		call LockAndWaitDK "390.34,99.17,-64.94"
+		call LockAndWaitDK "388.65,101.31,-70.21"
+		call LockAndWaitDK "387.01,104.18,-75.57"
+		call LockAndWaitDK "385.43,106.79,-80.71"
+		call LockAndWaitDK "383.72,109.53,-86.29"
+		call LockAndWaitDK "382.72,111.84,-90.91"
+		call LockAndWaitDK "381.65,113.92,-95.67"
+		call LockAndWaitDK "380.63,115.28,-100.23"
+		call LockAndWaitDK "379.52,116.03,-105.04"
+		RI_CMD_PauseCombatBots 0
+	}
+}
+function LockAndWaitDK(string _Loc, bool _Checkgoon=TRUE)
+{
+	wait 1
+	;echo lawdk ${_Loc}
+	variable string _tempLoc
+	while ${Me.Distance[${_Loc}]}>4
+	{
+		;echo in while
+		RIMUIObj:SetLockSpot[${Me.Name},${_Loc},2]
+		if ${Actor[goon].Distance}<7 && ${RIMUIObj.MaintainedEffectExists[Megaton Mallet Time!]} && ${_Checkgoon}
+		{
+			_tempLoc:Set[${Me.Loc}]
+			while ${Actor[Query, Name=-"goon" && Distance<7 && IsDead=FALSE](exists)} && ${RIMUIObj.MaintainedEffectExists[Megaton Mallet Time!]}
+			{
+				;echo in while 2
+				RIMUIObj:SetLockSpot[${Me.Name},${Actor[Query, Name=-"goon" && Distance<7 && IsDead=FALSE].Loc}]
+				wait 1
+			}
+			RIMUIObj:SetLockSpot[${Me.Name},${_tempLoc}]
+			wait 300 ${Me.Distance[${_tempLoc}]}<3
+			RIMUIObj:SetLockSpot[${Me.Name},${_Loc},1]
+			wait 300 ${Me.Distance[${_Loc}]}<=1
+		}
+		wait 1
+	}
+	;echo end lawdk
 }
 function Gharaka()
 {
@@ -48731,7 +48996,12 @@ function Ugweepai()
 	IncomingText:Clear
 	IncomingText2:Clear
 	IncomingText:Insert["can now be damaged"]
-	call CustomNamed "Ugweepai-INC" "480.51,164.47,-165.14" UgweepaiCustom
+	while !${Actor[Ugweepai].IsAggro}
+	{
+		Actor[Ugweepai]:DoubleClick
+		wait 1
+	}
+	call CustomNamed "Ugweepai-INC-NMB" "472.66,164.52,-162.76" UgweepaiCustom
 	IncomingText:Clear
 	IncomingText2:Clear
 	deletevariable RI_Var_Ugweepai_Target
@@ -48779,11 +49049,13 @@ function Scarfeather()
 }
 function ScarfeatherCustom(int _NamedID)
 {
+	if ${RI_Var_Bool_GlobalOthers}
+		return
 	;Aura=design_boiling_water_warning
 	;864 Scar-Hardened Hide
 	if ${Actor[id,${_NamedID}].Effect[${RIMUIObj.MainIconIDExists[${_NamedID},864]}].CurrentIncrements}>50
 	{
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${RIMUIObj.3rdPointLine[${Me.X},${Me.Z},${Actor[Query, Name=="" && Aura=="design_boiling_water_warning"].X},${Actor[Query, Name=="" && Aura=="design_boiling_water_warning"].Z},10].Token[1,"\,"]},${Me.Y},${RIMUIObj.3rdPointLine[${Me.X},${Me.Z},${Actor[Query, Name=="" && Aura=="design_boiling_water_warning"].X},${Actor[Query, Name=="" && Aura=="design_boiling_water_warning"].Z},10].Token[2,"\,"]}]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${RIMUIObj.3rdPointLine[${Me.X},${Me.Z},${Actor[Query, Name=="" && Aura=="design_boiling_water_warning"].X},${Actor[Query, Name=="" && Aura=="design_boiling_water_warning"].Z},10].Token[1,"\,"]},${Me.Y},${RIMUIObj.3rdPointLine[${Me.X},${Me.Z},${Actor[Query, Name=="" && Aura=="design_boiling_water_warning"].X},${Actor[Query, Name=="" && Aura=="design_boiling_water_warning"].Z},10].Token[2,"\,"]},2]
 		while ${Actor[id,${_NamedID}].Effect[${RIMUIObj.MainIconIDExists[${_NamedID},864]}].CurrentIncrements}>50
 			wait 1
 	}
@@ -48801,11 +49073,11 @@ function KrelburnCustom(int _NamedID)
 {
 	if ${RI_Var_Bool_GlobalOthers}
 		return
-	call RIObj.Target drakefly -Distance 25 ${_NamedID}
+	call RIObj.Target ${_NamedID}
 	if ${Trigger}
 	{
 		if ${Me.Distance[-485.30,125.78,-286.39]}<5
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-486.16,125.17,-274.33]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-485.84,125.09,-276.67]
 		else
 			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-485.30,125.78,-286.39]
 		Trigger:Set[0]
@@ -48816,21 +49088,45 @@ function Cannibrea()
 	IncomingText:Clear
 	IncomingText2:Clear
 	IncomingText:Insert["is about to unleash a deadly attack"]
-	call UseItem "pristine pteranodon feather"
-	call CustomNamed "Cannibrea" "-604.79,176.13,-103.15" CannibreaCustom
+	IncomingText:Insert["spreads her wings"]
+	;while !${Me.Maintained[Pteranodons of a Feather](exists)}
+	;{
+	;	if ${Me.CastingSpell} && ${Me.GetGameData[Spells.Casting].Label.Equal[]}
+	;		noop
+	;	else
+	;		Me.Inventory[pristine pteranodon feather]:Use
+	;	wait 5 ${Me.Maintained[Pteranodons of a Feather](exists)}
+	;}
+	RI_Var_Bool_SkipLoot:Set[1]
+	call CustomNamed "Cannibrea-NMB" "-612.08,178.51,-99.12" CannibreaCustom
 	IncomingText:Clear
 	IncomingText2:Clear
+	RI_Var_Bool_SkipLoot:Set[0]
 }
 function CannibreaCustom(int _NamedID)
 {
-	call RIObj.Target hatchling -Distance 30 ${_NamedID}
+	if ${RI_Var_Bool_GlobalOthers}
+		return
+	call RIObj.Target hatchling -Distance 20 pirate -Distance 10 ${_NamedID}
 	if ${Trigger}
 	{
+		variable int _failcnt
+		call RIObj.Target ${_NamedID}
+		_failcnt:Set[1]
+		while ${Actor[Query, ID=${_NamedID} && IsDead=FALSE](exists)} && ${_failcnt:Inc}<100 && !${Me.GetGameData[Target.Casting].Label.Equal[Pummeling Plumage]} && !${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Pummeling Plumage]}
+		{
+			call RIObj.Target ${_NamedID}
+			wait 1
+		}
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-620.29,182.34,-90.45]
+		_failcnt:Set[1]
+		while ${Actor[Query, ID=${_NamedID} && IsDead=FALSE](exists)} && ${_failcnt:Inc}<100 && ${Me.GetGameData[Target.Casting].Label.Equal[Pummeling Plumage]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Pummeling Plumage]}
+		{
+			call RIObj.Target ${_NamedID}
+			wait 1
+		}
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-612.08,178.51,-99.12]
 		Trigger:Set[0]
-		wait 10
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-625.18,182.88,-88.95]
-		wait 40
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-604.79,176.13,-103.15]
 	}
 }
 function Gromekus()
@@ -48843,32 +49139,32 @@ function Gromekus()
 
 function Bartus()
 {
-	call CustomNamed "Bartus Morrand" "426.89,28.46,-350.84" NONE spectral
+	call CustomNamed "Bartus Morrand" "426.89,28.46,-350.84" NONE spectral wispling
 }
 
 function Muhg()
 {
-	call CustomNamed "Soul Eater Muhg" "250.83,24.80,-252.79" NONE friend
+	call CustomNamed "Soul Eater Muhg" "250.83,24.80,-252.79" NONE friend ireful
 }
 
 function Dremaera()
 {
-	call CustomNamed "Dremaera Forsaken" "52.22,33.05,-316.82" NONE torrmented torment
+	call CustomNamed "Dremaera Forsaken" "52.22,33.05,-316.82" NONE torrmented torment wispling
 }
 
 function Gorok()
 {
-	call CustomNamed "Rune Protector Gorok" "-263.44,33.59,-782.29" NONE protector destroyer runic
+	call CustomNamed "Rune Protector Gorok" "-252.64,31.45,-788.23" NONE runic destroyer 
 }
 
 function Esmerelda()
 {
-	call CustomNamed "Esmerelda Everghast" "-613.32,16.37,-376.33" EsmereldaCustom everghast
+	call CustomNamed "Esmerelda Everghast-NMB" "-613.32,16.37,-376.33" EsmereldaCustom
 }
 function EsmereldaCustom(int _NamedID)
 {
-	call RIObj.Target everghast -Distance 20 ${_NamedID}
-	if ${Me.Distance[-613.32,16.37,-376.33]}>10 || ${Me.Distance[-623.27,16.37,-356.48]}>10
+	call RIObj.Target summoned -Distance 20 angry -Distance 20 ${_NamedID}
+	if ${Me.Y}>50 && ( ${Me.Distance[-613.32,16.37,-376.33]}>10 || ${Me.Distance[-623.27,16.37,-356.48]}>10 )
 	{
 		if ${Me.Distance[-613.32,16.37,-376.33]}<${Me.Distance[-623.27,16.37,-356.48]}
 		{
@@ -48888,7 +49184,7 @@ function Kartur()
 {
 	IncomingText:Clear
 	IncomingText2:Clear
-	IncomingText:Insert[notices a missing a]
+	IncomingText:Insert[notices a missing]
 	call CustomNamed "Kartur" "-38.86,-0.80,51.60" KarturCustom
 	IncomingText:Clear
 	IncomingText2:Clear
@@ -48900,7 +49196,7 @@ function KarturCustom(int _NamedID)
 	{
 		variable string _Item
 		Trigger:Set[0]
-		_Item:Set["${TriggerMessage.Right[${Math.Calc[(${TriggerMessage.Find[notices a missing a]}+19)*-1]}].Left[-1]}"]
+		_Item:Set["${TriggerMessage.Right[${Math.Calc[(${TriggerMessage.Find[notices a missing]}+17)*-1]}].Left[-1]}"]
 		;echo \"${_Item}\"
 		if ${Me.Inventory[${_Item}](exists)}
 		{
@@ -48920,6 +49216,9 @@ function KarturCustom(int _NamedID)
 }
 function Rilayne()
 {
+	Actor[Rilayne]:DoTarget
+	wait 150 ${Actor[Rilayne].Distance}<10
+	call LockAndWait -Loc "70.73,-0.75,-8.83"
 	call CustomNamed "T'valla Rilayne" "45.88,-0.76,-8.27" RilayneCustom
 }
 function RilayneCustom(int _NamedID)
@@ -48992,7 +49291,7 @@ function RosySpawnKing()
 		Trigger:Set[0]
 		call LockAndWait -Loc "157.56,-15.28,80.66" -RelayToGroup -AllGroupWithinRange 3
 		call ClickActor -Actor "chess black rook 1"
-		call LockAndWait -Loc "159.03,-15.28,113.73" -RelayToGroup -AllGroupWithinRange 3
+		call LockAndWait -Loc "159.26,-15.28,112.32" -RelayToGroup -AllGroupWithinRange 3
 		wait 10
 		call PlaceHouseItem 180
 		call PlaceHouseItem 180
@@ -49057,17 +49356,140 @@ function ThornbloodCustom(int _NamedID)
 
 function Sypheria()
 {
-	call CustomNamed "Sypheria the Shackled" "-146.98,-73.33,247.75" NONE chains
+	RI_Obj_CB:DoNotCastEncounter[TRUE]
+	RI_Obj_CB:DoNotCastAE[TRUE]
+	call RIObj.SingularFocus 1
+	call CustomNamed "Sypheria the Shackled-NLP-NMB" "-118.86,-73.26,265.16" SypheriaCustom
+	RI_Obj_CB:DoNotCastEncounter[FALSE]
+	RI_Obj_CB:DoNotCastAE[FALSE]
+	call RIObj.SingularFocus 0
 }
-
+function SypheriaCustom(int _NamedID)
+{
+	if ${Actor[id,${_NamedID}].Distance}>7 && !${RI_Var_Bool_GlobalOthers}
+	{
+		variable index:string _Locs
+		variable int _i
+		variable int _ClosestDistance
+		variable int _ClosestLoc
+		variable int _ClosestNamedLoc
+		
+		_Locs:Insert["-118.86,-73.26,265.16"]
+		_Locs:Insert["-124.34,-73.26,252.53"]
+		_Locs:Insert["-136.82,-73.26,247.49"]
+		_Locs:Insert["-149.27,-73.26,252.80"]
+		_Locs:Insert["-154.57,-73.26,264.55"]
+		_Locs:Insert["-149.44,-73.26,277.50"]
+		_Locs:Insert["-137.13,-73.26,282.88"]
+		_Locs:Insert["-124.56,-73.26,277.68"]
+		
+		;first determine which loc i am at
+		_ClosestDistance:Set[10000000]
+		for(_i:Set[1];${_i}<=${_Locs.Used};_i:Inc)
+		{
+			;echo ${_Locs.Get[${_i}]}: ${Me.Distance[${_Locs.Get[${_i}]}]}<${_ClosestDistance}
+			if ${Me.Distance[${_Locs.Get[${_i}]}]}<${_ClosestDistance}
+			{
+				;echo setting
+				_ClosestDistance:Set[${Me.Distance[${_Locs.Get[${_i}]}]}]
+				_ClosestLoc:Set[${_i}]
+			}
+		}
+			;now determine which loc the named is at
+		_ClosestDistance:Set[10000000]
+		for(_i:Set[1];${_i}<=${_Locs.Used};_i:Inc)
+		{
+			if ${Math.Distance[${_Locs.Get[${_i}]},${Actor[Query, ID=${_NamedID}].Loc}]}<${_ClosestDistance}
+			{
+				_ClosestDistance:Set[${Math.Distance[${_Locs.Get[${_i}]},${Actor[Query, ID=${_NamedID}].Loc}]}]
+				_ClosestNamedLoc:Set[${_i}]
+			}
+		}
+		;echo ${_ClosestLoc}
+		;echo ${_ClosestNamedLoc}
+		if ${_ClosestLoc}>${_ClosestNamedLoc}
+		{
+			;echo dec
+			for(_i:Set[${_ClosestLoc}];${_i}>=${_ClosestNamedLoc};_i:Dec)
+			{
+				;echo dec for ${_i}
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_Locs.Get[${_i}]},1,1000]
+				wait 300 ${Me.Distance[${_Locs.Get[${_i}]}]}<3
+				wait 300 ${RIMObj.AllGroupWithinRange[5]}
+			}
+		}
+		else
+		{
+			;echo inc
+			for(_i:Set[${_ClosestLoc}];${_i}<=${_ClosestNamedLoc};_i:Inc)
+			{
+				;echo inc for ${_i}
+				relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${_Locs.Get[${_i}]},1,1000]
+				wait 300 ${Me.Distance[${_Locs.Get[${_i}]}]}<3
+				wait 300 ${RIMObj.AllGroupWithinRange[5]}
+			}
+		}
+	}
+	;Bloodlinked Chains 828
+	if ${Actor[id,${_NamedID}].Distance}<=7
+		call RIObj.Dispell ${_NamedID} 828
+	call RIObj.Target ${_NamedID}
+}
 function Skelegore()
 {
-	call CustomNamed "Skelegore the Regurgitated" "-287.12,-82.32,216.06" NONE Bonewretch
+	call CustomNamed "Skelegore the Regurgitated-NMB" "-287.12,-82.32,216.06" SkelegoreCustom Bonewretch
 }
-
+function SkelegoreCustom(int _NamedID)
+{
+	if ${RI_Var_Bool_GlobalOthers}
+		return
+	
+	call RIObj.Target Bonewretch ${_NamedID}
+	
+	if ${Me.Distance[-257.19,-82.98,246.68]}<5 || ${Me.Distance[-275.68,-82.98,173.68]}<5 || ${Me.Distance[-328.76,-82.98,227.18]}<5
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Loc},19]
+		wait 1
+		RIMUIObj:SetLockSpot[${Me.Name},-287.12,-82.32,216.06]
+	}
+	elseif ${Me.Group[1].Distance[-257.19,-82.98,246.68]}<5 || ${Me.Group[1].Distance[-275.68,-82.98,173.68]}<5 || ${Me.Group[1].Distance[-328.76,-82.98,227.18]}<5
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Group[1].Loc},19]
+		wait 1
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[1].Name},-287.12,-82.32,216.06]
+	}
+	elseif ${Me.Group[2].Distance[-257.19,-82.98,246.68]}<5 || ${Me.Group[2].Distance[-275.68,-82.98,173.68]}<5 || ${Me.Group[2].Distance[-328.76,-82.98,227.18]}<5
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Group[2].Loc},19]
+		wait 1
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[2].Name},-287.12,-82.32,216.06]
+	}
+	elseif ${Me.Group[3].Distance[-257.19,-82.98,246.68]}<5 || ${Me.Group[3].Distance[-275.68,-82.98,173.68]}<5 || ${Me.Group[3].Distance[-328.76,-82.98,227.18]}<5
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Group[3].Loc},19]
+		wait 1
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[3].Name},-287.12,-82.32,216.06]
+	}
+	elseif ${Me.Group[4].Distance[-257.19,-82.98,246.68]}<5 || ${Me.Group[4].Distance[-275.68,-82.98,173.68]}<5 || ${Me.Group[4].Distance[-328.76,-82.98,227.18]}<5
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Group[4].Loc},19]
+		wait 1
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[4].Name},-287.12,-82.32,216.06]
+	}
+	elseif ${Me.Group[5].Distance[-257.19,-82.98,246.68]}<5 || ${Me.Group[5].Distance[-275.68,-82.98,173.68]}<5 || ${Me.Group[5].Distance[-328.76,-82.98,227.18]}<5
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Me.Group[5].Loc},19]
+		wait 1
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[${Me.Group[5].Name},-287.12,-82.32,216.06]
+	}
+	else
+	{
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-287.12,-82.32,216.06]
+	}
+}
 function Mazza()
 {
-	call CustomNamed "Mazza Zanzeer" "11.95,-15.39,173.78" NONE Sullian Porzo
+	call CustomNamed "Mazza Zanzeer" "11.95,-15.39,173.78" NONE Porzo
 }
 
 function Lysander()
@@ -49088,15 +49510,17 @@ function Vorigan()
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[Vorigan Mistmoore].Loc},3,1000]
 		if ${Actor[Vorigan Mistmoore].Distance}<5
 			Actor[Vorigan Mistmoore]:DoubleClick
+		wait 1
 	}
-	call CustomNamed "Vorigan Mistmoore" "-194.17,-62.27,-185.67" VoriganCustom
+	call CustomNamed "Vorigan Mistmoore" "-210.04,-62.31,-164.72" VoriganCustom
 	IncomingText:Clear
 	IncomingText2:Clear
 }
+;need to code this to go in the pool and then jump out literally jump
 function VoriganCustom(int _NamedID)
 {
 	call RIObj.Target rotting -Distance 20 ${_NamedID}
-	if ${Trigger} || (${Me.GetGameData[Target.Casting].Label.Equal[Vampiric Hemorrhage]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Vampiric Hemorrhage]})
+	if ${Zone.Name.Find[Solo]} && ( ${Trigger} || (${Me.GetGameData[Target.Casting].Label.Equal[Vampiric Hemorrhage]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal[Vampiric Hemorrhage]}) )
 	{
 		Trigger:Set[0]
 		if ${Actor[id,${_NamedID}].Distance[-194.89,-56.34,-219.84]}<${Actor[id,${_NamedID}].Distance[-190.75,-62.30,-151.05]}
@@ -49111,7 +49535,10 @@ function VoriganCustom(int _NamedID)
 	}
 	else
 	{
-		RIMUIObj:SetLockSpot[ALL,-194.17,-62.27,-185.67]
+		RIMUIObj:SetLockSpot[ALL,-210.04,-62.31,-164.72]
+		wait 20
+		if ${Me.Archetype.Equal[scout]}
+			RIMUIObj:SetLockSpot[OFF]
 	}
 }
 
@@ -49460,13 +49887,18 @@ function OlyxaCustom(int _NamedID)
 			call LockAndWait -Loc "-468.00,127.22,-754.99" -RelayToGroup
 		}
 		wait 300 ${Actor[id, ${_NamedID}].Distance}<30
-		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id, ${_NamedID}].Loc},7]
+		variable int _failcnt=1
+		while ${Actor[id, ${_NamedID}].Distance}>7 && ${_failcnt}<150
+		{
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id, ${_NamedID}].Loc},7]
+			wait 1
+		}
 	}
 }
 function Skulkor()
 {
-	call CustomNamed "Skulkor" "-442.17,159.79,-577.28" SkulkorCustom
-	call LockAndWait -Loc "-442.17,159.79,-577.28"
+	call CustomNamed "Skulkor" "-449.78,160.05,-569.37" SkulkorCustom
+	call LockAndWait -Loc "-449.78,160.05,-569.37"
 }
 function SkulkorCustom(int _NamedID)
 {
@@ -49494,9 +49926,27 @@ function CorpsetalonCustom(int _NamedID)
 }
 function Gangrerious()
 {
-	call CustomNamed "Gangrerious" "-468.21,188.54,-536.99" NONE Necrodaverus
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["searches the area for sustenance"]
+	call CustomNamed "Gangrerious-NMB" "-452.84,188.13,-537.43" GangreriousCustom
+	IncomingText:Clear
+	IncomingText2:Clear
 }
-
+function GangreriousCustom(int _NamedID)
+{
+	if ${RI_Var_Bool_GlobalOthers}
+		return
+	call RIObj.Target Necrodaverus -Distance 20 ${_NamedID}
+	if ${Trigger}
+	{
+		if ${Me.Distance[-452.84,188.13,-537.43]}<5
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-474.74,188.18,-541.19]
+		else
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-452.84,188.13,-537.43]
+		Trigger:Set[0]
+	}
+}
 function Grumblugtin()
 {
 	call CustomNamed "Grumblugtin" "-358.64,193.23,-717.52" GrumblugtinCustom
@@ -49540,7 +49990,7 @@ function Krel()
 
 function Bolor()
 {
-	call CustomNamed "Warlock Ren Bolor" "334.28,105.64,-13.21" NONE summoned
+	call CustomNamed "Warlock Ren Bolor-NMB" "361.20,107.77,-14.21" NONE summoned
 }
 
 function Oororr()
@@ -49550,12 +50000,12 @@ function Oororr()
 
 function Felazhor()
 {
-	call CustomNamed "Felazhor Khan" "-73.33,101.07,214.61"
+	call CustomNamed "Felazhor Khan" "-73.33,101.07,214.61" NONE blood divine
 }
 
 function Lagrecia()
 {
-	call CustomNamed "Lagrecia Vyl'Tayne" "-48.89,95.55,608.69" NONE Chernala Dead
+	call CustomNamed "Lagrecia Vyl'Tayne" "-48.89,95.55,608.69" NONE Chernala Drivazia Dead
 }
 
 ;End Mahngavi Wastes: Warpwood Cairn
@@ -49564,27 +50014,49 @@ function Lagrecia()
 
 function Lavec()
 {
-	call CustomNamed "Lavec Conun'Stah" "-331.32,14.67,293.36" NONE vampire
+	AnnounceText:Clear
+	AnnounceText:Insert["The air begins"]
+	AnnounceText:Insert["The air becomes thick with the smell of iron"]
+	call CustomNamed "Lavec Conun'Stah-NMB" "-302.33,13.19,276.67" LavecCustom
+	AnnounceText:Clear
 }
-
+function LavecCustom(int _NamedID)
+{
+	if ${RI_Var_Bool_GlobalOthers}
+		return
+	call RIObj.Target vampire -Distance 10 ${_NamedID}
+	if ${Trigger}
+	{
+		if ${Me.Distance[-302.33,13.19,276.67]}<5
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-309.02,12.98,267.77]
+		else
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-302.33,13.19,276.67]
+		Trigger:Set[0]
+	}
+}
 function Krinas()
 {
-	call CustomNamed "Krinas Bledso" "-132.57,16.05,315.26" 
+	call CustomNamed "Krinas Bledso" "-132.57,16.05,315.26" KrinasCustom thrall werehound
 }
-
+function KrinasCustom(int _NamedID)
+{
+	call RIObj.Target thrall -Distance 10 werehound -Distance 10 ${_NamedID}
+}
 function Stenkannreif()
 {
-	call CustomNamed "Stenkannreif, the Monster" "-226.67,48.04,345.84" NONE necrotic
+	call ToggleWalkRun 1
+	call CustomNamed "Stenkannreif, the Monster-NMB" "-226.67,48.04,345.84" NONE necrotic lich
+	call ToggleWalkRun 0
 }
 
 function Perisha()
 {
-	call CustomNamed "Perisha, the Mistress of Flies" "143.26,47.20,359.45" NONE corrupted resident
+	call CustomNamed "Perisha, the Mistress of Flies" "143.26,47.20,359.45" NONE corrupted resident lich
 }
 
 function Aga()
 {
-	call CustomNamed "Aga-Yagaba" "434.59,108.74,204.02" NONE lich resident madcap
+	call CustomNamed "Aga-Yagaba" "434.59,108.74,204.02" NONE madcap lich resident
 }
 
 ;End Forlorn Gist: Nightmares of Old
@@ -49717,7 +50189,7 @@ function SyvantiCustom(int _NamedID)
 		elseif ${TriggerMessage.Find[Mahngavi Wastes]}
 		{
 			call LockAndWait -Loc "49.47,-50.12,227.03" -RelayToGroup
-			wait 300 ${Me.Arcane}==0 && ${Me.Group[1].Arcane}==0
+			wait 300 ${Me.Arcane}<1 && ${Me.Group[1].Arcane}<1
 		}
 		elseif ${TriggerMessage.Find[Svarni Expanse]}
 		{

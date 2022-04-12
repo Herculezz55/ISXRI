@@ -89,8 +89,6 @@ function main()
     GOQuest:Insert["Treasure in Shortwine Burrow|Treasured|1"]
     GOQuest:Insert["Valuable Runes in a Dirty Place|Treasured|1"]
 
-
-
     Quest:Insert["A Dark Ceremony|1:00:00|5%|5%|1|Agile:Persuasive|Devoted|Treasured"]
     Quest:Insert["Captured in Bramble Woods|1:30:00|10%|5%|1|Noble:Tough|Lucky|Treasured"]
     Quest:Insert["Eliminate Klirkan X'Davai|2:00:00|15%|10%|1|Cautious|Devoted|Treasured"]
@@ -1467,7 +1465,9 @@ function RefreshAgents()
 atom EQ2_onRewardWindowAppeared()
 {
     if !${Script[${RI_Var_String_RunInstancesScriptName}](exists)} && !${Script[${RI_Var_String_RIInventoryScriptName}](exists)} && ${CompletingQuests}
-	    RewardWindow:AcceptReward
+	{
+        RewardWindow:AcceptReward
+    }
 }
 objectdef OverseerObj
 {
