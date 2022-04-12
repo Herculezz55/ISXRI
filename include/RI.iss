@@ -5662,7 +5662,7 @@
 ;						Lockspots toons
 ;						Autotargets add without Unleashed
 
-;v6.64 Changes 1-9-21
+;v6.64 Changes 1-9-22
 ;	CombatBot
 ;		Fixed a bug that was immediately toggleing off Champion's Interception
 ;			(if anyone notices any other abilities behaving in this way please report to Herculezz, THG or Bor)
@@ -5766,7 +5766,7 @@
 ;						Lockspots toons
 ;						Uses HO's
 
-;v6.65 Changes 4-11-21
+;v6.65 Changes 4-11-22
 ;	RI Inventory
 ;		Fixed a bug that was attempting to transmute/salvage merc only gear
 ;	AbilityCheck

@@ -11,7 +11,7 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.65 4-11-21"
+#define EXTENSION_VERSION "6.65 4-11-22"
 double EXTVER = 6.65;
 #include "ISXRI.h"
 
