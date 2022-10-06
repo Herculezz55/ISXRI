@@ -614,7 +614,7 @@ atom EQ2_onIncomingText(string Text)
 }
 atom EQ2_ReplyDialogAppeared(string ID)
 {
-   	relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+   	relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 }
 atom EQ2_onRewardWindowAppeared()
 {
@@ -631,12 +631,12 @@ atom EQ2_onRewardWindowAppeared()
 }
 function ShinyCollection()
 {
-	if ${EQ2UIPage[Journals,JournalsQuest].IsVisible} && ${EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].IsEnabled}
+	if ${EQ2UIPage[Journals,JournalsQuest].IsVisible} && ${EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[2].IsEnabled}
 	{	
 		wait 5
-		EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
+		EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[2].Child[6].Child[2].Child[1].Child[1]:LeftClick
 		wait 5
-		EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
+		EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[2].Child[6].Child[2].Child[1].Child[1]:LeftClick
 		wait 5
 		EQ2UIPage[Journals,JournalsQuest]:Close
 	}
@@ -1814,6 +1814,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 		}
 		case Svarni Expanse: Carrion Crag [Solo]
 		case Svarni Expanse: Carrion Crag [Heroic I]
+		case Svarni Expanse: Carrion Crag [Heroic II]
 		{
 			RI_CMD_Hidden_AddTLO SvarniExpanseCarrionCrag
 			LoadedTLO:Set[TRUE]
@@ -1825,6 +1826,7 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 		}
 		case Karuupa Jungle: Heart of Conflict [Solo]
 		case Karuupa Jungle: Heart of Conflict [Heroic I]
+		case Karuupa Jungle: Heart of Conflict [Heroic II]
 		{
 			RI_CMD_Hidden_AddTLO KaruupaJungleHeartofConflict
 			LoadedTLO:Set[TRUE]
@@ -1917,6 +1919,55 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CastleVacrulThroneoftheYdal[3rtZdjv7,#]};MainArrayCounter:Inc)
 				istrMain:Insert[${CastleVacrulThroneoftheYdal[3rtZdjv7,${MainArrayCounter}]}]
 
+			break
+		}
+		case The Merchant's Den [Solo]
+		;case The Merchant's Den [Heroic I]
+		;case The Merchant's Den [Heroic II]
+		{
+			RI_CMD_Hidden_AddTLO TheMerchantsDen
+			LoadedTLO:Set[TRUE]
+			LoadedTLOName:Set[TheMerchantsDen]
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheMerchantsDen[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${TheMerchantsDen[3rtZdjv7,${MainArrayCounter}]}]
+
+			call SetShinyIgnoreNamed 1
+			RI_Var_Bool_IgnoreShinyY:Set[1]
+			call AddShinyActor "!"
+
+			;Storage Wars
+			if ${QuestJournalWindow.ActiveQuest["Storage Wars"](exists)}
+			{
+				RI_Var_Bool_GrabShinys:Set[1]
+				call AddShinyActor "a captive Vikana associate"
+			}
+
+			;Competitive Market Strategies
+			if ${QuestJournalWindow.ActiveQuest["Competitive Market Strategies"](exists)}
+			{
+				RI_Var_Bool_GrabShinys:Set[1]
+				call AddShinyActor "a captive Vikana associate"
+				call AddShinyActor "Kelethin Crate"
+				call AddShinyActor "Erudin Rugs"
+				call AddShinyActor "Maj'Dul Pottery"
+			}
+			;Contract Termination
+			if ${QuestJournalWindow.ActiveQuest["Contract Termination"](exists)}
+			{
+				RI_Var_Bool_GrabShinys:Set[1]
+				call AddShinyActor "Glintswift Gang Promissory Notes"
+				call AddShinyActor "Furdock & Friends Merchant Contracts"
+			}
+			;Cut-throat Competition
+			if ${QuestJournalWindow.ActiveQuest["Cut-throat Competition"](exists)}
+			{
+				RI_Var_Bool_GrabShinys:Set[1]
+				call AddShinyActor "Glintswift Gang Promissory Notes"
+				call AddShinyActor "Furdock & Friends Merchant Contracts"
+				call AddShinyActor "Kelethin Crate"
+				call AddShinyActor "Erudin Rugs"
+				call AddShinyActor "Maj'Dul Pottery"
+			}
 			break
 		}
 		default
@@ -2365,8 +2416,8 @@ function HailActorFunction()
 		wait 2
 		relay ${RI_Var_String_RelayGroup} -noredirect eq2execute hail
 		wait 2
-		if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-			relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+			relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 5
 		;unpause bots
 		relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
@@ -2655,19 +2706,19 @@ objectdef RunInstancesObject
 					;echo ${_cnt}: ${args[${_cnt}]}: ${Actor[Query, ID=${args[${_cnt}]} && IsDead=FALSE]}: ${Actor[Query, ID=${args[${_cnt}]} && IsDead=FALSE](exists)}  ${args[${Math.Calc[${_cnt}+1]}].Find["-Distance"](exists)} ${Int[${args[${Math.Calc[${_cnt}+2]}]}]}
 					if ${args[${Math.Calc[${_cnt}+1]}].Find["-Distance"](exists)}
 					{
-						if ${Actor[Query, ID=${args[${_cnt}]} && IsDead=FALSE && Distance<=${Int[${args[${Math.Calc[${_cnt}+2]}]}]}](exists)}
+						if ${Actor[Query, ID=${args[${_cnt}]} && InCombatMode=TRUE && IsDead=FALSE && Distance<=${Int[${args[${Math.Calc[${_cnt}+2]}]}]}](exists)}
 						{
 							if ${Target.ID}!=${args[${_cnt}]}
-								Actor[Query, ID=${args[${_cnt}]} && IsDead=FALSE]:DoTarget
+								Actor[Query, ID=${args[${_cnt}]} && InCombatMode=TRUE && IsDead=FALSE]:DoTarget
 							return
 						}
 					}
 					else
 					{
-						if ${Actor[Query, ID=${args[${_cnt}]} && IsDead=FALSE](exists)}
+						if ${Actor[Query, ID=${args[${_cnt}]} && InCombatMode=TRUE && IsDead=FALSE](exists)}
 						{
 							if ${Target.ID}!=${args[${_cnt}]}
-								Actor[Query, ID=${args[${_cnt}]} && IsDead=FALSE]:DoTarget
+								Actor[Query, ID=${args[${_cnt}]} && InCombatMode=TRUE && IsDead=FALSE]:DoTarget
 							return
 						}
 					}
@@ -2677,7 +2728,7 @@ objectdef RunInstancesObject
 					;echo ${_cnt}: ${args[${_cnt}]}: ${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE]}: ${Actor[Query, Name=-"${args[${_cnt}]}" && IsDead=FALSE](exists)}  ${args[${Math.Calc[${_cnt}+1]}].Find["-Distance"](exists)} ${Int[${args[${Math.Calc[${_cnt}+2]}]}]} ${args[${Math.Calc[${_cnt}+2]}]}
 					if ${args[${Math.Calc[${_cnt}+1]}].Find["-Distance"](exists)}
 					{
-						if ${Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE && Distance<=${Int[${args[${Math.Calc[${_cnt}+2]}]}]}](exists)}
+						if ${Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && InCombatMode=TRUE && IsDead=FALSE && Distance<=${Int[${args[${Math.Calc[${_cnt}+2]}]}]}](exists)}
 						{
 							if ${LowestHealth}
 							{	
@@ -2692,20 +2743,20 @@ objectdef RunInstancesObject
 									}
 								}
 								if ${Target.ID}!=${MobWithLowestHealthID}
-									Actor[Query, ID=${MobWithLowestHealthID} && IsDead=FALSE]:DoTarget
+									Actor[Query, ID=${MobWithLowestHealthID} && InCombatMode=TRUE && IsDead=FALSE]:DoTarget
 								return
 							}
 							else
 							{
-								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE].ID}
-									Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE]:DoTarget
+								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && InCombatMode=TRUE && IsDead=FALSE].ID}
+									Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && InCombatMode=TRUE && IsDead=FALSE]:DoTarget
 								return
 							}
 						}
 					}
 					else
 					{
-						if ${Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE](exists)}
+						if ${Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && InCombatMode=TRUE && IsDead=FALSE](exists)}
 						{
 							if ${LowestHealth}
 							{	
@@ -2720,13 +2771,13 @@ objectdef RunInstancesObject
 									}
 								}
 								if ${Target.ID}!=${MobWithLowestHealthID}
-									Actor[Query, ID=${MobWithLowestHealthID} && IsDead=FALSE]:DoTarget
+									Actor[Query, ID=${MobWithLowestHealthID} && InCombatMode=TRUE && IsDead=FALSE]:DoTarget
 								return
 							}
 							else
 							{
-								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && Type!="Mercenary" && IsDead=FALSE].ID}
-									Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && IsDead=FALSE]:DoTarget
+								if ${Target.ID}!=${Actor[Query, Name=-"${args[${_cnt}]}" && Type!="Mercenary" && InCombatMode=TRUE && IsDead=FALSE].ID}
+									Actor[Query, Name=-"${args[${_cnt}]}" && ( Type =="NPC" || Type =="NamedNPC" ) && InCombatMode=TRUE && IsDead=FALSE]:DoTarget
 								return
 							}
 						}
@@ -2740,9 +2791,13 @@ objectdef RunInstancesObject
 		;set lockspot
 		if !${RI_Var_Bool_GlobalOthers}
 		{
+			variable int _lpfailcnt=0
 			Actor[Query, ID=${_ID} && IsDead=FALSE]:DoTarget
-			if ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}<30 && ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}>15
-				wait 50 ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}<15
+			while ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}<30 && ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}>15 && ${_lpfailcnt:Inc}<250
+			{
+				Actor[Query, ID=${_ID} && IsDead=FALSE]:DoTarget
+				wait 2
+			}
 			if ${_LockSpot.Find["|"](exists)}
 			{
 				RIMUIObj:SetLockSpot[${Me.Name},${_LockSpot.Token[1,|]},1,1000]
@@ -3729,6 +3784,120 @@ function WaitForMob(string WMName, int WMDistance=100, bool Aggro=FALSE, bool Ch
 	wait 5
 	;relay "${RI_Var_String_RelayGroup}" RI_Atom_SetLockSpot OFF
 }
+function CatalogCreature(string _Name)
+{
+	;get ID
+	variable int _ID
+	if ${Actor[Query, Name=-"${_Name}" && Distance<=15](exists)}
+		_ID:Set[${Actor[Query, Name=-"${_Name}" && Distance<=15].ID}]
+	else
+		return
+	;Add trigger text
+	;IncomingText:Insert[Currently targeting]
+	;IncomingText2:Insert["${_Name}"]
+	
+	if ${RI_Var_Bool_Debug}
+		echo ISXRI: ${Time}: CatalogCreature: ${_Name}
+	
+	;turn off assisting
+	RI_CMD_Assisting 0
+	
+	;pause bots
+	RI_CMD_PauseCombatBots 1
+	
+	;target
+	Actor[Query, ID=${_ID}]:DoTarget
+	
+	;cancel spellcast and clear ability queue
+	eq2ex cancel_spellcast
+	eq2ex clearabilityqueue 
+	
+	;wait until we are not casting
+	wait 200 !${Me.CastingSpell}
+	
+	;keep attempting to cast absorb magic (ID=1812025739) until it is no longer ready (aka casted)
+	do
+	{
+		if ${Target.ID}==${_ID}
+			Me.Ability[id,738679878]:Use
+		else
+			Actor[Query, ID=${_ID}]:DoTarget
+		
+		if ${Actor[Query, ID=${_ID}].Distance}>15
+			call RIMObj.Move ${String["${Actor[Query, ID=${_ID}].Loc}"].Replace[","," "]} 14 0 0 0 1 0 1 1
+
+		wait 5
+	}
+	while ${Actor[Query, ID=${_ID}].Target.ID}!=${Me.ID} && ${Actor[Query, ID=${_ID}](exists)} && !${Actor[Query, ID=${_ID}].IsDead}
+	;Trigger:Set[0]
+
+	;wait until we are not casting
+	wait 200 !${Me.CastingSpell}
+	
+	;turn on assisting
+	RI_CMD_Assisting 1
+	
+	;unpause bots
+	RI_CMD_PauseCombatBots 0
+
+	;Clear trigger text
+	;IncomingText:Remove[${IncomingText.Used}]
+	;IncomingText2:Remove[${IncomingText.Used}]
+}
+function CatalogCreatureID(int _ID)
+{
+	;Add trigger text
+	;IncomingText:Insert[Currently targeting]
+	;IncomingText2:Insert["${Actor[id,${_ID}].Name}"]
+
+	if ${RI_Var_Bool_Debug}
+		echo ISXRI: ${Time}: CatalogCreature: ${Actor[id,${_ID}].Name}
+	
+	;turn off assisting
+	RI_CMD_Assisting 0
+	
+	;pause bots
+	RI_CMD_PauseCombatBots 1
+	
+	;target
+	Actor[Query, ID=${_ID}]:DoTarget
+	
+	;cancel spellcast and clear ability queue
+	eq2ex cancel_spellcast
+	eq2ex clearabilityqueue 
+	
+	;wait until we are not casting
+	wait 200 !${Me.CastingSpell}
+	
+	;keep attempting to cast absorb magic (ID=1812025739) until it is no longer ready (aka casted)
+	do
+	{
+		if ${Target.ID}==${_ID}
+			Me.Ability[id,738679878]:Use
+		else
+			Actor[Query, ID=${_ID}]:DoTarget
+
+		if ${Actor[Query, ID=${_ID}].Distance}>15
+			call RIMObj.Move ${String["${Actor[Query, ID=${_ID}].Loc}"].Replace[","," "]} 14 0 0 0 1 0 1 1
+
+		wait 5
+	}
+	while ${Actor[Query, ID=${_ID}].Target.ID}!=${Me.ID} && ${Actor[Query, ID=${_ID}](exists)} && !${Actor[Query, ID=${_ID}].IsDead}
+	;Trigger:Set[0]
+
+	;wait until we are not casting
+	wait 200 !${Me.CastingSpell}
+	
+	;turn on assisting
+	RI_CMD_Assisting 1
+	
+	;unpause bots
+	RI_CMD_PauseCombatBots 0
+
+	;Clear trigger text
+	;IncomingText:Remove[${IncomingText.Used}]
+	;IncomingText2:Remove[${IncomingText.Used}]
+}
 function WaitForMobAway(string WMName, int WMDistance=100)
 {
 	call WaitForMobExists "${WMName}" ${WMDistance}
@@ -3984,11 +4153,11 @@ function HailActorFast(string _Actor, int _NumberOfResponses=1, int _ResponseNum
 		variable string _tempbtntxt
 		for(count:Set[1];${count}<=${_NumberOfResponses};count:Inc)
 		{
-			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText]}"]
-			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-				relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}]:LeftClick
+			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}].GetProperty[LocalText]}"]
+			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+				relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}]:LeftClick
 			wait 5
-			wait 50 ( ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || !${EQ2UIPage[ProxyActor,Conversation].IsVisible} )
+			wait 50 ( ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || !${EQ2UIPage[ProxyActor,Conversation].IsVisible} )
 		}
 		;unpause bots
 		relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
@@ -4006,14 +4175,14 @@ function HailActorMultiOption(string _Actor, ... args)
 	variable string _tempbtntxt
 	for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
 	{
-		_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${_count}]}].GetProperty[LocalText]}"]
+		_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${_count}]}].GetProperty[LocalText]}"]
 		;echo ${args[${_count}]}
 		if ${_count}==1
 			call HailActor "${_Actor}" 1 ${args[${_count}]} 1
 		else
 			call HailActor "${_Actor}" 1 ${args[${_count}]} 0
 		wait 5
-		wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${_count}]}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} 
+		wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${_count}]}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} 
 		;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
 	}
 }
@@ -4025,12 +4194,12 @@ function ConversationDialog( ... args)
 	variable string _tempbtntxt
 	for(_count:Set[1];${_count}<=${args.Used};_count:Inc)
 	{
-		_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${_count}]}].GetProperty[LocalText]}"]
+		_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${_count}]}].GetProperty[LocalText]}"]
 		;echo ${args[${_count}]}
-		if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-				relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${_count}]}]:LeftClick
+		if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+				relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${_count}]}]:LeftClick
 		wait 5
-		wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${_count}]}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} 
+		wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${_count}]}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} 
 		;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
 	}
 }
@@ -4275,11 +4444,11 @@ function HailActor(... args)
 				continue	
 			}
 			
-			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText]}"]
-			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-				relay ${_Relay} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}]:LeftClick
+			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}].GetProperty[LocalText]}"]
+			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+				relay ${_Relay} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}]:LeftClick
 			wait 5
-			wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]}
+			wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]}
 			;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
 		}
 		;unpause bots
@@ -4435,11 +4604,11 @@ function HailActorGetQuest(... args)
 		variable int _wcount=${Math.Calc[${Time.SecondsSinceMidnight}+60]}
 		while !${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} && !${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${Time.SecondsSinceMidnight}<=${_wcount}
 		{
-			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText]}"]
-			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-				relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}]:LeftClick
+			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}].GetProperty[LocalText]}"]
+			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+				relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}]:LeftClick
 			wait 5
-			wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)}
+			wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)}
 			;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
 		}
 		;unpause bots
@@ -13045,11 +13214,11 @@ function RevealedQueenInteract()
 	wait 5
 	eq2ex Hail
 	wait 5
-	EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+	EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 	wait 5
-	EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+	EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 	wait 5
-	EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+	EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 	wait 5
 	RewardWindow:AcceptReward
 	wait 5
@@ -13175,6 +13344,47 @@ function Gooblin()
 	echo Ending Gooblin
 }
 function UseItem(string _ItemName, int _Repeats=2)
+{
+	if !${RI_Var_Bool_GlobalOthers}
+		relay "other ${RI_Var_String_RelayGroup}" Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call UseItem \"${_ItemName}\" ${_Repeats}"]
+	;pause bots
+	variable bool _Botwaspaused=0
+	if ${CombatBotPaused}
+		_Botwaspaused:Set[1]
+	if !${_Botwaspaused}
+		RI_CMD_PauseCombatBots 1
+	eq2ex cancel_spellcast
+	wait 2
+	Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"]:Use
+	wait 5
+	if ${_Repeats}>1
+		Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"]:Use
+	wait 20
+	;unpause bots
+	if !${_Botwaspaused}
+		RI_CMD_PauseCombatBots 0
+}
+function UseRenfry(int _Which=2)
+{
+	;pause bots
+	RI_CMD_PauseCombatBots 1
+	eq2ex cancel_spellcast
+	wait 2
+	Me.Inventory[Query, Name=-"Renfry's Basement Bauble" && Location=="Inventory"]:Examine
+	wait 2
+	Me.Inventory[Query, Name=-"Renfry's Basement Bauble" && Location=="Inventory"]:Examine
+	wait 2
+	Me.Inventory[Query, Name=-"Renfry's Basement Bauble" && Location=="Inventory"]:Examine
+	wait 2
+	ReplyDialog:Choose[${_Which}]
+	wait 2
+	ReplyDialog:Choose[${_Which}]
+	wait 2
+	ReplyDialog:Choose[${_Which}]
+	;unpause bots
+	RI_CMD_PauseCombatBots 0
+}
+function UseItemRenfry(int _ZoneSelect=1)
 {
 	if !${RI_Var_Bool_GlobalOthers}
 		relay "other ${RI_Var_String_RelayGroup}" Script[${RI_Var_String_RunInstancesScriptName}]:QueueCommand["call UseItem \"${_ItemName}\" ${_Repeats}"]
@@ -15908,13 +16118,13 @@ function Frillik(bool caughtstart=FALSE, bool Fire=FALSE)
 		wait 3
 		eq2ex hail
 		wait 3
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 3
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 3
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 3
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		call RIMObj.Move 4.199240 13.058523 65.906937 1 0 TRUE FALSE TRUE FALSE TRUE
 		
 		while !${CaptainDoneTrigger}
@@ -15952,13 +16162,13 @@ function Frillik(bool caughtstart=FALSE, bool Fire=FALSE)
 		wait 3
 		eq2ex hail
 		wait 3
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4	
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		;hail Killten
 		Actor[Killten]:DoTarget
 		Actor[Killten]:DoFace
@@ -15968,21 +16178,21 @@ function Frillik(bool caughtstart=FALSE, bool Fire=FALSE)
 		Actor[Killten]:DoFace
 		eq2ex hail
 		wait 3
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 4
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 5
 		if ${Me.Speed}<75
 		{
@@ -17838,6 +18048,66 @@ function Zann()
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+function QuestY(string _QN)
+{
+	if ${QuestJournalWindow.CompletedQuest[${_QN}](exists)}
+	{
+		echo ISXRI: ${_QN} already Completed moving on
+		wait 10
+	}
+	else
+		call Quest "${_QN}"
+}
+function YunziTimeline()
+{
+	call QuestY "The \"Travels\" of Yun Zi - An Oasis For Your Thoughts"
+	call QuestY "The \"Travels\" of Yun Zi - In a Kingdom Far Away"
+	call QuestY "The \"Travels\" of Yun Zi - Echoes of the Past"
+	call QuestY "The \"Travels\" of Yun Zi - Kunark or Bust"
+	call QuestY "The \"Travels\" of Yun Zi - I Need to See Moors Places"`
+	call QuestY "The \"Travels\" of Yun Zi - Ice to See Velious"
+	call QuestY "The \"Travels\" of Yun Zi - An Eternity Without You"
+	call QuestY "The \"Travels\" of Yun Zi - Tears for Fears"
+	call QuestY "The \"Travels\" of Yun Zi - An Altar-Nate Malice"
+	call QuestY "The new \"Travels\" of Yun Zi - Antonica or Bust"
+	call QuestY "The new \"Travels\" of Yun Zi - Commonlands, Uncommon Heart"
+	call QuestY "The new \"Travels\" of Yun Zi - Run Nektulos Forest Run"
+	call QuestY "The new \"Travels\" of Yun Zi - Thundering Steppes By Steppes"
+	call QuestY "The new \"Travels\" of Yun Zi - Disenchanting the Enchanted"
+	call QuestY "The new \"Travels\" of Yun Zi - To Zek With It"
+	call QuestY "The new \"Travels\" of Yun Zi - Feerrott Not, I Shall Find You"
+	call QuestY "The new \"Travels\" of Yun Zi - Defrosting Everfrost"
+	call QuestY "The new \"Travels\" of Yun Zi - Having Fun Storming Lavastorm"
+	call QuestY "Yet more \"Travels\" of Yun Zi - Once Again in the Desert"
+	call QuestY "Yet more \"Travels\" of Yun Zi - Skies the Limit"
+	call QuestY "Yet more \"Travels\" of Yun Zi - ECHO ECHo ECho Echo echo"
+	call QuestY "Yet more \"Travels\" of Yun Zi - Rising to the Occasion"
+	call QuestY "Yet more \"Travels\" of Yun Zi - More Moors"
+	call QuestY "Yet more \"Travels\" of Yun Zi - Destined for Destiny"
+	call QuestY "Yet more \"Travels\" of Yun Zi - Eternally Eternity"
+	call QuestY "Yet more \"Travels\" of Yun Zi - Returning to Tears"
+	call QuestY "Yet more \"Travels\" of Yun Zi - Altering the Altar"
+	call QuestY "Traveler's Feast - Coldwind Clam Chowder"
+	call QuestY "Traveler's Feast - Darklight Beetle Omelets"
+	call QuestY "Traveler's Feast - Rivervale Ratatouille"
+	call QuestY "Traveler's Feast - Butcherblock Pumpkin Bread"
+	call QuestY "Traveler's Feast - Dervish Squash Curry"
+	call QuestY "Traveler's Feast - Sky Cake"
+	call QuestY "Traveler's Feast - Mara Mandaikon Kakiage"
+	call QuestY "Traveler's Feast - Kylong Bean Casserole"
+	call QuestY "Traveler's Feast - Othmir Pepper Pasta"
+	call QuestY "Traveler's Holidays - Getting a Feel For Frostfell"
+	call QuestY "Traveler's Holidays - Evoking Love"
+	call QuestY "Traveler's Holidays - More than Beer?"
+	call QuestY "Traveler's Holidays - The Meaning of Mischief"
+	call QuestY "Traveler's Holidays - Oceans for the Oceanless"
+	call QuestY "Traveler's Holidays - Under a Burning Sky"
+	call QuestY "Traveler's Holidays - Gears and Gadgets"
+	call QuestY "Traveler's Holidays - Deadly Nights"
+	call QuestY "Traveler's Holidays - We Need a Hero!"
+	call QuestY "Traveler's Kunark Catalog: Around the Landing"
+}
+
 function ResetZone(string _ZoneName)
 {
 	relay ${RG_Var_String_RelayGroup} RIMUIObj:ResetZone[ALL,"${_ZoneName}"]
@@ -21303,11 +21573,11 @@ function Path(... args)
 											}
 											for(_i:Set[1];${_i}<=${_Events.Token[2,-]};_i:Inc)
 											{
-												_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_Events.Token[3,-]}].GetProperty[LocalText]}"]
-												if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-													relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_Events.Token[3,-]}]:LeftClick
+												_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_Events.Token[3,-]}].GetProperty[LocalText]}"]
+												if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+													relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_Events.Token[3,-]}]:LeftClick
 												wait 5
-												wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_Events.Token[3,-]}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]}
+												wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_Events.Token[3,-]}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]}
 											}
 											if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
 											{
@@ -21413,6 +21683,124 @@ function Path(... args)
 									{
 										switch ${_Events.Token[${_ecnt},&]}
 										{
+											case CC
+											case CATALOGCREATURE
+											{
+												;clickactor event
+												while !${Actor[Query, ID=${_ID}].IsDead} && ${Actor[Query, ID=${_ID} && IsDead=FALSE].Distance}<=${_QueryDistance} && ( ${Actor[Query, ID=${_ID} && IsDead=FALSE].Name.Equal[${_Name}]} || !${_CheckName} ) && ${Actor[Query, ID=${_ID}](exists)} && ${_QueryActor.Get[${_cnt}].NotEqual[*TRIGGERED*]} && ( ${Me.CastingSpell} || ${Actor[Query, ID=${_ID}].Interactable} || !${_Interactable} )
+												{
+													if ${RI_Var_Bool_BreakPathFunction}
+													{
+														RI_Var_Bool_BreakPathFunction:Set[0]
+														return
+													}
+													if ${Me.FlyingUsingMount}
+														call RIMObj.FlyDown
+													if ${_StopForCombat}
+														call RIMObj.CheckCombat
+													echo call CCID
+													call CatalogCreatureID ${_ID}
+
+													if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${_ItemQty} of ${_ItemName}
+														Trigger:Set[FALSE]
+													}
+													if ${_QuestStepExists}
+													{
+														for(_countor:Set[1];${_countor}<=${_QuestStep.Used};_countor:Inc)
+														{
+															if ${RIObj.QuestStepExists["${_QuestStep.Get[${_countor}]}"]}
+															{
+																_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+																echo ISXRI: Triggered: ${_QuestStep.Get[${_countor}]} from ${_tempName}
+																Trigger:Set[FALSE]
+															}
+														}
+													}
+													if ${_QuestExists}
+													{
+														for(_countor:Set[1];${_countor}<=${_Quest.Used};_countor:Inc)
+														{
+															if ${QuestJournalWindow.ActiveQuest["${_Quest.Get[${_countor}]}"]}
+															{
+																_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+																echo ISXRI: Triggered: ${_Quest.Get[${_countor}]} Exists from ${_tempName}
+																Trigger:Set[FALSE]
+															}	
+														}
+													}
+													if ${_QuestDNE}
+													{
+														for(_countor:Set[1];${_countor}<=${_Quest.Used};_countor:Inc)
+														{
+															if !${QuestJournalWindow.ActiveQuest["${_Quest.Get[${_countor}]}"]}
+															{
+																_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+																echo ISXRI: Triggered: ${_Quest.Get[${_countor}]} Does Not Exist from ${_tempName}
+																Trigger:Set[FALSE]
+															}	
+														}
+														
+													}
+													if ${_QuestStepChecked}
+													{
+														for(_countor:Set[1];${_countor}<=${_QuestStep.Used};_countor:Inc)
+														{
+															if ${RIObj.QuestStepExists["${_QuestStep.Get[${_countor}]}",${_QuestStepChecked}]}
+															{
+																_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+																echo ISXRI: Triggered: ${_QuestStep.Get[${_countor}]}
+																Trigger:Set[FALSE]
+															}	
+														}
+													}
+													if ${Trigger}
+													{
+														_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+														echo ISXRI: Triggered: ${TriggerMessage} from ${_tempName}
+														Trigger:Set[FALSE]
+														wait 1
+													}
+													if ${CommonTrigger.NotEqual[""]}
+													{
+														if ( ${CommonTrigger.Token[1,:].Equal[QuestStepChecked]} || ${CommonTrigger.Token[1,:].Equal[QSC]} )&& ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}",1]}
+														{
+															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+															echo ISXRI: Triggered:${CommonTrigger.Token[2,:]}
+															Trigger:Set[FALSE]
+														}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepExists]} && ${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
+														{
+															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
+															Trigger:Set[FALSE]
+														}
+														if ${CommonTrigger.Token[1,:].Equal[QuestStepDNE]} && !${RIObj.QuestStepExists["${CommonTrigger.Token[2,:]}"]}
+														{
+															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} from ${_tempName}
+															Trigger:Set[FALSE]
+														}
+														if ${CommonTrigger.Token[1,:].Equal[QuestExists]} && ${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
+														{
+															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Exists from ${_tempName}
+															Trigger:Set[FALSE]
+														}
+														if ${CommonTrigger.Token[1,:].Equal[QuestDNE]} && !${QuestJournalWindow.ActiveQuest["${CommonTrigger.Token[2,:]}"]}
+														{
+															_QueryActor.Get[${_cnt}]:Set[*TRIGGERED*]
+															echo ISXRI: Triggered: ${CommonTrigger.Token[2,:]} Does Not Exist from ${_tempName}
+															Trigger:Set[FALSE]
+														}
+													}
+													if ${Actor[Query, ID=${_ID}].Distance}>=${_MoveToDistance} && !${_DontMoveActor}
+														call RIMObj.Move ${Actor[Query, ID=${_ID}].X} ${Math.Calc[${Actor[Query, ID=${_ID}].Y}+1]} ${Actor[Query, ID=${_ID}].Z} ${_MoveToDistance} 0 FALSE FALSE TRUE FALSE TRUE TRUE
+												}
+												break
+											}
 											case DC
 											case DoubleClick
 											{
@@ -22137,9 +22525,9 @@ function NewLandsNewProfitsStarter()
 		Actor[a sokokar tamer]:DoFace
 		Actor[a sokokar tamer]:DoTarget
 		eq2ex apply_verb ${Actor[a sokokar tamer].ID} hail
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 5
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 5
 		call TravelMap "Teren's Grasp Post" 0
 		wait 600 ${Me.IsMoving}
@@ -23567,8 +23955,8 @@ function GetCorrectQuest(string _Actor, string _QuestName, string _QuestStep, in
 			_failcnt:Inc
 		if ${_failcnt}>1
 			_noconvo:Set[1]
-		wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 	}
 	_noconvo:Set[0]
 	do
@@ -23595,8 +23983,8 @@ function GetCorrectQuest(string _Actor, string _QuestName, string _QuestStep, in
 					_failcnt:Inc
 				if ${_failcnt}>1
 					_noconvo:Set[1]
-				wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-				EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+				wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+				EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 			}
 			_noconvo:Set[0]
 		}
@@ -23716,8 +24104,8 @@ function PathHail(int _PathLines, int _Distance, bool _Loop, bool _GoReverseAfte
 							variable int _counth
 							for(_counth:Set[1];${_counth}<=${args[${Math.Calc[${_count}+2]}]};_counth:Inc)
 							{
-								if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}](exists)}
-									EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}]:LeftClick
+								if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}](exists)}
+									EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}]:LeftClick
 								wait 5
 							}
 							;unpause bots
@@ -23828,8 +24216,8 @@ function PathHail(int _PathLines, int _Distance, bool _Loop, bool _GoReverseAfte
 									variable int count
 									for(count:Set[1];${count}<=${args[${Math.Calc[${_count}+2]}]};count:Inc)
 									{
-										if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}](exists)}
-											EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}]:LeftClick
+										if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}](exists)}
+											EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}]:LeftClick
 										wait 5
 									}
 									;unpause bots
@@ -23985,8 +24373,8 @@ function PathHailCast(int _PathLines, int _Distance, bool _Loop, bool _GoReverse
 							; variable int _counth
 							; for(_counth:Set[1];${_counth}<=${args[${Math.Calc[${_count}+3]}]};_counth:Inc)
 							; {
-								; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}](exists)}
-									; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}]:LeftClick
+								; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}](exists)}
+									; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}]:LeftClick
 								; wait 5
 							; }
 							; wait 5
@@ -24098,8 +24486,8 @@ function PathHailCast(int _PathLines, int _Distance, bool _Loop, bool _GoReverse
 									; variable int count
 									; for(count:Set[1];${count}<=${args[${Math.Calc[${_count}+2]}]};count:Inc)
 									; {
-										; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}](exists)}
-											; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}]:LeftClick
+										; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}](exists)}
+											; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}]:LeftClick
 										; wait 5
 									; }
 									
@@ -24271,8 +24659,8 @@ function PathHailExists(int _PathLines, int _Distance, bool _Loop, bool _GoRever
 							variable int _counth
 							for(_counth:Set[1];${_counth}<=${args[${Math.Calc[${_count}+2]}]};_counth:Inc)
 							{
-								if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}](exists)}
-									EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}]:LeftClick
+								if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}](exists)}
+									EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}]:LeftClick
 								wait 5
 							}
 						}
@@ -24376,8 +24764,8 @@ function PathHailExists(int _PathLines, int _Distance, bool _Loop, bool _GoRever
 									; variable int count
 									; for(count:Set[1];${count}<=${args[${Math.Calc[${_count}+2]}]};count:Inc)
 									; {
-										; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}](exists)}
-											; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}]:LeftClick
+										; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}](exists)}
+											; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}]:LeftClick
 										; wait 5
 									; }
 								}
@@ -24535,8 +24923,8 @@ function PathHailDistance(int _PathLines, int _Distance, bool _Loop, bool _GoRev
 							; variable int _counth
 							; for(_counth:Set[1];${_counth}<=${args[${Math.Calc[${_count}+2]}]};_counth:Inc)
 							; {
-								; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}](exists)}
-									; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}]:LeftClick
+								; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}](exists)}
+									; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}]:LeftClick
 								; wait 5
 							; }
 							;unpause bots
@@ -24640,8 +25028,8 @@ function PathHailDistance(int _PathLines, int _Distance, bool _Loop, bool _GoRev
 									; variable int count
 									; for(count:Set[1];${count}<=${args[${Math.Calc[${_count}+2]}]};count:Inc)
 									; {
-										; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}](exists)}
-											; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${args[${Math.Calc[${_count}+3]}]}]:LeftClick
+										; if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}](exists)}
+											; EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${args[${Math.Calc[${_count}+3]}]}]:LeftClick
 										; wait 5
 									; }
 									;unpause bots
@@ -25770,11 +26158,11 @@ function PathItemHail(int _PathLines, int _Distance, int _Precision, bool _Loop,
 								wait 5
 								for(count:Set[1];${count}<=${args[${Math.Calc[${_count}+3]}]};count:Inc)
 								{
-									_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText]}"]
-									if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-										relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+									_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}].GetProperty[LocalText]}"]
+									if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+										relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 									wait 5
-									wait 20 ( ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || !${EQ2UIPage[ProxyActor,Conversation].IsVisible} )
+									wait 20 ( ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || !${EQ2UIPage[ProxyActor,Conversation].IsVisible} )
 								}
 								;unpause bots
 								relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
@@ -25928,10 +26316,10 @@ function PathItemHail(int _PathLines, int _Distance, int _Precision, bool _Loop,
 										for(count:Set[1];${count}<=${args[${Math.Calc[${_count}+3]}]};count:Inc)
 										{
 											_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText]}"]
-											if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-												relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+											if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+												relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 											wait 5
-											wait 20 ( ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || !${EQ2UIPage[ProxyActor,Conversation].IsVisible} )
+											wait 20 ( ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || !${EQ2UIPage[ProxyActor,Conversation].IsVisible} )
 										}
 										;unpause bots
 										relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0
@@ -28956,7 +29344,7 @@ function Collection(... args)
 						echo ISXRI: Collecting ${Me.Inventory[Query, Location=="Inventory" && Name=-"${args[${_count}]}"].Name}
 						Me.Inventory[Query, Location=="Inventory" && Name=-"${args[${_count}]}"]:Examine
 						wait 5
-						EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
+						EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[2].Child[6].Child[2].Child[1].Child[1]:LeftClick
 					}
 					else
 						echo ISXRI: ${Me.Inventory[Query, Location=="Inventory" && Name=-"${args[${_count}]}"].Name} Already Collected
@@ -29020,11 +29408,11 @@ function HailCollector()
 	variable string _tempbtntxt
 	for(count:Set[1];${count}<=3;count:Inc)
 	{
-		_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,2].GetProperty[LocalText]}"]
-		if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,2](exists)}
-			relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,2]:LeftClick
+		_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[2].GetProperty[LocalText]}"]
+		if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[2](exists)}
+			relay ${RI_Var_String_RelayGroup} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[2]:LeftClick
 		wait 5
-		wait 20 ( ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,2].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || !${EQ2UIPage[ProxyActor,Conversation].IsVisible} )
+		wait 20 ( ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[2].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]} || !${EQ2UIPage[ProxyActor,Conversation].IsVisible} )
 	}
 	;unpause bots
 	relay ${RI_Var_String_RelayGroup} -noredirect RI_CMD_PauseCombatBots 0	
@@ -29251,16 +29639,16 @@ function RingEvent(int _Distance, ... args)
 		else
 			_Query:Concat["Name=-\"${args[${_countor}]}\" || "]
 	}
-	while !${Actor[Query, Name=-"${args[${args.Used}]}" && Distance<=${_Distance}](exists)}
+	while !${Actor[Query, ${_Query}](exists)}
 	{
 		if ${Actor[Query, ${_Query}](exists)} && ${Target.ID}!=${Actor[Query, ${_Query}].ID}
 			Actor[Query, ${_Query}]:DoTarget
 		wait 2
 	}
-	while ${Actor[Query, Name=-"${args[${args.Used}]}" && Distance<=${_Distance} && IsDead=FALSE](exists)}
+	while ${Actor[Query, ${_Query}](exists)}
 	{
-		if ${Target.ID}!=${Actor[Query, Name=-"${args[${args.Used}]}" && Distance<=${_Distance} && IsDead=FALSE].ID}
-			Actor[Query, Name=-"${args[${args.Used}]}" && Distance<=${_Distance} && IsDead=FALSE]:DoTarget
+		if ${Actor[Query, ${_Query}](exists)} && ${Target.ID}!=${Actor[Query, ${_Query}].ID}
+			Actor[Query, ${_Query}]:DoTarget
 		wait 2
 	}
 }
@@ -35945,38 +36333,38 @@ function Solusek()
 		wait 2
 		eq2ex hail
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 5
 		wait 50
 		Actor[Query, Name=-"Solusek Ro"]:DoTarget
 		wait 2
 		;eq2ex hail
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 2
-		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1]:LeftClick
+		EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1]:LeftClick
 		wait 5
 		RI_CMD_Assist 1
 	}
@@ -38861,11 +39249,11 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 		{
 			if ${_acnt}==1
 			{
-				_Adds:Concat["\"${args[${_acnt}]}\" -Distance 30"]
+				_Adds:Concat["\"${args[${_acnt}]}\" -Distance 15"]
 			}
 			else
 			{
-				_Adds:Concat[" \"${args[${_acnt}]}\" -Distance 30"]
+				_Adds:Concat[" \"${args[${_acnt}]}\" -Distance 15"]
 			}
 		}
 	}
@@ -38891,26 +39279,7 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 				{
 					if ${Me.Archetype.NotEqual[priest]} && ${RIMUIObj.Archetype[${Me.Group[1].ID}].NotEqual[priest]}
 					{
-						if ${Me.Trauma}==1 && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"].TimeUntilReady}<1
-						{
-							;echo TRAUM
-							RI_Obj_CB:Cast["Item:Cure Trauma",1]
-						}
-						elseif ${Me.Elemental}==1 && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"].TimeUntilReady}<1
-						{
-							;echo ELE
-							RI_Obj_CB:Cast["Item:Cure Elemental",1]
-						}
-						elseif ${Me.Arcane}==1 && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"].TimeUntilReady}<1
-						{
-							;echo ARC
-							RI_Obj_CB:Cast["Item:Cure Arcane",1]
-						}
-						elseif ${Me.Noxious}==1 && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"].TimeUntilReady}<1
-						{
-							;echo NOX
-							RI_Obj_CB:Cast["Item:Cure Noxious",1]
-						}
+						call CheckCures
 					}
 				}
 				call RIObj.Target ${_Adds} ${_NamedID}
@@ -38921,26 +39290,7 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 				{
 					if ${Me.Archetype.NotEqual[priest]} && ${RIMUIObj.Archetype[${Me.Group[1].ID}].NotEqual[priest]}
 					{
-						if ${Me.Trauma}==1 && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"].TimeUntilReady}<1
-						{
-							;echo TRAUM
-							RI_Obj_CB:Cast["Item:Cure Trauma",1]
-						}
-						elseif ${Me.Elemental}==1 && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"].TimeUntilReady}<1
-						{
-							;echo ELE
-							RI_Obj_CB:Cast["Item:Cure Elemental",1]
-						}
-						elseif ${Me.Arcane}==1 && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"].TimeUntilReady}<1
-						{
-							;echo ARC
-							RI_Obj_CB:Cast["Item:Cure Arcane",1]
-						}
-						elseif ${Me.Noxious}==1 && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"](exists)} && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"].TimeUntilReady}<1
-						{
-							;echo NOX
-							RI_Obj_CB:Cast["Item:Cure Noxious",1]
-						}
+						call CheckCures
 					}
 				}
 				call RIObj.Target ${_NamedID}
@@ -46355,24 +46705,24 @@ function Obscura()
 }
 function CheckCures()
 {
-	if ${Zone.Name.Find[Solo]} && ${Me.Archetype.NotEqual[priest]}
+	if ${Me.Archetype.NotEqual[priest]}
 	{
-		if ${Me.Trauma}==1 && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"].TimeUntilReady}<1
+		if ${Me.Trauma}>0 && ${Me.Inventory[Query, Name=-"Cure Trauma" && Location=="Inventory"].TimeUntilReady}<1
 		{
 			;echo Trauma
 			RI_Obj_CB:Cast["Item:Cure Trauma",1]
 		}
-		elseif ${Me.Elemental}==1 && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"].TimeUntilReady}<1
+		elseif ${Me.Elemental}>0 && ${Me.Inventory[Query, Name=-"Cure Elemental" && Location=="Inventory"].TimeUntilReady}<1
 		{
 			;echo Elemental
 			RI_Obj_CB:Cast["Item:Cure Elemental",1]
 		}
-		if ${Me.Arcane}==1 && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"].TimeUntilReady}<1
+		if ${Me.Arcane}>0 && ${Me.Inventory[Query, Name=-"Cure Arcane" && Location=="Inventory"].TimeUntilReady}<1
 		{
 			;echo Arcane
 			RI_Obj_CB:Cast["Item:Cure Arcane",1]
 		}
-		elseif ${Me.Noxious}==1 && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"].TimeUntilReady}<1
+		elseif ${Me.Noxious}>0 && ${Me.Inventory[Query, Name=-"Cure Noxious" && Location=="Inventory"].TimeUntilReady}<1
 		{
 			;echo Noxious
 			RI_Obj_CB:Cast["Item:Cure Noxious",1]
@@ -46391,7 +46741,8 @@ function Calamitus()
 }
 function CalamitusCustom(int _NamedID)
 {
-	call CheckCures
+	if ${Zone.Name.Find[Solo]}
+		call CheckCures
 	if !${Actor[Query, Name=="a Zov Dyn Dabo" && IsDead=FALSE && X=157.089996 && Y=72.449997 && Z=234.880005].Target.InMyGroup} && ${Zone.Name.Find["[Solo]"]}==0
 	{
 		while !${Actor[Query, Name=="a Zov Dyn Dabo" && IsDead=FALSE && X=157.089996 && Y=72.449997 && Z=234.880005].Target.InMyGroup}
@@ -46762,7 +47113,8 @@ function PalovinaCustom(int _NamedID)
 		} 
 		while ${RIMUIObj.MainIconIDExists[${Me.ID},268]}
 		{
-			call CheckCures
+			if ${Zone.Name.Find[Solo]}
+				call CheckCures
 			wait 1
 		}
 		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,0.102117,-14.997500,-37.307487]
@@ -48781,59 +49133,130 @@ function Green()
 	call LockAndWait -Loc "610.67,89.49,-460.70" -AllGroupWithinRange 3
 	while ${Actor[Query, Name=="latching root" && Distance<10 && IsDead=FALSE](exists)}
 	{
-		call RIObj.Target "latching root" -Distance 10
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[Query, Name=-"latching root" && Distance<10]:DoTarget
+		call CheckCures
 		wait 1
 	}
 	while ${Actor[Query, Name=="a maniacal botanical" && Distance<10 && IsDead=FALSE](exists)}
 	{
 		call RIObj.Target "a maniacal botanical" -Distance 10
+		call CheckCures
 		wait 1
 	}
 	call LockAndWait -Loc "623.68,89.26,-450.95" -AllGroupWithinRange 3
 	call LockAndWait -Loc "625.79,89.30,-438.46" -AllGroupWithinRange 3
 	while ${Actor[Query, Name=="latching root" && Distance<10 && IsDead=FALSE](exists)}
 	{
-		call RIObj.Target "latching root" -Distance 10
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[Query, Name=-"latching root" && Distance<10]:DoTarget
+		call CheckCures
 		wait 1
 	}
 	while ${Actor[Query, Name=="a maniacal botanical" && Distance<10 && IsDead=FALSE](exists)}
 	{
 		call RIObj.Target "a maniacal botanical" -Distance 10
+		call CheckCures
 		wait 1
 	}
 	call LockAndWait -Loc "633.84,91.41,-413.0" -AllGroupWithinRange 3
-	call LockAndWait -Loc "584.43,87.67,-374.1" -AllGroupWithinRange 3
+	call LockAndWait -Loc "600.26,88.64,-390.1" -AllGroupWithinRange 3
 	while ${Actor[Query, Name=="latching root" && Distance<10 && IsDead=FALSE](exists)}
 	{
-		call RIObj.Target "latching root" -Distance 10
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[Query, Name=-"latching root" && Distance<10]:DoTarget
+		call CheckCures
 		wait 1
 	}
 	while ${Actor[Query, Name=="a maniacal botanical" && Distance<10 && IsDead=FALSE](exists)}
 	{
 		call RIObj.Target "a maniacal botanical" -Distance 10
+		call CheckCures
+		wait 1
+	}
+	call LockAndWait -Loc "584.43,87.67,-374.1" -AllGroupWithinRange 3
+	while ${Actor[Query, Name=="latching root" && Distance<10 && IsDead=FALSE](exists)}
+	{
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[Query, Name=-"latching root" && Distance<10]:DoTarget
+		call CheckCures
+		wait 1
+	}
+	while ${Actor[Query, Name=="a maniacal botanical" && Distance<10 && IsDead=FALSE](exists)}
+	{
+		call RIObj.Target "a maniacal botanical" -Distance 10
+		call CheckCures
+		wait 1
+	}
+	call LockAndWait -Loc "563.70,86.98,-364.53" -AllGroupWithinRange 3
+	while ${Actor[Query, Name=="latching root" && Distance<10 && IsDead=FALSE](exists)}
+	{
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[Query, Name=-"latching root" && Distance<10]:DoTarget
+		call CheckCures
+		wait 1
+	}
+	while ${Actor[Query, Name=="a maniacal botanical" && Distance<10 && IsDead=FALSE](exists)}
+	{
+		call RIObj.Target "a maniacal botanical" -Distance 10
+		call CheckCures
+		wait 1
+	}
+	call LockAndWait -Loc "534.33,86.63,-352.33" -AllGroupWithinRange 3
+	while ${Actor[Query, Name=="latching root" && Distance<10 && IsDead=FALSE](exists)}
+	{
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[Query, Name=-"latching root" && Distance<10]:DoTarget
+		call CheckCures
+		wait 1
+	}
+	while ${Actor[Query, Name=="a maniacal botanical" && Distance<10 && IsDead=FALSE](exists)}
+	{
+		call RIObj.Target "a maniacal botanical" -Distance 10
+		call CheckCures
 		wait 1
 	}
 	call LockAndWait -Loc "540.79,89.27,-375.51" -AllGroupWithinRange 3
 	while ${Actor[Query, Name=="latching root" && Distance<10 && IsDead=FALSE](exists)}
 	{
-		call RIObj.Target "latching root" -Distance 10
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[Query, Name=-"latching root" && Distance<10]:DoTarget
+		call CheckCures
 		wait 1
 	}
 	while ${Actor[Query, Name=="a maniacal botanical" && Distance<10 && IsDead=FALSE](exists)}
 	{
 		call RIObj.Target "a maniacal botanical" -Distance 10
+		call CheckCures
+		wait 1
+	}
+	call LockAndWait -Loc "520.38,89.30,-383.68" -AllGroupWithinRange 3
+	while ${Actor[Query, Name=="latching root" && Distance<10 && IsDead=FALSE](exists)}
+	{
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[Query, Name=-"latching root" && Distance<10]:DoTarget
+		call CheckCures
+		wait 1
+	}
+	while ${Actor[Query, Name=="a maniacal botanical" && Distance<10 && IsDead=FALSE](exists)}
+	{
+		call RIObj.Target "a maniacal botanical" -Distance 10
+		call CheckCures
 		wait 1
 	}
 	call LockAndWait -Loc "530.96,89.30,-405.12" -AllGroupWithinRange 3
 	call LockAndWait -Loc "543.80,89.30,-420.62" -AllGroupWithinRange 3
 	while ${Actor[Query, Name=="latching root" && Distance<10 && IsDead=FALSE](exists)}
 	{
-		call RIObj.Target "latching root" -Distance 10
+		if !${RI_Var_Bool_GlobalOthers}
+			Actor[Query, Name=-"latching root" && Distance<10]:DoTarget
+		call CheckCures
 		wait 1
 	}
 	while ${Actor[Query, Name=="a maniacal botanical" && Distance<10 && IsDead=FALSE](exists)}
 	{
 		call RIObj.Target "a maniacal botanical" -Distance 10
+		call CheckCures
 		wait 1
 	}
 	call CustomNamed "Mean Green-NMB" "543.80,89.30,-420.62" NONE floraform
@@ -49803,6 +50226,7 @@ function Olyxa()
 	IncomingText:Clear
 	IncomingText2:Clear
 	IncomingText:Insert["Avoid getting picked off by Olyxa"]
+	AbilityToInterrupt:Set["Triage"]
 	RIMUIObj:SetLockSpot[ALL,-490.82,132.02,-742.09]
 	call CustomNamed "High Shikari Olyxa-INC-NMB" "-490.82,132.02,-742.09" OlyxaCustom
 	IncomingText:Clear
@@ -49831,6 +50255,13 @@ function OlyxaCustom(int _NamedID)
 	if ${RI_Var_Bool_GlobalOthers}
 		return
 	call RIObj.Target ${_NamedID}
+	if ${Me.GetGameData[Target.Casting].Label.Equal["${AbilityToInterrupt}"]} || ${Me.GetGameData[ImpliedTarget.Casting].Label.Equal["${AbilityToInterrupt}"]}
+	{
+		f ${RI_Var_Bool_Debug}
+			echo ${Time}: Detected interrupt ability: ${AbilityToInterrupt} casting 
+		call SetInterruptSpell
+		call Interrupt
+	}
 	if ${Trigger}
 	{
 		Trigger:Set[0]
@@ -49886,13 +50317,13 @@ function OlyxaCustom(int _NamedID)
 			}
 			call LockAndWait -Loc "-468.00,127.22,-754.99" -RelayToGroup
 		}
-		wait 300 ${Actor[id, ${_NamedID}].Distance}<30
-		variable int _failcnt=1
-		while ${Actor[id, ${_NamedID}].Distance}>7 && ${_failcnt}<150
-		{
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id, ${_NamedID}].Loc},7]
-			wait 1
-		}
+		;wait 300 ${Actor[id, ${_NamedID}].Distance}<30
+		;variable int _failcnt=1
+		;while ${Actor[id, ${_NamedID}].Distance}>7 && ${_failcnt}<150
+		;{
+	;		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[id, ${_NamedID}].Loc},7]
+;			wait 1
+;		}
 	}
 }
 function Skulkor()
@@ -50591,6 +51022,248 @@ function HinokawuCustom(int _NamedID)
 }
 
 ;End Karuupa Jungle: Predator's Perch
+
+;Start The Merchant's Den
+function Merchantsdenwall()
+{
+	while !${Actor[Query, Name=="a cracked wall" && Aura=="dead"](exists)}
+	{
+		Actor[Query, Name=="a cracked wall"]:DoTarget
+		wait 1
+	}
+}
+function Merchantsdenshadysupplier()
+{
+	while ${Actor[Query, Name=="a shady supplier" && IsDead=FALSE](exists)}
+	{
+		Actor[Query, Name=="a shady supplier" && IsDead=FALSE]:DoTarget
+		wait 2
+	}
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert[You find a note with just the word]
+	variable int _failcnt=0
+	while !${Trigger} && ${_failcnt:Inc}<10
+	{
+		if ${Actor[a dead shady supplier].Distance}>6
+			call LockAndWait -Loc "${Actor[a dead shady supplier].Loc}"
+		Actor[a dead shady supplier]:DoubleClick
+		wait 2
+		Actor[a dead shady supplier]:DoubleClick
+		wait 2
+		Actor[a dead shady supplier]:DoubleClick
+		wait 2
+		;echo ${TriggerMessage}
+		;echo \"${TriggerMessage.Right[${Math.Calc[(${_fart.Find["You find a note with just the word, #2EFEF7"]}+50)*-1]}]}\"
+		declarevariable RI_Var_ShadySupplier string global ${TriggerMessage.Right[${Math.Calc[(${_fart.Find["You find a note with just the word, #2EFEF7"]}+50)*-1]}]}
+		RI_Var_ShadySupplier:Set[${RI_Var_ShadySupplier.Left[${RI_Var_ShadySupplier.Find[#]}].Left[-1]}]
+		;echo \"${RI_Var_ShadySupplier}\"
+		wait 10
+	}
+	Trigger:Set[0]
+	IncomingText:Clear
+	IncomingText2:Clear
+	if ${Me.Distance[-133.21,1.40,-62.13]}>3
+		call LockAndWait -Loc "-133.21,1.40,-62.13"
+}
+function Merchantsdengateman()
+{
+	CustomLoc:Set["0 0 0"]
+	call HailActor Gateman 2
+	call RIMObj.CheckCombat
+	wait 2
+	type ${RI_Var_ShadySupplier}
+	wait 2
+	press enter
+	wait 2
+	press enter
+	wait 2
+	press enter
+	wait 20
+	deletevariable RI_Var_ShadySupplier
+}
+function Twoshanks()
+{
+	;bilge
+	call CustomNamed "Captain Twoshanks" "-162.70,-0.30,-51.82" NONE bilge freebooter
+}
+
+function Grimalda()
+{
+	;armless
+	call CustomNamed "Grimalda Goodhand" "-198.18,-0.47,-51.473" NONE armless freebooter
+}
+
+function Gelda()
+{
+	call LockAndWait -Loc "-252.92,0.11,-48.51" -RelayToGroup
+	call CustomNamed "Gelda Glintswift" "-242.32,0.11,-48.58" GeldaCustom
+}
+function GeldaCustom(int _NamedID)
+{
+	wait 1
+	if ${RI_Var_Bool_GlobalOthers}
+		return
+	call RIObj.Target ${_NamedID}
+	;bubble 
+	;Move too kill and move back to lockspot
+	if ${Actor[bubble](exists)}
+	{
+		while ${Actor[bubble](exists)}
+		{
+			;a lycan thug  --- prolly ignore these
+			call RIObj.Target lycan -Distance 20 bodyguard -Distance 20 assertive -Distance 20 seller -Distance 20
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,${Actor[bubble].Loc}]
+			Actor[bubble]:DoubleClick
+			wait 5
+		}
+	}
+	elseif ${Me.Distance[-242.32,0.11,-48.58]}>5
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-242.32,0.11,-48.58]
+}
+
+
+function Furdock()
+{
+	;henchman
+	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,0]
+	call CustomNamed "Elder Furdock" "-240.48,0.16,-3.46" NONE henchman
+	RIMUIObj:SetUISetting[ALL,SettingsCastCureCheckBox,1]
+}
+
+function Lavalle()
+{
+	; hail at beggining
+	while !${Actor[Liegess Lavalle].IsAggro}
+	{
+		Actor[Liegess Lavalle]:DoubleClick
+		wait 5
+	}
+	;bloodthirsty
+	call CustomNamed "Liegess Lavalle" "-285.40,-4.44,46.51" NONE
+}
+
+function Beefcake()
+{
+	IncomingText:Clear
+	IncomingText2:Clear
+	IncomingText:Insert["Beefcake feels a bit crowded"]
+	
+	variable bool _HeroicOpsWereOff
+	if !${RI_Obj_CB.GetUISetting[SettingsStartHeroicCheckBox]}
+	{
+		RI_Obj_CB:SetUISetting[SettingsStartHeroicCheckBox,TRUE]
+		_HeroicOpsWereOff:Set[1]
+	}
+	; hail at beggining
+	while !${Actor[Beefcake].IsAggro}
+	{
+		Actor[Beefcake]:DoubleClick
+		wait 5
+	}
+
+	call CustomNamed "Beefcake" "-240.03,0.62,58.27" BeefcakeCustom
+
+	if ${_HeroicOpsWereOff}
+		RI_Obj_CB:SetUISetting[SettingsStartHeroicCheckBox,FALSE]
+
+	IncomingText:Clear
+	IncomingText2:Clear
+}
+
+;complete ho to drop inc's cant go above 20 so do a ho at 10 i spose
+function BeefcakeCustom(int _NamedID)
+{
+	call RIObj.Target ${_NamedID}
+	if ${Trigger}
+	{
+		Trigger:Set[0]
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-260.60,-4.45,58.35]
+		wait 50
+		relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[ALL,-240.74,0.62,58.67]
+	}
+	;868 Handsome Boys
+	;echo ${Actor[id,${_NamedID}]} // ${_NamedID} // ${Actor[id,${_NamedID}].Effect[${RIMUIObj.MainIconIDExists[${_NamedID},868]}].CurrentIncrements}>5
+	if ${Actor[id,${_NamedID}].Effect[${RIMUIObj.MainIconIDExists[${_NamedID},868]}].CurrentIncrements}>9
+	{
+		;echo HO
+		;code for heroic ops
+		;Scout Starter -41
+		;Mage Starter -25
+		;Priest Starter -14
+		;Tank Starter -0
+		variable int _StarterID
+		switch ${Me.Archetype}
+		{
+			case fighter
+			{
+				_StarterID:Set[0]
+				break
+			}
+			case scout
+			{
+				_StarterID:Set[41]
+				break
+			}
+			case mage
+			{
+				_StarterID:Set[25]
+				break
+			}
+			case priest
+			{
+				_StarterID:Set[14]
+				break
+			}
+		}
+		if ${EQ2.HOWheelState}==0 && ${Int[${RI_Obj_CB.GetHOIconIDAbility[${_StarterID}]}]}>-1
+		{
+			;echo our HO is on State ${EQ2.HOWheelState}, Casting ${RI_Obj_CB.GetHOIconIDAbility[${_StarterID}]}
+			RI_Obj_CB:Cast[${RI_Obj_CB.GetHOIconIDAbility[${_StarterID}]},1]
+		}
+		elseif ${EQ2.HOWheelState}==2
+		; && ${Int[${RI_Obj_CB.GetHOIconIDAbility[${EQ2.HOIconID1}]}]}>-1
+		{
+			if ${RI_Obj_CB.HOIconIDExists[${EQ2.HOIconID1}]}
+			{
+				RI_Obj_CB:Cast[${RI_Obj_CB.GetHOIconIDAbility[${EQ2.HOIconID1}]},1]
+			}
+			;echo our HO is on State ${EQ2.HOWheelState}, Casting ${RI_Obj_CB.GetHOIconIDAbility[${EQ2.HOIconID1}]}
+			if ${RI_Obj_CB.HOIconIDExists[${EQ2.HOIconID2}]}
+			{
+				RI_Obj_CB:Cast[${RI_Obj_CB.GetHOIconIDAbility[${EQ2.HOIconID2}]},1]
+			}
+			elseif ${RI_Obj_CB.HOIconIDExists[${EQ2.HOIconID3}]}
+			{
+				RI_Obj_CB:Cast[${RI_Obj_CB.GetHOIconIDAbility[${EQ2.HOIconID3}]},1]
+			}
+			elseif ${RI_Obj_CB.HOIconIDExists[${EQ2.HOIconID4}]}
+			{
+				RI_Obj_CB:Cast[${RI_Obj_CB.GetHOIconIDAbility[${EQ2.HOIconID4}]},1]
+			}
+			elseif ${RI_Obj_CB.HOIconIDExists[${EQ2.HOIconID5}]}
+			{
+				RI_Obj_CB:Cast[${RI_Obj_CB.GetHOIconIDAbility[${EQ2.HOIconID5}]},1]
+			}
+			elseif ${RI_Obj_CB.HOIconIDExists[${EQ2.HOIconID6}]}
+			{
+				RI_Obj_CB:Cast[${RI_Obj_CB.GetHOIconIDAbility[${EQ2.HOIconID6}]},1]
+			}
+		}
+		wait 5
+	}
+}
+
+function Dyrraga()
+{
+	while !${Actor[Arachlord Dyrraga].IsAggro}
+	{
+		wait 5
+	}
+	call CustomNamed "Arachlord Dyrraga-INC" "-236.87,-5.01,111.67" NONE commodity claret
+}
+
+;End The Merchant's Den
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

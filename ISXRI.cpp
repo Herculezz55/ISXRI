@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.65 4-11-22"
-double EXTVER = 6.65;
+#define EXTENSION_VERSION "6.72 10-1-22"
+double EXTVER = 6.72;
 #include "ISXRI.h"
 
 
@@ -1043,6 +1043,10 @@ double EXTVER = 6.65;
 #include "SvarniExpanseSideQuestTimeline.h"
 #include "TroubleforCampNaradasa.h"
 #include "UndeadReckoning.h"
+#include "CompetitiveMarketStrategies.h"
+#include "ContractTermination.h"
+#include "CutthroatCompetition.h"
+#include "StorageWars.h"
 
 //Instances
 #include "CastleVacrulCavernsoftheForsaken.h"
@@ -1056,6 +1060,7 @@ double EXTVER = 6.65;
 #include "ForlornGistNightmaresofOld.h"
 #include "KaruupaJunglePredatorsPerch.h"
 #include "MahngaviWastesWarpwoodCairn.h"
+#include "TheMerchantsDen.h"
 
 //Adventure
 #include "AltarAccessQuest.h"
@@ -1114,6 +1119,9 @@ double EXTVER = 6.65;
 #include "BasementBuildingFeedingRenfry.h"
 #include "BasementBuildingForlornFurnishings.h"
 #include "BasementBuildingTreatsforZiggy.h"
+
+//Yunzi 2022
+#include "TravelersKunarkCatalogAroundtheLanding.h"
 
 //#include ".h"
 //End Quest Dat Files
@@ -1295,6 +1303,9 @@ void CheckForAndLoadISXEQ2()
 }
 void ISXRIUnRegisterTLOs()
 {
+	//Yunzi 2022
+	pISInterface->RemoveTopLevelObject("TRAVELERSKUNARKCATALOGAROUNDTHELANDING");
+
 	//VoV
 	//Quests
 	pISInterface->RemoveTopLevelObject("GUIDEQUESTGUIDESGUIDETOVISIONSOFVETROVIA");
@@ -1308,6 +1319,10 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("SVARNIEXPANSESIDEQUESTTIMELINE");
 	pISInterface->RemoveTopLevelObject("TROUBLEFORCAMPNARADASA");
 	pISInterface->RemoveTopLevelObject("UNDEADRECKONING");
+	pISInterface->RemoveTopLevelObject("COMPETITIVEMARKETSTRATEGIES");
+	pISInterface->RemoveTopLevelObject("CONTRACTTERMINATION");
+	pISInterface->RemoveTopLevelObject("CUTTHROATCOMPETITION");
+	pISInterface->RemoveTopLevelObject("STORAGEWARS");
 
 	//Instances
 	pISInterface->RemoveTopLevelObject("CastleVacrulCavernsoftheForsaken");
@@ -1321,6 +1336,7 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("ForlornGistNightmaresofOld");
 	pISInterface->RemoveTopLevelObject("KaruupaJunglePredatorsPerch");
 	pISInterface->RemoveTopLevelObject("MahngaviWastesWarpwoodCairn");
+	pISInterface->RemoveTopLevelObject("TheMerchantsDen");
 
 	//Adventure
 	pISInterface->RemoveTopLevelObject("ALTARACCESSQUEST");
@@ -2528,7 +2544,7 @@ void updatefunction()
 	//printf("XML: %s", ISXRIPath);
 	//strcat_s(ISXRIXMLPath, "\\Extensions\\ISXRI.xml");
 	//string sfilename = filename;
-	ISXRIPath += "\\Extensions\\ISXDK35\\ISXRI.dll";
+	ISXRIPath += "\\x64\\Extensions\\ISXDK35\\ISXRI.dll";
 	ISXRIXMLPath += "\\RI\\RI.xml";
 	ISXRZXMLPath += "\\RI\\RZ.xml";
 	ISXRZoXMLPath += "\\RI\\RZo.xml";
@@ -2719,7 +2735,7 @@ void updatefunction()
 		filenameoldstr.erase(filenameoldstr.end() - 4, filenameoldstr.end());
 		filenameoldstr += "old.dll";
 		//printf("filenameoldstr: %s", filenameoldstr);
-		filenameoldstr2 = "Extensions\\\\ISXDK35\\\\" + filenameoldstr;
+		filenameoldstr2 = "x64\\\\Extensions\\\\ISXDK35\\\\" + filenameoldstr;
 		//printf("filenameoldstr2: %s", filenameoldstr2);
 		strcat_s(charremove, filenameoldstr2.c_str());
 		strcat_s(charremove,charremove2);
@@ -2784,7 +2800,7 @@ void updaterfunction()
 	//strcat_s(ISXRIXMLPath, "\\Extensions\\ISXRI.xml");
 	//string sfilename = filename;
 	//ISXRIPath += "\\Extensions\\ISXDK35\\" + sfilename;
-	ISXRIPath += "\\Extensions\\ISXDK35\\ISXRI.dll";
+	ISXRIPath += "\\x64\\Extensions\\ISXDK35\\ISXRI.dll";
 
 	//printf("Folder: %s", InnerspacePath);
 	//printf("DLL: %s", ISXRIPath);
@@ -38627,6 +38643,222 @@ bool __cdecl TLO_MahngaviWastesWarpwoodCairn(int argc, char* argv[], LSTYPEVAR& 
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_TheMerchantsDen(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TheMerchantsDen) / sizeof(TheMerchantsDen[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TheMerchantsDen[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_CompetitiveMarketStrategies(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(CompetitiveMarketStrategies) / sizeof(CompetitiveMarketStrategies[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = CompetitiveMarketStrategies[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ContractTermination(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ContractTermination) / sizeof(ContractTermination[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ContractTermination[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_CutthroatCompetition(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(CutthroatCompetition) / sizeof(CutthroatCompetition[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = CutthroatCompetition[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_StorageWars(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(StorageWars) / sizeof(StorageWars[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = StorageWars[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TravelersKunarkCatalogAroundtheLanding(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TravelersKunarkCatalogAroundtheLanding) / sizeof(TravelersKunarkCatalogAroundtheLanding[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersKunarkCatalogAroundtheLanding[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -38638,6 +38870,10 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 		pISInterface->AddTopLevelObject(argv[1], fLSTopLevelObject(argv[2]));*/
 
 		string tlo = argv[1];
+
+		//Yunzi 2022
+		if (tlo == "TRAVELERSKUNARKCATALOGAROUNDTHELANDING")
+			pISInterface->AddTopLevelObject("TRAVELERSKUNARKCATALOGAROUNDTHELANDING", TLO_TravelersKunarkCatalogAroundtheLanding);
 
 		//VoV
 		//Quests
@@ -38661,6 +38897,14 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("TROUBLEFORCAMPNARADASA", TLO_TroubleforCampNaradasa);
 		if (tlo == "UNDEADRECKONING")
 			pISInterface->AddTopLevelObject("UNDEADRECKONING", TLO_UndeadReckoning);
+		if (tlo == "COMPETITIVEMARKETSTRATEGIES")
+			pISInterface->AddTopLevelObject("COMPETITIVEMARKETSTRATEGIES", TLO_CompetitiveMarketStrategies);
+		if (tlo == "CONTRACTTERMINATION")
+			pISInterface->AddTopLevelObject("CONTRACTTERMINATION", TLO_ContractTermination);
+		if (tlo == "CUTTHROATCOMPETITION")
+			pISInterface->AddTopLevelObject("CUTTHROATCOMPETITION", TLO_CutthroatCompetition);
+		if (tlo == "STORAGEWARS")
+			pISInterface->AddTopLevelObject("STORAGEWARS", TLO_StorageWars);
 
 		//Instances
 		if (tlo == "CastleVacrulCavernsoftheForsaken")
@@ -38685,6 +38929,8 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("KaruupaJunglePredatorsPerch", TLO_KaruupaJunglePredatorsPerch);
 		if (tlo == "MahngaviWastesWarpwoodCairn")
 			pISInterface->AddTopLevelObject("MahngaviWastesWarpwoodCairn", TLO_MahngaviWastesWarpwoodCairn);
+		if (tlo == "TheMerchantsDen")
+			pISInterface->AddTopLevelObject("TheMerchantsDen", TLO_TheMerchantsDen);
 
 		//Adventure
 		if (tlo == "ALTARACCESSQUEST")

@@ -5837,6 +5837,110 @@
 ;				Stenkannreif
 ;					Now Walks for fight
 
+;v6.67 Changes 4-29-22
+;	RQ
+;		Added:
+;			Storage Wars
+;			Competitive Market Strategies
+;			Contract Termination
+;			Cut-throat Competition
+;	RZ
+;		Added:
+;			The Merchant's Den [Solo]
+;	RI
+;		Added:
+;			The Merchant's Den
+;				Pathing throughout zone
+;				Added:
+;					 Captain Twoshanks (RI Pull Twoshanks)
+;						Lockspots toons	
+;						Autotargets Adds					
+;					 Grimalda Goodhand (RI Pull Grimalda)
+;						Lockspots toons
+;						Autotargets Adds
+;					 Gelda Glintswift (RI Pull Gelda)
+;						Lockspots toons
+;						Autotargets Adds
+;						Moves to an Destroys Bubbles
+;					 Elder Furdock (RI Pull Furdock)
+;						Lockspots toons
+;						Autotargets Adds
+;					 Liegess Lavalle (RI Pull Lavalle)
+;						Lockspots toons
+;					 Beefcake (RI Pull Beefcake)
+;						Lockspots toons	
+;						Jousts
+;						Casts HO's as needed
+;					 Arachlord Dyrraga (RI Pull Dyrraga)
+;						Lockspots toons	
+;						Autotargets Adds
+
+;v6.68 Changes 7-1-22
+;	ISXRI
+;		Updated extension to 64 Bit
+;	RIO
+;		Fixed a bug that was not loading Quests with , in the name for Get Charged Quests Function
+;		Fixed a bug that was not buying Charged Quests
+;		Added alot of Season 4 Quests and Agents
+;	RQ
+;		What Lies Beneath
+;			Fixed a typo on arcannium
+
+;v6.69 Changes 7-17-22
+;	RZ
+;		Updated RZ FG, RZ MW and RZ FGMD to Support DBG Change to Renfry's Basement Bauble
+;			Will now choose Forlorn Gist
+;	RIO
+;		Fixed a EQ2UIPage Syntax Error
+;	RunInstances
+;		Fixed alot of EQ2UIPage Syntax Errors
+
+;v6.70 Changes 7-18-22
+;	ISXRI
+;		Fixed an issue with the updater function
+;			most everyone will need to manually update from
+;			http:\\www.isxri.com\Download.html
+;			Download the DLL and put in your 
+;			innerspace/x64/Extensions/ISXDK35 folder
+
+;v6.71 Changes 8-5-22
+;	RQ
+;		Modified:
+;			VoV Weekly Tradeskill Mission
+;			VoV Daily Tradeskill Mission
+;				Updated for new usage of Renfry's Bauble
+
+;v6.72 Changes 10-1-22
+;	RQ
+;		Added:
+;			Yunzi Timeline
+;				Will run all yunzi quests in order
+;					There is however a Caveat, if you completed any of the yunzi quests 
+;					on a toon other than the one you run this on it will fail because the
+;					yunzi quests are account wide completions, BUT it doesnt show completed on
+;					anyone but the toon that actually completed it
+;			Traveler's Kunark Catalog: Around the Landing
+
+
+;ISXRI - v6.71 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
+
+;----not done below yet
+;v6.71 Changes 7-1-22
+;	RZ
+;		Added:
+;			Svarni Expanse: Carrion Crag [Heroic II]
+;	RI
+;		Modified
+;			Svarni Expanse: Carrion Crag
+;				Modified:
+;					High Shikari Olyxa
+;						Tweaked movement a little
+;						Will now interrupt Triage
+;					Skulkor
+;						Modified LockSpot
+;					Gangrerious
+;						Modified LockSpot
+;						Now Jousts Searches
 
 ;RunQuest - Runs a quest with RQ\n\nArgument 1: For Who\nArgument 2: Quest Name]
 
@@ -5868,7 +5972,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.65
+variable(global) float RI_Var_Float_Version=6.72
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -8919,6 +9023,8 @@ objectdef RIMovementObject
 	function CheckShiny()
 	{
 		variable int _ClosestPoint
+		variable int _failcntshiny=0
+		variable int _combatshinycount
 		;; need to do a couple things here in this order, 1 - if Shiny's X is more than 1.5 > than Me.X then face shiny and do jump up function, -- DONE
 		;; 2 - record the amount of times this function is called (after the closest point return) on the same Shiny ID (use globalvar), if>5 then 
 		;; add to ignore index (which we will reset everytime you zone like the chest index) -- DONE
@@ -8940,135 +9046,139 @@ objectdef RIMovementObject
 		if ${RI_Var_Bool_ShinyDebug}
 			echo Query: ${RI_Var_String_Query}
 
-		;this is where we put ignore shinys that are retardedly placed gonna make it an index but this works for now
-		if ( ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].X}==-123.940010 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Y}==180.789993 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Z}==-211.589996 ) || ( ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].X}==-131.169998 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Y}==62.639999 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Z}==-397.750000 )
-			RI_Var_Int_ShinyID:Set[0]
-		else
-			RI_Var_Int_ShinyID:Set[${Actor[Query, ${RI_Var_String_Query} && Distance<=${ShinyScanDistance}].ID}]
+		while ${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}](exists)} && ${_failcntshiny:Inc}<5
+		{	
+			if ${Math.Distance[${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}].Y},${Me.Y}]}>9
+				return
+			;this is where we put ignore shinys that are retardedly placed gonna make it an index but this works for now
+			if ( ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].X}==-123.940010 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Y}==180.789993 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Z}==-211.589996 ) || ( ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].X}==-131.169998 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Y}==62.639999 && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}].Z}==-397.750000 )
+				RI_Var_Int_ShinyID:Set[0]
+			else
+				RI_Var_Int_ShinyID:Set[${Actor[Query, ${RI_Var_String_Query} && Distance<=${ShinyScanDistance}].ID}]
 
-		_ClosestPoint:Set[${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${RI_Var_Int_ShinyID}].Loc}",${RI_Var_Int_ShinyClosestPointScanPoints}]}]
+			_ClosestPoint:Set[${RIObj.ClosestPoint[${MainArrayCounter},"${Actor[id,${RI_Var_Int_ShinyID}].Loc}",${RI_Var_Int_ShinyClosestPointScanPoints}]}]
 
-		if ${RI_Var_Bool_ShinyDebug}
-			echo Shiny Found: ${Actor[id, ${RI_Var_Int_ShinyID}]}: ${Actor[id, ${RI_Var_Int_ShinyID}].ID} // ${RI_Var_Int_ShinyID} // ${Actor[id,${RI_Var_Int_ShinyID}].Loc} // ${_ClosestPoint}!=${MainArrayCounter} 
-
-		if ${RI_Var_Int_ShinyID}==0 || ${RIMUIObj.InvalidShinyCheck[${RI_Var_Int_ShinyID}]}
-		{
 			if ${RI_Var_Bool_ShinyDebug}
-				echo ISXRI: Shiny ${RI_Var_Int_ShinyID}:${Actor[id,${RI_Var_Int_ShinyID}].Name} at ${Actor[id,${RI_Var_Int_ShinyID}].Distance} is BAD leaving function
-			return
-		}
-		if !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[${RI_Var_Int_ShinyID}].X},${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+1]},${Actor[${RI_Var_Int_ShinyID}].Z}]}
-		{
-			if ${_ClosestPoint}!=${MainArrayCounter}
+				echo Shiny Found: ${Actor[id, ${RI_Var_Int_ShinyID}]}: ${Actor[id, ${RI_Var_Int_ShinyID}].ID} // ${RI_Var_Int_ShinyID} // ${Actor[id,${RI_Var_Int_ShinyID}].Loc} // ${_ClosestPoint}!=${MainArrayCounter} 
+
+			if ${RI_Var_Int_ShinyID}==0 || ${RIMUIObj.InvalidShinyCheck[${RI_Var_Int_ShinyID}]}
 			{
 				if ${RI_Var_Bool_ShinyDebug}
-					echo closest point doesnt match // ${_ClosestPoint}!=${MainArrayCounter}
+					echo ISXRI: Shiny ${RI_Var_Int_ShinyID}:${Actor[id,${RI_Var_Int_ShinyID}].Name} at ${Actor[id,${RI_Var_Int_ShinyID}].Distance} is BAD leaving function
 				return
 			}
-
-			if ${RI_Var_Int_ShinyID}==${RI_Var_Int_LastShinyID}
+			if !${EQ2.CheckCollision[${Me.X},${Math.Calc[${Me.Y}+1]},${Me.Z},${Actor[${RI_Var_Int_ShinyID}].X},${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+1]},${Actor[${RI_Var_Int_ShinyID}].Z}]}
 			{
-				RI_Var_Int_SameShinyCount:Inc
-				if ${RI_Var_Int_SameShinyCount}>4
+				if ${_ClosestPoint}!=${MainArrayCounter}
 				{
-					RI_Var_IndexInt_InvalidShiny:Insert[${RI_Var_Int_ShinyID}]
+					if ${RI_Var_Bool_ShinyDebug}
+						echo closest point doesnt match // ${_ClosestPoint}!=${MainArrayCounter}
 					return
 				}
-			}
-			else
-				RI_Var_Int_SameShinyCount:Set[0]
-			RI_Var_Int_LastShinyID:Set[${RI_Var_Int_ShinyID}]
-			GrabingShinys:Set[1]
-			if ${Devel.Equal[TRUE]} && ${Actor[id,${RI_Var_Int_ShinyID}].Name.Equal["?"]} 
-				RIMUIObj:LootOptions[ALL,RR]
-			if ${RI_Var_Bool_Debug}
-				echo ${Time}: Shiny is close enough being ${Actor[${RI_Var_Int_ShinyID}].Distance}
-			press -release ${RI_Var_String_ForwardKey}
-			Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
-			wait 1
-			if ${Me.TargetLOS} || ${Actor[id,${RI_Var_Int_ShinyID}].Name.NotEqual["?"]}
-			{
-				relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[1]
-				LootWindow:Close
-				wait 2
-				LootWindow:Close
-				if ${RI_Var_Bool_Debug}
-					echo ${Time}: Shiny is in LOS
-				wait 2
-				TempX:Set[${Me.X}]
-				TempY:Set[${Me.Y}]
-				TempZ:Set[${Me.Z}]
-				wait 5
-				call This.follow
-				call This.Move ${Actor[${RI_Var_Int_ShinyID}].X} ${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+0.01]} ${Actor[${RI_Var_Int_ShinyID}].Z} ${RI_Var_Int_ShinyMoveDistance} 10 FALSE TRUE TRUE FALSE TRUE
-				declare count int 0
-				for (count:Set[1];${count}<50;count:Inc)
+
+				if ${RI_Var_Int_ShinyID}==${RI_Var_Int_LastShinyID}
 				{
-					call This.CheckCombat
-					wait 1
-				}
-				
-				;check our shinys Y position vs ours
-				if !${RI_Var_Bool_IgnoreShinyY}
-				{
-					if ${Actor[id,${RI_Var_Int_ShinyID}].Name.Equal["?"]} && ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1 && ${Actor[id,${RI_Var_Int_ShinyID}].Y}>${Me.Y}
+					RI_Var_Int_SameShinyCount:Inc
+					if ${RI_Var_Int_SameShinyCount}>4
 					{
-						Actor[id,${RI_Var_Int_ShinyID}]:DoFace
-						wait 1
-						relay ${RI_Var_String_RelayGroup} RIMUIObj:JumpUp[ALL,${Me.X},${Me.Y},${Me.Z},${Math.Calc[${Me.Y}+.2]},${Me.Heading},5]
-						wait 100 ${RIMObj.AllGroupWithinRange[1.2]}
-						for (count:Set[1];${count}<50;count:Inc)
-						{
-							call This.CheckCombat
-							wait 1
-						}
+						RI_Var_IndexInt_InvalidShiny:Insert[${RI_Var_Int_ShinyID}]
+						return
 					}
 				}
-				;target shiney click it and lootall
-				if ${RI_Var_Bool_WaitForShinys}
+				else
+					RI_Var_Int_SameShinyCount:Set[0]
+				RI_Var_Int_LastShinyID:Set[${RI_Var_Int_ShinyID}]
+				GrabingShinys:Set[1]
+				if ${Devel.Equal[TRUE]} && ${Actor[id,${RI_Var_Int_ShinyID}].Name.Equal["?"]} 
+					RIMUIObj:LootOptions[ALL,RR]
+				if ${RI_Var_Bool_Debug}
+					echo ${Time}: Shiny is close enough being ${Actor[${RI_Var_Int_ShinyID}].Distance}
+				press -release ${RI_Var_String_ForwardKey}
+				Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
+				wait 1
+				if ${Me.TargetLOS} || ${Actor[id,${RI_Var_Int_ShinyID}].Name.NotEqual["?"]}
 				{
-					while ${Actor[id,${RI_Var_Int_ShinyID}](exists)}
-						wait 50
+					relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[1]
+					LootWindow:Close
+					wait 2
+					LootWindow:Close
+					if ${RI_Var_Bool_Debug}
+						echo ${Time}: Shiny is in LOS
+					wait 2
+					TempX:Set[${Me.X}]
+					TempY:Set[${Me.Y}]
+					TempZ:Set[${Me.Z}]
+					wait 5
+					call This.follow
+					call This.Move ${Actor[${RI_Var_Int_ShinyID}].X} ${Math.Calc[${Actor[${RI_Var_Int_ShinyID}].Y}+0.01]} ${Actor[${RI_Var_Int_ShinyID}].Z} ${RI_Var_Int_ShinyMoveDistance} 10 FALSE TRUE TRUE FALSE TRUE
+					_combatshinycount:Set[0]
+					for (_combatshinycount:Set[1];${_combatshinycount}<50;_combatshinycount:Inc)
+					{
+						call This.CheckCombat
+						wait 1
+					}
+					;check our shinys Y position vs ours  /// need to edit to only enact if it detects cant see target
+					if !${RI_Var_Bool_IgnoreShinyY}
+					{
+						if ${Actor[id,${RI_Var_Int_ShinyID}].Name.Equal["?"]} && ${Math.Distance[${Me.Y},${Actor[id,${RI_Var_Int_ShinyID}].Y}]}>1 && ${Actor[id,${RI_Var_Int_ShinyID}].Y}>${Me.Y}
+						{
+							Actor[id,${RI_Var_Int_ShinyID}]:DoFace
+							wait 1
+							relay ${RI_Var_String_RelayGroup} RIMUIObj:JumpUp[ALL,${Me.X},${Me.Y},${Me.Z},${Math.Calc[${Me.Y}+.2]},${Me.Heading},5]
+							wait 100 ${RIMObj.AllGroupWithinRange[1.2]}
+							for (count:Set[1];${count}<50;count:Inc)
+							{
+								call This.CheckCombat
+								wait 1
+							}
+						}
+					}
+					;target shiney click it and lootall
+					if ${RI_Var_Bool_WaitForShinys}
+					{
+						while ${Actor[id,${RI_Var_Int_ShinyID}](exists)}
+							wait 50
+					}
+					else
+					;if ${Developer}
+					;{
+						relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
+						waitframe
+						relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${RI_Var_Int_ShinyID}]:DoubleClick
+					;}
+					;else
+					;{
+					;	Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
+					;	waitframe
+					;	Actor[id,${RI_Var_Int_ShinyID}]:DoubleClick
+					;}
+					wait 10
+					LootWindow:LootAll
+					;wait 20
+					wait 50
+					;
+					;;;;;
+					if ${EQ2UIPage[Journals,JournalsQuest].IsVisible} && ${EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].IsEnabled}
+					{	
+						wait 5
+						EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
+						wait 5
+						EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
+						wait 5
+						EQ2UIPage[Journals,JournalsQuest]:Close
+					}
+					relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
+					call This.Move ${TempX} ${TempY} ${TempZ} ${Precision} 10 TRUE TRUE TRUE FALSE TRUE
 				}
 				else
-				;if ${Developer}
-				;{
-					relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
-					waitframe
-					relay ${RI_Var_String_RelayGroup} -noredirect Actor[id,${RI_Var_Int_ShinyID}]:DoubleClick
-				;}
-				;else
-				;{
-				;	Actor[id,${RI_Var_Int_ShinyID}]:DoTarget
-				;	waitframe
-				;	Actor[id,${RI_Var_Int_ShinyID}]:DoubleClick
-				;}
-				wait 10
-				LootWindow:LootAll
-				;wait 20
-				wait 50
-				;
-				;;;;;
-				if ${EQ2UIPage[Journals,JournalsQuest].IsVisible} && ${EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].IsEnabled}
-				{	
-					wait 5
-					EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
-					wait 5
-					EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
-					wait 5
-					EQ2UIPage[Journals,JournalsQuest]:Close
+				{
+					if ${RI_Var_Bool_Debug}
+						echo ${Time}: Shiny not in LOS
+					eq2ex target_none
 				}
-				relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[0]
-				call This.Move ${TempX} ${TempY} ${TempZ} ${Precision} 10 TRUE TRUE TRUE FALSE TRUE
 			}
-			else
-			{
-				if ${RI_Var_Bool_Debug}
-					echo ${Time}: Shiny not in LOS
-				eq2ex target_none
-			}
-			GrabingShinys:Set[0]
 		}
+		GrabingShinys:Set[0]
 		if ${RI_Var_Bool_Debug}
 			echo ISXRI: ${Time}: Ending CheckShiny
 	}
@@ -9559,14 +9669,12 @@ objectdef RIMovementObject
 			;check for a Shiny if set
 			if ${RI_Var_Bool_GrabShinys} && !${RI_Var_Bool_QuestMode} && ${StopForCombat} && !${SkipCheck} && !${RI_Var_Bool_GlobalOthers} && ${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}](exists)} 
 			{
-				if ( !${Actor[NamedNPC,radius,50](exists)} || ${Math.Distance[${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}>10 ) && ${Math.Distance[${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}].Y},${Me.Y}]}<10
-				{
-					RI_Var_Int_ShinyID:Set[${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}].ID}]
-					if ${RI_Var_Bool_ShinyDebug}
-						echo ${Time}: Closest Shiny ID: ${RI_Var_Int_ShinyID} @ ${Actor[${RI_Var_Int_ShinyID}].X} ${Actor[${RI_Var_Int_ShinyID}].Y} ${Actor[${RI_Var_Int_ShinyID}].Z} Which is ${Actor[${RI_Var_Int_ShinyID}].Distance} Away
-					;press -release ${RI_Var_String_ForwardKey}
-					call This.CheckShiny
-				}
+				if ${RI_Var_Bool_ShinyDebug}
+					echo ISXRI: ${Time}: Checking for Shiny: NamedNPC Exists: ${Actor[NamedNPC,radius,50](exists)} IgnoreNamed: ${RI_Var_Bool_IgnoreNamedForShiny} Shiny Y and Named Y Distance: ${Math.Distance[${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}
+				if ${Actor[NamedNPC,radius,50](exists)} && !${RI_Var_Bool_IgnoreNamedForShiny} && ${Math.Distance[${Actor[Query, ${RI_Var_String_Query} && Distance <= ${ShinyScanDistance}].Y},${Actor[NamedNPC,radius,50].Y}]}<11
+					return
+				
+				call This.CheckShiny
 			}
 			;press autorun key (stop move)
 			; if ${UseRI_Var_String_ForwardKey} && !${Me.FlyingUsingMount} && 
@@ -11150,6 +11258,7 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Yun Zi]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Around the Landing"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Getting a Feel For Frostfell"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Evoking Love"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - More than Beer?"]
@@ -11302,6 +11411,10 @@ objectdef RIMUIObject
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
 				UIElement[QuestsListBox@RI]:AddItem["Familiars Wild"]
+				UIElement[QuestsListBox@RI]:AddItem[Storage Wars]
+				UIElement[QuestsListBox@RI]:AddItem[Competitive Market Strategies]
+				UIElement[QuestsListBox@RI]:AddItem[Contract Termination]
+				UIElement[QuestsListBox@RI]:AddItem[Cut-throat Competition,Repeatable,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem[Guide Quest: Guide's Guide to Visions of Vetrovia]
 				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia Timeline,0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem[Flotsam For the Boatswain]

@@ -2438,6 +2438,21 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
 			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["The Merchant's Den [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["The Merchant's Den [Solo]"]
+			ZoneFrom:Insert["Forlorn Gist Merchants Den"]
+			ZoneTimer:Insert[1080]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["Zone to Merchant Den"]
+			ZoneEntranceLoc:Insert["-289.55 53.67 -345.43"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[64800]
 		}
 	}
 	
@@ -2840,6 +2855,7 @@ function BuyBauble(string _VendorName, string _Which)
 }
 function Goto(string _WhereToGo)
 {
+	;echo ${_WhereToGo}
 	wait 10
 	if ${_WhereToGo.Upper.Equal[MWG]}
 	{
@@ -2897,6 +2913,16 @@ function Goto(string _WhereToGo)
 	if ${_WhereToGo.Upper.Equal[FGO]}
 	{
 		_WhereToGo:Set["Forlorn Gist"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[FGMD]}
+	{
+		_WhereToGo:Set["Forlorn Gist Merchants Den"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ FGMDO
+	}
+	if ${_WhereToGo.Upper.Equal[FGMDO]}
+	{
+		_WhereToGo:Set["Forlorn Gist Merchants Den"]
 		Others:Set[TRUE]
 	}
 	if ${_WhereToGo.Upper.Equal[B]}
@@ -3022,7 +3048,7 @@ function Goto(string _WhereToGo)
 	variable string _WhereToGoShort
 	_WhereToGoShort:Set["${_WhereToGo.Replace[" ",""].Replace["[",""].Replace["]",""].Replace["'",""]}"]
 	
-	if ( !${_WhereToGoShort.Find[MahngaviWastesGhoulinda](exists)} && !${_WhereToGoShort.Find[KaruupaJunglePredatorsPerch](exists)} && !${_WhereToGoShort.Find[KaruupaJungleDedrakasDescent](exists)} && !${_WhereToGoShort.Find[KaruupaJungleHeartofConflict](exists)} && !${_WhereToGoShort.Find[KaruupaJungle](exists)} && !${_WhereToGoShort.Find[MahngaviWastes](exists)} && !${_WhereToGoShort.Find[SvarniExpanse](exists)} && !${_WhereToGoShort.Find[ForlornGist](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicketLodaKaiIsle](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicket](exists)} && ${_WhereToGoShort.NotEqual[LopingPlains]} && ${_WhereToGoShort.NotEqual[EchoCaverns]} && ${_WhereToGoShort.NotEqual[CityofFordelMidst]} && !${_WhereToGoShort.Find[SavageWeald](exists)} && !${_WhereToGoShort.Find[CityofSharVahl](exists)} && ${_WhereToGoShort.NotEqual[Baubles]} && ${_WhereToGoShort.NotEqual[AurelianCoast]} && ${_WhereToGoShort.NotEqual[SanctusSeruCity]} && ${_WhereToGoShort.NotEqual[Wracklands]})
+	if ( !${_WhereToGoShort.Find[ForlornGistMerchantsDen](exists)} && !${_WhereToGoShort.Find[MahngaviWastesGhoulinda](exists)} && !${_WhereToGoShort.Find[KaruupaJunglePredatorsPerch](exists)} && !${_WhereToGoShort.Find[KaruupaJungleDedrakasDescent](exists)} && !${_WhereToGoShort.Find[KaruupaJungleHeartofConflict](exists)} && !${_WhereToGoShort.Find[KaruupaJungle](exists)} && !${_WhereToGoShort.Find[MahngaviWastes](exists)} && !${_WhereToGoShort.Find[SvarniExpanse](exists)} && !${_WhereToGoShort.Find[ForlornGist](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicketLodaKaiIsle](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicket](exists)} && ${_WhereToGoShort.NotEqual[LopingPlains]} && ${_WhereToGoShort.NotEqual[EchoCaverns]} && ${_WhereToGoShort.NotEqual[CityofFordelMidst]} && !${_WhereToGoShort.Find[SavageWeald](exists)} && !${_WhereToGoShort.Find[CityofSharVahl](exists)} && ${_WhereToGoShort.NotEqual[Baubles]} && ${_WhereToGoShort.NotEqual[AurelianCoast]} && ${_WhereToGoShort.NotEqual[SanctusSeruCity]} && ${_WhereToGoShort.NotEqual[Wracklands]})
 	{
 		;echo ${_WhereToGoShort}
 		echo ISXRI: ${_WhereToGo} is not a Predetermined Goto Location
@@ -3059,6 +3085,11 @@ function Goto(string _WhereToGo)
 	{
 		;we are at ForlornGist
 		_WhereFrom:Set["Forlorn Gist"]
+	}
+	elseif ${Zone.Name.Find[Forlorn Gist]} && ${Me.Distance[-289.55,53.67,-345.43]}<75
+	{
+		;we are at ForlornGist
+		_WhereFrom:Set["Forlorn Gist Merchants Den"]
 	}
 	elseif ${Zone.Name.Find[Loping Plains]} && ${Me.Distance[-312.051636,15.470000,4.626971]}<55
 	{
@@ -3273,6 +3304,11 @@ function Goto(string _WhereToGo)
 	{
 		call UseBauble "Renfry's Basement Bauble" "Renfry's Basement"
 		call RenfrysBasementForlornGistInstances
+	}
+	elseif ${_WhereToGoShort.Equal[ForlornGistMerchantsDen]}
+	{
+		call UseBauble "Renfry's Basement Bauble" "Renfry's Basement"
+		call RenfrysBasementForlornGistMerchantsDen
 	}
 	elseif ${_WhereToGoShort.Equal[LopingPlains]}
 	{
@@ -3539,9 +3575,26 @@ function UseBauble(string _Which, string _ZoneName)
 	RI_CMD_PauseCombatBots 1
 	eq2ex cancel_spellcast
 	wait 2
-	Me.Inventory[Query, Name=-"${_Which}" && Location=="Inventory"]:Use
-	wait 5
-	Me.Inventory[Query, Name=-"${_Which}" && Location=="Inventory"]:Use
+	if ${_Which.Equal["Renfry's Basement Bauble"]}
+	{
+		Me.Inventory[Query, Name=-"${_Which}" && Location=="Inventory"]:Examine
+		wait 2
+		Me.Inventory[Query, Name=-"${_Which}" && Location=="Inventory"]:Examine
+		wait 2
+		Me.Inventory[Query, Name=-"${_Which}" && Location=="Inventory"]:Examine
+		wait 2
+		ReplyDialog:Choose[1]
+		wait 2
+		ReplyDialog:Choose[1]
+		wait 2
+		ReplyDialog:Choose[1]
+	}
+	else
+	{
+		Me.Inventory[Query, Name=-"${_Which}" && Location=="Inventory"]:Use
+		wait 5
+		Me.Inventory[Query, Name=-"${_Which}" && Location=="Inventory"]:Use
+	}
 	wait 50 ${EQ2.Zoning}
 	wait 600 !${EQ2.Zoning}
 	wait 50 ${Zone.Name.Equal["${_ZoneName}"]}
@@ -3551,16 +3604,88 @@ function UseBauble(string _Which, string _ZoneName)
 function RenfrysBasementForlornGistInstances()
 {
 	_PathFile:Clear
-	_PathFile:Insert[-0.18 0.02 28.59]
-	_PathFile:Insert[Custom|Wait|40]
-	_PathFile:Insert[-0.18 0.02 28.59]
-	_PathFile:Insert[Custom|Wait|10]
-	_PathFile:Insert[Custom|ZoneDoor|zone_from_forlorn_tradeskill]
+	;_PathFile:Insert[-0.18 0.02 28.59]
+	;_PathFile:Insert[Custom|Wait|40]
+	;_PathFile:Insert[-0.18 0.02 28.59]
+	;_PathFile:Insert[Custom|Wait|10]
+	;_PathFile:Insert[Custom|ZoneDoor|zone_from_forlorn_tradeskill]
 	if !${Others}
 	{
 		_PathFile:Insert[-326.30 13.94 52.29]
 		_PathFile:Insert[Custom|HailActor|a forlorn stable master|2]
 		_PathFile:Insert[Custom|WaitWhileMoving]
+	}
+	
+	call NavigatePath
+}
+function RenfrysBasementForlornGistMerchantsDen()
+{
+	_PathFile:Clear
+	;_PathFile:Insert[-0.18 0.02 28.59]
+	;_PathFile:Insert[Custom|Wait|40]
+	;_PathFile:Insert[-0.18 0.02 28.59]
+	;_PathFile:Insert[Custom|Wait|10]
+	;_PathFile:Insert[Custom|ZoneDoor|zone_from_forlorn_tradeskill]
+	if !${Others}
+	{
+		_PathFile:Insert[-353.74 13.60 60.38]
+		_PathFile:Insert[-348.66 13.18 51.72]
+		_PathFile:Insert[-343.92 13.43 42.76]
+		_PathFile:Insert[-339.10 13.61 33.76]
+		_PathFile:Insert[-333.87 13.54 24.93]
+		_PathFile:Insert[-328.97 10.47 16.74]
+		_PathFile:Insert[-324.22 6.51 8.78]
+		_PathFile:Insert[-321.24 5.40 -0.92]
+		_PathFile:Insert[-322.89 4.17 -11.00]
+		_PathFile:Insert[-325.92 2.97 -20.46]
+		_PathFile:Insert[-329.15 2.17 -30.01]
+		_PathFile:Insert[-332.45 1.79 -39.69]
+		_PathFile:Insert[-335.68 1.01 -49.15]
+		_PathFile:Insert[-338.91 0.87 -58.66]
+		_PathFile:Insert[-342.21 0.24 -68.32]
+		_PathFile:Insert[-345.52 -0.01 -78.06]
+		_PathFile:Insert[-348.81 -0.10 -87.70]
+		_PathFile:Insert[-352.04 0.31 -97.18]
+		_PathFile:Insert[-355.32 0.32 -106.80]
+		_PathFile:Insert[-358.70 0.32 -116.49]
+		_PathFile:Insert[-362.59 0.49 -126.04]
+		_PathFile:Insert[-366.48 0.54 -135.41]
+		_PathFile:Insert[-370.56 0.49 -144.55]
+		_PathFile:Insert[-375.64 0.32 -153.18]
+		_PathFile:Insert[-381.97 0.32 -161.23]
+		_PathFile:Insert[-388.46 0.23 -169.30]
+		_PathFile:Insert[-394.82 -0.19 -177.20]
+		_PathFile:Insert[-400.70 -0.03 -185.52]
+		_PathFile:Insert[-401.53 0.03 -195.76]
+		_PathFile:Insert[-398.12 0.45 -205.30]
+		_PathFile:Insert[-391.82 2.15 -212.95]
+		_PathFile:Insert[-384.21 4.19 -219.39]
+		_PathFile:Insert[-375.90 6.04 -224.66]
+		_PathFile:Insert[-367.07 8.45 -228.95]
+		_PathFile:Insert[-357.59 10.14 -233.25]
+		_PathFile:Insert[-348.33 11.26 -237.39]
+		_PathFile:Insert[-338.90 13.03 -241.29]
+		_PathFile:Insert[-329.81 15.02 -245.04]
+		_PathFile:Insert[-320.82 16.38 -249.41]
+		_PathFile:Insert[-311.94 17.38 -254.84]
+		_PathFile:Insert[-304.05 19.30 -260.98]
+		_PathFile:Insert[-294.86 21.66 -263.19]
+		_PathFile:Insert[-287.64 26.31 -268.68]
+		_PathFile:Insert[-282.07 34.00 -272.47]
+		_PathFile:Insert[-274.81 38.43 -278.15]
+		_PathFile:Insert[-267.48 39.39 -285.00]
+		_PathFile:Insert[-260.61 39.47 -292.65]
+		_PathFile:Insert[-254.18 38.51 -300.27]
+		_PathFile:Insert[-250.09 38.56 -309.66]
+		_PathFile:Insert[-246.48 42.92 -318.13]
+		_PathFile:Insert[-244.67 48.03 -326.98]
+		_PathFile:Insert[-248.03 51.72 -336.89]
+		_PathFile:Insert[-251.64 53.64 -344.78]
+		_PathFile:Insert[-261.84 53.43 -345.72]
+		_PathFile:Insert[-272.11 53.52 -345.08]
+		_PathFile:Insert[-282.33 53.52 -345.33]
+		_PathFile:Insert[-289.55 53.67 -345.43]
+		_PathFile:Insert[Custom|Wait|20]
 	}
 	
 	call NavigatePath
@@ -3665,11 +3790,11 @@ function MahngaviWastesEntranceMahngaviWastesInstances()
 function RenfrysBasementMahngaviWastesEntrance()
 {
 	_PathFile:Clear
-	_PathFile:Insert[-0.12 0.02 28.71]
-	_PathFile:Insert[Custom|Wait|40]
-	_PathFile:Insert[-0.12 0.02 28.71]
-	_PathFile:Insert[Custom|Wait|10]
-	_PathFile:Insert[Custom|ZoneDoor|zone_from_forlorn_tradeskill]
+	;_PathFile:Insert[-0.12 0.02 28.71]
+	;_PathFile:Insert[Custom|Wait|40]
+	;_PathFile:Insert[-0.12 0.02 28.71]
+	;_PathFile:Insert[Custom|Wait|10]
+	;_PathFile:Insert[Custom|ZoneDoor|zone_from_forlorn_tradeskill]
 	_PathFile:Insert[-349.92 13.21 56.56]
 	_PathFile:Insert[-345.51 13.23 47.52]
 	_PathFile:Insert[-341.21 13.59 38.49]
@@ -4844,11 +4969,11 @@ function HailActor(... args)
 				continue	
 			}
 			
-			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText]}"]
-			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,1](exists)}
-				relay ${_Relay} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}]:LeftClick
+			_tempbtntxt:Set["${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}].GetProperty[LocalText]}"]
+			if ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[1](exists)}
+				relay ${_Relay} -noredirect EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}]:LeftClick
 			wait 5
-			wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]}
+			wait 50 ${EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[${_ResponseNumber}].GetProperty[LocalText].NotEqual["${_tempbtntxt}"]}
 			;|| !${EQ2UIPage[ProxyActor,Conversation].IsVisible}
 		}
 		;unpause bots
@@ -5737,7 +5862,12 @@ function Zone(int _IndexPosition)
 		;echo ISXRI: We are not in Mahngavi Wastes we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
 		call Goto MW
 	}
-	if ${ZoneFrom.Get[${_IndexPosition}].Find["Forlorn Gist"](exists)} && ( !${Zone.Name.Find["Forlorn Gist"](exists)} || ${Me.Distance[434.29,108.74,205.00]}>75 )
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Forlorn Gist Merchants Den"](exists)} && ( !${Zone.Name.Find["Forlorn Gist"](exists)} || ${Me.Distance[-289.55,53.67,-345.43]}>75 )
+	{
+		;echo ISXRI: We are not in Forlorn Gist we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto FGMD
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Forlorn Gist"](exists)} && !${ZoneFrom.Get[${_IndexPosition}].Find["Forlorn Gist Merchants Den"](exists)} && ( !${Zone.Name.Find["Forlorn Gist"](exists)} || ${Me.Distance[434.29,108.74,205.00]}>75 )
 	{
 		;echo ISXRI: We are not in Forlorn Gist we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
 		call Goto FG

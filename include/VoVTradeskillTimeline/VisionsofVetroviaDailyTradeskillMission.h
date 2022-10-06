@@ -3,7 +3,7 @@ string VisionsofVetroviaDailyTradeskillMission[] = {"Visions of Vetrovia Daily T
 "CheckAndSet -InZone \"Renfry's Basement\" 10", 
 "0 0 0", 
 "Custom", 
-"UseItem \"Renfry's Basement Bauble\"", 
+"UseRenfry", 
 "0 0 0", 
 "Custom", 
 "WaitForZoning", 

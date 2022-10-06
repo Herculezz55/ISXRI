@@ -1,6 +1,6 @@
 What Lies Beneath
 Custom
-CheckPreReqs -completedquest "The Captain's Lament" -itemqty "arcannium" 2 -itemqty "effulgent candle" 1 -itemqty "effulgent coal" 5 -itemqty "effulgent incense" 3 -itemqty "Thaumic Coal" 34 -itemqty "Thaumic Incense" 1 -itemqty "arcannium cluster" 2 -itemqty "adamantine cluster" 1 -itemqty "bornite nodule" 32 -itemqty "cadmium ore" 1 -itemqty "ferrite cluster" 1 -itemqty "incandescent material" 2 -itemqty "Malduran lumber" 3 -itemqty "rhenium ore" 1 -itemqty "splitiron ore" 9 -itemqty "thalumbral root" 10 -itemqty "thaumic material" 1 -itemqty "titanium ore" 1 -itemqty "umbrite" 40
+CheckPreReqs -completedquest "The Captain's Lament" -itemqty "arcannium" 2 -itemqty "effulgent candle" 1 -itemqty "effulgent coal" 5 -itemqty "effulgent incense" 3 -itemqty "Thaumic Coal" 34 -itemqty "Thaumic Incense" 1 -itemqty "adamantine cluster" 1 -itemqty "bornite nodule" 32 -itemqty "cadmium ore" 1 -itemqty "ferrite cluster" 1 -itemqty "incandescent material" 2 -itemqty "Malduran lumber" 3 -itemqty "rhenium ore" 1 -itemqty "splitiron ore" 9 -itemqty "thalumbral root" 10 -itemqty "thaumic material" 1 -itemqty "titanium ore" 1 -itemqty "umbrite" 40
 0 0 0
 Custom
 CheckActiveQuest "What Lies Beneath" 27
