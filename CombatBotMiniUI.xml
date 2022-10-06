@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ISUI>
+	<!-- Main Window -->
+	<Window Name='CombatBotMiniUI'>
+	<X>50</X>
+	<Y>100</Y>
+	<Width>160</Width>
+	<Height>125</Height>
+	  <TitleBar template='window.Titlebar'>
+		<Children>
+		  <Text Name='Title' Template='window.Titlebar.Title' />
+		   <commandbutton name='Custom Close Button' Template='window.Titlebar.Close'>
+			<Command>RI_Obj_CB:EndBot</Command>
+		  </commandbutton>
+		</Children>
+	  </TitleBar>
+	  <StorePosition>1</StorePosition>
+	<Title>CBv${RI_Var_Float_Version.Precision[2]}</Title>
+	<Children>
+		<Text name='MeSubClass'> 
+					<Y>3</Y> 
+					<Width>105%</Width> 
+					<Height>85</Height> 
+					<Alignment>Center</Alignment>
+					<Text>${RI_Var_String_MySubClass}</Text>
+					<Wrap />
+		</Text>
+		<Commandbutton name='Pause'>
+			<X>9</X>
+			<Y>20</Y>
+			<Width>145</Width>
+			<Height>35</Height>
+			<Text>Pause</Text>
+			<Border>0</Border>
+			<OnLeftClick>
+				if ${This.Text.Equal[Pause]}
+					RI_Obj_CB:Pause[1,1]
+				else
+					RI_Obj_CB:Pause[0]
+			</OnLeftClick>
+			<AutoTooltip>
+				Pause/Resume
+			</AutoTooltip>
+		</Commandbutton>
+		<Commandbutton name='Maximize'>
+			<X>9</X>
+			<Y>58</Y>
+			<Width>145</Width>
+			<Height>35</Height>
+			<Text>Maximize</Text>
+			<Border>0</Border>
+			<OnLeftClick>
+				if ${This.Text.Equal[Maximize]}
+				{
+					UIElement[CombatBotUI]:Show
+					This:SetText[Minimize]
+				}
+				else
+				{
+					UIElement[CombatBotUI]:Hide
+					This:SetText[Maximize]
+				}
+			</OnLeftClick>
+			<AutoTooltip>
+				Maximize CombatBot
+			</AutoTooltip>
+		</Commandbutton>
+	</Children>
+</Window>
+</ISUI>		
