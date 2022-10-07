@@ -5,7 +5,7 @@
 	<X>50</X>
 	<Y>100</Y>
 	<Width>160</Width>
-	<Height>125</Height>
+	<Height>145</Height>
 	  <TitleBar template='window.Titlebar'>
 		<Children>
 		  <Text Name='Title' Template='window.Titlebar.Title' />
@@ -64,7 +64,30 @@
 			<AutoTooltip>
 				Maximize CombatBot
 			</AutoTooltip>
-		</Commandbutton>
+    </Commandbutton>
+    <Commandbutton name='RIConsole'>
+        <X>9</X>
+        <Y>100`</Y>
+        <Width>145</Width>
+        <Height>25</Height>
+        <Text>RIConsole</Text>
+        <Border>0</Border>
+        <OnLeftClick>
+if ${This.Text.Equal[RIConsole]}
+            {
+                UIElement[RIConsole]:Show
+                This:SetText[RIConsole ON]
+            }
+            else
+            {
+                UIElement[RIConsole]:Hide
+                This:SetText[RIConsole]
+            }
+        </OnLeftClick>
+        <AutoTooltip>
+           RIConsole Toggle
+        </AutoTooltip>
+    </Commandbutton>
 	</Children>
 </Window>
-</ISUI>		
+</ISUI>	
