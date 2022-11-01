@@ -18058,7 +18058,7 @@ function QuestY(string _QN)
 	else
 		call Quest "${_QN}"
 }
-function YunziTimeline()
+function Yunzi2017Timeline()
 {
 	call QuestY "The \"Travels\" of Yun Zi - An Oasis For Your Thoughts"
 	call QuestY "The \"Travels\" of Yun Zi - In a Kingdom Far Away"
@@ -18069,6 +18069,9 @@ function YunziTimeline()
 	call QuestY "The \"Travels\" of Yun Zi - An Eternity Without You"
 	call QuestY "The \"Travels\" of Yun Zi - Tears for Fears"
 	call QuestY "The \"Travels\" of Yun Zi - An Altar-Nate Malice"
+}
+function Yunzi2018Timeline()
+{
 	call QuestY "The new \"Travels\" of Yun Zi - Antonica or Bust"
 	call QuestY "The new \"Travels\" of Yun Zi - Commonlands, Uncommon Heart"
 	call QuestY "The new \"Travels\" of Yun Zi - Run Nektulos Forest Run"
@@ -18078,6 +18081,9 @@ function YunziTimeline()
 	call QuestY "The new \"Travels\" of Yun Zi - Feerrott Not, I Shall Find You"
 	call QuestY "The new \"Travels\" of Yun Zi - Defrosting Everfrost"
 	call QuestY "The new \"Travels\" of Yun Zi - Having Fun Storming Lavastorm"
+}
+function Yunzi2019Timeline()
+{
 	call QuestY "Yet more \"Travels\" of Yun Zi - Once Again in the Desert"
 	call QuestY "Yet more \"Travels\" of Yun Zi - Skies the Limit"
 	call QuestY "Yet more \"Travels\" of Yun Zi - ECHO ECHo ECho Echo echo"
@@ -18087,6 +18093,9 @@ function YunziTimeline()
 	call QuestY "Yet more \"Travels\" of Yun Zi - Eternally Eternity"
 	call QuestY "Yet more \"Travels\" of Yun Zi - Returning to Tears"
 	call QuestY "Yet more \"Travels\" of Yun Zi - Altering the Altar"
+}
+function Yunzi2020Timeline()
+{
 	call QuestY "Traveler's Feast - Coldwind Clam Chowder"
 	call QuestY "Traveler's Feast - Darklight Beetle Omelets"
 	call QuestY "Traveler's Feast - Rivervale Ratatouille"
@@ -18096,6 +18105,9 @@ function YunziTimeline()
 	call QuestY "Traveler's Feast - Mara Mandaikon Kakiage"
 	call QuestY "Traveler's Feast - Kylong Bean Casserole"
 	call QuestY "Traveler's Feast - Othmir Pepper Pasta"
+}
+function Yunzi2021Timeline()
+{
 	call QuestY "Traveler's Holidays - Getting a Feel For Frostfell"
 	call QuestY "Traveler's Holidays - Evoking Love"
 	call QuestY "Traveler's Holidays - More than Beer?"
@@ -18105,7 +18117,29 @@ function YunziTimeline()
 	call QuestY "Traveler's Holidays - Gears and Gadgets"
 	call QuestY "Traveler's Holidays - Deadly Nights"
 	call QuestY "Traveler's Holidays - We Need a Hero!"
+}
+function Yunzi2022Timeline()
+{
 	call QuestY "Traveler's Kunark Catalog: Around the Landing"
+	call QuestY "Traveler's Kunark Catalog: Central Kylong"
+	call QuestY "Traveler's Kunark Catalog: Deeper into Kylong"
+	call QuestY "Traveler's Kunark Catalog: Focusing on Fens"
+	call QuestY "Traveler's Kunark Catalog: Not the Panda!"
+}
+function YunziTimeline()
+{
+	echo ISXRI: ${Time} Starting Yunzi 2017 Timeline
+	call Yunzi2017Timeline
+	echo ISXRI: ${Time} Starting Yunzi 2018 Timeline
+	call Yunzi2018Timeline
+	echo ISXRI: ${Time} Starting Yunzi 2019 Timeline
+	call Yunzi2019Timeline
+	echo ISXRI: ${Time} Starting Yunzi 2020 Timeline
+	call Yunzi2020Timeline
+	echo ISXRI: ${Time} Starting Yunzi 2021 Timeline
+	call Yunzi2021Timeline
+	echo ISXRI: ${Time} Starting Yunzi 2022 Timeline
+	call Yunzi2022Timeline
 }
 
 function ResetZone(string _ZoneName)
@@ -20965,8 +20999,9 @@ function Path(... args)
 				if ${_DontFinishPathWhenDone} || ( ${MainArrayCounter}<=${_start} && ${_ReversePath} ) || ( !${_ReversePath} && ${MainArrayCounter}>=${_endpoint} )
 				{
 					if ${RI_Var_Bool_PathDebug}
-						echo setting _done 
+						echo setting _done and !_goReverse 
 					_Done:Set[1]
+					_goReverse:Set[0]
 					if !${_StopForCombat}
 						call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 0 1 0 1 1 0
 					else
@@ -21698,7 +21733,7 @@ function Path(... args)
 														call RIMObj.FlyDown
 													if ${_StopForCombat}
 														call RIMObj.CheckCombat
-													echo call CCID
+													;echo call CCID
 													call CatalogCreatureID ${_ID}
 
 													if ${_CheckItemQty} && ${RIMUIObj.InventoryQuantity["${_ItemName}"]}>=${_ItemQty}
@@ -49713,7 +49748,7 @@ function RosySpawnKing()
 	{
 		Trigger:Set[0]
 		call LockAndWait -Loc "157.56,-15.28,80.66" -RelayToGroup -AllGroupWithinRange 3
-		call ClickActor -Actor "chess black rook 1"
+		call ClickActor -Actor "chess black rook 1" -NoRelayToGroup
 		call LockAndWait -Loc "159.26,-15.28,112.32" -RelayToGroup -AllGroupWithinRange 3
 		wait 10
 		call PlaceHouseItem 180
@@ -49723,7 +49758,7 @@ function RosySpawnKing()
 			continue
 		call LockAndWait -Loc "150.48,-15.28,88.81" -RelayToGroup -AllGroupWithinRange 3
 		wait 300 ${Actor[chess black bishop 1].Interactable}
-		call ClickActor -Actor "chess black bishop 1"
+		call ClickActor -Actor "chess black bishop 1" -NoRelayToGroup
 		call LockAndWait -Loc "162.27,-15.28,99.85" -RelayToGroup -AllGroupWithinRange 3
 		wait 10
 		call PlaceHouseItem 218
@@ -49733,7 +49768,7 @@ function RosySpawnKing()
 			continue
 		call LockAndWait -Loc "145.37,-15.28,104.59" -RelayToGroup -AllGroupWithinRange 3
 		wait 300 ${Actor[chess black queen].Interactable}
-		call ClickActor -Actor "chess black queen"
+		call ClickActor -Actor "chess black queen" -NoRelayToGroup
 		call LockAndWait -Loc "149.54,-15.28,108.21" -RelayToGroup -AllGroupWithinRange 3
 		wait 10
 		call PlaceHouseItem 180
@@ -50475,9 +50510,9 @@ function KrinasCustom(int _NamedID)
 }
 function Stenkannreif()
 {
-	call ToggleWalkRun 1
+	;call ToggleWalkRun 1
 	call CustomNamed "Stenkannreif, the Monster-NMB" "-226.67,48.04,345.84" NONE necrotic lich
-	call ToggleWalkRun 0
+	;call ToggleWalkRun 0
 }
 
 function Perisha()

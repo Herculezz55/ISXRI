@@ -5910,16 +5910,46 @@
 ;			VoV Daily Tradeskill Mission
 ;				Updated for new usage of Renfry's Bauble
 
-;v6.72 Changes 10-1-22
+;v6.72 Changes 10-29-22
 ;	RQ
 ;		Added:
-;			Yunzi Timeline
-;				Will run all yunzi quests in order
-;					There is however a Caveat, if you completed any of the yunzi quests 
-;					on a toon other than the one you run this on it will fail because the
-;					yunzi quests are account wide completions, BUT it doesnt show completed on
-;					anyone but the toon that actually completed it
-;			Traveler's Kunark Catalog: Around the Landing
+;			Chaos Descending
+;				Chaos Descending Timeline
+;				Chaos Descending Tradeskill Timeline
+;					The Scrivener's Tale: Animating the Inanimate
+;					The Scrivener's Tale: Crafting at a Snail's Pace
+;					The Scrivener's Tale: Escargot Overclocking
+;			Renewal of Ro
+;				Secrets of the Sands
+;			A Gathering Obsession Timeline
+;				A Gathering Obsession
+;			Yunzi
+;				Yunzi Timeline
+;					(Will run all yunzi quests in order
+;						There is however a Caveat, if you completed any of the yunzi quests 
+;						on a toon other than the one you run this on it will fail because the
+;						yunzi quests are account wide completions, BUT it doesnt show completed on
+;						anyone but the toon that actually completed it)
+;					Yunzi 2017 Timeline
+;					Yunzi 2018 Timeline
+;					Yunzi 2019 Timeline
+;					Yunzi 2020 Timeline
+;					Yunzi 2021 Timeline
+;					Yunzi 2022 Timeline
+;						Traveler's Kunark Catalog: Around the Landing
+;						Traveler's Kunark Catalog: Central Kylong
+;						Traveler's Kunark Catalog: Deeper into Kylong
+;						Traveler's Kunark Catalog: Focusing on Fens
+;						Traveler's Kunark Catalog: Not the Panda!
+;	RI
+;		Fixed a bug in the Path Function
+;		Modified:
+;			Castle Vacrul: Rosy Reverie
+;				Fixed a bug in the Chess game that would allow RG'd toons to pickup the pieces
+;			Forlorn Gist: Nightmares of Old
+;				Modified:
+;					Stenkannreif
+;						Removed walk run toggle
 
 
 ;ISXRI - v6.71 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
@@ -11258,16 +11288,14 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Yun Zi]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2022 Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Around the Landing"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Getting a Feel For Frostfell"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Evoking Love"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - More than Beer?"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - The Meaning of Mischief"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Oceans for the Oceanless"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Under a Burning Sky"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Gears and Gadgets"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Deadly Nights"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - We Need a Hero!"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Central Kylong"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Deeper into Kylong"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Focusing on Fens"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Not the Panda!"]
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2017 Timeline",0,FFE8E200]
 				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Oasis For Your Thoughts"]
 				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - In a Kingdom Far Away"]
@@ -11278,6 +11306,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Eternity Without You"]
 				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - Tears for Fears"]
 				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Altar-Nate Malice"]
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2018 Timeline",0,FFE8E200]
 				;UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Antonica or Bust"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Commonlands, Uncommon Heart"]
@@ -11288,6 +11317,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Feerrott Not, I Shall Find You"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Defrosting Everfrost"]
 				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Having Fun Storming Lavastorm"]
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2019 Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Once Again in the Desert"]
 				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Skies the Limit"]
 				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - ECHO ECHo ECho Echo echo"]
@@ -11297,6 +11327,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Eternally Eternity"]
 				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Returning to Tears"]
 				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Altering the Altar"]
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2020 Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Coldwind Clam Chowder"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Darklight Beetle Omelets"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Rivervale Ratatouille"]
@@ -11306,11 +11337,21 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Mara Mandaikon Kakiage"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Kylong Bean Casserole"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Othmir Pepper Pasta"]
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2021 Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Getting a Feel For Frostfell"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Evoking Love"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - More than Beer?"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - The Meaning of Mischief"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Oceans for the Oceanless"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Under a Burning Sky"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Gears and Gadgets"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Deadly Nights"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - We Need a Hero!"]
 			}
 			elseif ${_CatName.Equal[Chaos Descending]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
-				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Chaos Descending Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Pursuit of Justice"]
 				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Visitation Day"]
 				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Starpyre's Flames"]
@@ -11319,6 +11360,10 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Shadow Casting in the Dark"]
 				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Flames of Order"]
 				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Gusts of Order"]
+				UIElement[QuestsListBox@RI]:AddItem["Chaos Descending Tradeskill Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["The Scrivener's Tale: Animating the Inanimate"]
+				UIElement[QuestsListBox@RI]:AddItem["The Scrivener's Tale: Crafting at a Snail's Pace"]
+				UIElement[QuestsListBox@RI]:AddItem["The Scrivener's Tale: Escargot Overclocking"]
 			}
 			elseif ${_CatName.Equal[Blood of Luclin]}
 			{
@@ -11456,6 +11501,16 @@ objectdef RIMUIObject
 				;UIElement[QuestsListBox@RI]:AddItem[Undead Reckoning,Repeatable,FF00b33c]
 				;UIElement[QuestsListBox@RI]:AddItem[Grumblugtin's Last Hope]
 			}
+			elseif ${_CatName.Equal[A Gathering Obsession Timeline]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession"]
+			}
+			elseif ${_CatName.Equal[Renewal of Ro]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["Secrets of the Sands"]
+			}
 		}
 	}
 	method RQ(string _QuestName=!NONE!)
@@ -11477,6 +11532,7 @@ objectdef RIMUIObject
 			UIElement[CategoryText@RI]:Show
 			UIElement[CategoryComboBox@RI]:Show
 			
+			UIElement[CategoryComboBox@RI]:AddItem[A Gathering Obsession Timeline]
 			UIElement[CategoryComboBox@RI]:AddItem[Artisan Epic]
 			UIElement[CategoryComboBox@RI]:AddItem[Blood of Luclin]
 			UIElement[CategoryComboBox@RI]:AddItem[Chaos Descending]
@@ -11487,11 +11543,12 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:AddItem[Kunark Ascending Adventure]
 			UIElement[CategoryComboBox@RI]:AddItem[Planes of Prophecy]
 			UIElement[CategoryComboBox@RI]:AddItem[Reign of Shadows]
+			UIElement[CategoryComboBox@RI]:AddItem[Renewal of Ro]
 			UIElement[CategoryComboBox@RI]:AddItem[Sokokar Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Terrors of Thalumbra Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Visions of Vetrovia]
 			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
-			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Visions of Vetrovia].ID}]
+			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Renewal of Ro].ID}]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FF5DA5CF]

@@ -11,7 +11,7 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.72 10-1-22"
+#define EXTENSION_VERSION "6.72 10-29-22"
 double EXTVER = 6.72;
 #include "ISXRI.h"
 
@@ -837,7 +837,6 @@ double EXTVER = 6.72;
 #include "ThenewTravelsofYunZiHavingFunStormingLavastorm.h"
 
 // CD Instances
-
 #include "AwuidorTheNebulousDeep.h"
 #include "DoomfireElementsofRage.h"
 #include "DoomfireTheEnkindledTowers.h"
@@ -852,7 +851,11 @@ double EXTVER = 6.72;
 #include "VegarlsonTheTerreneRift.h"
 
 // CD Quests
-
+#include "ChaosDescendingTradeskillTimeline.h"
+#include "TheScrivenersTaleAnimatingtheInanimate.h"
+#include "TheScrivenersTaleCraftingataSnailsPace.h"
+#include "TheScrivenersTaleEscargotOverclocking.h"
+#include "ChaosDescendingTimeline.h"
 #include "ElementsofDestructionPlanesofDisorder.h"
 #include "ElementsofDestructionPureAdventure.h"
 #include "ElementsofDestructionPursuitofJustice.h"
@@ -890,7 +893,6 @@ double EXTVER = 6.72;
 #include "TheIcyKeepHard.h"
 
 //BoL Quests
-
 #include "FamiliarsWild.h"
 #include "LightAmongstShadowsSpiresofMythicPassage.h"
 #include "LightAmongstShadowsTheVaultofOmens.h"
@@ -1031,9 +1033,7 @@ double EXTVER = 6.72;
 
 //VoV
 //Quests
-
 #include "GuideQuestGuidesGuidetoVisionsofVetrovia.h"
-
 //SideQuests
 #include "ForYourDyesOnly.h"
 #include "GrumblugtinsLastHope.h"
@@ -1120,8 +1120,32 @@ double EXTVER = 6.72;
 #include "BasementBuildingForlornFurnishings.h"
 #include "BasementBuildingTreatsforZiggy.h"
 
+//END VoV
+
 //Yunzi 2022
+#include "Yunzi2017Timeline.h"
+#include "Yunzi2018Timeline.h"
+#include "Yunzi2019Timeline.h"
+#include "Yunzi2020Timeline.h"
+#include "Yunzi2021Timeline.h"
+#include "Yunzi2022Timeline.h"
+#include "YunziTimeline.h"
 #include "TravelersKunarkCatalogAroundtheLanding.h"
+#include "TravelersKunarkCatalogCentralKylong.h"
+#include "TravelersKunarkCatalogDeeperintoKylong.h"
+#include "TravelersKunarkCatalogFocusingonFens.h"
+#include "TravelersKunarkCatalogNotthePanda.h"
+
+//A Gathering Obsession
+#include "AGatheringObsession.h"
+
+//RoR
+//Prelude
+#include "SecretsoftheSands.h"
+
+//Adventure
+
+//Tradeskill
 
 //#include ".h"
 //End Quest Dat Files
@@ -1303,8 +1327,31 @@ void CheckForAndLoadISXEQ2()
 }
 void ISXRIUnRegisterTLOs()
 {
+	//RoR
+	//Prelude
+	pISInterface->RemoveTopLevelObject("SECRETSOFTHESANDS");
+
+	//Adventure
+	 
+	//Tradeskill
+	
+
+	//A Gathering Obsession
+	pISInterface->RemoveTopLevelObject("AGATHERINGOBSESSION");
+
 	//Yunzi 2022
+	pISInterface->RemoveTopLevelObject("YUNZI2017TIMELINE");
+	pISInterface->RemoveTopLevelObject("YUNZI2018TIMELINE");
+	pISInterface->RemoveTopLevelObject("YUNZI2019TIMELINE");
+	pISInterface->RemoveTopLevelObject("YUNZI2020TIMELINE");
+	pISInterface->RemoveTopLevelObject("YUNZI2021TIMELINE");
+	pISInterface->RemoveTopLevelObject("YUNZI2022TIMELINE");
+	pISInterface->RemoveTopLevelObject("YUNZITIMELINE");
 	pISInterface->RemoveTopLevelObject("TRAVELERSKUNARKCATALOGAROUNDTHELANDING");
+	pISInterface->RemoveTopLevelObject("TRAVELERSKUNARKCATALOGCENTRALKYLONG");
+	pISInterface->RemoveTopLevelObject("TRAVELERSKUNARKCATALOGDEEPERINTOKYLONG");
+	pISInterface->RemoveTopLevelObject("TRAVELERSKUNARKCATALOGFOCUSINGONFENS");
+	pISInterface->RemoveTopLevelObject("TRAVELERSKUNARKCATALOGNOTTHEPANDA");
 
 	//VoV
 	//Quests
@@ -2294,6 +2341,11 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("VegarlsonTheTerreneRift");
 
 	//CD Quests
+	pISInterface->RemoveTopLevelObject("CHAOSDESCENDINGTRADESKILLTIMELINE");
+	pISInterface->RemoveTopLevelObject("THESCRIVENERSTALEANIMATINGTHEINANIMATE");
+	pISInterface->RemoveTopLevelObject("THESCRIVENERSTALECRAFTINGATASNAILSPACE");
+	pISInterface->RemoveTopLevelObject("THESCRIVENERSTALEESCARGOTOVERCLOCKING");
+	pISInterface->RemoveTopLevelObject("CHAOSDESCENDINGTIMELINE");
 	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONPLANESOFDISORDER");
 	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONPUREADVENTURE");
 	pISInterface->RemoveTopLevelObject("ELEMENTSOFDESTRUCTIONPURSUITOFJUSTICE");
@@ -38859,6 +38911,654 @@ bool __cdecl TLO_TravelersKunarkCatalogAroundtheLanding(int argc, char* argv[], 
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_ChaosDescendingTimeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ChaosDescendingTimeline) / sizeof(ChaosDescendingTimeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ChaosDescendingTimeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ChaosDescendingTradeskillTimeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ChaosDescendingTradeskillTimeline) / sizeof(ChaosDescendingTradeskillTimeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ChaosDescendingTradeskillTimeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheScrivenersTaleAnimatingtheInanimate(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TheScrivenersTaleAnimatingtheInanimate) / sizeof(TheScrivenersTaleAnimatingtheInanimate[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TheScrivenersTaleAnimatingtheInanimate[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheScrivenersTaleCraftingataSnailsPace(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TheScrivenersTaleCraftingataSnailsPace) / sizeof(TheScrivenersTaleCraftingataSnailsPace[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TheScrivenersTaleCraftingataSnailsPace[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TheScrivenersTaleEscargotOverclocking(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TheScrivenersTaleEscargotOverclocking) / sizeof(TheScrivenersTaleEscargotOverclocking[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TheScrivenersTaleEscargotOverclocking[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_AGatheringObsession(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(AGatheringObsession) / sizeof(AGatheringObsession[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = AGatheringObsession[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_SecretsoftheSands(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(SecretsoftheSands) / sizeof(SecretsoftheSands[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = SecretsoftheSands[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TravelersKunarkCatalogCentralKylong(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TravelersKunarkCatalogCentralKylong) / sizeof(TravelersKunarkCatalogCentralKylong[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersKunarkCatalogCentralKylong[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TravelersKunarkCatalogDeeperintoKylong(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TravelersKunarkCatalogDeeperintoKylong) / sizeof(TravelersKunarkCatalogDeeperintoKylong[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersKunarkCatalogDeeperintoKylong[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TravelersKunarkCatalogFocusingonFens(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TravelersKunarkCatalogFocusingonFens) / sizeof(TravelersKunarkCatalogFocusingonFens[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersKunarkCatalogFocusingonFens[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TravelersKunarkCatalogNotthePanda(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TravelersKunarkCatalogNotthePanda) / sizeof(TravelersKunarkCatalogNotthePanda[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TravelersKunarkCatalogNotthePanda[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_Yunzi2017Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(Yunzi2017Timeline) / sizeof(Yunzi2017Timeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = Yunzi2017Timeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_Yunzi2018Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(Yunzi2018Timeline) / sizeof(Yunzi2018Timeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = Yunzi2018Timeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_Yunzi2019Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(Yunzi2019Timeline) / sizeof(Yunzi2019Timeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = Yunzi2019Timeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_Yunzi2020Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(Yunzi2020Timeline) / sizeof(Yunzi2020Timeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = Yunzi2020Timeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_Yunzi2021Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(Yunzi2021Timeline) / sizeof(Yunzi2021Timeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = Yunzi2021Timeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_Yunzi2022Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(Yunzi2022Timeline) / sizeof(Yunzi2022Timeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = Yunzi2022Timeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_YunziTimeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(YunziTimeline) / sizeof(YunziTimeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = YunziTimeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -38870,10 +39570,39 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 		pISInterface->AddTopLevelObject(argv[1], fLSTopLevelObject(argv[2]));*/
 
 		string tlo = argv[1];
+		//RoR
+		if (tlo == "SECRETSOFTHESANDS")
+			pISInterface->AddTopLevelObject("SECRETSOFTHESANDS", TLO_SecretsoftheSands);
+
+		//A Gathering Obsession
+		if (tlo == "AGATHERINGOBSESSION")
+			pISInterface->AddTopLevelObject("AGATHERINGOBSESSION", TLO_AGatheringObsession);
 
 		//Yunzi 2022
+		if (tlo == "YUNZI2017TIMELINE")
+			pISInterface->AddTopLevelObject("YUNZI2017TIMELINE", TLO_Yunzi2017Timeline);
+		if (tlo == "YUNZI2018TIMELINE")
+			pISInterface->AddTopLevelObject("YUNZI2018TIMELINE", TLO_Yunzi2018Timeline);
+		if (tlo == "YUNZI2019TIMELINE")
+			pISInterface->AddTopLevelObject("YUNZI2019TIMELINE", TLO_Yunzi2019Timeline);
+		if (tlo == "YUNZI2020TIMELINE")
+			pISInterface->AddTopLevelObject("YUNZI2020TIMELINE", TLO_Yunzi2020Timeline);
+		if (tlo == "YUNZI2021TIMELINE")
+			pISInterface->AddTopLevelObject("YUNZI2021TIMELINE", TLO_Yunzi2021Timeline);
+		if (tlo == "YUNZI2022TIMELINE")
+			pISInterface->AddTopLevelObject("YUNZI2022TIMELINE", TLO_Yunzi2022Timeline);
+		if (tlo == "YUNZITIMELINE")
+			pISInterface->AddTopLevelObject("YUNZITIMELINE", TLO_YunziTimeline);
 		if (tlo == "TRAVELERSKUNARKCATALOGAROUNDTHELANDING")
 			pISInterface->AddTopLevelObject("TRAVELERSKUNARKCATALOGAROUNDTHELANDING", TLO_TravelersKunarkCatalogAroundtheLanding);
+		if (tlo == "TRAVELERSKUNARKCATALOGCENTRALKYLONG")
+			pISInterface->AddTopLevelObject("TRAVELERSKUNARKCATALOGCENTRALKYLONG", TLO_TravelersKunarkCatalogCentralKylong);
+		if (tlo == "TRAVELERSKUNARKCATALOGDEEPERINTOKYLONG")
+			pISInterface->AddTopLevelObject("TRAVELERSKUNARKCATALOGDEEPERINTOKYLONG", TLO_TravelersKunarkCatalogDeeperintoKylong);
+		if (tlo == "TRAVELERSKUNARKCATALOGFOCUSINGONFENS")
+			pISInterface->AddTopLevelObject("TRAVELERSKUNARKCATALOGFOCUSINGONFENS", TLO_TravelersKunarkCatalogFocusingonFens);
+		if (tlo == "TRAVELERSKUNARKCATALOGNOTTHEPANDA")
+			pISInterface->AddTopLevelObject("TRAVELERSKUNARKCATALOGNOTTHEPANDA", TLO_TravelersKunarkCatalogNotthePanda);
 
 		//VoV
 		//Quests
@@ -39370,7 +40099,17 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("VegarlsonTheTerreneRift", TLO_VegarlsonTheTerreneRift);
 
 		//CD Quests
+		if (tlo == "CHAOSDESCENDINGTRADESKILLTIMELINE")
+			pISInterface->AddTopLevelObject("CHAOSDESCENDINGTRADESKILLTIMELINE", TLO_ChaosDescendingTradeskillTimeline);
+		if (tlo == "THESCRIVENERSTALEANIMATINGTHEINANIMATE")
+			pISInterface->AddTopLevelObject("THESCRIVENERSTALEANIMATINGTHEINANIMATE", TLO_TheScrivenersTaleAnimatingtheInanimate);
+		if (tlo == "THESCRIVENERSTALECRAFTINGATASNAILSPACE")
+			pISInterface->AddTopLevelObject("THESCRIVENERSTALECRAFTINGATASNAILSPACE", TLO_TheScrivenersTaleCraftingataSnailsPace);
+		if (tlo == "THESCRIVENERSTALEESCARGOTOVERCLOCKING")
+			pISInterface->AddTopLevelObject("THESCRIVENERSTALEESCARGOTOVERCLOCKING", TLO_TheScrivenersTaleEscargotOverclocking);
 
+		if (tlo == "CHAOSDESCENDINGTIMELINE")
+			pISInterface->AddTopLevelObject("CHAOSDESCENDINGTIMELINE", TLO_ChaosDescendingTimeline);
 		if (tlo == "ELEMENTSOFDESTRUCTIONPLANESOFDISORDER")
 			pISInterface->AddTopLevelObject("ELEMENTSOFDESTRUCTIONPLANESOFDISORDER", TLO_ElementsofDestructionPlanesofDisorder);
 		if (tlo == "ELEMENTSOFDESTRUCTIONPUREADVENTURE")
