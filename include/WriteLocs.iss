@@ -381,6 +381,15 @@ function main(... args)
 				call Write -quest "${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText]}"
 				break
 			}
+			case -filename
+			case -fn
+			case -f
+			{
+				_quest:Set[TRUE]
+				UIElement[Save@WriteLocs]:SetText[Save]
+				UIElement[TEFilename@WriteLocs]:SetText["${args[${Math.Calc[${_count}+1]}]}"]
+				break
+			}
 			default
 				noop
 		}

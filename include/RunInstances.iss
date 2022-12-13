@@ -2573,7 +2573,8 @@ objectdef RunInstancesObject
 				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[ClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>25 && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 				{
 					;echo Checking ${counter}:: ${istrMain.Get[${counter}].Replace[" ",","]} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
-					if ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} && ( !${EQ2.CheckCollision[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]} || !${_CheckCollision} )
+					if ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance}
+					; && ( !${EQ2.CheckCollision[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]} || !${_CheckCollision} )
 					{
 						ClosestArrayPosition:Set[${counter}]
 						Distance:Set[${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}]
@@ -2593,7 +2594,8 @@ objectdef RunInstancesObject
 				if ${istrMain.Get[${counter}].NotEqual[Custom]} && ${istrMain.Get[${counter}].NotEqual[Wait]} && ${istrMain.Get[${counter}].NotEqual[ClickActor]} && ${istrMain.Get[${counter}].NotEqual[HailActor]} && ${istrMain.Get[${counter}].NotEqual[Named]} && ${istrMain.Get[${counter}].NotEqual[CustomNamed]} && ${istrMain.Get[${counter}].NotEqual[StandardNamed]} && ${istrMain.Get[${counter}].NotEqual[SameLock]} && ${istrMain.Get[${counter}].NotEqual[DontMoveBehind]} && ${istrMain.Get[${counter}].NotEqual[MoveBehind]} && ${istrMain.Get[${counter}].NotEqual[StopForCombat]} && ${istrMain.Get[${counter}].NotEqual[DontStopForCombat]} && ${istrMain.Get[${counter}].NotEqual[ClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontClearTarget]} && ${istrMain.Get[${counter}].NotEqual[DontKillAdd]} && ${istrMain.Get[${counter}].NotEqual[ReturnLOCS]} && ${istrMain.Get[${counter}].NotEqual["0 0 0"]} && ${istrMain.Get[${counter}].Length}>13 && ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
 				{
 					;echo Checking ${counter}:: ${istrMain.Get[${counter}].Replace[" ",","]} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} :: ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}](exists)}
-					if ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance} && ( !${EQ2.CheckCollision[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]} || !${_CheckCollision} )
+					if ${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}<${Distance}
+					; && ( !${EQ2.CheckCollision[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]} || !${_CheckCollision} )  /// while checkcollision is broken
 					{
 						ClosestArrayPosition:Set[${counter}]
 						Distance:Set[${Math.Distance[${Loc},${istrMain.Get[${counter}].Replace[" ",","]}]}]
@@ -5399,8 +5401,10 @@ function Evac(bool EndScript)
 	relay ${RI_Var_String_RelayGroup} RI_Evac
 	wait 45
 	if ${Me.Group}>1 && ${Me.Group[1].Type.Equal[PC]}
+	{
 		wait 50000 ${RIMObj.AllGroupInZone}
-	wait 200
+		wait 200
+	}
 	;check for a Shiny if set
 	if ${RI_Var_Bool_GrabShinys}
 	; && ${Actor[Query, Name=-"?" && Distance<=${ShinyScanDistance}](exists)}
@@ -18812,9 +18816,11 @@ function CraftIt(string _Recipe, int _Amount=1, bool _KeepWindow=FALSE, bool _Ex
 						counter:Set[${RICraft.ReactionAbilityMID[${CurrentReactiveMID}]}]
 					else
 						counter:Set[${RICraft.ReactionAbility[${CurrentReactive}]}]
-					echo Counter1:${counter}
+					if ${RI_Var_Bool_CraftDebug}
+						echo Counter1:${counter}
 					waitframe
-					echo Counter2:${counter}
+					if ${RI_Var_Bool_CraftDebug}
+						echo Counter2:${counter}
 					call CastReactions ${counter} ${_Experimentation}
 					CurrentReactive:Set[""]
 				}
@@ -18974,9 +18980,11 @@ function CraftIt(string _Recipe, int _Amount=1, bool _KeepWindow=FALSE, bool _Ex
                 	counter:Set[${RICraft.ReactionAbilityMID[${CurrentReactiveMID}]}]
 				else
 					counter:Set[${RICraft.ReactionAbility[${CurrentReactive}]}]
-				echo Counter1:${counter}
+				if ${RI_Var_Bool_CraftDebug}
+					echo Counter1:${counter}
                	waitframe
-				echo Counter2:${counter}
+				if ${RI_Var_Bool_CraftDebug}
+					echo Counter2:${counter}
 				call CastReactions ${counter} ${_Experimentation}
 				CurrentReactive:Set[""]
             }
@@ -19159,7 +19167,7 @@ function CastReactions(int _ReactiveArt, bool _Exp=FALSE)
 }
 function CastReaction(int xability, int xtimer, int _timer=99999999999999999999999999999999999999999999999999999999999999999999)
 {
-	;if ${RI_Var_Bool_CraftDebug}
+	if ${RI_Var_Bool_CraftDebug}
 		echo ISXRI: Casting Reaction: ${TSSpell[${xability},${xtimer}].Token[1,|]} // ${_timer}
 	variable int _failcnt
 	do
@@ -19206,7 +19214,7 @@ function CastReaction(int xability, int xtimer, int _timer=999999999999999999999
 	wait 5 ${Me.Maintained[${TSSpell[${xability},${xtimer}].Token[1,|]}](exists)} || ${Me.Ability[id,${TSSpell[${xability},${xtimer}]}].TimeUntilReady}>0 || ${Script.RunningTime}>${_timer}
 	
 	eq2ex clearabilityqueue
-	;if ${RI_Var_Bool_CraftDebug}
+	if ${RI_Var_Bool_CraftDebug}
 		echo ISXRI: Done Casting Reaction: ${TSSpell[${xability},${xtimer}].Token[1,|]}
 }
 function CastReactionOLD(int xability, int xtimer)
@@ -19317,13 +19325,16 @@ objectdef RICraftObject
 		; TSSpell[<1=Progress & 2=Durability>,<type>] Where type refers to
 		; Type 1: 1=+Progress -Durability, 2=+Progress -Success, 3=+Progress -Power
 		; Type 2: 1=+Durability -Progress, 2=+Durability -Success, 3=+Durability -Power
-		echo Skill: ${_Skill}
-		echo TSSpell[1,1]:Set["${This.SkillSpell[${_Skill},1,1]}"]
-		echo TSSpell[1,2]:Set["${This.SkillSpell[${_Skill},1,2]}"]
-		echo TSSpell[1,3]:Set["${This.SkillSpell[${_Skill},1,3]}"]
-		echo TSSpell[2,1]:Set["${This.SkillSpell[${_Skill},2,1]}"]
-		echo TSSpell[2,2]:Set["${This.SkillSpell[${_Skill},2,2]}"]
-		echo TSSpell[2,3]:Set["${This.SkillSpell[${_Skill},2,3]}"]
+		if ${RI_Var_Bool_CraftDebug}
+		{
+			echo Skill: ${_Skill}
+			echo TSSpell[1,1]:Set["${This.SkillSpell[${_Skill},1,1]}"]
+			echo TSSpell[1,2]:Set["${This.SkillSpell[${_Skill},1,2]}"]
+			echo TSSpell[1,3]:Set["${This.SkillSpell[${_Skill},1,3]}"]
+			echo TSSpell[2,1]:Set["${This.SkillSpell[${_Skill},2,1]}"]
+			echo TSSpell[2,2]:Set["${This.SkillSpell[${_Skill},2,2]}"]
+			echo TSSpell[2,3]:Set["${This.SkillSpell[${_Skill},2,3]}"]
+		}
 		TSSpell[1,1]:Set["${This.SkillSpell[${_Skill},1,1]}"]
 		TSSpell[1,2]:Set["${This.SkillSpell[${_Skill},1,2]}"]
 		TSSpell[1,3]:Set["${This.SkillSpell[${_Skill},1,3]}"]
@@ -20684,6 +20695,7 @@ function Path(... args)
 	variable index:string _Quest
 	variable string _Events
 	variable bool _Done=FALSE
+	variable bool _reversedone=FALSE
 	variable bool _LoopPath=FALSE
 	variable bool _ReversePath=FALSE
 	variable bool _ReversePathLoopOnly=FALSE
@@ -20708,6 +20720,7 @@ function Path(... args)
 	variable bool _CheckName=FALSE
 	variable string _Name=""
 	variable bool _DontFinishPathWhenDone=FALSE
+	variable int _YDiff=99999999999999
 	for(_acnt:Set[1];${_acnt}<=${args.Used};_acnt:Inc)
 	{
 		if ${RI_Var_Bool_PathDebug}
@@ -20744,6 +20757,13 @@ function Path(... args)
 			case -PathLines
 			{
 				_PathLines:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
+				break
+			}
+			case -YDifferential
+			case -YDiff
+			case -YD
+			{
+				_YDiff:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
 				break
 			}
 			case -P
@@ -20881,6 +20901,7 @@ function Path(... args)
 	variable bool _Hailed=FALSE
 	variable string _tempbtntxt
 	variable bool _DontMoveActor=FALSE
+	
 	_start:Set[${MainArrayCounter}]
 	if ${_TargetSelf}
 		Actor[${Me.ID}]:DoTarget
@@ -20911,7 +20932,11 @@ function Path(... args)
 				else
 				{
 					if ${MainArrayCounter:Dec}<=${_start}
+					{
+						if ${RI_Var_Bool_PathDebug}
+							echo setting !_whileCheck because ${MainArrayCounter}<=${_start}
 						_whileCheck:Set[0]
+					}
 				}
 			}
 			else
@@ -20922,6 +20947,8 @@ function Path(... args)
 				{
 					if ${MainArrayCounter:Inc}>=${_endpoint}
 					{
+						if ${RI_Var_Bool_PathDebug}
+							echo setting !_whileCheck because ${MainArrayCounter}>=${_endpoint}
 						_whileCheck:Set[0]
 					}
 				}
@@ -20993,15 +21020,18 @@ function Path(... args)
 				if ${_ReversePath} && !${_goReverse}
 				{
 					if ${RI_Var_Bool_PathDebug}
-						echo setting _goReverse
+						echo setting _goReverse && _reversedone && _whileCheck
 					_goReverse:Set[1]
+					_reversedone:Set[1]
+					_whileCheck:Set[1]
 				}
 				if ${_DontFinishPathWhenDone} || ( ${MainArrayCounter}<=${_start} && ${_ReversePath} ) || ( !${_ReversePath} && ${MainArrayCounter}>=${_endpoint} )
 				{
 					if ${RI_Var_Bool_PathDebug}
-						echo setting _done and !_goReverse 
+						echo setting _done and !_goReverse and !_whileCheck
 					_Done:Set[1]
 					_goReverse:Set[0]
+					_whileCheck:Set[0]
 					if !${_StopForCombat}
 						call RIMObj.Move ${istrMain.Get[${MainArrayCounter}]} ${_Precision} 0 1 0 1 0 1 1 0
 					else
@@ -21065,7 +21095,7 @@ function Path(... args)
 			if ${_JumpAfterEachLoc} && ${MainArrayCounter}!=${_endpoint} && ${MainArrayCounter}!=${_start}
 				press ${RI_Var_String_JumpKey}
 			;;;;;; MOVE FUNCTIONS END
-			if !${_Done}
+			if !${_Done} && !${_reversedone}
 			{
 				_TriggeredCount:Set[0]
 				for(_cnt:Set[1];${_cnt}<=${_QueryActor.Used};_cnt:Inc)
@@ -21305,8 +21335,8 @@ function Path(... args)
 								_Query:Set["Name=-\"${_ActorName}\" && Distance<=${_QueryDistance} && IsLocked=FALSE && IsDead=FALSE"]
 						}
 						if ${RI_Var_Bool_PathDebug}
-							echo ${_Query} // ${Actor[Query, ${_Query}](exists)}
-						if ${Actor[Query, ${_Query}](exists)}
+							echo ${_Query} // ${Actor[Query, ${_Query}](exists)} // ${Math.Distance[${Me.Y},${Actor[Query, ${_Query}].Y}]}<=${_YDiff}
+						if ${Actor[Query, ${_Query}](exists)} && ${Math.Distance[${Me.Y},${Actor[Query, ${_Query}].Y}]}<=${_YDiff}
 						{
 							
 							if ${RI_Var_Bool_PathDebug}
@@ -22402,7 +22432,6 @@ function Path(... args)
 				}
 				;;;;; This is where i moved the move functions from in case it breaks shit
 			}
-			
 		}
 		if ( ${_ReversePath} && !${_goReverse} ) || ( ${_ReversePathLoopOnly} && !${_Done} && !${_goReverse} )
 		{
@@ -22413,12 +22442,12 @@ function Path(... args)
 		elseif !${_Done} && ${_LoopPath}
 		{
 			if ${RI_Var_Bool_PathDebug}
-				echo NotLoop: setting MAC to ${_start}
+				echo Loop: setting MAC to ${_start}
 			_goReverse:Set[0]
 			MainArrayCounter:Set[${_start}]
 		}
 		if ${RI_Var_Bool_PathDebug}
-			echo do while ${_LoopPath} && ${_Done}
+			echo do while ${_LoopPath} && !${_Done}
 	}
 	while ${_LoopPath} && !${_Done}
 	wait 20
@@ -29865,6 +29894,19 @@ function SetMainArrayCounter(int _ArrayCounterSetter=0)
 {
 	MainArrayCounter:Set[${_ArrayCounterSetter}]
 }
+function WaitForQuestStep(string _QuestStep=-1)
+{
+	if ${_QuestStep.Equals[-1]}
+	{
+		echo ISXRI: No quest step was passed in, returning
+		return
+	}
+
+	echo ISXRI: Waiting for Quest Step: ${_QuestStep}
+
+	while !${RIMUIObj.QuestStepExists["${_QuestStep}"]}
+		wait 2
+}
 function WaitForIncomingText(... args)
 {
 	IncomingText:Clear
@@ -29902,7 +29944,7 @@ function WaitForAnnounceText(... args)
 	wait 20
 	
 	wait 100 ${Me.Distance["${MyLoc}"]}<3
-	
+	Trigger:Set[0]
 	relay ${RI_Var_String_RelayGroup} RIMUIObj:SetLockSpot[OFF]
 }
 function WaitForScript(string _ScriptName)

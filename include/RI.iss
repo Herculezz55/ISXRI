@@ -5951,8 +5951,22 @@
 ;					Stenkannreif
 ;						Removed walk run toggle
 
+;v6.73 Changes 12-12-22
+;	RQ
+;		Added:
+;			Renewal of Ro
+;				Renewal of Ro Tradeskill Timeline
+;					Researchers of Ro Responsibility for Raj'Dur
+;					Researchers of Ro Curing the Curse
+;					Researchers of Ro Renewal
+;					Researchers of Ro Takish Time
+;					Researchers of Ro Sandstone Setup
 
-;ISXRI - v6.71 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
+
+
+
+
+;ISXRI - v6.73 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
 
 ;----not done below yet
 ;v6.71 Changes 7-1-22
@@ -6002,7 +6016,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.72
+variable(global) float RI_Var_Float_Version=6.73
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -11509,6 +11523,12 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Renewal of Ro]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro Tradeskill Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Responsibility for Raj'Dur"]
+				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Curing the Curse"]
+				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Renewal"]
+				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Takish Time"]
+				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Sandstone Setup"]
 				UIElement[QuestsListBox@RI]:AddItem["Secrets of the Sands"]
 			}
 		}

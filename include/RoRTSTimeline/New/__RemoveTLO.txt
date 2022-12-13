@@ -1,0 +1,6 @@
+"""pISInterface->RemoveTopLevelObject("RENEWALOFROTRADESKILLTIMELINE.DAT");""" 
+"""pISInterface->RemoveTopLevelObject("RESEARCHERSOFROCURINGTHECURSE.DAT");""" 
+"""pISInterface->RemoveTopLevelObject("RESEARCHERSOFRORENEWAL.DAT");""" 
+"""pISInterface->RemoveTopLevelObject("RESEARCHERSOFRORESPONSIBILITYFORRAJDUR.DAT");""" 
+"""pISInterface->RemoveTopLevelObject("RESEARCHERSOFROSANDSTONESETUP.DAT");""" 
+"""pISInterface->RemoveTopLevelObject("RESEARCHERSOFROTAKISHTIME.DAT");""" 
