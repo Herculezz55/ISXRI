@@ -100,6 +100,9 @@ Path -PL 37 -L -DFPWD -R -YD 10 -QA "-QD|100|-A|desert shrub|-T|QSC:harvested th
 Custom
 FastTravel "Isle of Mara" FALSE
 0 0 0
+Wait
+20
+0 0 0
 Custom
 FastTravel "Raj'Dur Plateaus" FALSE
 0 0 0

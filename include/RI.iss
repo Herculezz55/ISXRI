@@ -5962,29 +5962,172 @@
 ;					Researchers of Ro Takish Time
 ;					Researchers of Ro Sandstone Setup
 
-
-
-
-
-;ISXRI - v6.73 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
-
-;----not done below yet
-;v6.71 Changes 7-1-22
-;	RZ
+;v6.74 Changes 12-16-22
+;	RQ
 ;		Added:
-;			Svarni Expanse: Carrion Crag [Heroic II]
-;	RI
-;		Modified
-;			Svarni Expanse: Carrion Crag
-;				Modified:
-;					High Shikari Olyxa
-;						Tweaked movement a little
-;						Will now interrupt Triage
-;					Skulkor
-;						Modified LockSpot
-;					Gangrerious
-;						Modified LockSpot
-;						Now Jousts Searches
+;			Renewal of Ro
+;				Research Requisition Tradeskill Missions
+;					Grabs all 3 Missions, Harvests in Raj'Dur the returns
+;					to quest givers, Crafts required items and turns in
+;			YunZi
+;				Traveler's Kunark Catalog: Still not a Panda!
+;				Traveler's Kunark Catalog: Killers in Kunzar
+;				Traveler's Kunark Catalog: Scouting Skyfire
+;				Traveler's Kunark Catalog: Angry, Angry, Angry
+;		Modified:
+;			Renewal of Ro
+;				Renewal of Ro Tradeskill Timeline
+;					Researchers of Ro Responsibility for Raj'Dur
+;					Researchers of Ro Takish Time
+;					Researchers of Ro Sandstone Setup
+;						Now waits for Portable Work Bench to be ready before casting
+
+;v6.75 Changes 2-8-23
+;	RunInstances
+;		Added /hidden_effects delete 4221996095 to the FastTravel Function
+;		Added:
+;				(From here on out unless there is some special coding 
+;				for Nameds I will only list the nameds and the Pull 
+;				method with Tank and Spank)
+;			Raj'Dur Plateaus: Blood and Sand
+;				Baka (RI Pull Baka)
+;				Khadra Chatt (RI Pull Khadra)
+;				Quartermaster Hamid (RI Pull Hamid)
+;				Farid (RI Pull Farid)
+;				Mustapha Droughtbringer (RI Pull Mustapha)
+;			Raj'Dur Plateaus: The Sultan's Dagger 
+;				Bashida the Blade (RI Pull Bashida)
+;				Kerem B'ayet (RI Pull Kerem)
+;				Carrionpicker (RI Pull Carrionpicker)
+;				Albusat Alsihriu (RI Pull Albusat)
+;				Aqile Akalay (RI Pull Akalay)
+;				Aldys, Sultan of the Daggers (RI Pull Aldys)
+;			Buried Takish'Hiz: Terrene Threshold
+;				Shiroth Avinox (RI Pull Shiroth)
+;					Jousts when appropriate
+;				The Haunting of Tualanan (RI Pull Tualanan)
+;					Completes Puzzle
+;					Moves to and engages Named
+;					Moves back to named and casts Daze/Fear/Mez/Stifle/Stun (Coming Soon)
+;				Terranus (RI Pull Terranus)
+;					Kills Adds
+;					Stays Within 4 of Named
+;				Terratha's (RI Pull Terratha)
+;				Malachiel (RI Pull Caedor)
+;			Buried Takish'Hiz: The Sacred Gift
+;				Exorax (RI Pull Exorax)
+;					Clears correct piles
+;				Ganadan (RI Pull Ganadan)
+;					Moves and Cures (if no merc or cure spell have pots)
+;				Anirath Andirin (RI Pull Anirath)
+;					Clears correct piles
+;			Takish Badlands: Overgrowth
+;				Florafang (RI Pull Florafang)
+;				The Gobbler (RI Pull Gobbler)
+;				Cleavespine (RI Pull Cleavespine)
+;				Tawerek (RI Pull Tawerek)
+;				Leafjaw (RI Pull Leafjaw)
+;					Moves to and kills Orbs
+;			Takish Badlands: Kigathor's Glade
+;				Lopik Runtbottom (RI Pull Lopik)
+;				Migral Strongfeet (RI Pull Migral)
+;				Chief Dunesea (RI Pull Dunesea)
+;				The Harrower (RI Pull Harrower)
+;				Kigathor Stonebark (RI Pull Kigathor)
+;			Sandstone Delta: Eye of the Storm
+;				Gallopagus (RI Pull Gallopagus)
+;					Activates Pillars
+;					Moves behind pillar to Stun named
+;				Hargan & Fushuga (RI Pull Hargan)
+;					Kicks crabs
+;				Stormy Withers (RI Pull Withers)
+;					Moves on and off platform as needed
+;				Wa'la'kra'na & Pri'ki'ori'ki (RI Pull Pri)
+;				Agmork the Almighty Angler (RI Pull Agmork)
+;					Kicks crabs and Sharks
+;					Moves to tent for wave
+;			Sandstone Delta: Eye of Night
+;				Crusader Palaendor (RI Pull Palaendor)
+;				Shadowscum (RI Pull Shadowscum)
+;				Granight (RI Pull Granight)
+;				Ahuttam the Sword's Breeze (RI Pull Ahuttam)
+;				Nenmioseh the Night's Eye (RI Pull Nenmioseh)
+;	RQ
+;		Modified:
+;			Renewal of Ro
+;				Research Requisition Tradeskill Missions
+;					Will now remove harvestables and fuels from the depots
+;					in your guild hall if you are there
+;					Tweaked pathing for harvesting
+;				Renewal of Ro Tradeskill Timeline
+;					Added a 2s wait in between Fast Travels
+;					Tweaked pathing for harvesting
+;			Kunark Ascending
+;				Guardians of Growf
+;					Removed the check for Search and Rescue
+;		Added:
+;			A Gathering Obsession Timeline
+;				A Gathering Obsession
+;				A Gathering Obsession, Part II
+;				A Gathering Obsession, Part III
+;				A Gathering Obsession, Part IV
+;				A Gathering Obsession, Part V
+;				A Gathering Obsession, Part VI
+;				A Gathering Obsession, Part VII
+;				A Gathering Obsession, Part VIII
+;				A Gathering Obsession, Final Errand
+;				The Return Of A Gathering Obsession
+;				The Captain's Lament (Updated)
+;				Fond Memories
+;				A Gathering Obsession Beyond The Grave
+;			The Gathering Goblin Timeline
+;				Guardian of Growf
+;				Blessing of Growf
+;				Protector of Growf
+;				Seeds of Growf
+;				The Plan of Growf
+;				Tree of Growf
+;				Budding Progress
+;				Home Sickness
+;				The Gardening Goblin
+;			Renewal of Ro
+;				Renewal of Ro Adventure Timeline
+;					Renewal of Ro: All's Well in Hopewell
+;						Seeking Mystic Solutions
+;						Fight or Fright
+;					Renewal of Ro: Raj'Durabad Bound
+;						Desert Products
+;						Crystals and Coconuts
+;					Renewal of Ro: In for a Raj'Durabad Time
+;						A History of Sultans
+;						Curse and Tell
+;						The Threatening Truth
+;						Raj'Durabad Feeling About This
+;					Renewal of Ro: Desperately Seeking Sigils
+;					Renewal of Ro: Chosen Follower
+;					Renewal of Ro: Buried Truths
+;					Renewal of Ro: Rebirth
+;					Renewal of Ro: Badlands Transformed
+;					Renewal of Ro: Tailing Dragons
+;						Flustered By Flora
+;						Culling Seedlings
+;						Garden Spikes for Takish Growth
+;						Market Opportunities
+;						Component Parts
+;						Sea of Opportunity
+;					Renewal of Ro: Determined Through the Delta
+;					Renewal of Ro: Illusion From the Disillusioned
+;						One-Eyes of War
+;						Swordfury Rising
+;						Blind with Stormfury
+;						One-Eyes on the Prize
+;						In the Names of War
+;						Take to the Skies
+;					Renewal of Ro: Mission Most Heated
+;					Renewal of Ro: Sultan's Shattered Designs
+
+;ISXRI - v6.75 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
+
 
 ;RunQuest - Runs a quest with RQ\n\nArgument 1: For Who\nArgument 2: Quest Name]
 
@@ -6016,7 +6159,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.73
+variable(global) float RI_Var_Float_Version=6.75
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -9158,6 +9301,8 @@ objectdef RIMovementObject
 					_combatshinycount:Set[0]
 					for (_combatshinycount:Set[1];${_combatshinycount}<50;_combatshinycount:Inc)
 					{
+						if ${RI_Var_Bool_ShinyDebug}
+							ISXRI ${Time}: Waiting for combat before shiny collection // _combatshinycount: ${_combatshinycount}
 						call This.CheckCombat
 						wait 1
 					}
@@ -9170,8 +9315,10 @@ objectdef RIMovementObject
 							wait 1
 							relay ${RI_Var_String_RelayGroup} RIMUIObj:JumpUp[ALL,${Me.X},${Me.Y},${Me.Z},${Math.Calc[${Me.Y}+.2]},${Me.Heading},5]
 							wait 100 ${RIMObj.AllGroupWithinRange[1.2]}
-							for (count:Set[1];${count}<50;count:Inc)
+							for (_combatshinycount:Set[1];${_combatshinycount}<50;_combatshinycount:Inc)
 							{
+								if ${RI_Var_Bool_ShinyDebug}
+									ISXRI ${Time}: Waiting for combat before shiny collection // _combatshinycount: ${_combatshinycount}
 								call This.CheckCombat
 								wait 1
 							}
@@ -9202,12 +9349,12 @@ objectdef RIMovementObject
 					wait 50
 					;
 					;;;;;
-					if ${EQ2UIPage[Journals,JournalsQuest].IsVisible} && ${EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].IsEnabled}
+					if ${EQ2UIPage[Journals,JournalsQuest].IsVisible} && ${EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[2].IsEnabled}
 					{	
 						wait 5
-						EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
+						EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[2].Child[6].Child[2].Child[1].Child[1]:LeftClick
 						wait 5
-						EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[Page,2].Child[Page,6].Child[Composite,2].Child[Page,1].Child[Button,1]:LeftClick
+						EQ2UIPage[Journals,JournalsQuest].Child[Page,TabPages].Child[2].Child[6].Child[2].Child[1].Child[1]:LeftClick
 						wait 5
 						EQ2UIPage[Journals,JournalsQuest]:Close
 					}
@@ -9636,8 +9783,11 @@ objectdef RIMovementObject
 				wait 1
 				press -release ${RI_Var_String_FlyUpKey}
 			}	
-				
-			while ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}>${Y1} ) || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ${RI_Var_Bool_Start} && ${_Zone.Equal["${Zone.Name}"]}
+			if ${RI_Var_Bool_Debug}
+			{
+				echo ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}>${Y1} ) || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ( ${RI_Var_Bool_Start} || !${Script[${RI_Var_String_RunInstancesScriptName}](exists)} ) && ${_Zone.Equal["${Zone.Name}"]}
+			}
+			while ${Math.Distance[${Me.Y},${Y1}]}>5 && ( ${Me.FlyingUsingMount} || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}>${Y1} ) || ( ( ${Me.WaterDepth}>0 && ${Me.IsSwimming} ) && ${Me.Y}<${Y1} && ${Me.WaterDepth}<1 ) ) && ( ${RI_Var_Bool_Start} || !${Script[${RI_Var_String_RunInstancesScriptName}](exists)} ) && ${_Zone.Equal["${Zone.Name}"]}
 			{
 				if ${EQ2.Zoning}!=0
 				{
@@ -11308,6 +11458,10 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Deeper into Kylong"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Focusing on Fens"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Not the Panda!"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Still not a Panda!"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Killers in Kunzar"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Scouting Skyfire"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Angry, Angry, Angry"]
 				UIElement[QuestsListBox@RI]:AddItem["Yunzi Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2017 Timeline",0,FFE8E200]
 				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
@@ -11518,11 +11672,73 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[A Gathering Obsession Timeline]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession"]
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part II"]
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part III"]
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part IV"]
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part V"]
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part VI"]
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part VII"]
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part VIII"]
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Final Errand"]
+				UIElement[QuestsListBox@RI]:AddItem["The Return Of A Gathering Obsession"]
+				UIElement[QuestsListBox@RI]:AddItem["The Captain's Lament"]
+				UIElement[QuestsListBox@RI]:AddItem["Fond Memories"]
+				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession Beyond The Grave"]
+			}
+			elseif ${_CatName.Equal[The Gardening Goblin Timeline]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem[The Gardening Goblin Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Guardian of Growf"]
+				UIElement[QuestsListBox@RI]:AddItem["Blessing of Growf"]
+				UIElement[QuestsListBox@RI]:AddItem["Protector of Growf"]
+				UIElement[QuestsListBox@RI]:AddItem["Seeds of Growf"]
+				UIElement[QuestsListBox@RI]:AddItem["The Plan of Growf"]
+				UIElement[QuestsListBox@RI]:AddItem["Tree of Growf"]
+				UIElement[QuestsListBox@RI]:AddItem["Budding Progress"]
+				UIElement[QuestsListBox@RI]:AddItem["Home Sickness"]
+				UIElement[QuestsListBox@RI]:AddItem["The Gardening Goblin"]
 			}
 			elseif ${_CatName.Equal[Renewal of Ro]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem[Renewal of Ro Adventure Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: All's Well in Hopewell"]
+				;UIElement[QuestsListBox@RI]:AddItem["Seeking Mystic Solutions"]
+				;UIElement[QuestsListBox@RI]:AddItem["Fight or Fright"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Raj'Durabad Bound"]
+				;UIElement[QuestsListBox@RI]:AddItem["Desert Products"]
+				;UIElement[QuestsListBox@RI]:AddItem["Crystals and Coconuts"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: In for a Raj'Durabad Time"]
+				;UIElement[QuestsListBox@RI]:AddItem["A History of Sultans"]
+				;UIElement[QuestsListBox@RI]:AddItem["Curse and Tell"]
+				;UIElement[QuestsListBox@RI]:AddItem["The Threatening Truth"]
+				;UIElement[QuestsListBox@RI]:AddItem["Raj'Durabad Feeling About This"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Desperately Seeking Sigils"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Chosen Follower"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Buried Truths"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Rebirth"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Badlands Transformed"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Tailing Dragons"]
+				;UIElement[QuestsListBox@RI]:AddItem["Flustered By Flora"]
+				;UIElement[QuestsListBox@RI]:AddItem["Culling Seedlings"]
+				;UIElement[QuestsListBox@RI]:AddItem["Garden Spikes for Takish Growth"]
+				;UIElement[QuestsListBox@RI]:AddItem["Market Opportunities"]
+				;UIElement[QuestsListBox@RI]:AddItem["Component Parts"]
+				;UIElement[QuestsListBox@RI]:AddItem["Sea of Opportunity"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Determined Through the Delta"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Illusion From the Disillusioned"]
+				;UIElement[QuestsListBox@RI]:AddItem["One-Eyes of War"]
+				;UIElement[QuestsListBox@RI]:AddItem["Swordfury Rising"]
+				;UIElement[QuestsListBox@RI]:AddItem["Blind with Stormfury"]
+				;UIElement[QuestsListBox@RI]:AddItem["One-Eyes on the Prize"]
+				;UIElement[QuestsListBox@RI]:AddItem["In the Names of War"]
+				;UIElement[QuestsListBox@RI]:AddItem["Take to the Skies"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Mission Most Heated"]
+				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Sultan's Shattered Designs"]
+				UIElement[QuestsListBox@RI]:AddItem["Research Requisition Tradeskill Missions",0,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro Tradeskill Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Responsibility for Raj'Dur"]
 				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Curing the Curse"]
@@ -11566,6 +11782,7 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:AddItem[Renewal of Ro]
 			UIElement[CategoryComboBox@RI]:AddItem[Sokokar Crafting]
 			UIElement[CategoryComboBox@RI]:AddItem[Terrors of Thalumbra Crafting]
+			UIElement[CategoryComboBox@RI]:AddItem[The Gardening Goblin Timeline]
 			UIElement[CategoryComboBox@RI]:AddItem[Visions of Vetrovia]
 			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
 			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Renewal of Ro].ID}]

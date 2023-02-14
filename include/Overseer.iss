@@ -300,7 +300,7 @@ function main()
     Quest:Insert["Dance Haywire, Dance|1:30:00|10%|5%|1|Unpredictable:Forager|Secretive|Treasured"]
     Quest:Insert["Kill Zappodill|1:30:00|10%|5%|1|Inquisitive:Corrupt|Forager|Treasured"]
     Quest:Insert["Save Hedwocket Cobbleblork|2:00:00|15%|10%|1|Explorative|Shrewd|Treasured"]
-    Quest:Insert["Eliminate Crumb Shinsplitter|2:00:00|15%|10%|1|Forager|Adventurous|Treasured"]
+    Quest:Insert["Eliminate Crumb Shinspitter|2:00:00|15%|10%|1|Forager|Adventurous|Treasured"]
 
     ;Legendary
     Quest:Insert["Tools of Success|2:30:00|10%|5%|2|Noble:Devoted:Lucky:Wise|Unpredictable:Daring|Legendary"]

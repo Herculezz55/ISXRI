@@ -230,5 +230,5 @@ string AGatheringObsession[] = {"A Gathering Obsession",
 "-27.32 10.28 -110.67", 
 "Custom", 
 "HailActor \"Qho Augren\" 10 1 TRUE FALSE", 
-"-27.32 10.28 -110.67",
+"-27.32 10.28 -110.67", 
 };

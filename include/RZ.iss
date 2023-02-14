@@ -43,6 +43,7 @@ variable bool RESETALLZONES=FALSE
 
 atom BuildIndexes(string _Expac)
 {
+	;variable string _IndexBuilder
 	;Clear Zone
 	_Zone:Clear
 	UIElement[ZonesAvail@RZ]:ClearItems
@@ -1157,21 +1158,6 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
 			ZoneUnlockTime:Insert[5400]	
-			;Zone
-			;_Zone:Insert[""]
-			;UIElement[ZonesAvail@RZ]:AddItem[""]
-			;ZoneFrom:Insert["Myrist"]
-			;ZoneTimer:Insert[90]
-			;ZoneExit:Insert[""]
-			;ZoneExitPopupSelection:Insert[0]
-			;ZoneExitLoc:Insert[""]
-			;ZoneEntrance:Insert[""]
-			;ZoneEntranceLoc:Insert[""]
-			;ZonePathFile:Insert[0]
-			;ZoneUnlocked:Insert[TRUE]
-			;ZoneSetTime:Insert[0]
-			;ZoneUnlockTime:Insert[5400]
-			
 			
 			break
 		}
@@ -2453,8 +2439,152 @@ atom BuildIndexes(string _Expac)
 			ZoneUnlocked:Insert[TRUE]
 			ZoneSetTime:Insert[0]
 			ZoneUnlockTime:Insert[64800]
+
+			break
+		}
+		case Renewal of Ro
+		{
+			;Raj'Dur Plateaus: The Sultan's Dagger [Signature]
+			;_IndexBuilder:Set["Raj'Dur Plateaus: The Sultan's Dagger [Signature]"|"Raj'Dur Plateaus: The Sultan's Dagger [Signature]"|"Raj'Dur Plateaus The Sultan's Dagger"|90|"Exit"|0|""|"zone_portal_to_dun_plateaus_02"|""|0|TRUE|0|5400]
+			
+			;Zone
+			_Zone:Insert["Raj'Dur Plateaus: Blood and Sand [Signature]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Raj'Dur Plateaus: Blood and Sand [Signature]"]
+			ZoneFrom:Insert["Raj'Dur Plateaus Blood and Sand"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_portal_to_dun_plateaus_01"]
+			ZoneEntranceLoc:Insert["162.720001,-59.590000,477.339996"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Raj'Dur Plateaus: The Sultan's Dagger [Signature]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Raj'Dur Plateaus: The Sultan's Dagger [Signature]"]
+			ZoneFrom:Insert["Raj'Dur Plateaus The Sultan's Dagger"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_portal_to_dun_plateaus_02"]
+			ZoneEntranceLoc:Insert["60.549999,87.639999,-349.829987"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Buried Takish'Hiz: Terrene Threshold [Signature]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Buried Takish'Hiz: Terrene Threshold [Signature]"]
+			ZoneFrom:Insert["Raj'Dur Plateaus Buried Takish'Hiz"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_portal_to_takish_dungeons"]
+			ZoneEntranceLoc:Insert["-554.349976,10.960000,427.899994"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Buried Takish'Hiz: The Sacred Gift [Signature]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Buried Takish'Hiz: The Sacred Gift [Signature]"]
+			ZoneFrom:Insert["Raj'Dur Plateaus Buried Takish'Hiz"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_portal_to_takish_dungeons"]
+			ZoneEntranceLoc:Insert["-554.349976,10.960000,427.899994"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Takish Badlands: Overgrowth [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Takish Badlands: Overgrowth [Solo]"]
+			ZoneFrom:Insert["Takish Badlands Overgrowth"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_portal_to_dun_takish_badlands_01"]
+			ZoneEntranceLoc:Insert["742.023987,58.080002,42.790913"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Takish Badlands: Kigathor's Glade [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Takish Badlands: Kigathor's Glade [Solo]"]
+			ZoneFrom:Insert["Takish Badlands Kigathor's Glade"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_portal_to_dun_takish_badlands_02"]
+			ZoneEntranceLoc:Insert["-394.227814,245.000000,213.808731"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Sandstone Delta: Eye of the Storm [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sandstone Delta: Eye of the Storm [Solo]"]
+			ZoneFrom:Insert["Sandstone Delta Eye of the Storm"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["zone_exit_main"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_portal_to_dun_sandstone_delta_01"]
+			ZoneEntranceLoc:Insert["-47.570000,57.150002,160.699997"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			_Zone:Insert["Sandstone Delta: Eye of Night [Solo]"]
+			UIElement[ZonesAvail@RZ]:AddItem["Sandstone Delta: Eye of Night [Solo]"]
+			ZoneFrom:Insert["Sandstone Delta Eye of Night"]
+			ZoneTimer:Insert[90]
+			ZoneExit:Insert["Exit"]
+			ZoneExitPopupSelection:Insert[0]
+			ZoneExitLoc:Insert[""]
+			ZoneEntrance:Insert["zone_portal_to_dun_sandstone_delta_02"]
+			ZoneEntranceLoc:Insert["589.960022,113.050003,-631.919983"]
+			ZonePathFile:Insert[0]
+			ZoneUnlocked:Insert[TRUE]
+			ZoneSetTime:Insert[0]
+			ZoneUnlockTime:Insert[5400]
+
+			;Zone
+			;_Zone:Insert[""]
+			;UIElement[ZonesAvail@RZ]:AddItem[""]
+			;ZoneFrom:Insert[""]
+			;ZoneTimer:Insert[90]
+			;ZoneExit:Insert["Exit"]
+			;ZoneExitPopupSelection:Insert[0]
+			;ZoneExitLoc:Insert[""]
+			;ZoneEntrance:Insert[""]
+			;ZoneEntranceLoc:Insert[""]
+			;ZonePathFile:Insert[0]
+			;ZoneUnlocked:Insert[TRUE]
+			;ZoneSetTime:Insert[0]
+			;ZoneUnlockTime:Insert[5400]
+			break
 		}
 	}
+
 	
 }
 variable(global) int RZ_Var_Int_Count=1
@@ -2594,13 +2724,14 @@ function main(... args)
 	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml"
 	RZObj:Maximize
 	RZObj:LoadSave
+	UIElement[ExpacComboBox@RZ]:AddItem["Renewal of Ro"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Visions of Vetrovia"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Reign of Shadows"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Blood of Luclin"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Chaos Descending"]
 	UIElement[ExpacComboBox@RZ]:AddItem["Planes of Prophecy"]
 	UIElement[ExpacComboBox@RZ]:SelectItem[1]
-	BuildIndexes "Visions of Vetrovia"
+	BuildIndexes "Renewal of Ro"
 	
 	;start RIMovement if it is not running
 	relay all -noredirect ${If[!${Script[Buffer:RIMovement](exists)},RIMovement,noop]}
@@ -2745,6 +2876,7 @@ function main(... args)
 				;call CheckZones function
 				call RZObj.CheckZones
 				;echo checking if ${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]} at ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]} is unlocked: ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]}]}
+				;echo \${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]}]}
 				if ${ZoneUnlocked.Get[${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]}]}
 					call Zone ${RZObj.ZoneIndexPosition["${UIElement[AddedZoneList@RZ].OrderedItem[${RZ_Var_Int_Count}]}"]}
 			}
@@ -2857,6 +2989,71 @@ function Goto(string _WhereToGo)
 {
 	;echo ${_WhereToGo}
 	wait 10
+	if ${_WhereToGo.Upper.Equal[RP]}
+	{
+		_WhereToGo:Set["Raj'Dur Plateaus"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ RPO
+	}
+	if ${_WhereToGo.Upper.Equal[RPO]}
+	{
+		_WhereToGo:Set["Raj'Dur Plateaus"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[RPBS]}
+	{
+		_WhereToGo:Set["Raj'Dur Plateaus Blood and Sand"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ RPO
+	}
+	if ${_WhereToGo.Upper.Equal[RPTSD]}
+	{
+		_WhereToGo:Set["Raj'Dur Plateaus The Sultan's Dagger"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ RPO
+	}
+	if ${_WhereToGo.Upper.Equal[RPBT]}
+	{
+		_WhereToGo:Set["Raj'Dur Plateaus Buried Takish'Hiz"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ RPO
+	}
+	if ${_WhereToGo.Upper.Equal[TB]}
+	{
+		_WhereToGo:Set["Takish Badlands"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ TBO
+	}
+	if ${_WhereToGo.Upper.Equal[TBO]}
+	{
+		_WhereToGo:Set["Takish Badlands"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[TBKG]}
+	{
+		_WhereToGo:Set["Takish Badlands Kigathor's Glade"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ TBO
+	}
+	if ${_WhereToGo.Upper.Equal[TBOG]}
+	{
+		_WhereToGo:Set["Takish Badlands Overgrowth"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ TBO
+	}
+	if ${_WhereToGo.Upper.Equal[SD]}
+	{
+		_WhereToGo:Set["Sandstone Delta"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SDO
+	}
+	if ${_WhereToGo.Upper.Equal[SDO]}
+	{
+		_WhereToGo:Set["Sandstone Delta"]
+		Others:Set[TRUE]
+	}
+	if ${_WhereToGo.Upper.Equal[SDES]}
+	{
+		_WhereToGo:Set["Sandstone Delta Eye of the Storm"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SDO
+	}
+	if ${_WhereToGo.Upper.Equal[SDEN]}
+	{
+		_WhereToGo:Set["Sandstone Delta Eye of Night"]
+		relay "other ${RI_Var_String_RelayGroup}" RZ SDO
+	}
 	if ${_WhereToGo.Upper.Equal[MWG]}
 	{
 		_WhereToGo:Set["Mahngavi Wastes Ghoulinda"]
@@ -3048,7 +3245,7 @@ function Goto(string _WhereToGo)
 	variable string _WhereToGoShort
 	_WhereToGoShort:Set["${_WhereToGo.Replace[" ",""].Replace["[",""].Replace["]",""].Replace["'",""]}"]
 	
-	if ( !${_WhereToGoShort.Find[ForlornGistMerchantsDen](exists)} && !${_WhereToGoShort.Find[MahngaviWastesGhoulinda](exists)} && !${_WhereToGoShort.Find[KaruupaJunglePredatorsPerch](exists)} && !${_WhereToGoShort.Find[KaruupaJungleDedrakasDescent](exists)} && !${_WhereToGoShort.Find[KaruupaJungleHeartofConflict](exists)} && !${_WhereToGoShort.Find[KaruupaJungle](exists)} && !${_WhereToGoShort.Find[MahngaviWastes](exists)} && !${_WhereToGoShort.Find[SvarniExpanse](exists)} && !${_WhereToGoShort.Find[ForlornGist](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicketLodaKaiIsle](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicket](exists)} && ${_WhereToGoShort.NotEqual[LopingPlains]} && ${_WhereToGoShort.NotEqual[EchoCaverns]} && ${_WhereToGoShort.NotEqual[CityofFordelMidst]} && !${_WhereToGoShort.Find[SavageWeald](exists)} && !${_WhereToGoShort.Find[CityofSharVahl](exists)} && ${_WhereToGoShort.NotEqual[Baubles]} && ${_WhereToGoShort.NotEqual[AurelianCoast]} && ${_WhereToGoShort.NotEqual[SanctusSeruCity]} && ${_WhereToGoShort.NotEqual[Wracklands]})
+	if ( !${_WhereToGoShort.Find[SandstoneDeltaEyeoftheStorm](exists)} && !${_WhereToGoShort.Find[SandstoneDeltaEyeofNight](exists)} && !${_WhereToGoShort.Find[SandstoneDelta](exists)} && !${_WhereToGoShort.Find[TakishBadlandsKigathorsGlade](exists)} && !${_WhereToGoShort.Find[TakishBadlandsOvergrowth](exists)} && !${_WhereToGoShort.Find[TakishBadlands](exists)} && !${_WhereToGoShort.Find[RajDurPlateaus](exists)} && !${_WhereToGoShort.Find[RajDurPlateausBloodandSand](exists)} && !${_WhereToGoShort.Find[RajDurPlateausTheSultansDagger](exists)} && !${_WhereToGoShort.Find[RajDurPlateausBuriedTakishHiz](exists)} && !${_WhereToGoShort.Find[MahngaviWastesGhoulinda](exists)} && !${_WhereToGoShort.Find[KaruupaJunglePredatorsPerch](exists)} && !${_WhereToGoShort.Find[KaruupaJungleDedrakasDescent](exists)} && !${_WhereToGoShort.Find[KaruupaJungleHeartofConflict](exists)} && !${_WhereToGoShort.Find[KaruupaJungle](exists)} && !${_WhereToGoShort.Find[MahngaviWastes](exists)} && !${_WhereToGoShort.Find[SvarniExpanse](exists)} && !${_WhereToGoShort.Find[ForlornGist](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicketLodaKaiIsle](exists)} && !${_WhereToGoShort.Find[ShadeweaversThicket](exists)} && ${_WhereToGoShort.NotEqual[LopingPlains]} && ${_WhereToGoShort.NotEqual[EchoCaverns]} && ${_WhereToGoShort.NotEqual[CityofFordelMidst]} && !${_WhereToGoShort.Find[SavageWeald](exists)} && !${_WhereToGoShort.Find[CityofSharVahl](exists)} && ${_WhereToGoShort.NotEqual[Baubles]} && ${_WhereToGoShort.NotEqual[AurelianCoast]} && ${_WhereToGoShort.NotEqual[SanctusSeruCity]} && ${_WhereToGoShort.NotEqual[Wracklands]})
 	{
 		;echo ${_WhereToGoShort}
 		echo ISXRI: ${_WhereToGo} is not a Predetermined Goto Location
@@ -3056,7 +3253,43 @@ function Goto(string _WhereToGo)
 	}
 	variable string _WhereFrom=NONE
 	;first determine where we are at
-	if ${Zone.Name.Find[Svarni Expanse]} && ${Me.Distance[-523.72,89.88,-533.43]}<55
+	
+	if ${Zone.Name.Find[Sandstone Delta]} && ${Me.Distance[589.960022,113.050003,-631.919983]}<55
+	{
+		;we are at Sandstone Delta: Eye of Night
+		_WhereFrom:Set["Sandstone Delta Eye of Night"]
+	}
+	elseif ${Zone.Name.Find[Sandstone Delta]} && ${Me.Distance[-47.570000,57.150002,160.699997]}<55
+	{
+		;we are at Sandstone Delta: Eye of the Storm
+		_WhereFrom:Set["Sandstone Delta Eye of the Storm"]
+	}
+	elseif ${Zone.Name.Find[Takish Badlands]} && ${Me.Distance[-394.227814,245.000000,213.808731]}<55
+	{
+		;we are at Kigathor's Glade
+		_WhereFrom:Set["Takish Badlands Kigathor's Glade"]
+	}
+	elseif ${Zone.Name.Find[Takish Badlands]} && ${Me.Distance[742.023987,58.080002,42.790913]}<55
+	{
+		;we are at Takish Badlands Overgrowth
+		_WhereFrom:Set["Takish Badlands Overgrowth"]
+	}
+	elseif ${Zone.Name.Find[Raj'Dur Plateaus]} && ${Me.Distance[162.720001,-59.590000,477.339996]}<55
+	{
+		;we are at Blood and Sand
+		_WhereFrom:Set["Raj'Dur Plateaus Blood and Sand"]
+	}
+	elseif ${Zone.Name.Find[Raj'Dur Plateaus]} && ${Me.Distance[60.549999,87.639999,-349.829987]}<55
+	{
+		;we are at The Sultan's Dagger
+		_WhereFrom:Set["Raj'Dur Plateaus The Sultan's Dagger"]
+	}
+	elseif ${Zone.Name.Find[Raj'Dur Plateaus]} && ${Me.Distance[-554.349976,10.960000,427.899994]}<55
+	{
+		;we are at The Sultan's Dagger
+		_WhereFrom:Set["Raj'Dur Plateaus Buried Takish'Hiz"]
+	}
+	elseif ${Zone.Name.Find[Svarni Expanse]} && ${Me.Distance[-523.72,89.88,-533.43]}<55
 	{
 		;we are at Svarni Expanse
 		_WhereFrom:Set["Svarni Expanse"]
@@ -3181,7 +3414,208 @@ function Goto(string _WhereToGo)
 		return
 	}
 	;echo ${_WhereFromShort.Equal["${_WhereToGoShort}"]} // ${_WhereFromShort} // ${_WhereToGoShort}
-	
+	if ${_WhereToGoShort.Equal[SandstoneDelta]}
+	{
+		call FastTravel "Takish Badlands"
+		wait 50 ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+		call TakishBadlandsSandstoneDelta
+		wait 50 ${Zone.ShortName.Find[exp19_rgn_sandstone_delta](exists)}
+	}
+	elseif ${_WhereToGoShort.Equal[SandstoneDeltaEyeofTheStorm]}
+	{
+		if ${_WhereFromShort.Equal[SandstoneDeltaEyeofNight]}
+		{
+			if !${Others}
+				call SandstoneDeltaEyeofNightSandstoneDeltaEyeofTheStorm
+		}
+		elseif ${_WhereFromShort.Equal[TakishBadlandsKigathorsGlade]}
+		{
+			call TakishBadlandsSandstoneDelta TRUE
+			if !${Others}
+				call SandstoneDeltaEyeofTheStorm
+		}
+		elseif ${_WhereFromShort.Equal[TakishBadlandsOvergrowth]}
+		{
+			call TakishBadlandsOvergrowthTakishBadlandsKigathorsGlade
+			call TakishBadlandsSandstoneDelta TRUE
+			if !${Others}
+				call SandstoneDeltaEyeofTheStorm
+		}
+		else
+		{
+			if ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+			{
+				call FastTravel "Isle of Mara"
+				wait 50
+			}
+			call FastTravel "Takish Badlands"
+			wait 50 ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+			call TakishBadlandsSandstoneDelta
+			wait 50 ${Zone.ShortName.Find[exp19_rgn_sandstone_delta](exists)}
+			if !${Others}
+				call SandstoneDeltaEyeofTheStorm
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[SandstoneDeltaEyeofNight]}
+	{
+		if ${_WhereFromShort.Equal[SandstoneDeltaEyeofTheStorm]}
+		{
+			if !${Others}
+				call SandstoneDeltaEyeofTheStormSandstoneDeltaEyeofNight
+		}
+		elseif ${_WhereFromShort.Equal[TakishBadlandsKigathorsGlade]}
+		{
+			call TakishBadlandsSandstoneDelta TRUE
+			if !${Others}
+				call SandstoneDeltaEyeofNight
+		}
+		elseif ${_WhereFromShort.Equal[TakishBadlandsOvergrowth]}
+		{
+			call TakishBadlandsOvergrowthTakishBadlandsKigathorsGlade
+			call TakishBadlandsSandstoneDelta TRUE
+			if !${Others}
+				call SandstoneDeltaEyeofNight
+		}
+		else
+		{
+			if ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+			{
+				call FastTravel "Isle of Mara"
+				wait 50
+			}
+			call FastTravel "Takish Badlands"
+			wait 50 ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+			call TakishBadlandsSandstoneDelta
+			wait 50 ${Zone.ShortName.Find[exp19_rgn_sandstone_delta](exists)}
+			if !${Others}
+				call SandstoneDeltaEyeofNight
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[TakishBadlands]}
+	{
+		call FastTravel "Takish Badlands"
+		wait 50 ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+	}
+	elseif ${_WhereToGoShort.Equal[TakishBadlandsOvergrowth]}
+	{
+		if ${_WhereFromShort.Equal[TakishBadlandsKigathorsGlade]}
+		{
+			if !${Others}
+				call TakishBadlandsKigathorsGladeTakishBadlandsOvergrowth
+		}
+		else
+		{
+			if ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+			{
+				call FastTravel "Isle of Mara"
+				wait 50
+			}
+			call FastTravel "Takish Badlands"
+			wait 50 ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+			if !${Others}
+				call TakishBadlandsOvergrowth
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[TakishBadlandsKigathorsGlade]}
+	{
+		if ${_WhereFromShort.Equal[TakishBadlandsOvergrowth]}
+		{
+			if !${Others}
+				call TakishBadlandsOvergrowthTakishBadlandsKigathorsGlade
+		}
+		else
+		{
+			if ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+			{
+				call FastTravel "Isle of Mara"
+				wait 50
+			}
+			call FastTravel "Takish Badlands"
+			wait 50 ${Zone.ShortName.Find[exp19_rgn_takish_badlands](exists)}
+			if !${Others}
+				call TakishBadlandsKigathorsGlade
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[RajDurPlateaus]}
+	{
+		call FastTravel "Raj'Dur Plateaus"
+		wait 50 ${Zone.ShortName.Find[exp19_rgn_plateaus](exists)}
+	}
+	elseif ${_WhereToGoShort.Equal[RajDurPlateausBloodandSand]}
+	{
+		if ${_WhereFromShort.Equal[RajDurPlateausBuriedTakishHiz]}
+		{
+			if !${Others}
+				call RajDurPlateausBuriedTakishHizRajDurPlateausBloodandSand
+		}
+		elseif ${_WhereFromShort.Equal[RajDurPlateausTheSultansDagger]}
+		{
+			if !${Others}
+				call RajDurPlateausTheSultansDaggerRajDurPlateausBloodandSand
+		}
+		else
+		{
+			if ${Zone.ShortName.Find[exp19_rgn_plateaus](exists)}
+			{
+				call FastTravel "Isle of Mara"
+				wait 50
+			}
+			call FastTravel "Raj'Dur Plateaus"
+			wait 50 ${Zone.ShortName.Find[exp19_rgn_plateaus](exists)}
+			if !${Others}
+				call RajDurPlateausBloodandSand
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[RajDurPlateausTheSultansDagger]}
+	{
+		if ${_WhereFromShort.Equal[RajDurPlateausBuriedTakishHiz]}
+		{
+			if !${Others}
+				call RajDurPlateausBuriedTakishHizRajDurPlateausTheSultansDagger
+		}
+		elseif ${_WhereFromShort.Equal[RajDurPlateausBloodandSand]}
+		{
+			if !${Others}
+				call RajDurPlateausTheSultansDagger
+		}
+		else
+		{
+			if ${Zone.ShortName.Find[exp19_rgn_plateaus](exists)}
+			{
+				call FastTravel "Isle of Mara"
+				wait 50
+			}
+			call FastTravel "Raj'Dur Plateaus"
+			wait 50 ${Zone.ShortName.Find[exp19_rgn_plateaus](exists)}
+			if !${Others}
+				call RajDurPlateausTheSultansDagger
+		}
+	}
+	elseif ${_WhereToGoShort.Equal[RajDurPlateausBuriedTakishHiz]}
+	{
+		if ${_WhereFromShort.Equal[RajDurPlateausTheSultansDagger]}
+		{
+			if !${Others}
+				call RajDurPlateausTheSultansDaggerRajDurPlateausBuriedTakishHiz
+		}
+		elseif ${_WhereFromShort.Equal[RajDurPlateausBloodandSand]}
+		{
+			if !${Others}
+				call RajDurPlateausBuriedTakishHiz
+		}
+		else
+		{
+			if ${Zone.ShortName.Find[exp19_rgn_plateaus](exists)}
+			{
+				call FastTravel "Isle of Mara"
+				wait 50
+			}
+			call FastTravel "Raj'Dur Plateaus"
+			wait 50 ${Zone.ShortName.Find[exp19_rgn_plateaus](exists)}
+			if !${Others}
+				call RajDurPlateausBuriedTakishHiz
+		}
+	}
 	if ${_WhereToGoShort.Equal[MahngaviWastesGhoulinda]}
 	{
 		call UseBauble "Renfry's Basement Bauble" "Renfry's Basement"
@@ -3600,6 +4034,507 @@ function UseBauble(string _Which, string _ZoneName)
 	wait 50 ${Zone.Name.Equal["${_ZoneName}"]}
 	;unpause bots
 	RI_CMD_PauseCombatBots 0
+}
+function TakishBadlandsSandstoneDelta(bool _SkipTransport=FALSE)
+{
+	_PathFile:Clear
+	if !${_SkipTransport}
+	{
+		_PathFile:Insert[243.04 48.02 1183.43]
+		_PathFile:Insert[Custom|Wait|1]
+		_PathFile:Insert[243.04 77.21 1183.43]
+		_PathFile:Insert[211.67 73.84 1150.42]
+		_PathFile:Insert[179.93 73.84 1111.76]
+		_PathFile:Insert[147.16 73.84 1073.71]
+		_PathFile:Insert[114.36 73.84 1035.60]
+		_PathFile:Insert[85.79 73.84 994.54]
+		_PathFile:Insert[77.67 73.80 972.47]
+		_PathFile:Insert[Custom|RIMObj.FlyDown]
+		_PathFile:Insert[78.09 1.86 974.25]
+		_PathFile:Insert[Custom|ClickActor|a transport of Growth]
+		_PathFile:Insert[Custom|Wait|50]
+		_PathFile:Insert[Custom|WaitWhileMoving]
+		_PathFile:Insert[Custom|Wait|10]
+		_PathFile:Insert[Custom|WaitWhileMoving]
+	}
+	_PathFile:Insert[-437.46 246.98 181.05]
+	_PathFile:Insert[Custom|ClickActor|Zone to Sandstone Delta]
+	_PathFile:Insert[Custom|Wait|50]
+	_PathFile:Insert[Custom|TravelMap|Sandstone Delta]
+	_PathFile:Insert[Custom|Wait|50]
+	_PathFile:Insert[Custom|WaitWhileMoving]
+
+	call NavigatePath
+}
+function SandstoneDeltaEyeofTheStormSandstoneDeltaEyeofNight()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-58.53 57.37 164.87]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-58.53 107.44 164.87]
+	_PathFile:Insert[-58.53 157.58 164.87]
+	_PathFile:Insert[-58.53 207.62 164.87]
+	_PathFile:Insert[-23.61 214.63 129.67]
+	_PathFile:Insert[11.68 214.63 94.09]
+	_PathFile:Insert[47.11 214.63 58.38]
+	_PathFile:Insert[82.14 214.63 22.53]
+	_PathFile:Insert[116.25 214.63 -14.07]
+	_PathFile:Insert[150.50 214.63 -50.82]
+	_PathFile:Insert[184.74 214.63 -87.56]
+	_PathFile:Insert[218.93 214.63 -124.25]
+	_PathFile:Insert[253.05 214.63 -160.86]
+	_PathFile:Insert[287.15 214.63 -197.46]
+	_PathFile:Insert[321.36 214.63 -234.17]
+	_PathFile:Insert[355.49 214.63 -270.79]
+	_PathFile:Insert[389.61 214.63 -307.41]
+	_PathFile:Insert[423.79 214.63 -344.08]
+	_PathFile:Insert[458.36 214.63 -381.17]
+	_PathFile:Insert[492.55 214.63 -417.86]
+	_PathFile:Insert[525.69 214.63 -455.30]
+	_PathFile:Insert[549.01 214.63 -499.68]
+	_PathFile:Insert[568.60 214.63 -545.70]
+	_PathFile:Insert[582.94 214.63 -593.71]
+	_PathFile:Insert[593.05 213.47 -642.99]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[590.46 112.36 -633.63]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function SandstoneDeltaEyeofNightSandstoneDeltaEyeofTheStorm()
+{
+	_PathFile:Clear
+	_PathFile:Insert[593.07 113.71 -642.99]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[593.05 163.47 -642.99]
+	_PathFile:Insert[593.05 213.47 -642.99]
+	_PathFile:Insert[582.94 214.63 -593.71]
+	_PathFile:Insert[582.94 214.63 -593.71]
+	_PathFile:Insert[568.60 214.63 -545.70]
+	_PathFile:Insert[549.01 214.63 -499.68]
+	_PathFile:Insert[525.69 214.63 -455.30]
+	_PathFile:Insert[492.55 214.63 -417.86]
+	_PathFile:Insert[458.36 214.63 -381.17]
+	_PathFile:Insert[423.79 214.63 -344.08]
+	_PathFile:Insert[389.61 214.63 -307.41]
+	_PathFile:Insert[355.49 214.63 -270.79]
+	_PathFile:Insert[321.36 214.63 -234.17]
+	_PathFile:Insert[287.15 214.63 -197.46]
+	_PathFile:Insert[253.05 214.63 -160.86]
+	_PathFile:Insert[218.93 214.63 -124.25]
+	_PathFile:Insert[184.74 214.63 -87.56]
+	_PathFile:Insert[150.50 214.63 -50.82]
+	_PathFile:Insert[116.25 214.63 -14.07]
+	_PathFile:Insert[82.14 214.63 22.53]
+	_PathFile:Insert[47.11 214.63 58.38]
+	_PathFile:Insert[11.68 214.63 94.09]
+	_PathFile:Insert[-23.61 214.63 129.67]
+	_PathFile:Insert[-58.53 207.62 164.87]
+	_PathFile:Insert[-58.53 157.58 164.87]
+	_PathFile:Insert[-58.53 107.44 164.87]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-48.22 57.54 161.17]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function SandstoneDeltaEyeofTheStorm()
+{
+	_PathFile:Clear
+	_PathFile:Insert[658.81 51.26 171.21]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[658.81 101.54 171.21]
+	_PathFile:Insert[609.19 108.52 173.47]
+	_PathFile:Insert[559.17 108.52 175.75]
+	_PathFile:Insert[509.14 108.52 178.03]
+	_PathFile:Insert[466.49 134.71 179.98]
+	_PathFile:Insert[419.72 152.72 182.11]
+	_PathFile:Insert[370.68 163.09 184.35]
+	_PathFile:Insert[320.69 163.09 186.63]
+	_PathFile:Insert[270.61 163.09 188.91]
+	_PathFile:Insert[220.42 163.09 191.20]
+	_PathFile:Insert[170.38 163.09 193.48]
+	_PathFile:Insert[120.15 163.09 195.77]
+	_PathFile:Insert[71.31 152.50 192.49]
+	_PathFile:Insert[25.33 134.45 182.81]
+	_PathFile:Insert[-18.42 113.87 169.34]
+	_PathFile:Insert[-53.15 94.42 164.63]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-48.22 57.54 161.17]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function SandstoneDeltaEyeofNight()
+{
+	_PathFile:Clear
+	_PathFile:Insert[657.51 51.26 165.78]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[657.51 101.49 165.78]
+	_PathFile:Insert[657.51 151.80 165.78]
+	_PathFile:Insert[653.40 159.74 116.49]
+	_PathFile:Insert[649.18 159.74 65.79]
+	_PathFile:Insert[645.01 159.74 15.77]
+	_PathFile:Insert[640.86 159.74 -34.06]
+	_PathFile:Insert[636.68 159.74 -84.17]
+	_PathFile:Insert[632.51 159.74 -134.31]
+	_PathFile:Insert[628.34 159.74 -184.40]
+	_PathFile:Insert[624.16 159.74 -234.53]
+	_PathFile:Insert[619.99 159.74 -284.51]
+	_PathFile:Insert[615.84 159.74 -334.43]
+	_PathFile:Insert[611.66 159.74 -384.51]
+	_PathFile:Insert[607.49 159.74 -434.63]
+	_PathFile:Insert[603.92 159.74 -484.78]
+	_PathFile:Insert[599.75 159.74 -534.95]
+	_PathFile:Insert[595.01 159.74 -584.97]
+	_PathFile:Insert[589.94 159.74 -638.56]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[589.82 112.77 -632.45]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function TakishBadlandsKigathorsGladeTakishBadlandsOvergrowth()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-401.80 245.21 214.40]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-401.80 292.28 214.40]
+	_PathFile:Insert[-322.34 292.00 216.00]
+	_PathFile:Insert[-272.15 292.00 219.04]
+	_PathFile:Insert[-222.02 292.00 222.85]
+	_PathFile:Insert[-171.84 292.00 225.29]
+	_PathFile:Insert[-121.90 292.00 227.72]
+	_PathFile:Insert[-71.94 292.00 230.25]
+	_PathFile:Insert[-21.93 292.00 233.02]
+	_PathFile:Insert[14.14 257.08 235.29]
+	_PathFile:Insert[62.86 257.08 223.65]
+	_PathFile:Insert[111.51 257.08 212.04]
+	_PathFile:Insert[160.05 257.08 199.32]
+	_PathFile:Insert[209.00 257.08 189.10]
+	_PathFile:Insert[257.36 257.08 175.97]
+	_PathFile:Insert[305.93 257.08 162.77]
+	_PathFile:Insert[354.48 257.08 149.59]
+	_PathFile:Insert[402.96 257.08 136.42]
+	_PathFile:Insert[451.55 257.08 123.22]
+	_PathFile:Insert[500.08 257.08 110.04]
+	_PathFile:Insert[548.46 257.08 96.90]
+	_PathFile:Insert[596.98 257.08 83.72]
+	_PathFile:Insert[645.26 257.08 70.61]
+	_PathFile:Insert[693.84 257.08 57.41]
+	_PathFile:Insert[741.87 258.73 42.52]
+	_PathFile:Insert[741.87 208.42 42.52]
+	_PathFile:Insert[741.87 158.30 42.52]
+	_PathFile:Insert[741.87 108.13 42.52]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[741.87 58.08 42.52]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function TakishBadlandsOvergrowthTakishBadlandsKigathorsGlade()
+{
+	_PathFile:Clear
+	_PathFile:Insert[741.87 58.08 42.52]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[741.87 108.13 42.52]
+	_PathFile:Insert[741.87 158.30 42.52]
+	_PathFile:Insert[741.87 208.42 42.52]
+	_PathFile:Insert[741.87 258.73 42.52]
+	_PathFile:Insert[693.84 257.08 57.41]
+	_PathFile:Insert[645.26 257.08 70.61]
+	_PathFile:Insert[596.98 257.08 83.72]
+	_PathFile:Insert[548.46 257.08 96.90]
+	_PathFile:Insert[500.08 257.08 110.04]
+	_PathFile:Insert[451.55 257.08 123.22]
+	_PathFile:Insert[402.96 257.08 136.42]
+	_PathFile:Insert[354.48 257.08 149.59]
+	_PathFile:Insert[305.93 257.08 162.77]
+	_PathFile:Insert[257.36 257.08 175.97]
+	_PathFile:Insert[209.00 257.08 189.10]
+	_PathFile:Insert[160.05 257.08 199.32]
+	_PathFile:Insert[111.51 257.08 212.04]
+	_PathFile:Insert[62.86 257.08 223.65]
+	_PathFile:Insert[14.14 257.08 235.29]
+	_PathFile:Insert[-21.93 292.00 233.02]
+	_PathFile:Insert[-71.94 292.00 230.25]
+	_PathFile:Insert[-121.90 292.00 227.72]
+	_PathFile:Insert[-171.84 292.00 225.29]
+	_PathFile:Insert[-222.02 292.00 222.85]
+	_PathFile:Insert[-272.15 292.00 219.04]
+	_PathFile:Insert[-322.34 292.00 216.00]
+	_PathFile:Insert[-401.80 292.28 214.40]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-394.50 245.01 213.84]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function TakishBadlandsKigathorsGlade()
+{
+	_PathFile:Clear
+	_PathFile:Insert[243.04 48.02 1183.43]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[243.04 77.21 1183.43]
+	_PathFile:Insert[211.67 73.84 1150.42]
+	_PathFile:Insert[179.93 73.84 1111.76]
+	_PathFile:Insert[147.16 73.84 1073.71]
+	_PathFile:Insert[114.36 73.84 1035.60]
+	_PathFile:Insert[85.79 73.84 994.54]
+	_PathFile:Insert[77.67 73.80 972.47]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[78.09 1.86 974.25]
+	_PathFile:Insert[Custom|ClickActor|a transport of Growth]
+	_PathFile:Insert[Custom|Wait|50]
+	_PathFile:Insert[Custom|WaitWhileMoving]
+	_PathFile:Insert[Custom|Wait|10]
+	_PathFile:Insert[Custom|WaitWhileMoving]
+	_PathFile:Insert[-396.37 249.54 144.74]
+	_PathFile:Insert[-426.86 249.36 200.53]
+	_PathFile:Insert[-396.58 245.01 212.86]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function TakishBadlandsOvergrowth()
+{
+	_PathFile:Clear
+	_PathFile:Insert[241.60 48.08 1185.47]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[241.60 98.34 1185.47]
+	_PathFile:Insert[241.60 148.51 1185.47]
+	_PathFile:Insert[241.60 197.88 1185.47]
+	_PathFile:Insert[260.45 197.88 1138.82]
+	_PathFile:Insert[279.29 197.88 1092.20]
+	_PathFile:Insert[298.03 197.88 1045.82]
+	_PathFile:Insert[316.87 197.88 999.20]
+	_PathFile:Insert[335.63 197.88 952.78]
+	_PathFile:Insert[354.38 197.88 906.36]
+	_PathFile:Insert[373.16 197.88 859.90]
+	_PathFile:Insert[391.96 197.88 813.37]
+	_PathFile:Insert[410.78 197.88 766.79]
+	_PathFile:Insert[429.55 197.88 720.35]
+	_PathFile:Insert[448.33 197.88 673.87]
+	_PathFile:Insert[467.18 197.88 627.22]
+	_PathFile:Insert[484.57 197.88 580.19]
+	_PathFile:Insert[497.81 197.88 531.94]
+	_PathFile:Insert[512.78 197.88 484.16]
+	_PathFile:Insert[527.78 197.88 436.30]
+	_PathFile:Insert[542.75 197.88 388.55]
+	_PathFile:Insert[557.72 197.88 340.77]
+	_PathFile:Insert[572.67 197.88 293.06]
+	_PathFile:Insert[587.64 197.88 245.30]
+	_PathFile:Insert[602.62 197.88 197.51]
+	_PathFile:Insert[617.60 197.88 149.71]
+	_PathFile:Insert[642.84 172.39 114.72]
+	_PathFile:Insert[668.64 139.40 87.22]
+	_PathFile:Insert[692.97 108.42 61.24]
+	_PathFile:Insert[735.53 108.42 46.59]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[741.25 58.08 43.02]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function RajDurPlateausBloodandSand()
+{
+	_PathFile:Clear
+	_PathFile:Insert[196.21 -60.43 461.32]
+	_PathFile:Insert[163.21 -59.76 478.30]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function RajDurPlateausTheSultansDaggerRajDurPlateausBloodandSand()
+{
+	_PathFile:Clear
+	_PathFile:Insert[67.20 87.57 -348.66]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[67.20 123.17 -348.66]
+	_PathFile:Insert[70.30 123.17 -325.09]
+	_PathFile:Insert[77.30 123.17 -277.48]
+	_PathFile:Insert[82.52 123.17 -227.81]
+	_PathFile:Insert[86.06 123.17 -177.65]
+	_PathFile:Insert[89.59 123.17 -127.66]
+	_PathFile:Insert[93.12 123.17 -77.70]
+	_PathFile:Insert[96.64 123.17 -27.82]
+	_PathFile:Insert[100.18 123.17 22.36]
+	_PathFile:Insert[103.72 123.17 72.54]
+	_PathFile:Insert[107.25 123.17 122.59]
+	_PathFile:Insert[110.79 123.17 172.75]
+	_PathFile:Insert[113.64 123.17 222.74]
+	_PathFile:Insert[121.42 123.17 272.36]
+	_PathFile:Insert[139.01 123.17 319.26]
+	_PathFile:Insert[156.40 115.88 365.64]
+	_PathFile:Insert[172.62 96.47 408.92]
+	_PathFile:Insert[196.21 90.18 461.32]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[163.21 -59.76 478.30]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function RajDurPlateausBuriedTakishHizRajDurPlateausBloodandSand()
+{
+	_PathFile:Clear
+	_PathFile:Insert[-535.32 11.28 433.75]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-535.32 46.77 433.75]
+	_PathFile:Insert[-535.32 96.77 433.75]
+	_PathFile:Insert[-535.32 140.77 433.75]
+	_PathFile:Insert[-517.81 140.77 438.81]
+	_PathFile:Insert[-475.88 140.77 449.74]
+	_PathFile:Insert[-435.46 146.77 459.48]
+	_PathFile:Insert[-394.79 146.77 468.60]
+	_PathFile:Insert[-351.67 146.77 477.53]
+	_PathFile:Insert[-302.77 146.77 487.13]
+	_PathFile:Insert[-253.30 146.77 496.00]
+	_PathFile:Insert[-203.87 146.77 504.86]
+	_PathFile:Insert[-154.37 146.77 513.74]
+	_PathFile:Insert[-104.33 146.77 517.96]
+	_PathFile:Insert[-55.12 146.77 507.51]
+	_PathFile:Insert[-6.12 146.77 497.10]
+	_PathFile:Insert[43.13 146.77 486.65]
+	_PathFile:Insert[92.26 146.77 476.21]
+	_PathFile:Insert[141.21 146.77 465.82]
+	_PathFile:Insert[196.21 146.77 461.32]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[163.21 -59.76 478.30]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function RajDurPlateausTheSultansDagger()
+{
+	_PathFile:Clear
+	_PathFile:Insert[196.21 -60.43 461.32]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[196.21 -9.88 461.32]
+	_PathFile:Insert[196.21 40.16 461.32]
+	_PathFile:Insert[196.21 90.18 461.32]
+	_PathFile:Insert[172.62 96.47 408.92]
+	_PathFile:Insert[156.40 115.88 365.64]
+	_PathFile:Insert[139.01 123.17 319.26]
+	_PathFile:Insert[121.42 123.17 272.36]
+	_PathFile:Insert[113.64 123.17 222.74]
+	_PathFile:Insert[110.79 123.17 172.75]
+	_PathFile:Insert[107.25 123.17 122.59]
+	_PathFile:Insert[103.72 123.17 72.54]
+	_PathFile:Insert[100.18 123.17 22.36]
+	_PathFile:Insert[96.64 123.17 -27.82]
+	_PathFile:Insert[93.12 123.17 -77.70]
+	_PathFile:Insert[89.59 123.17 -127.66]
+	_PathFile:Insert[86.06 123.17 -177.65]
+	_PathFile:Insert[82.52 123.17 -227.81]
+	_PathFile:Insert[77.30 123.17 -277.48]
+	_PathFile:Insert[70.30 123.17 -325.09]
+	_PathFile:Insert[67.20 123.17 -348.66]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[60.92 87.57 -349.34]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function RajDurPlateausBuriedTakishHiz()
+{
+	_PathFile:Clear
+	_PathFile:Insert[196.21 -60.43 461.32]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[196.21 -9.98 461.32]
+	_PathFile:Insert[196.21 40.05 461.32]
+	_PathFile:Insert[196.21 90.22 461.32]
+	_PathFile:Insert[196.21 146.77 461.32]
+	_PathFile:Insert[141.21 146.77 465.82]
+	_PathFile:Insert[92.26 146.77 476.21]
+	_PathFile:Insert[43.13 146.77 486.65]
+	_PathFile:Insert[-6.12 146.77 497.10]
+	_PathFile:Insert[-55.12 146.77 507.51]
+	_PathFile:Insert[-104.33 146.77 517.96]
+	_PathFile:Insert[-154.37 146.77 513.74]
+	_PathFile:Insert[-203.87 146.77 504.86]
+	_PathFile:Insert[-253.30 146.77 496.00]
+	_PathFile:Insert[-302.77 146.77 487.13]
+	_PathFile:Insert[-351.67 146.77 477.53]
+	_PathFile:Insert[-394.79 146.77 468.60]
+	_PathFile:Insert[-435.46 146.77 459.48]
+	_PathFile:Insert[-475.88 140.77 449.74]
+	_PathFile:Insert[-517.81 140.77 438.81]
+	_PathFile:Insert[-535.32 140.77 433.75]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-550.38 11.28 429.10]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function RajDurPlateausBuriedTakishHizRajDurPlateausTheSultansDagger()
+{
+	_PathFile:Clear
+
+	_PathFile:Insert[-537.16 10.29 433.60]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[-537.16 60.45 433.60]
+	_PathFile:Insert[-537.16 110.63 433.60]
+	_PathFile:Insert[-491.65 130.33 425.88]
+	_PathFile:Insert[-442.33 130.33 417.52]
+	_PathFile:Insert[-392.77 130.33 409.12]
+	_PathFile:Insert[-343.41 130.33 400.76]
+	_PathFile:Insert[-303.99 130.33 369.79]
+	_PathFile:Insert[-280.41 130.33 325.46]
+	_PathFile:Insert[-256.53 130.33 281.48]
+	_PathFile:Insert[-232.51 130.33 237.25]
+	_PathFile:Insert[-208.59 130.33 193.20]
+	_PathFile:Insert[-184.67 130.33 149.16]
+	_PathFile:Insert[-160.67 130.33 104.95]
+	_PathFile:Insert[-136.77 130.33 60.96]
+	_PathFile:Insert[-112.84 130.33 16.88]
+	_PathFile:Insert[-88.95 130.33 -27.12]
+	_PathFile:Insert[-65.08 130.33 -71.08]
+	_PathFile:Insert[-41.12 130.33 -115.19]
+	_PathFile:Insert[-17.11 130.33 -159.42]
+	_PathFile:Insert[6.87 130.33 -203.57]
+	_PathFile:Insert[30.90 130.33 -247.82]
+	_PathFile:Insert[49.80 130.33 -293.59]
+	_PathFile:Insert[65.78 130.33 -336.14]
+	_PathFile:Insert[67.94 130.33 -346.77]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[62.07 87.35 -349.28]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
+}
+function RajDurPlateausTheSultansDaggerRajDurPlateausBuriedTakishHiz()
+{
+	_PathFile:Clear
+	_PathFile:Insert[67.94 86.33 -346.76]
+	_PathFile:Insert[Custom|Wait|1]
+	_PathFile:Insert[67.94 130.33 -346.77]
+	_PathFile:Insert[65.78 130.33 -336.14]
+	_PathFile:Insert[49.80 130.33 -293.59]
+	_PathFile:Insert[30.90 130.33 -247.82]
+	_PathFile:Insert[6.87 130.33 -203.57]
+	_PathFile:Insert[-17.11 130.33 -159.42]
+	_PathFile:Insert[-41.12 130.33 -115.19]
+	_PathFile:Insert[-65.08 130.33 -71.08]
+	_PathFile:Insert[-88.95 130.33 -27.12]
+	_PathFile:Insert[-112.84 130.33 16.88]
+	_PathFile:Insert[-136.77 130.33 60.96]
+	_PathFile:Insert[-160.67 130.33 104.95]
+	_PathFile:Insert[-184.67 130.33 149.16]
+	_PathFile:Insert[-208.59 130.33 193.20]
+	_PathFile:Insert[-232.51 130.33 237.25]
+	_PathFile:Insert[-256.53 130.33 281.48]
+	_PathFile:Insert[-280.41 130.33 325.46]
+	_PathFile:Insert[-303.99 130.33 369.79]
+	_PathFile:Insert[-343.41 130.33 400.76]
+	_PathFile:Insert[-392.77 130.33 409.12]
+	_PathFile:Insert[-442.33 130.33 417.52]
+	_PathFile:Insert[-491.65 130.33 425.88]
+	_PathFile:Insert[-537.16 130.33 433.60]
+	_PathFile:Insert[Custom|RIMObj.FlyDown]
+	_PathFile:Insert[-550.38 11.28 429.10]
+	_PathFile:Insert[Custom|Wait|20]
+
+	call NavigatePath
 }
 function RenfrysBasementForlornGistInstances()
 {
@@ -4996,7 +5931,26 @@ function TravelMap(string _Zone)
 	call RIMObj.TravelMap "${_Zone}"
 	;echo Travel Map End
 }
+function ClickActor(string _ActorName)
+{
+	call RIMObj.CheckCombat
+	wait 10
+	;pause bots
+	RI_CMD_PauseCombatBots 1
+	wait 5
+	
+	wait 5
+	Actor[${_ActorName}]:DoubleClick
+	wait 5
+	Actor[${_ActorName}]:DoubleClick
+	wait 5
+	Actor[${_ActorName}]:DoubleClick
+	wait 5 ${Me.CastingSpell}
+	wait 50 !${Me.CastingSpell}
 
+	;unpause bots
+	RI_CMD_PauseCombatBots 0
+}
 function WaitWhileMoving(int _Wait=600)
 {
 	;echo WaitWhileMoving
@@ -5006,8 +5960,10 @@ function WaitWhileMoving(int _Wait=600)
 }
 function WaitForZoning(int _Wait=600)
 {
+	;echo WaitForZoning
 	wait ${_Wait} ${EQ2.Zoning}==1
 	wait ${_Wait} ${EQ2.Zoning}==0
+	;echo WaitForZoningEnd
 }
 function FlyUp(float _HoldTime=1, bool HoldTimeIsYLoc=FALSE)
 {
@@ -5877,13 +6833,52 @@ function Zone(int _IndexPosition)
 		;echo ISXRI: We are not in Forlorn Gist we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
 		call Goto KJPP
 	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Raj'Dur Plateaus Blood and Sand"](exists)} && ( !${Zone.Name.Find["Raj'Dur Plateaus"](exists)} || ${Me.Distance[162.720001,-59.590000,477.339996]}>55 )
+	{
+		;echo ISXRI: We are not at ${ZoneFrom.Get[${_IndexPosition}]} we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto RPBS
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Raj'Dur Plateaus The Sultan's Dagger"](exists)} && ( !${Zone.Name.Find["Raj'Dur Plateaus"](exists)} || ${Me.Distance[60.549999,87.639999,-349.829987]}>55 )
+	{
+		;echo ISXRI: We are not at ${ZoneFrom.Get[${_IndexPosition}]} we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto RPTSD
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Raj'Dur Plateaus Buried Takish'Hiz"](exists)} && ( !${Zone.Name.Find["Raj'Dur Plateaus"](exists)} || ${Me.Distance[-554.349976,10.960000,427.899994]}>55 )
+	{
+		;echo ISXRI: We are not at ${ZoneFrom.Get[${_IndexPosition}]} we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto RPBT
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Takish Badlands Kigathor's Glade"](exists)} && ( !${Zone.Name.Find["Takish Badlands"](exists)} || ${Me.Distance[-394.227814,245.000000,213.808731]}>55 )
+	{
+		;echo ISXRI: We are not at ${ZoneFrom.Get[${_IndexPosition}]} we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto TBKG
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Takish Badlands Overgrowth"](exists)} && ( !${Zone.Name.Find["Takish Badlands"](exists)} || ${Me.Distance[742.023987,58.080002,42.790913]}>55 )
+	{
+		;echo ISXRI: We are not at ${ZoneFrom.Get[${_IndexPosition}]} we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto TBOG
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Sandstone Delta Eye of Night"](exists)} && ( !${Zone.Name.Find["Sandstone Delta"](exists)} || ${Me.Distance[589.960022,113.050003,-631.919983]}>55 )
+	{
+		;echo ISXRI: We are not at ${ZoneFrom.Get[${_IndexPosition}]} we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto SDEN
+	}
+	if ${ZoneFrom.Get[${_IndexPosition}].Find["Sandstone Delta Eye of the Storm"](exists)} && ( !${Zone.Name.Find["Sandstone Delta"](exists)} || ${Me.Distance[-47.570000,57.150002,160.699997]}>55 )
+	{
+		;echo ISXRI: We are not at ${ZoneFrom.Get[${_IndexPosition}]} we are in ${Zone.Name} or not near the Entrance Loc we are at ${Me.Loc}, Moving there
+		call Goto SDES
+	}
 	wait 6000 ${RIMObj.AllGroupInZone}
 	wait 20
 	
 	variable int _cnt=0
 	for(_cnt:Set[1];${_cnt}<=${Math.Calc[${ZoneEntranceLoc.Get[${_IndexPosition}].Count[|]}+1]};_cnt:Inc)
 	{
-		call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}].Token[${_cnt},|]} 5 0 0 1 1 0 1 1
+		;echo "${ZoneEntranceLoc.Get[${_IndexPosition}].Token[${_cnt},|].Replace[","," "]}" // ${ZoneEntranceLoc.Get[${_IndexPosition}].Token[${_cnt},|].Equal[""]}
+		if ${ZoneEntranceLoc.Get[${_IndexPosition}].Token[${_cnt},|].Equal[""]}
+			noop
+		else
+			call RIMObj.Move ${ZoneEntranceLoc.Get[${_IndexPosition}].Token[${_cnt},|].Replace[","," "]} 5 0 0 1 1 0 1 1
 	}
 	
 	

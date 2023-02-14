@@ -1,8 +1,5 @@
 Guardian of Growf
 Custom
-CheckPreReqs -Completed "Search and Rescue"
-0 0 0
-Custom
 HailActor Growf 4
 80.817497 -171.308716 -681.423401
 88.431801 -171.308716 -674.803162

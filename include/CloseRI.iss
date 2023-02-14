@@ -98,4 +98,6 @@ function main()
 		Script[Buffer:RICharList]:End
 	if ${Script[Buffer:RIBalance](exists)}
 		Script[Buffer:RIBalance]:End
+	if ${Script[Buffer:RoRDisguiseFlute](exists)}
+		Script[Buffer:RoRDisguiseFlute]:End
 }
