@@ -343,9 +343,7 @@ function main(string FunctionToRun=NONE)
 		if ${FunctionToRun.NotEqual[Q-RI_Var_Bool_GlobalOthers]}
 		{
 			_PreGo_
-			if !${NoFile}
-				echo ISXRI: ${Time} Done Importing ZoneFile from Extension, to Load from File type ImportZoneFile filename (omitting filename, will attempt to load WriteLocs default file for the zone)
-			else
+			if ${NoFile}
 				ImportZoneFile
 		}
 		if ${RI_Var_Bool_BackOffMerc}
@@ -466,9 +464,7 @@ function main(string FunctionToRun=NONE)
 		
 		;get the zoneset
 		_PreGo_
-		if !${NoFile}
-			echo ISXRI: ${Time} Done Importing ZoneFile from Extension, to Load from File type ImportZoneFile filename (omitting filename, will attempt to load WriteLocs default file for the zone)
-		else
+		if ${NoFile}
 			ImportZoneFile
 			
 		eq2ex /merc backoff
@@ -656,22 +652,23 @@ function ReadBook(string _BookName, bool _ClickLastPage=FALSE, bool _CloseBook=F
 	; ;echo call PreGo "${_EXTVar}" "${_Verbose}"
 	; call PreGo "${_EXTVar}" "${_Verbose}"
 ; }
-atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
+atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE, bool _Quest=FALSE)
 {
     ;echo PreGo(string _EXTVar=~NONE~=${_EXTVar}, bool _Verbose=TRUE=${_Verbose})
 	if ${_EXTVar.NotEqual[~NONE~]}
 	{
-		if ${_Verbose}
-			echo ISXRI: ${Time} Importing ZoneFile from Extension
-		istrMain:Clear
-		for(MainArrayCounter:Set[0];${MainArrayCounter}<${${_EXTVar}[3rtZdjv7,#]};MainArrayCounter:Inc)
-			istrMain:Insert[${${_EXTVar}[3rtZdjv7,${MainArrayCounter}]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Done Importing ZoneFile from Extension, to Load from File type ImportZoneFile filename (omitting filename, will attempt to load WriteLocs default file for the zone)
+		if ${_Quest}
+		{
+			istrMain:Clear
+			for(MainArrayCounter:Set[0];${MainArrayCounter}<${${_EXTVar}[3rtZdjv7,#]};MainArrayCounter:Inc)
+				istrMain:Insert[${${_EXTVar}[3rtZdjv7,${MainArrayCounter}]}]
+		}
+		else
+			LoadZone ${_EXTVar}
 		return
 	}
-	if ${_Verbose}
-		echo ISXRI: ${Time} Importing ZoneFile from Extension
+	;if ${_Verbose}
+	;	echo ISXRI: ${Time} Importing ZoneFile from Extension
 	istrMain:Clear
 	switch ${Me.GetGameData[Self.ZoneName].Label}
 	{
@@ -1816,11 +1813,11 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 		case Svarni Expanse: Carrion Crag [Heroic I]
 		case Svarni Expanse: Carrion Crag [Heroic II]
 		{
-			RI_CMD_Hidden_AddTLO SvarniExpanseCarrionCrag
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SvarniExpanseCarrionCrag]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SvarniExpanseCarrionCrag[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SvarniExpanseCarrionCrag[3rtZdjv7,${MainArrayCounter}]}]
+			LoadZone SvarniExpanseCarrionCrag
+			;LoadedTLO:Set[TRUE]
+			;LoadedTLOName:Set[SvarniExpanseCarrionCrag]
+			;for(MainArrayCounter:Set[0];${MainArrayCounter}<${SvarniExpanseCarrionCrag[3rtZdjv7,#]};MainArrayCounter:Inc)
+		;		istrMain:Insert[${SvarniExpanseCarrionCrag[3rtZdjv7,${MainArrayCounter}]}]
 
 			break
 		}
@@ -1973,11 +1970,11 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 		case Raj'Dur Plateaus: Blood and Sand [Signature]
 		;case Raj'Dur Plateaus: Blood and Sand
 		{
-			RI_CMD_Hidden_AddTLO RajDurPlateausBloodandSand
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[RajDurPlateausBloodandSand]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${RajDurPlateausBloodandSand[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${RajDurPlateausBloodandSand[3rtZdjv7,${MainArrayCounter}]}]
+			LoadZone RajDurPlateausBloodandSand
+			;LoadedTLO:Set[TRUE]
+			;LoadedTLOName:Set[RajDurPlateausBloodandSand]
+			;for(MainArrayCounter:Set[0];${MainArrayCounter}<${RajDurPlateausBloodandSand[3rtZdjv7,#]};MainArrayCounter:Inc)
+			;	istrMain:Insert[${RajDurPlateausBloodandSand[3rtZdjv7,${MainArrayCounter}]}]
 
 			break
 		}
@@ -1989,6 +1986,13 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			LoadedTLOName:Set[RajDurPlateausTheSultansDagger]
 			for(MainArrayCounter:Set[0];${MainArrayCounter}<${RajDurPlateausTheSultansDagger[3rtZdjv7,#]};MainArrayCounter:Inc)
 				istrMain:Insert[${RajDurPlateausTheSultansDagger[3rtZdjv7,${MainArrayCounter}]}]
+			
+			;Taskish Tablets for the Taking
+            if ${QuestJournalWindow.ActiveQuest["Taskish Tablets for the Taking"](exists)}
+            {
+                RI_Var_Bool_GrabShinys:Set[1]
+                call AddShinyActor "Stolen Ancient Tablet"
+            }
 
 			break
 		}
@@ -2030,7 +2034,12 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 				RI_Var_Bool_GrabShinys:Set[1]
 				call AddShinyActor "Spell-shaped Stone"
 			}
-
+			;Overgrowth Seed Stealers
+            if ${QuestJournalWindow.ActiveQuest["Overgrowth Seed Stealers"](exists)}
+            {
+                RI_Var_Bool_GrabShinys:Set[1]
+                call AddShinyActor "Jar of Seeds"
+            }
 			break
 		}
 		case Takish Badlands: Kigathor's Glade [Solo]
@@ -2053,6 +2062,14 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SandstoneDeltaEyeoftheStorm[3rtZdjv7,#]};MainArrayCounter:Inc)
 				istrMain:Insert[${SandstoneDeltaEyeoftheStorm[3rtZdjv7,${MainArrayCounter}]}]
 
+			;Sans Manifested Sands /SandstoneDeltaEyeoftheStorm
+            if ${QuestJournalWindow.ActiveQuest["Sans Manifested Sands"](exists)}
+            {
+                RI_Var_Bool_GrabShinys:Set[1]
+                call AddShinyActor "Sands of Clarity"
+                call AddShinyActor "Sands of Supremacy"
+            }
+
 			break
 		}
 		case Sandstone Delta: Eye of Night [Solo]
@@ -2071,7 +2088,14 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 				call AddShinyActor "Eye of Night Ward"
 				call AddShinyActor "Night Metal"
 			}
-
+			;Sand By Me
+            if ${QuestJournalWindow.ActiveQuest["Sand By Me"](exists)}
+            {
+                RI_Var_Bool_GrabShinys:Set[1]
+                call AddShinyActor "Sands of Zealotry"
+                call AddShinyActor "Sands of Blessing"
+                call AddShinyActor "Sands of Secrets"
+            }
 			break
 		}
 		default
@@ -2094,6 +2118,29 @@ atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE)
 		}
 	}
 }
+atom LoadZone(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}")
+{
+	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
+	if ${FP.FileExists[${ZoneFileName}.dat]}
+	{
+		if ${Debug}
+			ISXRI: File ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat found Importing
+		ImportZoneFile ${ZoneFileName}
+	}
+	else
+	{
+		if ${Debug}
+			ISXRI: File ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat not found Importing from Extension
+		echo ISXRI: ${Time} Importing ZoneFile from Extension
+		RI_CMD_Hidden_AddTLO ${ZoneFileName}
+		LoadedTLO:Set[TRUE]
+		LoadedTLOName:Set[${ZoneFileName}]
+		for(MainArrayCounter:Set[0];${MainArrayCounter}<${${ZoneFileName}[3rtZdjv7,#]};MainArrayCounter:Inc)
+			istrMain:Insert[${${ZoneFileName}[3rtZdjv7,${MainArrayCounter}]}]
+		echo ISXRI: ${Time} Done Importing ZoneFile from Extension, to Load from File type ImportZoneFile filename (omitting filename, will attempt to load WriteLocs default file for the zone)
+	}
+}
+
 atom(global) IZF(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}", bool _Verbose=TRUE)
 {
 	ImportZoneFile "${ZoneFileName}" ${_Verbose}
@@ -2544,7 +2591,23 @@ function NamedFunction()
 		call Named ${NamedName} TRUE ${NamedLoc} ${LOD} ${LODXYZ} ${MoveBehind} FALSE 0 ${KillAdd} ${AddName}
 	}
 	elseif ${CustomNamed}
-		call Named ${NamedName} FALSE 0 0 0 FALSE 0 0 0 FALSE TRUE ${NamedName} FALSE 0
+	{
+		declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
+		if ${FP.FileExists[${NamedName}.iss]}
+		{
+			echo running ${NamedName}.iss
+			run ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${NamedName}.iss
+			wait 5
+			while ${Script[${NamedName}]}
+			{
+				echo waiting for script to end
+				wait 1
+			}
+			echo script ended
+		}
+		else
+			call Named ${NamedName} FALSE 0 0 0 FALSE 0 0 0 FALSE TRUE ${NamedName} FALSE 0
+	}
 }
 function AddShinyActor(string _Name)
 {
@@ -19967,14 +20030,31 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	else
 		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
+	;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
 	
-	wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
+	;wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
 	
-	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
+	;if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
+	;	relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0 1
+	;else
+	;	relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+
+	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
+	if ${FP.FileExists[${_QuestName}.dat]}
+	{
+		if ${Debug}
+			ISXRI: File ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat found Importing
+		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile ${_QuestName} 0
+	}
 	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+	{
+		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
+	
+		wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
+		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
+			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0 1
+	}
+
 	wait 5
 	wait 50 ${istrMain.Used}>0
 	_QuestName:Set[${istrMain.Get[1]}]
@@ -29102,7 +29182,27 @@ function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Re
 		wait 50 ${istrMain.Used}>0
 		if ${RI_Var_Bool_GlobalOthers}
 			return
-
+		if ${_InstanceName.Find["SandstoneDeltaEyeoftheStorm"]}
+		{
+			;Sans Manifested Sands
+            if ${QuestJournalWindow.ActiveQuest["Sans Manifested Sands"](exists)}
+            {
+                RI_Var_Bool_GrabShinys:Set[1]
+                call AddShinyActor "Sands of Clarity"
+                call AddShinyActor "Sands of Supremacy"
+            }
+		}
+		if ${_InstanceName.Find["SandstoneDeltaEyeofNight"]}
+		{
+			;Sand By Me
+            if ${QuestJournalWindow.ActiveQuest["Sand By Me"](exists)}
+            {
+                RI_Var_Bool_GrabShinys:Set[1]
+                call AddShinyActor "Sands of Zealotry"
+                call AddShinyActor "Sands of Blessing"
+                call AddShinyActor "Sands of Secrets"
+            }
+		}
 		if ${_InstanceName.Find["TakishBadlandsOvergrowth"]}
 		{
 			;Renewal of Ro: Tailing Dragons
@@ -29111,6 +29211,12 @@ function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Re
 				RI_Var_Bool_GrabShinys:Set[1]
 				call AddShinyActor "Spell-shaped Stone"
 			}
+			;Overgrowth Seed Stealers
+            if ${QuestJournalWindow.ActiveQuest["Overgrowth Seed Stealers"](exists)}
+            {
+                RI_Var_Bool_GrabShinys:Set[1]
+                call AddShinyActor "Jar of Seeds"
+            }
 		}
 		if ${_InstanceName.Find["SandstoneDeltaEyeofNight"]}
 		{
@@ -29121,6 +29227,15 @@ function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Re
 				call AddShinyActor "Eye of Night Ward"
 				call AddShinyActor "Night Metal"
 			}
+		}
+		if ${_InstanceName.Find["RajDurPlateausTheSultansDagger"]}
+		{
+			;Taskish Tablets for the Taking
+            if ${QuestJournalWindow.ActiveQuest["Taskish Tablets for the Taking"](exists)}
+            {
+                RI_Var_Bool_GrabShinys:Set[1]
+                call AddShinyActor "Stolen Ancient Tablet"
+            }
 		}
 		call LootOptions RoundRobin
 		relay ${RI_Var_String_RelayGroup} RI_CMD_Assist 1 ${Me.Name}
@@ -39175,7 +39290,7 @@ function CustomNamed(string _NamedsName, string _LockSpot, string _CustomLoop=NO
 		}
 		wait 1
 	}
-
+	
 	variable int _NamedID=0
 	_NamedID:Set[${Actor[Query, Name=-"${_NamedName}" && IsDead=FALSE && ( Type=="NamedNPC" || Type=="NPC" )].ID}]
 	wait 2
@@ -51632,6 +51747,7 @@ function Tualanan()
 	IncomingText:Clear
 	DeleteVariable RI_Var_IndexString_PuzzleSquares
 	DeleteVariable RI_Var_Int_ClosestLoc
+	wait 50
 }
 function TualananCustom(int _NamedID)
 {

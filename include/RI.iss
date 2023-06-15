@@ -6126,7 +6126,34 @@
 ;					Renewal of Ro: Mission Most Heated
 ;					Renewal of Ro: Sultan's Shattered Designs
 
-;ISXRI - v6.75 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
+;v6.76 Changes 3-12-23
+;	RunInstances
+;		Added Ability to use Custom Zone.Dat and Named.iss files directly through RI/ZoneFiles folder
+;			in order to run Custom Named coding you need to make sure the Function Name of the Named 
+;			matches Case Sensitive with the Named.iss file in the RI/ZoneFiles folder, for the Zone
+;			dat files the File must match the naming convention from RIW, essentially if you do RIW
+;			within the zone you are wanting to custom code RIW already names the file correctly,
+;			if you would like all versions of the zone (Solo, Heroic I/II/II, ETC) to share the same 
+;			DAT file just remove the variant in the name ex. Solo or HeroicII, Enjoy and happy coding
+;		Modified
+;			Buried Takish'Hiz: Terrene Threshold
+;				The Haunting of Tualanan
+;					Added 5s wait after killing Named
+;	RQ
+;		Modified:
+;			Renewal of Ro
+;				Research Requisition Tradeskill Missions
+;					Fixed Getting Quests
+
+;v6.77 Changes 3-19-23
+;	RQ
+;		Fixed a bug in Timelines
+;		Added Ability to use Custom QUESTNAME.Dat files directly through RI/ZoneFiles folder
+;			QuestNames must be striped of all SpecialCharacters and Spaces, to see what a 
+;			quest name needs to be you can run riw -Quest "Quest Name"
+;			and it will auto generate the DAT files as required
+
+;ISXRI - v6.77 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
 
 
 ;RunQuest - Runs a quest with RQ\n\nArgument 1: For Who\nArgument 2: Quest Name]
@@ -6159,7 +6186,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.75
+variable(global) float RI_Var_Float_Version=6.77
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15

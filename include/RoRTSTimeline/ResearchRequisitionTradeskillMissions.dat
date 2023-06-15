@@ -30,7 +30,7 @@ Wait
 193.05 -60.24 525.42
 189.16 -60.20 564.59
 Custom
-HailActorMultiOption "Bairam Najafi" 2 1
+HailActor "Bairam Najafi" 2
 150.14 -60.16 585.15
 Wait
 1
@@ -110,7 +110,7 @@ Custom
 WaitWhileMoving
 0 0 0
 Custom
-HailActorMultiOption Hamdi 2 1
+HailActor Hamdi 2
 643.14 155.29 -694.82
 Custom
 UseItem "Call of the Delta"
@@ -119,7 +119,7 @@ Custom
 BuyFromVendor "Tarkin" "Call of the Delta" 1
 750.95 115.88 -453.50
 Custom
-HailActorMultiOption Shahin 2 1
+HailActor Shahin 2
 754.91 115.82 -446.47
 Custom
 FastTravel "Raj'Dur Plateaus"
