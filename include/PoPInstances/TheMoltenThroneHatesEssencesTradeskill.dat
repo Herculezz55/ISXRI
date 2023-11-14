@@ -4,8 +4,43 @@ Custom
 ExecuteCommand "RI_Harvest"
 1796.083618 701.884399 832.902100
 Custom
-MessageBox "Go harvest 50 molten shards and resume here"
+HarvestNode "Molten Throne debris" "molten shard" 50
 1796.083618 701.884399 832.902100
+Custom
+HarvestNode "Molten Throne debris" "molten shard" 50
+1817.18 705.20 872.53
+1828.22 706.90 902.78
+1846.83 708.69 967.79
+Custom
+HarvestNode "Molten Throne debris" "molten shard" 50
+1846.83 708.69 967.79
+1851.04 711.89 1000.86
+Custom
+HarvestNode "Molten Throne debris" "molten shard" 50
+1851.04 711.89 1000.86
+1829.05 715.54 1013.98
+Custom
+HarvestNode "Molten Throne debris" "molten shard" 50
+1829.05 715.54 1013.98
+1803.17 714.49 1008.42
+1786.09 714.38 1006.37
+Custom
+HarvestNode "Molten Throne debris" "molten shard" 50
+1786.09 714.38 1006.37
+1756.48 708.74 974.60
+Custom
+HarvestNode "Molten Throne debris" "molten shard" 50
+1756.48 708.74 974.60
+1766.91 708.64 945.32
+Custom
+HarvestNode "Molten Throne debris" "molten shard" 50
+1766.91 708.64 945.32
+1769.74 707.24 902.73
+Custom
+HarvestNode "Molten Throne debris" "molten shard" 50
+1769.74 707.24 902.73
+1799.16 706.85 896.92
+1804.98 703.22 845.01
 Custom
 CraftIt "Fragment of Ro"
 1806.775024 694.578674 794.539734
