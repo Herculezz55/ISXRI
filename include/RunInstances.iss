@@ -18496,7 +18496,6 @@ function Yunzi20223imeline()
 	call QuestY "Beginner Botany: Timorous Deep"
 	call QuestY "Beginner Botany: Thundering Steppes"
 	call QuestY "Beginner Botany: Nektulos Forest"
-	call QuestY "Beginner Botany: Last One"
 }
 function YunziTimeline()
 {
@@ -18512,6 +18511,8 @@ function YunziTimeline()
 	call Yunzi2021Timeline
 	echo ISXRI: ${Time} Starting Yunzi 2022 Timeline
 	call Yunzi2022Timeline
+	echo ISXRI: ${Time} Starting Yunzi 2023 Timeline
+	call Yunzi2023Timeline
 }
 
 function ResetZone(string _ZoneName)
