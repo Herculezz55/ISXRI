@@ -11488,7 +11488,6 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Timorous Deep"]
 				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Thundering Steppes"]
 				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Nektulos Forest"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Last One"]
 				UIElement[QuestsListBox@RI]:AddItem["Yunzi Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2017 Timeline",0,FFE8E200]
 				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
