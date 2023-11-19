@@ -18486,6 +18486,18 @@ function Yunzi2022Timeline()
 	call QuestY "Traveler's Kunark Catalog: Scouting Skyfire"
 	call QuestY "Traveler's Kunark Catalog: Angry, Angry, Angry"
 }
+function Yunzi20223imeline()
+{
+	call QuestY "Beginner Botany: Antonican Flora"
+	call QuestY "Beginner Botany: Commonlands Plants"
+	call QuestY "Beginner Botany: Darklight Diversity"
+	call QuestY "Beginner Botany: Greater Faydark"
+	call QuestY "Beginner Botany: Frostfang Flora"
+	call QuestY "Beginner Botany: Timorous Deep"
+	call QuestY "Beginner Botany: Thundering Steppes"
+	call QuestY "Beginner Botany: Nektulos Forest"
+	call QuestY "Beginner Botany: Last One"
+}
 function YunziTimeline()
 {
 	echo ISXRI: ${Time} Starting Yunzi 2017 Timeline
