@@ -44,7 +44,8 @@ Path -PL 6 -L -DFPWD -QA "-A|moss|-T|QSC:3/3|-E|H" -CT "QSC:It seems pretty unde
 38.25 280.87 470.60
 8.08 278.20 341.72
 -163.38 257.59 336.35
--170.99 154.25 341.17
+-170.99 174.25 341.17
+-183.72 150.60 378.56
 Custom
 ClickActor -Actor "wood"
 -229.98 148.69 434.97
@@ -68,32 +69,32 @@ Custom
 ClickActor -Actor "wood"
 -249.35 148.96 452.55
 Custom
-CheckQuestStep "Great now my bags will smell charred" 101
+CheckQuestStep "Great, now my bags will smell charred" 101
 -249.35 148.96 452.55
 Custom
 ClickActor -Actor "wood"
 -229.98 148.69 434.97
 Custom
-CheckQuestStep "Great now my bags will smell charred" 101
+CheckQuestStep "Great, now my bags will smell charred" 101
 -207.42 149.36 403.12
 Custom
 ClickActor -Actor "wood"
 -246.83 148.79 451.23
 Custom
-CheckQuestStep "Great now my bags will smell charred" 101
+CheckQuestStep "Great, now my bags will smell charred" 101
 -246.83 148.79 451.23
 Custom
 ClickActor -Actor "wood"
 -246.33 149.90 475.65
 Custom
-CheckQuestStep "Great now my bags will smell charred" 101
+CheckQuestStep "Great, now my bags will smell charred" 101
 -246.33 149.90 475.65
 -276.40 150.22 509.88
 Custom
 ClickActor -Actor "wood"
 -249.35 148.96 452.55
 Custom
-CheckQuestStep "Great now my bags will smell charred" 101
+CheckQuestStep "Great, now my bags will smell charred" 101
 -249.35 148.96 452.55
 Custom
 MessageBox  "Collect 1 wood because its not working right. Known Bug. Then Press Resume"

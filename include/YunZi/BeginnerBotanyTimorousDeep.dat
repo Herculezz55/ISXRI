@@ -101,7 +101,7 @@ Custom
 ClickActor -Actor "driftwood"
 -378.78 -0.57 -80.69
 Custom
-CheckQuestStep "I found some driftwood" 121
+CheckQuestStep "I found some driftwood" 124
 -378.78 -0.57 -80.69
 Custom
 ClickActor -Actor "driftwood"
@@ -113,11 +113,13 @@ Custom
 ClickActor -Actor "driftwood"
 -308.90 0.81 -109.05
 Custom
-CheckQuestStep "I found some driftwood" 121
+CheckQuestStep "I found some driftwood" 124
 -340.91 0.70 37.01
 Custom
 MessageBox "Collect 3 driftwood because its not working right. Known Bug. Then Press Resume"
 -340.91 0.70 37.01
+-354.02 -0.40 -84.99
+-388.59 0.82 -55.06
 -308.90 0.81 -109.05
 Custom
 FastTravel "The Barren Sky"
