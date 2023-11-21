@@ -18496,6 +18496,7 @@ function Yunzi20223imeline()
 	call QuestY "Beginner Botany: Timorous Deep"
 	call QuestY "Beginner Botany: Thundering Steppes"
 	call QuestY "Beginner Botany: Nektulos Forest"
+	call QuestY "Beginner Botany: Butcherblock Mountains"
 }
 function YunziTimeline()
 {
