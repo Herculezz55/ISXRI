@@ -1,0 +1,16 @@
+Disassemble: No!
+Custom
+HailActorGetQuest -Actor "Burnish" 
+697.13 -46.35 -439.70
+Custom
+ClickAllActors "Adjusted W.H.O.O. Supplies"
+712.75 -43.79 -472.41
+Custom
+MessageBox "ExamineItem Adjusted W.H.O.O. Components Clickie and Unpack"
+713.37 -43.77 -471.91
+Custom
+CraftIt "Adjusted W.H.O.O." 1
+720.37 -43.67 -470.15
+Custom
+HailActor "Burnish" 6 1
+697.13 -46.35 -439.70

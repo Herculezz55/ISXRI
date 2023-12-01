@@ -1,0 +1,13 @@
+Disassemble: Tricking the Eyes
+Custom
+HailActorGetQuest -Actor "Burnish" 
+697.13 -46.35 -439.70
+Custom
+ClickAllActors "Stray Feathers"
+720.83 -44.73 -444.81
+Custom
+CraftIt "Hooluk Illusion Potion" 1
+720.37 -43.67 -470.15
+Custom
+HailActor "Burnish" 4 1
+697.13 -46.35 -439.70
