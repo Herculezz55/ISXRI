@@ -1,0 +1,75 @@
+Ballads of Zimara: Ascending Collection
+Custom
+HailActorGetQuest -Actor "Sirran the Lunatic"
+106.63 377.93 667.41
+152.81 361.42 669.82
+210.95 378.52 653.36
+Custom
+ClickActor cloud
+212.64 378.85 652.89
+Custom
+TravelMap "Zenith Helionae"
+212.64 378.85 652.89
+290.53 163.20 -90.15
+288.68 164.28 -120.23
+Custom
+ZoneDoor zone_portal_to_strungstone_dungeons "Zimara Breadth: Strungstone Ascent [Solo]"
+288.76, 164.76, -126.28
+Custom
+Instance
+0 0 0
+Custom
+ZoneDoor Exit
+553.23 219.92 -819.00
+Custom
+Path -PL 13 -L -R -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
+583.55 212.81 -774.65
+572.77 194.29 -665.10
+Custom
+ClickActor teleport_to_cleaved_fates
+650.00 207.46 -463.41
+Wait
+5
+0 0 0
+714.31 176.57 273.68
+Custom
+Path -PL 13 -L -R -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
+742.59 234.57 -423.91
+697.64 179.31 290.25
+776.34 189.47 418.40
+692.58 264.37 543.09
+; run all the way - kill two names
+Custom 
+ClickActor traverse
+351.02 401.46 596.43
+Custom
+Path -PL 13 -L -R -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
+424.14 380.87 546.66
+432.72 381.44 553.46
+102.96 378.09 666.38
+121.97 386.69 748.48
+-42.26 387.75 724.23
+-28.75 386.89 694.10
+-172.03 406.72 827.40
+; Kill Crisj'Jen the Bold 
+; Kill Fuejenyrus 
+; end zone
+287.95 164.09-118.62
+Custom 
+FlyUp 5
+287.95 164.09-118.62
+279.61 161.58 -90.26
+309.35 167.15 -53.82
+Custom
+ClickActor cloud
+313.10 167.48 -53.67
+Custom
+TravelMap "Strungstone Peaks"
+313.10 167.48 -53.67
+208.11 377.84 655.18
+166.12 362.97 670.29
+113.02 374.09 694.14
+111.85 378.00 668.63
+Custom
+HailActor "Sirran the Lunatic" 
+106.63 377.93 667.41

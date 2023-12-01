@@ -1,0 +1,49 @@
+Ballads of Zimara: Fractal Chorus Finale
+Custom
+HailActorGetQuest -Actor "Miranna Ameema"
+-911.86 189.59 330.13
+-867.60 188.91 351.67
+-912.42 186.75 304.56
+-895.87 166.22 216.97
+-872.84 159.36 128.18
+-836.75 144.42 38.95
+-736.10 142.50 20.50
+-677.47 141.90 -18.79
+Custom
+ClickAllActors "Fly from Isles of Wisdom"
+-677.47 141.90 -18.79
+Custom
+TravelMap "Auric Palisades"
+-677.47 141.90 -18.79
+-709.47 145.39 -366.67
+-711.15 145.96 -392.13
+-663.46 130.08 -422.26
+-627.50 182.10 -579.74
+-622.59 185.65 -625.14
+-658.12 210.34 -687.98
+-702.27 228.29 -737.51
+-711.87 229.62 -751.98
+Custom
+ClickAllActors
+-711.87 229.62 -751.98
+Custom
+ZoneDoor "Aether Wroughtlands" 1 FALSE 20 True
+-711.87 229.62 -751.98
+Custom
+WaitForZoning
+0 0 0
+886.24 -45.59 -323.17
+846.73 -45.25 -319.32
+778.88 -44.24 -325.65
+713.24 -47.01 -351.70
+653.33 -34.13 -399.73
+629.81 -25.66 -416.26
+Custom
+HailActor "Riccaww" 1 1
+629.81 -25.66 -416.26
+Custom
+HailActor "Oolfonso" 1 1
+629.81 -25.66 -416.26
+Custom
+HailActor "Tehes" 1 1
+629.81 -25.66 -416.26

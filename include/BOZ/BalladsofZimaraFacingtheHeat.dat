@@ -1,0 +1,87 @@
+Ballads of Zimara: Facing the Heat
+Custom
+HailActorGetQuest -Actor "Miranna Ameema"
+-323.79 118.56 642.41
+Custom
+FlyUp 5
+-320.98 184.49 638.83
+-357.05 191.61 616.87 59.52 -12.66 0.00
+-477.85 220.37 539.02 48.94 -6.24 0.00
+-552.43 231.19 474.04 48.94 -6.24 0.00
+-646.87 244.88 391.75 48.94 -6.24 0.00
+-746.30 261.67 277.39 33.74 -0.18 -0.00
+-763.21 272.14 187.54 2.41 -0.00 -0.00
+Custom
+FlyDown
+-757.67 185.80 163.47
+Custom
+PauseCombatBot 1
+-752.89 186.37 165.80
+Custom
+Target "a Hoot Totem" 0 14
+-752.89 186.37 165.80
+Custom
+UseItem "Potion of Vigorous Unmaking"
+-752.89 186.37 165.80
+Wait
+20
+-752.89 186.37 165.80
+Custom
+PauseCombatBot 0
+-752.89 186.37 165.80
+-800.94 175.26 181.98
+-836.77 173.66 192.49
+-855.35 174.51 210.72
+Custom
+PauseCombatBot 1
+-855.35 174.51 210.72
+Custom
+Target "a Hoot Totem" 0 14
+-855.35 174.51 210.72
+Custom
+UseItem "Potion of Vigorous Unmaking"
+-855.35 174.51 210.72
+Custom
+PauseCombatBot 0
+-855.35 174.51 210.72
+-848.28 175.12 193.60
+-849.46 175.92 192.33
+Custom
+HailActor "Vofres" 4 1
+-849.46 175.92 192.33
+-824.32 174.89 186.32
+-798.22 174.54 190.27
+Custom
+ZoneDoor zone_portal_to_aerie_dungeons "Splendor Sky Aerie: Vale Invasion [Solo]"
+-798.22 174.54 190.27
+Custom
+Instance
+0 0 0
+-800.47 84.68 261.92
+-802.40 84.45 268.48
+Custom
+HailActor "Miranna Ameema"
+-802.40 84.45 268.48
+-788.25 79.87 277.49
+-762.24 68.55 331.52
+-749.58 64.98 375.13
+-743.40 62.89 404.77
+;  TODO kill a bunch of things 
+-527 81 692
+-767 61 539
+-777 85 611
+Custom
+ClickActor crystal
+-793.09 84.70 622.25
+; TODO  kill last boss
+Custom
+HailActor "Miranna Ameema"
+-1083.33 181.71 753.22
+; Zones you into Zimara Breadth
+Custom
+WaitForZoning
+0 0 0
+-698.14 229.93 -753.69
+Custom
+HailActor "Miranna Ameema"
+-689.63 229.48 -753.62

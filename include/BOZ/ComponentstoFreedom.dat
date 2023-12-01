@@ -1,0 +1,24 @@
+Components to Freedom
+Custom
+HailActorGetQuest -Actor "Ecihoolo"
+-776.99 191.51 224.39
+-810.95 189.29 255.39
+Custom
+Path -PL 12 -L -QA "-A|a skylight spren|-T|QSC:6/6|-E|K" -QA "-A|Powdered Zootoxin|-T|QSC:12/12|-E|H" -QA "-A|a stratos fairy|-T|QSC:12/12|-E|K" -QA "-A|pond creeper|-T|QSC:I gathered the melon and pond creepers slime|-E|K" -QA "-A|stratos pyrite|-T|QSC:8/8|-E|H" -CT "QSC:I gathered all of the corrosive oil"
+-810.95 189.29 255.39
+-864.68 187.44 319.48
+-889.05 187.99 323.59
+-916.11 186.26 296.10
+-938.90 192.36 304.39
+-897.39 165.96 214.09
+-895.21 165.34 212.78
+-839.99 165.63 277.94
+-867.82 199.03 386.24
+-857.02 188.58 333.72
+-812.99 189.29 253.23
+-840.41 189.19 217.63
+-796.86 190.12 228.66
+-775.49 191.77 223.76
+Custom
+HailActor "Ecihoolo"
+-776.99 191.51 224.39

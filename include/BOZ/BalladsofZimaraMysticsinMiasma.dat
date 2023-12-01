@@ -1,0 +1,93 @@
+Ballads of Zimara: Mystics in Miasma
+Custom
+HailActorGetQuest -Actor "Crestcry"
+1069.37 179.50 756.18
+951.06 164.86 756.11
+929.35 161.86 760.16
+Custom
+ClickActor -Actor bird 
+929.35 161.86 760.16
+Custom
+TravelMap "Sanctuary"
+0 0 0
+345.61 252.83 732.94
+293.13 263.05 795.62
+297.22 230.47 680.92
+311.45 205.80 590.99
+240.67 201.20 537.77
+227.02 154.19 482.56
+165.87 92.79 402.47
+264.38 44.84 331.09
+343.04 49.27 278.53
+403.64 64.87 279.94
+Custom
+ZoneDoor zone_portal_to_aerie_dungeons "Splendor Sky Aerie: Marshlands Miasma [Solo]"
+403.64 64.87 279.94
+Custom
+Instance
+0 0 0
+649.01 82.58 347.96
+Custom
+HailActor "Miranna Ameema" 5 1
+665.40 78.12 348.89
+Custom
+Path -PL 9 -L -QA "-A|metallic shard|-T|QSC:7/7|-E|K" -QA "-A|carniverous corpse eater|-T|QSC:8/8|-E|K" -QA "-A|a fearful miasma|-T|QSC:4/4|-E|K"
+685.76 76.41 359.62
+721.79 77.47 374.77
+756.46 61.24 331.38
+746.93 71.59 417.28
+789.33 59.20 273.13
+814.79 71.60 338.47
+831.08 67.24 268.87
+888.28 74.96 280.64
+884.60 65.12 204.00
+837.36 43.54 132.22
+Custom
+Path 
+920.13 44.06 218.63
+Custom
+PauseCombatBot 1
+920.13 44.06 218.63
+Custom
+Target "Sqokri" 0 14
+927.22 38.74 223.42
+Custom
+UseItem "Blinding Conviction Gem"
+920.13 44.06 218.63
+Wait
+20
+920.13 44.06 218.63
+Custom
+PauseCombatBot 0
+920.13 44.06 218.63
+715.95 68.73 287.56
+670.75 76.76 349.41
+646.74 83.19 347.09
+; TODO zone out
+Custom
+ClickActor door
+646.74 83.19 347.09
+Custom
+WaitForZoning
+605.26 85.64 318.97
+544.34 83.34 310.96
+396.87 63.82 277.90
+302.09 39.98 291.66
+230.85 58.26 347.82
+167.25 99.37 416.88
+118.48 143.58 522.48
+165.03 190.08 604.57
+212.35 214.78 660.84
+281.40 235.15 717.42
+345.15 252.83 732.65
+Custom
+ClickActor -Actor bird 
+345.61 252.83 732.94
+Custom
+TravelMap "Felfeather Isle"
+0 0 0
+984.51 168.20 761.81
+1058.75 176.57 753.62
+Custom
+HailActor "Crestcry"
+1069.37 179.50 756.18
