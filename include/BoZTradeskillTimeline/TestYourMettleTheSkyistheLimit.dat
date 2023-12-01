@@ -26,8 +26,10 @@ Wait
 -471.78 -24.55 -360.77
 ; check name of debri
 Custom
-ClickActor Invasion Debris
+ClickAllActors "Invasion Debris"
 -471.78 -24.55 -360.77
+Wait
+40
 Custom
 FastTravel "The Barren Sky"
 0 0 0
@@ -40,7 +42,7 @@ Custom
 ClickAllActors
 -463.43 -70.97 -439.45
 Custom
-TravelMap "Aerie"
+TravelMap "Splendor Sky Aerie"
 -463.43 -70.97 -439.45
 WaitForZoning
 0 0 0

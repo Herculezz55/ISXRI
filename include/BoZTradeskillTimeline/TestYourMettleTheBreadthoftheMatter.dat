@@ -25,8 +25,10 @@ HailActorGetQuest -Actor "Goldbeak"
 Custom
 ClickAllActors "teleport crystal"
 -785.15 85.00 608.62
+Wait
+20
 Custom
-MessageBox "Click the teleport crystal"
+MessageBox "Click the teleport crystal if you did not port"
 -785.15 85.00 608.62
 -1080.85 178.32 675.49
 -1083.49 181.21 721.60
@@ -111,8 +113,10 @@ WaitForZoning
 Custom
 ClickAllActors "teleport crystal"
 -1077.75 177.98 670.36
+Wait
+20
 Custom
-MessageBox "Click the teleport crystal"
+MessageBox "Click the teleport crystal if you did not port"
 -780.67 84.82 604.73
 -744.97 62.68 424.60
 -680.68 73.51 442.30
