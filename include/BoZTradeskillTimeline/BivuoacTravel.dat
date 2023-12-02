@@ -6,16 +6,22 @@ Custom
 RemoveFromDepot "Fuel Depot" "Zimaran Coal" 200 "aerated mineral water" 20 "Zimaran Candle" 60 "Zimaran Kindling" 60 "Zimaran Sandpaper" 60 "Zimaran Incense" 60
 0 0 0
 Custom
-CheckAndSet -InZone "Aether Wroughtlands" 44
+CheckAndSet -InZone "Aether Wroughtlands" 55
 0 0 0
 Custom
-CheckAndSet -InZone "Splendor Sky Aerie" 11
+CheckAndSet -InZone "Splendor Sky Aerie" 22
 0 0 0
 Custom
-FastTravel "Splendor Sky Aerie"
+FastTravel "The Barren Sky"
 0 0 0
 Custom
-Path -PL 6 -L -CPSP
+ClickActor zone_to_norrath TRUE FALSE 50
+-589.04 -46.54 -401.60
+Custom
+TravelMap "Splendor Sky Aerie"
+0 0 0
+Custom
+Path -PL 6 -L -CPSP -R
 -326.54 117.71 617.13
 -326.54 176.59 617.13
 -331.53 191.76 614.60
@@ -48,9 +54,12 @@ Custom
 WaitForZoning
 0 0 0
 Custom
-Path -PL 6 -L -CPSP
+Path -PL 6 -L -CPSP -R
 878.86 -46.25 -332.62
 839.21 -46.29 -316.60
 749.21 -46.35 -334.57
 714.78 -45.21 -420.98
 713.16 -43.62 -457.59
+Custom
+HailActor "Burnish" 
+716.24 -43.70 -471.57
