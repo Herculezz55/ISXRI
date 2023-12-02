@@ -6153,23 +6153,7 @@
 ;			quest name needs to be you can run riw -Quest "Quest Name"
 ;			and it will auto generate the DAT files as required
 
-;v6.79 Changes 11-27-23
-;	RQ
-;		Added:
-;			Yunzi
-;				Yunzi Timeline
-;					Yunzi 2023 Timeline
-;						Beginner Botany: Antonican Flora
-;						Beginner Botany: Commonlands Plants
-;						Beginner Botany: Darklight Diversity
-;						Beginner Botany: Greater Faydark
-;						Beginner Botany: Frostfang Flora
-;						Beginner Botany: Timorous Deep
-;						Beginner Botany: Thundering Steppes
-;						Beginner Botany: Nektulos Forest
-;						Beginner Botany: Butcherblock Mountains
-
-;ISXRI - v6.79 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
+;ISXRI - v6.77 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
 
 
 ;RunQuest - Runs a quest with RQ\n\nArgument 1: For Who\nArgument 2: Quest Name]
@@ -11495,16 +11479,16 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Yun Zi]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2023 Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Antonican Flora"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Commonlands Plants"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Darklight Diversity"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Greater Faydark"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Frostfang Flora"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Timorous Deep"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Thundering Steppes"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Nektulos Forest"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Butcherblock Mountains"]
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2022 Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Around the Landing"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Central Kylong"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Deeper into Kylong"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Focusing on Fens"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Not the Panda!"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Still not a Panda!"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Killers in Kunzar"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Scouting Skyfire"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Angry, Angry, Angry"]
 				UIElement[QuestsListBox@RI]:AddItem["Yunzi Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2017 Timeline",0,FFE8E200]
 				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
@@ -11558,16 +11542,6 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Gears and Gadgets"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Deadly Nights"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - We Need a Hero!"]
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2022 Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Around the Landing"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Central Kylong"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Deeper into Kylong"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Focusing on Fens"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Not the Panda!"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Still not a Panda!"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Killers in Kunzar"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Scouting Skyfire"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Angry, Angry, Angry"]
 			}
 			elseif ${_CatName.Equal[Chaos Descending]}
 			{

@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.79 11-27-23"
-double EXTVER = 6.79;
+#define EXTENSION_VERSION "6.78 11-15-23"
+double EXTVER = 6.78;
 #include "ISXRI.h"
 
 
@@ -1129,7 +1129,6 @@ double EXTVER = 6.79;
 #include "Yunzi2020Timeline.h"
 #include "Yunzi2021Timeline.h"
 #include "Yunzi2022Timeline.h"
-#include "Yunzi2023Timeline.h"
 #include "YunziTimeline.h"
 #include "TravelersKunarkCatalogAroundtheLanding.h"
 #include "TravelersKunarkCatalogCentralKylong.h"
@@ -1486,7 +1485,6 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("YUNZI2020TIMELINE");
 	pISInterface->RemoveTopLevelObject("YUNZI2021TIMELINE");
 	pISInterface->RemoveTopLevelObject("YUNZI2022TIMELINE");
-	pISInterface->RemoveTopLevelObject("YUNZI2023TIMELINE");
 	pISInterface->RemoveTopLevelObject("YUNZITIMELINE");
 	pISInterface->RemoveTopLevelObject("TRAVELERSKUNARKCATALOGAROUNDTHELANDING");
 	pISInterface->RemoveTopLevelObject("TRAVELERSKUNARKCATALOGCENTRALKYLONG");
@@ -39671,42 +39669,6 @@ bool __cdecl TLO_Yunzi2022Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
 	return false;
 }
 //TLO to return string arrays
-bool __cdecl TLO_Yunzi2023Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
-{
-	int numberofelements = sizeof(Yunzi2023Timeline) / sizeof(Yunzi2023Timeline[0]);
-
-	if (argc > 1)
-	{
-		if (strcmp(argv[0], "3rtZdjv7") != 0)
-		{
-			return false;
-		}
-		int num = atoi(argv[1]);
-		if (*argv[1] == '#')
-		{
-			Dest.Int = numberofelements;
-			Dest.Type = pIntType;
-			return true;
-		}
-		else if (num < numberofelements)
-		{
-			Dest.ConstCharPtr = Yunzi2023Timeline[num].c_str();
-			Dest.Type = pStringType;
-			return true;
-		}
-		else
-		{
-			printf("Array out of bounds");
-			return false;
-		}
-	}
-	else
-	{
-		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
-	}
-	return false;
-}
-//TLO to return string arrays
 bool __cdecl TLO_YunziTimeline(int argc, char* argv[], LSTYPEVAR& Dest)
 {
 	int numberofelements = sizeof(YunziTimeline) / sizeof(YunziTimeline[0]);
@@ -42473,8 +42435,6 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 			pISInterface->AddTopLevelObject("YUNZI2021TIMELINE", TLO_Yunzi2021Timeline);
 		if (tlo == "YUNZI2022TIMELINE")
 			pISInterface->AddTopLevelObject("YUNZI2022TIMELINE", TLO_Yunzi2022Timeline);
-		if (tlo == "YUNZI2023TIMELINE")
-			pISInterface->AddTopLevelObject("YUNZI2023TIMELINE", TLO_Yunzi2023Timeline);
 		if (tlo == "YUNZITIMELINE")
 			pISInterface->AddTopLevelObject("YUNZITIMELINE", TLO_YunziTimeline);
 		if (tlo == "TRAVELERSKUNARKCATALOGAROUNDTHELANDING")
