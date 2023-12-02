@@ -84,7 +84,10 @@ Path -PL 2 -L -QA "-A|Additional Debris Sample|-T|QSC:I have found more debris|-
 -695.33 144.13 0.39
 -679.24 141.91 -17.53
 Custom
-ClickAllActors "Fly from Isles of Wisdom"
+ClickAllActors "Fly from Isles of Wisdom" 5
+-677.47 141.90 -18.79
+Wait
+5
 -677.47 141.90 -18.79
 Custom
 TravelMap "Auric Palisades"
