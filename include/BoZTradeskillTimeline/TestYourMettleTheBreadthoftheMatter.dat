@@ -23,14 +23,14 @@ HailActorGetQuest -Actor "Goldbeak"
 -758.23 83.09 606.97
 -785.15 85.00 608.62
 Custom
-ClickAllActors "teleport crystal"
+ClickActor "teleport crystal" FALSE FALSE 50
 -785.15 85.00 608.62
 Wait
 20
+0 0 0
 Custom
 MessageBox "Click the teleport crystal if you did not port"
--785.15 85.00 608.62
--1080.85 178.32 675.49
+0 0 0
 -1083.49 181.21 721.60
 -1096.01 181.82 740.86
 Custom
@@ -89,6 +89,9 @@ ClickAllActors "Fly from Isles of Wisdom"
 Custom
 TravelMap "Auric Palisades"
 -677.47 141.90 -18.79
+Wait
+5
+-677.47 141.90 -18.79
 -709.47 145.39 -366.67
 -711.15 145.96 -392.13
 -663.46 130.08 -422.26
@@ -111,13 +114,14 @@ WaitForZoning
 -1085.65 181.68 735.68
 -1078.15 178.11 672.10
 Custom
-ClickAllActors "teleport crystal"
+ClickActor "teleport crystal" FALSE FALSE 50
 -1077.75 177.98 670.36
 Wait
 20
+0 0 0
 Custom
 MessageBox "Click the teleport crystal if you did not port"
--780.67 84.82 604.73
+0 0 0
 -744.97 62.68 424.60
 -680.68 73.51 442.30
 -639.43 66.77 459.85

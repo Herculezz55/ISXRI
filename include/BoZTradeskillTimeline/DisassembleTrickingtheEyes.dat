@@ -4,10 +4,13 @@ HailActorGetQuest -Actor "Burnish"
 697.13 -46.35 -439.70
 Custom
 ClickAllActors "Stray Feathers"
+723.92 -45.47 -441.77
+Custom
+ClickAllActors
 720.83 -44.73 -444.81
 Custom
 CraftIt "Hooluk Illusion Potion" 1
-720.37 -43.67 -470.15
+720.79 -43.61 -472.14
 Custom
 HailActor "Burnish" 4 1
 697.13 -46.35 -439.70
