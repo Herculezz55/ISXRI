@@ -64,13 +64,16 @@ CraftIt "W.H.O.O. Advanced"
 -632.10 125.06 -441.31
 -678.01 130.19 -420.01
 -708.81 144.44 -396.53
--709.35 145.29 -359.36
+-708.73 145.32 -359.05
 Custom
-ClickAllActors "Fly from Auric Palisades" 5
--709.56 145.35 -360.27
+ClickActor "Fly from Auric Palisades"
+-708.73 145.32 -359.05
+Wait
+5
+-708.73 145.32 -359.05
 Custom
 TravelMap "Isles of Wisdom"
--709.56 145.35 -360.27
+-708.73 145.32 -359.05
 -703.18 144.16 13.35
 -777.85 141.99 27.76
 -828.73 142.75 28.51
@@ -84,16 +87,13 @@ Path -PL 2 -L -QA "-A|Additional Debris Sample|-T|QSC:I have found more debris|-
 -695.33 144.13 0.39
 -679.24 141.91 -17.53
 Custom
-ClickAllActors "Fly from Isles of Wisdom" 5
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Wait
 5
 -677.47 141.90 -18.79
 Custom
 TravelMap "Auric Palisades"
--677.47 141.90 -18.79
-Wait
-5
 -677.47 141.90 -18.79
 -709.47 145.39 -366.67
 -711.15 145.96 -392.13
@@ -106,7 +106,10 @@ Wait
 -702.27 228.29 -737.51
 -711.87 229.62 -751.98
 Custom
-ClickAllActors "Zone to Splendor Sky Aerie"
+ClickActor "Zone to Splendor Sky Aerie"
+-711.87 229.62 -751.98
+Wait
+5
 -711.87 229.62 -751.98
 Custom
 ZoneDoor "Splendor Sky Aerie" 1 FALSE 20 True

@@ -6,7 +6,7 @@ Custom
 HailActor "Hydona" 3 1
 335.49 286.45 965.62
 Custom
-Path -PL 89 -L -YD 10 -QA "-QD|125|-A|aether roots|-T|QSC:I have harvested the root|-E|H" -QA "-QD|125|-A|aether shrub|-T|QSC:harvested the breadfruit|-E|H" -QA "-QD|125|-A|aether shrub|-T|QSC:harvested the seeds|-E|H" -QA "-QD|125|-A|fallen branch|-T|QSC:harvested the wood|-E|H" -QA "-QD|125|-A|rough ore|-T|QSC:harvested the ore|-E|H" -QA "-QD|125|-A|gem cluster|-T|QSC:harvested the gems|-E|H" -QA "-QD|125|-A|animal den|-T|QSC:harvested the hides|-E|H" -CT "QSC:I have gathered a number of local harvests"
+Path -PL 89 -L -YD 10 -QA "-QD|125|-A|aether roots|-T|QSC:I have harvested the root|-E|H" -QA "-QD|125|-A|aether shrub|-T|QSC:harvested the breadfruit|-E|H" -QA "-QD|125|-A|animal den|-T|QSC:I have harvested the meat.|-E|H"-QA "-QD|125|-A|aether shrub|-T|QSC:harvested the seeds|-E|H" -QA "-QD|125|-A|fallen branch|-T|QSC:harvested the wood|-E|H" -QA "-QD|125|-A|rough ore|-T|QSC:harvested the ore|-E|H" -QA "-QD|125|-A|gem cluster|-T|QSC:Harvest trystine gems|-E|H" -QA "-QD|125|-A|animal den|-T|QSC:harvested the hides|-E|H" -CT "QSC:I have gathered a number of local harvests"
 305.13 287.14 910.62
 288.52 285.17 887.30
 285.79 279.90 863.26
@@ -107,14 +107,14 @@ Path
 -722.32 63.44 389.10
 -742.48 66.83 371.20
 -754.08 62.72 388.27
--758.94 64.28 403.74
--788.03 71.69 406.95
--818.92 81.44 385.04
 Custom
-Path -PL 2 -L -YD 10 -QA "-QD|125|-A|Goldbeak's Ore|-T|QSC:harvested Goldbeak's Ore|-E|H" -CT "QSC:collected her ore samples"
--818.92 81.44 385.04
--825.07 86.57 363.65
--744.97 62.68 424.60
+Path -PL 5 -L -YD 10 -QA "-QD|125|-A|Goldbeak's Ore|-T|QSC:harvested Goldbeak's Ore|-E|H" -CT "QSC:collected her ore samples"
+-742.65 62.80 422.30
+-757.75 63.33 433.42
+-786.32 68.04 417.29
+-807.31 79.97 387.36
+-816.86 82.54 374.57
+-820.15 82.14 382.69
 Custom
 Path -PL 10 -CPSP
 -791.61 70.01 413.70
