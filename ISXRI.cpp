@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.78 11-15-23"
-double EXTVER = 6.78;
+#define EXTENSION_VERSION "6.79 12-1-23"
+double EXTVER = 6.79;
 #include "ISXRI.h"
 
 
@@ -1140,6 +1140,18 @@ double EXTVER = 6.78;
 #include "TravelersKunarkCatalogScoutingSkyfire.h"
 #include "TravelersKunarkCatalogStillnotaPanda.h"
 
+//Yunzi 2023
+#include "BeginnerBotanyAntonicanFlora.h"
+#include "BeginnerBotanyButcherblockMountains.h"
+#include "BeginnerBotanyCommonlandsPlants.h"
+#include "BeginnerBotanyDarklightDiversity.h"
+#include "BeginnerBotanyFrostfangFlora.h"
+#include "BeginnerBotanyGreaterFaydark.h"
+#include "BeginnerBotanyNektulosForest.h"
+#include "BeginnerBotanyThunderingSteppes.h"
+#include "BeginnerBotanyTimorousDeep.h"
+#include "Yunzi2023Timeline.h"
+
 //A Gathering Obsession
 #include "AGatheringObsession.h"
 #include "AGatheringObsessionBeyondTheGrave.h"
@@ -1399,6 +1411,18 @@ void CheckForAndLoadISXEQ2()
 }
 void ISXRIUnRegisterTLOs()
 {
+	//Yunzi 2023
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYANTONICANFLORA"); 
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYBUTCHERBLOCKMOUNTAINS");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYCOMMONLANDSPLANTS");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYDARKLIGHTDIVERSITY");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYFROSTFANGFLORA");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYGREATERFAYDARK");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYNEKTULOSFOREST");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYTHUNDERINGSTEPPES");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYTIMOROUSDEEP");
+	pISInterface->RemoveTopLevelObject("YUNZI2023TIMELINE");
+ 
 	//RoR
 	//Prelude
 	pISInterface->RemoveTopLevelObject("SECRETSOFTHESANDS");
@@ -42260,6 +42284,366 @@ bool __cdecl TLO_TheReturnOfAGatheringObsession(int argc, char* argv[], LSTYPEVA
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyAntonicanFlora(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyAntonicanFlora) / sizeof(BeginnerBotanyAntonicanFlora[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyAntonicanFlora[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyButcherblockMountains(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyButcherblockMountains) / sizeof(BeginnerBotanyButcherblockMountains[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyButcherblockMountains[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyCommonlandsPlants(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyCommonlandsPlants) / sizeof(BeginnerBotanyCommonlandsPlants[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyCommonlandsPlants[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyDarklightDiversity(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyDarklightDiversity) / sizeof(BeginnerBotanyDarklightDiversity[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyDarklightDiversity[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyFrostfangFlora(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyFrostfangFlora) / sizeof(BeginnerBotanyFrostfangFlora[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyFrostfangFlora[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyGreaterFaydark(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyGreaterFaydark) / sizeof(BeginnerBotanyGreaterFaydark[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyGreaterFaydark[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyNektulosForest(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyNektulosForest) / sizeof(BeginnerBotanyNektulosForest[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyNektulosForest[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyThunderingSteppes(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyThunderingSteppes) / sizeof(BeginnerBotanyThunderingSteppes[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyThunderingSteppes[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyTimorousDeep(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyTimorousDeep) / sizeof(BeginnerBotanyTimorousDeep[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyTimorousDeep[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_Yunzi2023Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(Yunzi2023Timeline) / sizeof(Yunzi2023Timeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = Yunzi2023Timeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 /// END OF TLOS
 int __cdecl CMD_AddTLO(int argc, char *argv[])
@@ -42272,6 +42656,28 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 		pISInterface->AddTopLevelObject(argv[1], fLSTopLevelObject(argv[2]));*/
 
 		string tlo = argv[1];
+
+		//Yunzi 2023
+		if (tlo == "BEGINNERBOTANYANTONICANFLORA")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYANTONICANFLORA", TLO_BeginnerBotanyAntonicanFlora);
+		if (tlo == "BEGINNERBOTANYBUTCHERBLOCKMOUNTAINS")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYBUTCHERBLOCKMOUNTAINS", TLO_BeginnerBotanyButcherblockMountains);
+		if (tlo == "BEGINNERBOTANYCOMMONLANDSPLANTS")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYCOMMONLANDSPLANTS", TLO_BeginnerBotanyCommonlandsPlants);
+		if (tlo == "BEGINNERBOTANYDARKLIGHTDIVERSITY")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYDARKLIGHTDIVERSITY", TLO_BeginnerBotanyDarklightDiversity);
+		if (tlo == "BEGINNERBOTANYFROSTFANGFLORA")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYFROSTFANGFLORA", TLO_BeginnerBotanyFrostfangFlora);
+		if (tlo == "BEGINNERBOTANYGREATERFAYDARK")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYGREATERFAYDARK", TLO_BeginnerBotanyGreaterFaydark);
+		if (tlo == "BEGINNERBOTANYNEKTULOSFOREST")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYNEKTULOSFOREST", TLO_BeginnerBotanyNektulosForest);
+		if (tlo == "BEGINNERBOTANYTHUNDERINGSTEPPES")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYTHUNDERINGSTEPPES", TLO_BeginnerBotanyThunderingSteppes);
+		if (tlo == "BEGINNERBOTANYTIMOROUSDEEP")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYTIMOROUSDEEP", TLO_BeginnerBotanyTimorousDeep);
+		if (tlo == "YUNZI2023TIMELINE")
+			pISInterface->AddTopLevelObject("YUNZI2023TIMELINE", TLO_Yunzi2023Timeline);
 
 		//RoR
 		//Instances

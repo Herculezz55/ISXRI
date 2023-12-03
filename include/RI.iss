@@ -11542,6 +11542,16 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Gears and Gadgets"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Deadly Nights"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - We Need a Hero!"]
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2023 Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Antonican Flora"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Commonlands Plants"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Darlight Diversity"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Greater Faydark"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Frostfang Flora"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Timorous Deep"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Thundering Steppes"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Nektulos Forest"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Butcherblock Mountains"]
 			}
 			elseif ${_CatName.Equal[Chaos Descending]}
 			{
