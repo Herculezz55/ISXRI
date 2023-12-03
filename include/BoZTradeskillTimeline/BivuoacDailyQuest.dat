@@ -62,7 +62,7 @@ Path -PL 6 -L -CPSP -R
 713.16 -43.62 -457.59
 Custom
 HailActor "Burnish" 2 1
-716.24 -43.70 -471.57
+711.79 -43.80 -472.62
 Custom
 CheckActiveQuest "Bivouac: Barricades" 78 FALSE
 716.24 -43.70 -471.57

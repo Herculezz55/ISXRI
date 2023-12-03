@@ -1,7 +1,6 @@
-Bivouac: Healing
-Repeatable
+Bivouac Daily Generic
 Custom
-HailActorGetQuest -Actor "Burnish" 
+HailActor "Burnish" 
 711.79 -43.80 -472.62
 Custom 
 Path -PL 32 -L -YD 10 -QA "-QD|200|-A|aether roots|-T|QSC:I have harvested the root|-E|H" -QA "-QD|200|-A|aether shrub|-T|QSC:harvested the breadfruit|-E|H" -QA "-QD|200|-A|aether shrub|-T|QSC:harvested the seeds|-E|H" -QA "-QD|200|-A|fallen branch|-T|QSC:harvested the wood|-E|H" -QA "-QD|200|-A|rough ore|-T|QSC:harvested the ore|-E|H" -QA "-QD|200|-A|gem cluster|-T|QSC:harvested the gems|-E|H" -QA "-QD|200|-A|animal den|-T|QSC:harvested the hides|-E|H" -CT "QSC:I have harvested the resources"
@@ -53,7 +52,7 @@ Path -PL 6 -L -CPSP
 620.31 -3.31 -412.85
 695.11 -46.16 -430.35
 Custom
-CraftIt "Bivouac Healing Potions" 6
+MessageBox "CraftIt 6 Bivouac Item for quest"
 717.25 -43.78 -474.22
 Custom
 HailActor "Burnish" 4 1

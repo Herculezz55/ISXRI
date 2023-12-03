@@ -2,7 +2,7 @@ Bivouac: Provisions
 Repeatable
 Custom
 HailActorGetQuest -Actor "Burnish" 
-716.24 -43.70 -471.57
+711.79 -43.80 -472.62
 Custom 
 Path -PL 32 -R -L -QA "-QD|200|-A|aether shrub|-T|QSC:harvested the breadfruit|-E|H" -QA "-QD|200|-A|aether shrub|-T|QSC:harvested the seeds|-E|H" -QA "-QD|200|-A|animal den|-T|QSC:harvested the meat|-E|H" -CT "QSC:I have harvested the resources"
 697.21 -46.35 -431.16
@@ -54,7 +54,7 @@ Path -PL 6 -L -CPSP
 695.11 -46.16 -430.35
 Custom
 CraftIt "Bivouac Provisions" 6
-720.37 -43.67 -470.15
+717.25 -43.78 -474.22
 Custom
 HailActor "Burnish" 4 1
-697.13 -46.35 -439.70
+711.79 -43.80 -472.62
