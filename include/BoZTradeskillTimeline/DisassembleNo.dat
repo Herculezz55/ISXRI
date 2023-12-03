@@ -6,7 +6,7 @@ Custom
 ClickAllActors "Adjusted W.H.O.O. Supplies"
 712.75 -43.79 -472.41
 Custom
-MessageBox "ExamineItem Adjusted W.H.O.O. Components Clickie and Unpack Adjusted W.H.O.O. Components"
+MessageBox "PICK UP the Adjusted W.H.O.O. Components Clickie and UNPACK Adjusted W.H.O.O. Components"
 713.37 -43.77 -471.91
 Custom
 CraftIt "Adjusted W.H.O.O." 1
