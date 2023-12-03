@@ -3,13 +3,16 @@ Custom
 HailActorGetQuest -Actor "Burnish" 
 697.13 -46.35 -439.70
 Custom
-ClickActor -Actor "Adjusted W.H.O.O. Components" 5
+ClickAllActors "Adjusted W.H.O.O. Supplies" 5
+712.75 -43.79 -472.41
+Custom
+MessageBox "Click Adjusted W.H.O.O. Components Clickie"
 713.37 -43.77 -471.91
 Custom
-ClickActor -Actor "Adjusted W.H.O.O. Supplies" 5
+UnpackItem "Adjusted W.H.O.O. Components"
 713.37 -43.77 -471.91
 Custom
-MessageBox "PICK UP the Adjusted W.H.O.O. Supplies and UNPACK Adjusted W.H.O.O. Components"
+MessageBox "Did it UNPACK Adjusted W.H.O.O. Components?"
 713.37 -43.77 -471.91
 Custom
 CraftIt "Adjusted W.H.O.O." 1
