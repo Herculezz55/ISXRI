@@ -12,9 +12,6 @@ Custom
 CheckPreReqs -ITEMQTY "Zimaran Invasion Debris" 1
 0 0 0
 Custom
-MessageBox "Did you need to make a sample now?"
-331.19 286.45 957.75
-Custom
 CheckQuestStep "Speak to Goldbeak" 6
 331.19 286.45 957.75
 Custom
