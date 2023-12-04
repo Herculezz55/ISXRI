@@ -6153,6 +6153,33 @@
 ;			quest name needs to be you can run riw -Quest "Quest Name"
 ;			and it will auto generate the DAT files as required
 
+;v6.78 Changes 6-1-23
+;	
+;		
+
+;v6.79 Changes 12-3-23
+;	RQ
+;		Added: YunZi Panda 2023
+;			Beginner Botany Antonican Flora
+;			Beginner Botany Commonlands Plants
+;			Beginner Botany Darklight Diversity
+;			Beginner Botany Greater Faydark
+;			Beginner Botany Frostfang Flora
+;			Beginner Botany Timorous Deep
+;			Beginner Botany Thundering Steppes
+;			Beginner Botany Nektulos Forest
+;			Beginner Botany Butcherblock Mountains
+;			Beginner Botany Timeline
+;	
+
+;v6.80 Changes 12-4-23
+;	RQ
+;		Added: Ballads of Zimara Tradeskill Line
+; 
+; 
+; 
+; 
+
 ;ISXRI - v6.77 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
 
 
@@ -11478,17 +11505,17 @@ objectdef RIMUIObject
 			}
 			elseif ${_CatName.Equal[Yun Zi]}
 			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2022 Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Around the Landing"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Central Kylong"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Deeper into Kylong"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Focusing on Fens"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Not the Panda!"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Still not a Panda!"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Killers in Kunzar"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Scouting Skyfire"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Angry, Angry, Angry"]
+				UIElement[QuestsListBox@RI]:ClearItems				
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2023 Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Antonican Flora"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Commonlands Plants"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Darlight Diversity"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Greater Faydark"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Frostfang Flora"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Timorous Deep"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Thundering Steppes"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Nektulos Forest"]
+				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Butcherblock Mountains"]
 				UIElement[QuestsListBox@RI]:AddItem["Yunzi Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2017 Timeline",0,FFE8E200]
 				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
@@ -11542,16 +11569,16 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Gears and Gadgets"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Deadly Nights"]
 				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - We Need a Hero!"]
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2023 Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Antonican Flora"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Commonlands Plants"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Darlight Diversity"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Greater Faydark"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Frostfang Flora"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Timorous Deep"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Thundering Steppes"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Nektulos Forest"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Butcherblock Mountains"]
+				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2022 Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Around the Landing"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Central Kylong"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Deeper into Kylong"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Focusing on Fens"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Not the Panda!"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Still not a Panda!"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Killers in Kunzar"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Scouting Skyfire"]
+				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Angry, Angry, Angry"]
 			}
 			elseif ${_CatName.Equal[Chaos Descending]}
 			{
@@ -11784,6 +11811,26 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Sandstone Setup"]
 				UIElement[QuestsListBox@RI]:AddItem["Secrets of the Sands"]
 			}
+			elseif ${_CatName.Equal[Ballads of Zimara]}
+			{
+				UIElement[QuestsListBox@RI]:ClearItems
+				UIElement[QuestsListBox@RI]:AddItem[Ballads of Zimara Adventure Timeline,0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Ballads of Zimara Requisition Tradeskill Missions",0,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem["Ballads of Zimara Tradeskill Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Sky is the Limit"]
+				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Time to Preen"]
+				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: WHOO"]
+				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Where"]
+				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Breadth of the Matter"]
+				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Width of the Breadth"]
+				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Bivouac Building"]
+				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Aetheric Safety"]
+				UIElement[QuestsListBox@RI]:AddItem["Disassemble: No"]
+				UIElement[QuestsListBox@RI]:AddItem["Disassemble: A Rocky Beginning"]
+				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Hide if You Can"]
+				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Tricking the Eyes"]
+				UIElement[QuestsListBox@RI]:AddItem["Disassemble: A Different Approach"]
+			}
 		}
 	}
 	method RQ(string _QuestName=!NONE!)
@@ -11807,6 +11854,7 @@ objectdef RIMUIObject
 			
 			UIElement[CategoryComboBox@RI]:AddItem[A Gathering Obsession Timeline]
 			UIElement[CategoryComboBox@RI]:AddItem[Artisan Epic]
+			UIElement[CategoryComboBox@RI]:AddItem[Ballads of Zimara]
 			UIElement[CategoryComboBox@RI]:AddItem[Blood of Luclin]
 			UIElement[CategoryComboBox@RI]:AddItem[Chaos Descending]
 			UIElement[CategoryComboBox@RI]:AddItem[Epic 2.0 Pre Reqs]
