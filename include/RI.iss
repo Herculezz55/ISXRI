@@ -11829,11 +11829,6 @@ objectdef RIMUIObject
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
 				UIElement[QuestsListBox@RI]:AddItem[Ballads of Zimara Adventure Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac Daily Quest",0,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Barricades"]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Healing"]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Provisions"]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Repairs"]
 				UIElement[QuestsListBox@RI]:AddItem["Ballads of Zimara Tradeskill Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Sky is the Limit"]
 				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Time to Preen"]
@@ -11848,6 +11843,11 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Hide if You Can"]
 				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Tricking the Eyes"]
 				UIElement[QuestsListBox@RI]:AddItem["Disassemble: A Different Approach"]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac Daily Quest",0,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Barricades"]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Healing"]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Provisions"]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Repairs"]
 			}
 		}
 	}
