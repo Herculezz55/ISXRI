@@ -11815,7 +11815,11 @@ objectdef RIMUIObject
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
 				UIElement[QuestsListBox@RI]:AddItem[Ballads of Zimara Adventure Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Ballads of Zimara Requisition Tradeskill Missions",0,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac Daily Quest",0,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Barricades"]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Healing"]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Provisions"]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Repairs"]
 				UIElement[QuestsListBox@RI]:AddItem["Ballads of Zimara Tradeskill Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Sky is the Limit"]
 				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Time to Preen"]

@@ -1471,7 +1471,6 @@ void ISXRIUnRegisterTLOs()
 	pISInterface->RemoveTopLevelObject("TOSPLENDORSANCTUARY");
 	pISInterface->RemoveTopLevelObject("TOZIMARA");
 	pISInterface->RemoveTopLevelObject("TOZIMARAFROMSPLENDOR");
-
 	
 	//Yunzi 2023
 	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYANTONICANFLORA"); 
