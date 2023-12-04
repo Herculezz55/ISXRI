@@ -11874,7 +11874,7 @@ objectdef RIMUIObject
 			UIElement[CategoryComboBox@RI]:AddItem[The Gardening Goblin Timeline]
 			UIElement[CategoryComboBox@RI]:AddItem[Visions of Vetrovia]
 			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
-			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Renewal of Ro].ID}]
+			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Ballads of Zimara].ID}]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FF5DA5CF]
