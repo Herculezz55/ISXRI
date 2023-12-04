@@ -6175,9 +6175,23 @@
 ;v6.80 Changes 12-4-23
 ;	RQ
 ;		Added: Ballads of Zimara Tradeskill Line
-; 
-; 
-; 
+;			Test Your Mettle: The Sky is the Limit
+;			Test Your Mettle: Time to Preen
+;			Test Your Mettle: WHOO
+;			Test Your Mettle: Where
+;			Test Your Mettle: The Breadth of the Matter
+;			Test Your Mettle: The Width of the Breadth
+;			Test Your Mettle: Bivouac Building
+;			Test Your Mettle: Aetheric Safety
+;			Disassemble: No
+;			Disassemble: A Rocky Beginning
+;			Disassemble: Hide if You Can
+;			Disassemble: Tricking the Eyes
+;			Disassemble: A Different Approach
+;			Bivouac: Repairs
+;			Bivouac: Provisions
+;			Bivouac: Healing
+;			Bivouac: Barricades
 ; 
 
 ;ISXRI - v6.77 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
