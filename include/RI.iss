@@ -11828,7 +11828,6 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Ballads of Zimara]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Ballads of Zimara Adventure Timeline,0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Ballads of Zimara Tradeskill Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Sky is the Limit"]
 				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Time to Preen"]
