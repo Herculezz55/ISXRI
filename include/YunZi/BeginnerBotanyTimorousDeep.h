@@ -135,5 +135,5 @@ string BeginnerBotanyTimorousDeep[] = {"Beginner Botany: Timorous Deep",
 "2298.24 -199.84 2499.40", 
 "Custom", 
 "HailActor \"Bao Bao\" 5 1", 
-"2298.24 -199.84 2499.40"
+"2298.24 -199.84 2499.40",
 };
