@@ -1,0 +1,104 @@
+if (tlo == "BIVOUACBARRICADES")
+  pISInterface->AddTopLevelObject("BIVOUACBARRICADES", TLO_BivouacBarricades);
+if (tlo == "BIVOUACDAILYGENERIC")
+  pISInterface->AddTopLevelObject("BIVOUACDAILYGENERIC", TLO_BivouacDailyGeneric);
+if (tlo == "BIVOUACHEALING")
+  pISInterface->AddTopLevelObject("BIVOUACHEALING", TLO_BivouacHealing);
+if (tlo == "BIVOUACPROVISIONS")
+  pISInterface->AddTopLevelObject("BIVOUACPROVISIONS", TLO_BivouacProvisions);
+if (tlo == "BIVOUACREPAIRS")
+  pISInterface->AddTopLevelObject("BIVOUACREPAIRS", TLO_BivouacRepairs);
+if (tlo == "BIVUOACDAILYQUEST")
+  pISInterface->AddTopLevelObject("BIVUOACDAILYQUEST", TLO_BivuoacDailyQuest);
+if (tlo == "BIVUOACDAILYTRAVEL")
+  pISInterface->AddTopLevelObject("BIVUOACDAILYTRAVEL", TLO_BivuoacDailyTravel);
+if (tlo == "BIVUOACTRAVEL")
+  pISInterface->AddTopLevelObject("BIVUOACTRAVEL", TLO_BivuoacTravel);
+if (tlo == "DISASSEMBLEADIFFERENTAPPROACH")
+  pISInterface->AddTopLevelObject("DISASSEMBLEADIFFERENTAPPROACH", TLO_DisassembleADifferentApproach);
+if (tlo == "DISASSEMBLEAROCKYBEGINNING")
+  pISInterface->AddTopLevelObject("DISASSEMBLEAROCKYBEGINNING", TLO_DisassembleARockyBeginning);
+if (tlo == "DISASSEMBLEHIDEIFYOUCAN")
+  pISInterface->AddTopLevelObject("DISASSEMBLEHIDEIFYOUCAN", TLO_DisassembleHideifYouCan);
+if (tlo == "DISASSEMBLENO")
+  pISInterface->AddTopLevelObject("DISASSEMBLENO", TLO_DisassembleNo);
+if (tlo == "DISASSEMBLETRICKINGTHEEYES")
+  pISInterface->AddTopLevelObject("DISASSEMBLETRICKINGTHEEYES", TLO_DisassembleTrickingtheEyes);
+if (tlo == "TESTYOURMETTLEAETHERICSAFETY")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLEAETHERICSAFETY", TLO_TestYourMettleAethericSafety);
+if (tlo == "TESTYOURMETTLEBIVOUACBUILDING")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLEBIVOUACBUILDING", TLO_TestYourMettleBivouacBuilding);
+if (tlo == "TESTYOURMETTLETHEBREADTHOFTHEMATTER")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETHEBREADTHOFTHEMATTER", TLO_TestYourMettleTheBreadthoftheMatter);
+if (tlo == "TESTYOURMETTLETHESKYISTHELIMIT")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETHESKYISTHELIMIT", TLO_TestYourMettleTheSkyistheLimit);
+if (tlo == "TESTYOURMETTLETHEWIDTHOFTHEBREADTH")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETHEWIDTHOFTHEBREADTH", TLO_TestYourMettleTheWidthoftheBreadth);
+if (tlo == "TESTYOURMETTLETIMELINE")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETIMELINE", TLO_TestYourMettleTimeline);
+if (tlo == "TESTYOURMETTLETIMETOPREEN")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETIMETOPREEN", TLO_TestYourMettleTimetoPreen);
+if (tlo == "TESTYOURMETTLEWHERE")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLEWHERE", TLO_TestYourMettleWhere);
+if (tlo == "TESTYOURMETTLEWHOO")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLEWHOO", TLO_TestYourMettleWHOO);
+if (tlo == "TOAETHER")
+  pISInterface->AddTopLevelObject("TOAETHER", TLO_ToAether);
+if (tlo == "TOSPLENDORSANCTUARY")
+  pISInterface->AddTopLevelObject("TOSPLENDORSANCTUARY", TLO_ToSplendorSanctuary);
+if (tlo == "TOZIMARA")
+  pISInterface->AddTopLevelObject("TOZIMARA", TLO_ToZimara);
+if (tlo == "TOZIMARAFROMSPLENDOR")
+  pISInterface->AddTopLevelObject("TOZIMARAFROMSPLENDOR", TLO_ToZimaraFromSplendor);
+if (tlo == "BIVOUACBARRICADES")
+  pISInterface->AddTopLevelObject("BIVOUACBARRICADES", TLO_BivouacBarricades);
+if (tlo == "BIVOUACDAILYGENERIC")
+  pISInterface->AddTopLevelObject("BIVOUACDAILYGENERIC", TLO_BivouacDailyGeneric);
+if (tlo == "BIVOUACHEALING")
+  pISInterface->AddTopLevelObject("BIVOUACHEALING", TLO_BivouacHealing);
+if (tlo == "BIVOUACPROVISIONS")
+  pISInterface->AddTopLevelObject("BIVOUACPROVISIONS", TLO_BivouacProvisions);
+if (tlo == "BIVOUACREPAIRS")
+  pISInterface->AddTopLevelObject("BIVOUACREPAIRS", TLO_BivouacRepairs);
+if (tlo == "BIVUOACDAILYQUEST")
+  pISInterface->AddTopLevelObject("BIVUOACDAILYQUEST", TLO_BivuoacDailyQuest);
+if (tlo == "BIVUOACDAILYTRAVEL")
+  pISInterface->AddTopLevelObject("BIVUOACDAILYTRAVEL", TLO_BivuoacDailyTravel);
+if (tlo == "BIVUOACTRAVEL")
+  pISInterface->AddTopLevelObject("BIVUOACTRAVEL", TLO_BivuoacTravel);
+if (tlo == "DISASSEMBLEADIFFERENTAPPROACH")
+  pISInterface->AddTopLevelObject("DISASSEMBLEADIFFERENTAPPROACH", TLO_DisassembleADifferentApproach);
+if (tlo == "DISASSEMBLEAROCKYBEGINNING")
+  pISInterface->AddTopLevelObject("DISASSEMBLEAROCKYBEGINNING", TLO_DisassembleARockyBeginning);
+if (tlo == "DISASSEMBLEHIDEIFYOUCAN")
+  pISInterface->AddTopLevelObject("DISASSEMBLEHIDEIFYOUCAN", TLO_DisassembleHideifYouCan);
+if (tlo == "DISASSEMBLENO")
+  pISInterface->AddTopLevelObject("DISASSEMBLENO", TLO_DisassembleNo);
+if (tlo == "DISASSEMBLETRICKINGTHEEYES")
+  pISInterface->AddTopLevelObject("DISASSEMBLETRICKINGTHEEYES", TLO_DisassembleTrickingtheEyes);
+if (tlo == "TESTYOURMETTLEAETHERICSAFETY")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLEAETHERICSAFETY", TLO_TestYourMettleAethericSafety);
+if (tlo == "TESTYOURMETTLEBIVOUACBUILDING")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLEBIVOUACBUILDING", TLO_TestYourMettleBivouacBuilding);
+if (tlo == "TESTYOURMETTLETHEBREADTHOFTHEMATTER")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETHEBREADTHOFTHEMATTER", TLO_TestYourMettleTheBreadthoftheMatter);
+if (tlo == "TESTYOURMETTLETHESKYISTHELIMIT")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETHESKYISTHELIMIT", TLO_TestYourMettleTheSkyistheLimit);
+if (tlo == "TESTYOURMETTLETHEWIDTHOFTHEBREADTH")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETHEWIDTHOFTHEBREADTH", TLO_TestYourMettleTheWidthoftheBreadth);
+if (tlo == "TESTYOURMETTLETIMELINE")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETIMELINE", TLO_TestYourMettleTimeline);
+if (tlo == "TESTYOURMETTLETIMETOPREEN")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLETIMETOPREEN", TLO_TestYourMettleTimetoPreen);
+if (tlo == "TESTYOURMETTLEWHERE")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLEWHERE", TLO_TestYourMettleWhere);
+if (tlo == "TESTYOURMETTLEWHOO")
+  pISInterface->AddTopLevelObject("TESTYOURMETTLEWHOO", TLO_TestYourMettleWHOO);
+if (tlo == "TOAETHER")
+  pISInterface->AddTopLevelObject("TOAETHER", TLO_ToAether);
+if (tlo == "TOSPLENDORSANCTUARY")
+  pISInterface->AddTopLevelObject("TOSPLENDORSANCTUARY", TLO_ToSplendorSanctuary);
+if (tlo == "TOZIMARA")
+  pISInterface->AddTopLevelObject("TOZIMARA", TLO_ToZimara);
+if (tlo == "TOZIMARAFROMSPLENDOR")
+  pISInterface->AddTopLevelObject("TOZIMARAFROMSPLENDOR", TLO_ToZimaraFromSplendor);
