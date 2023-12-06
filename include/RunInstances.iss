@@ -18669,6 +18669,12 @@ function OpenDoor(string _DoorName, float _ClosedHeading, bool _WaitTilClosed=FA
 		}
 	}
 }
+function UnpackItem(string _ItemName)
+{
+	wait 5
+	eq2ex inventory unpack ${Me.Inventory[Query, Name=-"${_ItemName}" && Location=="Inventory"].Index}
+	wait 10
+}
 function ExamineItem(string _ItemName, ... args)
 {
 	wait 5

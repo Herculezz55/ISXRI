@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.78 11-15-23"
-double EXTVER = 6.78;
+#define EXTENSION_VERSION "6.80 12-4-23"
+double EXTVER = 6.80;
 #include "ISXRI.h"
 
 
@@ -1140,6 +1140,18 @@ double EXTVER = 6.78;
 #include "TravelersKunarkCatalogScoutingSkyfire.h"
 #include "TravelersKunarkCatalogStillnotaPanda.h"
 
+//Yunzi 2023
+#include "BeginnerBotanyAntonicanFlora.h"
+#include "BeginnerBotanyButcherblockMountains.h"
+#include "BeginnerBotanyCommonlandsPlants.h"
+#include "BeginnerBotanyDarklightDiversity.h"
+#include "BeginnerBotanyFrostfangFlora.h"
+#include "BeginnerBotanyGreaterFaydark.h"
+#include "BeginnerBotanyNektulosForest.h"
+#include "BeginnerBotanyThunderingSteppes.h"
+#include "BeginnerBotanyTimorousDeep.h"
+#include "Yunzi2023Timeline.h"
+
 //A Gathering Obsession
 #include "AGatheringObsession.h"
 #include "AGatheringObsessionBeyondTheGrave.h"
@@ -1218,6 +1230,39 @@ double EXTVER = 6.78;
 #include "ResearchersofRoSandstoneSetup.h"
 #include "ResearchersofRoTakishTime.h"
 #include "ResearchRequisitionTradeskillMissions.h"
+
+// BoZ
+
+// BoZ Tradeskill
+#include "BivouacBarricades.h"
+#include "BivouacDailyGeneric.h"
+#include "BivouacHealing.h"
+#include "BivouacProvisions.h"
+#include "BivouacRepairs.h"
+#include "BivuoacDailyQuest.h"
+#include "BivuoacDailyTravel.h"
+#include "BivuoacTravel.h"
+#include "DisassembleADifferentApproach.h"
+#include "DisassembleARockyBeginning.h"
+#include "DisassembleHideifYouCan.h"
+#include "DisassembleNo.h"
+#include "DisassembleTrickingtheEyes.h"
+#include "TestYourMettleAethericSafety.h"
+#include "TestYourMettleBivouacBuilding.h"
+#include "TestYourMettleTheBreadthoftheMatter.h"
+#include "TestYourMettleTheSkyistheLimit.h"
+#include "TestYourMettleTheWidthoftheBreadth.h"
+#include "TestYourMettleTimeline.h"
+#include "TestYourMettleTimetoPreen.h"
+#include "TestYourMettleWhere.h"
+#include "TestYourMettleWHOO.h"
+
+// BoZ Adventure
+#include "ToAether.h"
+#include "ToSplendorSanctuary.h"
+#include "ToZimara.h"
+#include "ToZimaraFromSplendor.h"
+
 
 //#include ".h"
 //End Quest Dat Files
@@ -1399,6 +1444,46 @@ void CheckForAndLoadISXEQ2()
 }
 void ISXRIUnRegisterTLOs()
 {
+	// BOZ TS Timeline
+	pISInterface->RemoveTopLevelObject("BIVOUACBARRICADES");
+	pISInterface->RemoveTopLevelObject("BIVOUACDAILYGENERIC");
+	pISInterface->RemoveTopLevelObject("BIVOUACHEALING");
+	pISInterface->RemoveTopLevelObject("BIVOUACPROVISIONS");
+	pISInterface->RemoveTopLevelObject("BIVOUACREPAIRS");
+	pISInterface->RemoveTopLevelObject("BIVUOACDAILYQUEST");
+	pISInterface->RemoveTopLevelObject("BIVUOACDAILYTRAVEL");
+	pISInterface->RemoveTopLevelObject("BIVUOACTRAVEL");
+	pISInterface->RemoveTopLevelObject("DISASSEMBLEADIFFERENTAPPROACH");
+	pISInterface->RemoveTopLevelObject("DISASSEMBLEAROCKYBEGINNING");
+	pISInterface->RemoveTopLevelObject("DISASSEMBLEHIDEIFYOUCAN");
+	pISInterface->RemoveTopLevelObject("DISASSEMBLENO");
+	pISInterface->RemoveTopLevelObject("DISASSEMBLETRICKINGTHEEYES");
+	pISInterface->RemoveTopLevelObject("TESTYOURMETTLEAETHERICSAFETY");
+	pISInterface->RemoveTopLevelObject("TESTYOURMETTLEBIVOUACBUILDING");
+	pISInterface->RemoveTopLevelObject("TESTYOURMETTLETHEBREADTHOFTHEMATTER");
+	pISInterface->RemoveTopLevelObject("TESTYOURMETTLETHESKYISTHELIMIT");
+	pISInterface->RemoveTopLevelObject("TESTYOURMETTLETHEWIDTHOFTHEBREADTH");
+	pISInterface->RemoveTopLevelObject("TESTYOURMETTLETIMELINE");
+	pISInterface->RemoveTopLevelObject("TESTYOURMETTLETIMETOPREEN");
+	pISInterface->RemoveTopLevelObject("TESTYOURMETTLEWHERE");
+	pISInterface->RemoveTopLevelObject("TESTYOURMETTLEWHOO");
+	pISInterface->RemoveTopLevelObject("TOAETHER");
+	pISInterface->RemoveTopLevelObject("TOSPLENDORSANCTUARY");
+	pISInterface->RemoveTopLevelObject("TOZIMARA");
+	pISInterface->RemoveTopLevelObject("TOZIMARAFROMSPLENDOR");
+	
+	//Yunzi 2023
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYANTONICANFLORA"); 
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYBUTCHERBLOCKMOUNTAINS");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYCOMMONLANDSPLANTS");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYDARKLIGHTDIVERSITY");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYFROSTFANGFLORA");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYGREATERFAYDARK");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYNEKTULOSFOREST");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYTHUNDERINGSTEPPES");
+	pISInterface->RemoveTopLevelObject("BEGINNERBOTANYTIMOROUSDEEP");
+	pISInterface->RemoveTopLevelObject("YUNZI2023TIMELINE");
+ 
 	//RoR
 	//Prelude
 	pISInterface->RemoveTopLevelObject("SECRETSOFTHESANDS");
@@ -42260,6 +42345,1302 @@ bool __cdecl TLO_TheReturnOfAGatheringObsession(int argc, char* argv[], LSTYPEVA
 	}
 	return false;
 }
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyAntonicanFlora(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyAntonicanFlora) / sizeof(BeginnerBotanyAntonicanFlora[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyAntonicanFlora[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyButcherblockMountains(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyButcherblockMountains) / sizeof(BeginnerBotanyButcherblockMountains[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyButcherblockMountains[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyCommonlandsPlants(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyCommonlandsPlants) / sizeof(BeginnerBotanyCommonlandsPlants[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyCommonlandsPlants[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyDarklightDiversity(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyDarklightDiversity) / sizeof(BeginnerBotanyDarklightDiversity[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyDarklightDiversity[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyFrostfangFlora(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyFrostfangFlora) / sizeof(BeginnerBotanyFrostfangFlora[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyFrostfangFlora[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyGreaterFaydark(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyGreaterFaydark) / sizeof(BeginnerBotanyGreaterFaydark[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyGreaterFaydark[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyNektulosForest(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyNektulosForest) / sizeof(BeginnerBotanyNektulosForest[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyNektulosForest[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyThunderingSteppes(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyThunderingSteppes) / sizeof(BeginnerBotanyThunderingSteppes[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyThunderingSteppes[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BeginnerBotanyTimorousDeep(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BeginnerBotanyTimorousDeep) / sizeof(BeginnerBotanyTimorousDeep[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BeginnerBotanyTimorousDeep[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_Yunzi2023Timeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(Yunzi2023Timeline) / sizeof(Yunzi2023Timeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = Yunzi2023Timeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BivouacBarricades(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BivouacBarricades) / sizeof(BivouacBarricades[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BivouacBarricades[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BivouacDailyGeneric(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BivouacDailyGeneric) / sizeof(BivouacDailyGeneric[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BivouacDailyGeneric[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BivouacHealing(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BivouacHealing) / sizeof(BivouacHealing[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BivouacHealing[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BivouacProvisions(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BivouacProvisions) / sizeof(BivouacProvisions[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BivouacProvisions[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BivouacRepairs(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BivouacRepairs) / sizeof(BivouacRepairs[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BivouacRepairs[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BivuoacDailyQuest(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BivuoacDailyQuest) / sizeof(BivuoacDailyQuest[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BivuoacDailyQuest[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BivuoacDailyTravel(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BivuoacDailyTravel) / sizeof(BivuoacDailyTravel[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BivuoacDailyTravel[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_BivuoacTravel(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BivuoacTravel) / sizeof(BivuoacTravel[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BivuoacTravel[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_DisassembleADifferentApproach(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(DisassembleADifferentApproach) / sizeof(DisassembleADifferentApproach[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = DisassembleADifferentApproach[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_DisassembleARockyBeginning(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(DisassembleARockyBeginning) / sizeof(DisassembleARockyBeginning[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = DisassembleARockyBeginning[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_DisassembleHideifYouCan(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(DisassembleHideifYouCan) / sizeof(DisassembleHideifYouCan[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = DisassembleHideifYouCan[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_DisassembleNo(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(DisassembleNo) / sizeof(DisassembleNo[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = DisassembleNo[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_DisassembleTrickingtheEyes(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(DisassembleTrickingtheEyes) / sizeof(DisassembleTrickingtheEyes[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = DisassembleTrickingtheEyes[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TestYourMettleAethericSafety(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TestYourMettleAethericSafety) / sizeof(TestYourMettleAethericSafety[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TestYourMettleAethericSafety[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TestYourMettleBivouacBuilding(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TestYourMettleBivouacBuilding) / sizeof(TestYourMettleBivouacBuilding[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TestYourMettleBivouacBuilding[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TestYourMettleTheBreadthoftheMatter(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TestYourMettleTheBreadthoftheMatter) / sizeof(TestYourMettleTheBreadthoftheMatter[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TestYourMettleTheBreadthoftheMatter[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TestYourMettleTheSkyistheLimit(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TestYourMettleTheSkyistheLimit) / sizeof(TestYourMettleTheSkyistheLimit[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TestYourMettleTheSkyistheLimit[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TestYourMettleTheWidthoftheBreadth(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TestYourMettleTheWidthoftheBreadth) / sizeof(TestYourMettleTheWidthoftheBreadth[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TestYourMettleTheWidthoftheBreadth[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TestYourMettleTimeline(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TestYourMettleTimeline) / sizeof(TestYourMettleTimeline[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TestYourMettleTimeline[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TestYourMettleTimetoPreen(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TestYourMettleTimetoPreen) / sizeof(TestYourMettleTimetoPreen[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TestYourMettleTimetoPreen[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TestYourMettleWhere(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TestYourMettleWhere) / sizeof(TestYourMettleWhere[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TestYourMettleWhere[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_TestYourMettleWHOO(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(TestYourMettleWHOO) / sizeof(TestYourMettleWHOO[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = TestYourMettleWHOO[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ToAether(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ToAether) / sizeof(ToAether[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ToAether[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ToSplendorSanctuary(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ToSplendorSanctuary) / sizeof(ToSplendorSanctuary[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ToSplendorSanctuary[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ToZimara(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ToZimara) / sizeof(ToZimara[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ToZimara[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+//TLO to return string arrays
+bool __cdecl TLO_ToZimaraFromSplendor(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(ToZimaraFromSplendor) / sizeof(ToZimaraFromSplendor[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = ToZimaraFromSplendor[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
 
 /// END OF TLOS
 int __cdecl CMD_AddTLO(int argc, char *argv[])
@@ -42272,6 +43653,82 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 		pISInterface->AddTopLevelObject(argv[1], fLSTopLevelObject(argv[2]));*/
 
 		string tlo = argv[1];
+		// BoZ TS Timeline
+		if (tlo == "BIVOUACBARRICADES")
+			pISInterface->AddTopLevelObject("BIVOUACBARRICADES", TLO_BivouacBarricades);
+		if (tlo == "BIVOUACDAILYGENERIC")
+			pISInterface->AddTopLevelObject("BIVOUACDAILYGENERIC", TLO_BivouacDailyGeneric);
+		if (tlo == "BIVOUACHEALING")
+			pISInterface->AddTopLevelObject("BIVOUACHEALING", TLO_BivouacHealing);
+		if (tlo == "BIVOUACPROVISIONS")
+			pISInterface->AddTopLevelObject("BIVOUACPROVISIONS", TLO_BivouacProvisions);
+		if (tlo == "BIVOUACREPAIRS")
+			pISInterface->AddTopLevelObject("BIVOUACREPAIRS", TLO_BivouacRepairs);
+		if (tlo == "BIVUOACDAILYQUEST")
+			pISInterface->AddTopLevelObject("BIVUOACDAILYQUEST", TLO_BivuoacDailyQuest);
+		if (tlo == "BIVUOACDAILYTRAVEL")
+			pISInterface->AddTopLevelObject("BIVUOACDAILYTRAVEL", TLO_BivuoacDailyTravel);
+		if (tlo == "BIVUOACTRAVEL")
+			pISInterface->AddTopLevelObject("BIVUOACTRAVEL", TLO_BivuoacTravel);
+		if (tlo == "DISASSEMBLEADIFFERENTAPPROACH")
+			pISInterface->AddTopLevelObject("DISASSEMBLEADIFFERENTAPPROACH", TLO_DisassembleADifferentApproach);
+		if (tlo == "DISASSEMBLEAROCKYBEGINNING")
+			pISInterface->AddTopLevelObject("DISASSEMBLEAROCKYBEGINNING", TLO_DisassembleARockyBeginning);
+		if (tlo == "DISASSEMBLEHIDEIFYOUCAN")
+			pISInterface->AddTopLevelObject("DISASSEMBLEHIDEIFYOUCAN", TLO_DisassembleHideifYouCan);
+		if (tlo == "DISASSEMBLENO")
+			pISInterface->AddTopLevelObject("DISASSEMBLENO", TLO_DisassembleNo);
+		if (tlo == "DISASSEMBLETRICKINGTHEEYES")
+			pISInterface->AddTopLevelObject("DISASSEMBLETRICKINGTHEEYES", TLO_DisassembleTrickingtheEyes);
+		if (tlo == "TESTYOURMETTLEAETHERICSAFETY")
+			pISInterface->AddTopLevelObject("TESTYOURMETTLEAETHERICSAFETY", TLO_TestYourMettleAethericSafety);
+		if (tlo == "TESTYOURMETTLEBIVOUACBUILDING")
+			pISInterface->AddTopLevelObject("TESTYOURMETTLEBIVOUACBUILDING", TLO_TestYourMettleBivouacBuilding);
+		if (tlo == "TESTYOURMETTLETHEBREADTHOFTHEMATTER")
+			pISInterface->AddTopLevelObject("TESTYOURMETTLETHEBREADTHOFTHEMATTER", TLO_TestYourMettleTheBreadthoftheMatter);
+		if (tlo == "TESTYOURMETTLETHESKYISTHELIMIT")
+			pISInterface->AddTopLevelObject("TESTYOURMETTLETHESKYISTHELIMIT", TLO_TestYourMettleTheSkyistheLimit);
+		if (tlo == "TESTYOURMETTLETHEWIDTHOFTHEBREADTH")
+			pISInterface->AddTopLevelObject("TESTYOURMETTLETHEWIDTHOFTHEBREADTH", TLO_TestYourMettleTheWidthoftheBreadth);
+		if (tlo == "TESTYOURMETTLETIMELINE")
+			pISInterface->AddTopLevelObject("TESTYOURMETTLETIMELINE", TLO_TestYourMettleTimeline);
+		if (tlo == "TESTYOURMETTLETIMETOPREEN")
+			pISInterface->AddTopLevelObject("TESTYOURMETTLETIMETOPREEN", TLO_TestYourMettleTimetoPreen);
+		if (tlo == "TESTYOURMETTLEWHERE")
+			pISInterface->AddTopLevelObject("TESTYOURMETTLEWHERE", TLO_TestYourMettleWhere);
+		if (tlo == "TESTYOURMETTLEWHOO")
+			pISInterface->AddTopLevelObject("TESTYOURMETTLEWHOO", TLO_TestYourMettleWHOO);
+		if (tlo == "TOAETHER")
+			pISInterface->AddTopLevelObject("TOAETHER", TLO_ToAether);
+		if (tlo == "TOSPLENDORSANCTUARY")
+			pISInterface->AddTopLevelObject("TOSPLENDORSANCTUARY", TLO_ToSplendorSanctuary);
+		if (tlo == "TOZIMARA")
+			pISInterface->AddTopLevelObject("TOZIMARA", TLO_ToZimara);
+		if (tlo == "TOZIMARAFROMSPLENDOR")
+			pISInterface->AddTopLevelObject("TOZIMARAFROMSPLENDOR", TLO_ToZimaraFromSplendor);
+
+
+		//Yunzi 2023
+		if (tlo == "BEGINNERBOTANYANTONICANFLORA")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYANTONICANFLORA", TLO_BeginnerBotanyAntonicanFlora);
+		if (tlo == "BEGINNERBOTANYBUTCHERBLOCKMOUNTAINS")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYBUTCHERBLOCKMOUNTAINS", TLO_BeginnerBotanyButcherblockMountains);
+		if (tlo == "BEGINNERBOTANYCOMMONLANDSPLANTS")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYCOMMONLANDSPLANTS", TLO_BeginnerBotanyCommonlandsPlants);
+		if (tlo == "BEGINNERBOTANYDARKLIGHTDIVERSITY")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYDARKLIGHTDIVERSITY", TLO_BeginnerBotanyDarklightDiversity);
+		if (tlo == "BEGINNERBOTANYFROSTFANGFLORA")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYFROSTFANGFLORA", TLO_BeginnerBotanyFrostfangFlora);
+		if (tlo == "BEGINNERBOTANYGREATERFAYDARK")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYGREATERFAYDARK", TLO_BeginnerBotanyGreaterFaydark);
+		if (tlo == "BEGINNERBOTANYNEKTULOSFOREST")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYNEKTULOSFOREST", TLO_BeginnerBotanyNektulosForest);
+		if (tlo == "BEGINNERBOTANYTHUNDERINGSTEPPES")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYTHUNDERINGSTEPPES", TLO_BeginnerBotanyThunderingSteppes);
+		if (tlo == "BEGINNERBOTANYTIMOROUSDEEP")
+			pISInterface->AddTopLevelObject("BEGINNERBOTANYTIMOROUSDEEP", TLO_BeginnerBotanyTimorousDeep);
+		if (tlo == "YUNZI2023TIMELINE")
+			pISInterface->AddTopLevelObject("YUNZI2023TIMELINE", TLO_Yunzi2023Timeline);
 
 		//RoR
 		//Instances
