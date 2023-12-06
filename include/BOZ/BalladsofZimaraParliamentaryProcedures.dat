@@ -4,7 +4,7 @@ HailActorGetQuest -Actor "Coarsequill"
 -343.03 117.94 602.52
 -332.52 119.12 627.12
 Custom
-HailActor "Miranna Ameema" 11 1
+HailActor "Miranna Ameema" 15 1
 -325.36 118.37 638.91
 -339.27 113.03 567.30
 -289.35 91.64 482.51
@@ -44,10 +44,27 @@ ClickActor door
 250.92 283.77 878.59
 207.99 274.96 821.16
 207.65 274.96 819.59
-; Complete Quest "Junior Hootine in the Making"
-; Complete Quest "Earning Your Talons"
-; Complete Quest "Screeching with Sang'Huuu Scouts"
-; Complete Quest "A Real Whose Hoos"
+Custom
+HailActor -Actor "Jabber Longwind" 3 1
+207.65 274.96 819.59
+Custom
+MakeActiveQuest "Junior Hootie in the Making"
+207.65 274.96 819.59
+Custom
+Quest "JuniorHootineintheMaking"
+0 0 0
+Custom
+Quest "EarningYourTalons"
+0 0 0
+Custom
+Quest "ScreechingwithSangHuuuScouts"
+0 0 0
+Custom
+Quest "ARealWhoseHoos"
+0 0 0
+Custom
+MakeActiveQuest "Ballads of Zimara: Parliamentary Procedures"
+0 0 0
 Custom
 Path
 335.24 286.42 948.34
@@ -84,7 +101,7 @@ Custom
 HailActor "Kindellan the Elder" 3 1
 -833.95 71.55 541.95
 Custom
-Click Actor door
+ClickActor door
 -827.51 71.56 552.97
 Custom
 Evac

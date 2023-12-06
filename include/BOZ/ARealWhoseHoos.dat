@@ -47,7 +47,7 @@ ClickActor "Vines"
 -595.20 101.74 77.84
 -599.36 96.52 160.91
 Custom
-Path -PL 8 -L -QA "-A|melon radish|-T|QSC:I gathered the melon|-E|H" -QA "-A|pond creeper|-T|QSC:I gathered the melon and pond creepers slime|-E|K"
+Path -PL 8 -L -DFPWD -QA "-A|melon radish|-T|QSC:I gathered the melon|-E|H" -QA "-A|pond creeper|-T|QSC:I gathered the melon and pond creepers slime|-E|K" -CT "QSC:I gathered the melon radishes and pond creeper slime"
 -633.01 96.99 157.98
 -569.06 97.93 179.79
 -517.57 73.71 347.22
@@ -75,7 +75,7 @@ ClickActor "Vines"
 -563.44 205.50 -36.83
 -485.75 238.94 -77.39
 -463.39 238.33 -75.15
-Custom 
+Custom
 ApplyVerb "a sickly giant owl" "Apply Chelation Potion"
 -462.36 238.36 -75.82
 Custom
