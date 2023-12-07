@@ -1,4 +1,5 @@
 More Metal Extraction
+Repeatable
 Custom
 CheckAndSet -InZone "Splendor Sky Aerie" 22
 0 0 0
@@ -21,7 +22,7 @@ FastTravel "Splendor Sky Aerie"
 -831.34 176.14 152.57
 -833.96 176.02 149.34
 Custom
-HailActorGetQuest -Actor "Hootensia" 3 1
+HailActorGetQuest -Actor ""Hootensia"" 3 1
 -833.96 176.02 149.34
 -826.31 174.51 159.69
 -822.21 197.55 170.36
@@ -31,23 +32,30 @@ HailActorGetQuest -Actor "Hootensia" 3 1
 -787.97 168.58 281.69
 -784.94 159.99 316.31
 Custom
-Path -PL 16 -L -QA "-QD|200|-A|Gold Metal Deposit|-T|QSC:I removed|-E|H" -QA "-QD|200|-A|Silver Metal Deposit|-T|QSC:I removed|-E|H" -QA "-QD|200|-A|alloy residue|-T|QSC:I removed|-E|K" -QA "-QD|200|-A|scorched shamblers|-T|QSC:I removed|-E|K" -CT "QSC:I removed"
--804.00 163.41 304.51
--766.96 153.21 299.43
--730.25 144.33 316.00
--689.61 148.82 334.34
--630.58 148.89 373.35
--634.71 153.14 452.83
--587.86 156.42 476.01
--564.90 160.21 546.24
--584.92 152.80 646.29
--605.07 147.28 671.01
--691.37 116.24 653.29
--764.64 105.94 589.78
--812.66 104.44 503.80
--854.84 136.83 448.80
--829.07 137.27 434.44
--796.70 138.31 374.99
+Path -PL 16 -L -QA "-QD|40|-A|Gold Metal Deposit|-T|QSC:I removed|-E|H" -QA "-QD|40|-A|Silver Metal Deposit|-T|QSC:I removed|-E|H" -QA "-QD|40|-A|alloy residue|-T|QSC:I removed|-E|K" -QA "-QD|40|-A|a scorched shambler|-T|QSC:I removed|-E|K" -CT "QSC:I removed"
+-737.98 63.02 405.99
+-769.78 79.41 314.04
+-761.81 69.51 328.44
+-726.58 62.30 412.30
+-714.80 72.36 367.79
+-708.78 89.97 333.05
+-701.63 104.20 302.28
+-721.31 61.99 400.33
+-727.29 62.21 415.65
+-756.41 62.39 438.87
+-782.13 66.78 421.43
+-798.50 73.09 405.13
+-767.29 60.35 480.34
+-780.55 58.56 517.20
+-826.21 82.14 573.41
+-865.08 74.13 543.56
+-828.37 65.61 513.21
+-827.01 77.63 457.02
+-847.76 81.46 457.70
+-835.96 90.14 429.69
+-858.16 79.03 483.14
+-885.75 91.70 488.98
+-778.90 58.20 502.60
 Custom
 Path
 -793.52 138.46 364.80
