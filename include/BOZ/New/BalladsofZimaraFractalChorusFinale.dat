@@ -10,7 +10,7 @@ HailActorGetQuest -Actor "Miranna Ameema"
 -736.10 142.50 20.50
 -677.47 141.90 -18.79
 Custom
-ClickAllActors "Fly from Isles of Wisdom"
+ClickActor "Fly from Isles of Wisdom" 5
 -677.47 141.90 -18.79
 Custom
 TravelMap "Auric Palisades"
@@ -24,7 +24,7 @@ TravelMap "Auric Palisades"
 -702.27 228.29 -737.51
 -711.87 229.62 -751.98
 Custom
-ClickAllActors
+ClickAllActors 5
 -711.87 229.62 -751.98
 Custom
 ZoneDoor "Aether Wroughtlands" 1 FALSE 20 True
