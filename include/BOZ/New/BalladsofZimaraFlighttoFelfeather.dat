@@ -3,6 +3,10 @@ Custom
 CheckPreReqs -Completed "A Real Whose Hoos"
 0 0 0
 Custom
+FastTravel "Splendor Sky Aerie"
+0 0 0
+-332.52 119.12 627.12
+Custom
 HailActorGetQuest -Actor "Miranna Ameema"
 -325.36 118.37 638.91
 -324.14 118.37 639.08
@@ -70,10 +74,10 @@ Path
 1042.89 174.06 764.90
 1069.37 179.50 756.18
 Custom
-HailActor "Crestcry" 1 1 
+HailActor "Crestcry" 12 1 
 1069.37 179.50 756.18
 Wait
-2
+20
 Custom
 HailActor "Crestcry" 12 1 
 1069.37 179.50 756.18
