@@ -1,10 +1,28 @@
 Ballads of Zimara: Parliamentary Procedures
 Custom
+CheckPreReqs -Completed "Junior Hootie in the Making"
+0 0 0
+Custom
+CheckPreReqs -Completed  "Earning Your Talons"
+0 0 0
+Custom
+CheckPreReqs -Completed  "Screeching with Sang'Huuu Scouts"
+0 0 0
+Custom
+FastTravel "The Barren Sky"
+0 0 0
+Custom
+ClickActor zone_to_norrath TRUE FALSE 50
+-589.04 -46.54 -401.60
+Custom
+TravelMap "Splendor Sky Aerie"
+0 0 0
+Custom
 HailActorGetQuest -Actor "Coarsequill"
 -343.03 117.94 602.52
 -332.52 119.12 627.12
 Custom
-HailActor "Miranna Ameema" 15 1
+HailActor -Actor "Miranna Ameema" 15 1
 -325.36 118.37 638.91
 -339.27 113.03 567.30
 -289.35 91.64 482.51
@@ -45,73 +63,43 @@ ClickActor door
 207.99 274.96 821.16
 207.65 274.96 819.59
 Custom
-HailActor -Actor "Jabber Longwind" 3 1
+ClickActor "Talisman of Seven Talons" 5
 207.65 274.96 819.59
-Custom
-MakeActiveQuest "Junior Hootie in the Making"
-207.65 274.96 819.59
-Custom
-Quest "JuniorHootineintheMaking"
-0 0 0
-Custom
-Quest "EarningYourTalons"
-0 0 0
-Custom
-Quest "ScreechingwithSangHuuuScouts"
-0 0 0
-Custom
-Quest "ARealWhoseHoos"
-0 0 0
-Custom
-MakeActiveQuest "Ballads of Zimara: Parliamentary Procedures"
-0 0 0
 Custom
 Path
-335.24 286.42 948.34
-354.10 285.54 996.27
-331.90 276.09 1035.49
-280.92 282.55 1046.36
-241.13 286.64 1053.50
-234.85 286.49 1024.02
-322.27 305.31 1008.55
+208.06 274.96 821.51
+208.06 295.87 821.51
+192.49 306.44 861.54
+174.63 310.99 904.03
+155.72 315.81 949.02
+149.31 319.58 985.82
+156.50 322.10 1009.92
+167.21 311.45 1021.47
+218.45 315.65 1029.49
+238.51 317.12 1025.26
+287.30 309.50 1014.99
+315.21 305.08 1001.21
 Custom
-ClickActor "Parliamentary Door"
-322.27 305.31 1008.55
+FlyDown 1
+315.21 305.08 1001.21
+Custom
+ClickActor qst_widget_hooluk_parliament_chamber
+314.33 305.09 999.27
+Custom
+WaitForZoning
+0 0 0
 -830.07 71.15 552.66
 -833.95 71.55 541.95
 Custom
-HailActor "Kindellan the Elder" 2 1
+HailActor "Kindellan the Elder" 16 1
 -833.95 71.55 541.95
-Custom
-HailActor "Fullplume the Elder" 1 1
--833.95 71.55 541.95
-Custom
-HailActor "Kindellan the Elder" 3 1
--833.95 71.55 541.95
-Custom
-HailActor "Fullplume the Elder" 1 1
--833.95 71.55 541.95
-Custom
-HailActor "Kindellan the Elder" 2 1
--833.95 71.55 541.95
-Custom
-HailActor "Fullplume the Elder" 2 1
--833.95 71.55 541.95
-Custom
-HailActor "Kindellan the Elder" 3 1
--833.95 71.55 541.95
-Custom
-ClickActor door
 -827.51 71.56 552.97
 Custom
-Evac
-0 0 0
-Custom
-WaitForZoning
+FastTravel "Splendor Sky Aerie"
 0 0 0
 Custom
 Path
 -324.37 118.29 637.48
 Custom
-HailActor "Miranna Ameema" 11 1
--325.36 118.37 638.91
+HailActor -Actor "Miranna Ameema" 2 1
+-322.30 118.41 639.84

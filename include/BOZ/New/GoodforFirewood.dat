@@ -2,27 +2,30 @@ Good for Firewood
 Custom
 HailActorGetQuest -Actor "Oolchimedes"
 1072.31 176.96 712.82
+1070.61 176.96 719.05
 951.06 164.86 756.11
 929.35 161.86 760.16
 Custom
-ClickActor -Actor bird 
+ClickActor "Fly to Hooluk Village"
 929.35 161.86 760.16
 Custom
 TravelMap "Sanctuary"
 0 0 0
+Wait 
+5
+348.22 252.95 730.41
 345.61 252.83 732.94
 293.13 263.05 795.62
 297.22 230.47 680.92
 311.45 205.80 590.99
 240.67 201.20 537.77
 227.02 154.19 482.56
-165.87 92.79 402.47
-264.38 44.84 331.09
-343.04 49.27 278.53
-403.64 64.87 279.94
-500.64 80.63 287.31
+165.87 154.19 402.47
+264.38 154.19 331.09
+343.04 154.19 278.53
+403.64 154.19 279.94
 Custom
-Path -PL 12 -L -QA "-A|aububorian corpse|-T|QSC:I destroyed" -CT "QSC:I destroyed the corroded auduborian"
+Path -PL 12 -L -QA "-A|Auduborian Corpse|-T|QSC:I destroyed|-E|H" -CT "QSC:I destroyed the corroded auduborian"
 537.42 84.30 321.35
 561.29 104.64 411.37
 593.07 105.51 437.69
@@ -39,10 +42,9 @@ Path -PL 12 -L -QA "-A|aububorian corpse|-T|QSC:I destroyed" -CT "QSC:I destroye
 613.43 107.55 432.74
 598.07 106.73 429.47
 Custom
-Path
-500.64 80.63 287.31
-403.64 64.87 279.94
-343.04 49.27 278.53
+Path -PL 10 -CPSP
+498.53 82.10 277.67
+400.59 64.29 286.37
 360.89 53.36 295.92
 306.54 46.38 310.50
 236.32 58.29 363.91
@@ -60,11 +62,11 @@ Path
 240.44 286.68 1052.55
 345.61 252.83 732.94
 Custom
-ClickActor -Actor bird 
+ClickActor "Fly to Felfeather" 
 345.61 252.83 732.94
 Custom
 TravelMap "Felfeather Isle"
-0 0 0
+345.61 252.83 732.94
 929.35 161.86 760.16
 951.06 164.86 756.11
 1028.57 173.76 793.29

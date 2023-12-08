@@ -8,10 +8,11 @@ HailActorGetQuest -Actor "Crestcry"
 Custom
 HailActor "Ooichimedes" 6 1
 1071.06 176.96 713.83
+1070.61 176.96 719.05
 951.06 164.86 756.11
 929.35 161.86 760.16
 Custom
-ClickActor -Actor bird 
+ClickActor "Fly to Hooluk Village"
 929.35 161.86 760.16
 Custom
 TravelMap "Sanctuary"
@@ -32,7 +33,7 @@ TravelMap "Sanctuary"
 610.51 84.50 189.10
 675.14 61.26 178.47
 Custom
-Path -PL 29 -L -QA "-A|noxious swarm larvae|-T|QSC:8/8|-E|K" -QA "-A|a wild aeraquis|-T|QSC:10/10|-E|K"
+Path -PL 28 -L -QA "-A|noxious swarm larvae|-T|QSC:swarm larvae|-E|H" -QA "-A|a wild aeraquis|-T|QSC:aeraquis|-E|K" -CT "QSC:I gathered the"
 668.60 63.50 176.67
 723.26 55.66 165.77
 706.99 55.08 220.49
@@ -63,10 +64,9 @@ Path -PL 29 -L -QA "-A|noxious swarm larvae|-T|QSC:8/8|-E|K" -QA "-A|a wild aera
 601.41 105.16 451.70
 630.31 103.95 488.93
 Custom
-Path
-500.64 80.63 287.31
-403.64 64.87 279.94
-343.04 49.27 278.53
+Path -PL 10 -CPSP
+498.53 82.10 277.67
+400.59 64.29 286.37
 360.89 53.36 295.92
 306.54 46.38 310.50
 236.32 58.29 363.91
@@ -84,11 +84,11 @@ Path
 240.44 286.68 1052.55
 345.61 252.83 732.94
 Custom
-ClickActor -Actor bird 
+ClickActor "Fly to Felfeather" 
 345.61 252.83 732.94
 Custom
 TravelMap "Felfeather Isle"
-0 0 0
+345.61 252.83 732.94
 929.35 161.86 760.16
 951.06 164.86 756.11
 1028.57 173.76 793.29
@@ -100,7 +100,7 @@ HailActor "Miranna Ameema" 5 1
 951.06 164.86 756.11
 929.35 161.86 760.16
 Custom
-ClickActor -Actor bird 
+ClickActor "Fly to Hooluk Village"
 929.35 161.86 760.16
 Custom
 TravelMap "Sanctuary"
@@ -221,10 +221,10 @@ Wait
 Custom
 PauseCombatBot 0
 17.37 258.12 150.87
-9.76 255.33 137.78 293.95 0.00 0.00
-52.33 255.40 104.41 321.78 0.00 0.00
-24.86 255.01 65.99 71.61 0.00 0.00
--27.61 254.61 52.90 72.00 0.00 0.00
+9.76 255.33 137.78
+52.33 255.40 104.41
+24.86 255.01 65.99
+-27.61 254.61 52.90
 Custom
 PauseCombatBot 1
 -30.10 254.56 51.03
@@ -293,7 +293,7 @@ Wait
 167.98 281.45 849.86
 149.19 280.74 863.85
 Custom
-ClickActor -Actor cloud 
+ClickActor "Fly from" 
 149.19 280.74 863.85
 Custom
 TravelMap "Preening Island"
@@ -312,7 +312,7 @@ HailActor "Miranna Ameema" 5 1
 -343.74 195.66 1100.17
 -302.74 192.20 1105.56
 Custom
-ClickActor -Actor cloud 
+ClickActor "Fly from" 
 -302.74 192.20 1105.56
 Custom
 TravelMap "Preening Island"

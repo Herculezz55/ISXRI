@@ -155,28 +155,7 @@ HailActor "Coarsequill" 8 1
 -550.55 196.52 525.76
 -609.07 165.80 513.78
 Custom
-PathHarvest 15 25 1 1 1 0 "metallic crystal" "Destroy metallic crystals 6/6" 6
--669.63 91.81 611.76
--710.27 98.14 620.81
--736.55 93.47 592.11
--755.95 93.94 565.88
--761.03 91.22 544.35
--753.18 96.89 525.28
--770.82 92.81 498.24
--840.50 98.67 529.73
--863.94 95.71 537.80
--878.98 112.52 563.55
--802.81 143.68 587.46
--726.81 133.55 621.73
--718.77 128.79 658.16
--690.99 92.85 632.90
--664.98 89.21 617.23
--639.05 86.07 620.83
-Custom
-TimeStampEcho "not doing the crystal this way"
-0 0 0
-Custom
-Path -PL 32 -L -R -QA "-QD|200|-A|a metalmorphic besieger|-T|QSC:Slay metalmorphic|-E|K" -QA "-QD|200|-A|Metallic Crystal|-T|QSC:Destroy|-E|H" -QA "-QD|200|-A|a fire-ravaged greenwood|-T|QSC:Obtain greenwood|-E|K" -CT "QSC:Before speaking with the hooluk"
+Path -PL 32 -L -R -QA "-QD|200|-A|a metalmorphic besieger|-T|QSC:Slay metalmorphic|-E|K" -QA "-QD|200|-A|a fire-ravaged greenwood|-T|QSC:Obtain greenwood|-E|K" -CT "QSC:Before speaking with the hooluk"
 -717.30 153.47 578.56
 -667.40 150 612.82
 -632.78 150 678.76
@@ -210,11 +189,54 @@ Path -PL 32 -L -R -QA "-QD|200|-A|a metalmorphic besieger|-T|QSC:Slay metalmorph
 -875.86 175 767.23
 -932.49 200 775.06
 -961.36 200 751.65
--1024.69 225 797.15
--609.07 165.80 513.78
--550.55 196.52 525.76
--467.55 196.52 545.74
--343.71 196.52 602.03
+Custom
+TimeStampEcho "Finished metalmorphic besieger and greenwood"
+0 0 0
+Custom
+PathHarvest 15 25 1 1 1 0 "metallic crystal" "Before speaking with the hooluk" 1
+-669.63 91.81 611.76
+-710.27 98.14 620.81
+-736.55 93.47 592.11
+-755.95 93.94 565.88
+-761.03 91.22 544.35
+-753.18 96.89 525.28
+-770.82 92.81 498.24
+-840.50 98.67 529.73
+-863.94 95.71 537.80
+-878.98 112.52 563.55
+-802.81 143.68 587.46
+-726.81 133.55 621.73
+-718.77 128.79 658.16
+-690.99 92.85 632.90
+-664.98 89.21 617.23
+-639.05 86.07 620.83
+Custom
+CheckQuestStep "Ballads of Zimara: Neighborhoot Watch" "Before speaking with the hooluk" 218
+0 0 0
+Custom
+MessageBox "Please click the remaining needed crystals (6/6)"
+0 0 0
+Custom
+Path -PL 18 -CPSP
+-774.00 176.53 614.66
+-759.23 172.75 603.58
+-718.98 168.76 599.16
+-693.43 167.84 600.02
+-657.91 167.71 602.17
+-629.25 181.05 603.82
+-596.56 181.58 605.69
+-566.06 182.07 607.44
+-535.49 182.56 609.19
+-503.14 193.98 611.05
+-474.66 194.44 611.33
+-446.83 194.88 610.78
+-419.00 195.34 605.74
+-393.73 195.75 602.68
+-370.28 196.12 602.20
+-351.79 196.42 601.83
+-351.79 169.30 601.83
+-351.79 140.83 601.83
+-351.74 118.30 601.81
 Custom
 HailActor "Coarsequill" 2 1
 -343.03 117.94 602.52

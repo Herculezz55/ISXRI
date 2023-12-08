@@ -6,7 +6,7 @@ HailActorGetQuest -Actor "Skirha"
 951.06 164.86 756.11
 929.35 161.86 760.16
 Custom
-ClickActor -Actor bird 
+ClickActor "Fly to Hooluk Village"
 929.35 161.86 760.16
 Custom
 TravelMap "Sanctuary"
@@ -65,7 +65,7 @@ Path
 240.44 286.68 1052.55
 345.61 252.83 732.94
 Custom
-ClickActor -Actor bird 
+ClickActor "Fly to Felfeather" 
 345.61 252.83 732.94
 Custom
 TravelMap "Felfeather Isle"

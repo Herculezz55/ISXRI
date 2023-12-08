@@ -39,7 +39,7 @@ Custom
 CheckQuestStep "I have removed the terrorizing woodland bristlebane" 43
 -246.96 186.53 30.18
 Custom
-MessageBox "Unable to confirm if you have removed the terrorizing woodland bristlebane. Please check the quest steps"
+TimeStampEcho "Unable to confirm if you have removed the terrorizing woodland bristlebane. Please check the quest steps"
 -246.96 186.53 30.18
 Custom
 Path 

@@ -4,14 +4,17 @@ Roots in Corruption
 Custom
 HailActorGetQuest -Actor "Oolchimedes"
 1072.78 176.96 714.08
+1070.61 176.96 719.05
 951.06 164.86 756.11
 929.35 161.86 760.16
 Custom
-ClickActor -Actor bird 
+ClickActor "Fly to Hooluk Village"
 929.35 161.86 760.16
 Custom
 TravelMap "Sanctuary"
 929.35 161.86 760.16
+Wait 
+5
 348.22 252.95 730.41
 345.61 252.83 732.94
 293.13 263.05 795.62
@@ -19,12 +22,12 @@ TravelMap "Sanctuary"
 311.45 205.80 590.99
 240.67 201.20 537.77
 227.02 154.19 482.56
-165.87 92.79 402.47
-264.38 44.84 331.09
-343.04 49.27 278.53
-403.64 64.87 279.94
+165.87 154.19 402.47
+264.38 154.19 331.09
+343.04 154.19 278.53
+403.64 154.19 279.94
 Custom
-Path -PL 24 -L -QA "-A|healthy aububorian bark|-T|QSC:8/8" -QA "-A|a metal inflicted auduborian|-T|QSC:8/8"
+Path -PL 13 -L -QA "-A|healthy auduborian bark|-T|QSC:Gather healthy auduborian bark|-E|H" -QA "-A|a metal inflicted auduborian|-T|QSC:8/8|-E|UseItem-Sacrificed Corruption" -CT "QSC: I've gathered"
 502.01 81.06 292.16
 539.37 86.34 346.86
 563.70 103.98 404.56
@@ -40,7 +43,7 @@ Path -PL 24 -L -QA "-A|healthy aububorian bark|-T|QSC:8/8" -QA "-A|a metal infli
 561.95 85.03 262.49
 515.42 88.62 252.19
 Custom
-Path
+Path -PL 10 -CPSP
 498.53 82.10 277.67
 400.59 64.29 286.37
 360.89 53.36 295.92
@@ -60,11 +63,11 @@ Path
 240.44 286.68 1052.55
 345.61 252.83 732.94
 Custom
-ClickActor -Actor bird 
+ClickActor "Fly to Felfeather" 
 345.61 252.83 732.94
 Custom
 TravelMap "Felfeather Isle"
-0 0 0
+345.61 252.83 732.94
 929.35 161.86 760.16
 951.06 164.86 756.11
 1028.57 173.76 793.29
