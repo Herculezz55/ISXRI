@@ -1,6 +1,9 @@
 Bivouac: Provisions
 Repeatable
 Custom
+CheckPreReqs -ITEMQTY "Zimaran Kindling" 30
+711.79 -43.80 -472.62
+Custom
 HailActorGetQuest -Actor "Burnish" 
 711.79 -43.80 -472.62
 711.79 -43.80 -472.62

@@ -3,7 +3,7 @@ Custom
 CheckAndSet -NotInZone "Guild Hall" 7
 0 0 0
 Custom
-RemoveFromDepot "Fuel Depot" "Zimaran Coal" 200 "aerated mineral water" 20 "Zimaran Candle" 60 "Zimaran Kindling" 60 "Zimaran Sandpaper" 60 "Zimaran Incense" 60
+RemoveFromDepot "Fuel Depot" "Zimaran Coal" 60 "Zimaran Candle" 60 "Zimaran Kindling" 60 "Zimaran Sandpaper" 60 "Zimaran Incense" 60
 0 0 0
 Custom
 CheckAndSet -InZone "Aether Wroughtlands" 55
