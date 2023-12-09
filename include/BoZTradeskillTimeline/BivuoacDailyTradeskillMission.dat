@@ -74,7 +74,7 @@ Custom
 CheckAndSet -NotActiveQuest "Bivouac: Barricades" 78
 716.24 -43.70 -471.57
 Custom
-Quest "BivouacBarricades"
+Quest "BivouacBarricades" 0 1
 716.24 -43.70 -471.57
 Custom
 MakeActiveQuest "Bivouac: Healing"
@@ -86,7 +86,7 @@ Custom
 CheckAndSet -NotActiveQuest "Bivouac: Healing" 90
 716.24 -43.70 -471.57
 Custom
-Quest "BivouacHealing"
+Quest "BivouacHealing" 0 1
 716.24 -43.70 -471.57
 Custom
 MakeActiveQuest "Bivouac: Provisions"
@@ -98,7 +98,7 @@ Custom
 CheckAndSet -NotActiveQuest "Bivouac: Provisions" 102
 716.24 -43.70 -471.57
 Custom
-Quest "BivouacProvisions"
+Quest "BivouacProvisions" 0 1
 716.24 -43.70 -471.57
 Custom
 MakeActiveQuest "Bivouac: Repairs"
@@ -110,7 +110,7 @@ Custom
 CheckAndSet -NotActiveQuest "Bivouac: Repairs" 114
 716.24 -43.70 -471.57
 Custom
-Quest "BivouacRepairs"
+Quest "BivouacRepairs" 0 1
 716.24 -43.70 -471.57
 Custom
 TimeStampEcho "Ending Bivuoac Daily"
