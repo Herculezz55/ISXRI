@@ -6227,7 +6227,7 @@
 
 ;		Added sending mercs like pets (uses same setting)
 
-variable(global) float RI_Var_Float_Version=6.77
+variable(global) float RI_Var_Float_Version=6.81
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -11828,7 +11828,7 @@ objectdef RIMUIObject
 			elseif ${_CatName.Equal[Ballads of Zimara]}
 			{
 				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["Ballads of Zimara Tradeskill Timeline",0,FFE8E200]
+				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle Timeline",0,FFE8E200]
 				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Sky is the Limit"]
 				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Time to Preen"]
 				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: WHOO"]
@@ -11842,7 +11842,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Hide if You Can"]
 				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Tricking the Eyes"]
 				UIElement[QuestsListBox@RI]:AddItem["Disassemble: A Different Approach"]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac Daily Quest",0,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac Daily Tradeskill Mission",0,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Barricades"]
 				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Healing"]
 				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Provisions"]

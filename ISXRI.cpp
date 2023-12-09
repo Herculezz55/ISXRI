@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.80 12-4-23"
-double EXTVER = 6.80;
+#define EXTENSION_VERSION "6.81 12-9-23"
+double EXTVER = 6.81;
 #include "ISXRI.h"
 
 
@@ -1234,14 +1234,11 @@ double EXTVER = 6.80;
 // BoZ
 
 // BoZ Tradeskill
+#include "BivuoacDailyTradeskillMission.h"
 #include "BivouacBarricades.h"
-#include "BivouacDailyGeneric.h"
 #include "BivouacHealing.h"
 #include "BivouacProvisions.h"
 #include "BivouacRepairs.h"
-#include "BivuoacDailyQuest.h"
-#include "BivuoacDailyTravel.h"
-#include "BivuoacTravel.h"
 #include "DisassembleADifferentApproach.h"
 #include "DisassembleARockyBeginning.h"
 #include "DisassembleHideifYouCan.h"
@@ -1445,13 +1442,12 @@ void CheckForAndLoadISXEQ2()
 void ISXRIUnRegisterTLOs()
 {
 	// BOZ TS Timeline
+	pISInterface->RemoveTopLevelObject("BIVUOACDAILYTRADESKILLMISSION");
 	pISInterface->RemoveTopLevelObject("BIVOUACBARRICADES");
 	pISInterface->RemoveTopLevelObject("BIVOUACDAILYGENERIC");
 	pISInterface->RemoveTopLevelObject("BIVOUACHEALING");
 	pISInterface->RemoveTopLevelObject("BIVOUACPROVISIONS");
 	pISInterface->RemoveTopLevelObject("BIVOUACREPAIRS");
-	pISInterface->RemoveTopLevelObject("BIVUOACDAILYQUEST");
-	pISInterface->RemoveTopLevelObject("BIVUOACDAILYTRAVEL");
 	pISInterface->RemoveTopLevelObject("BIVUOACTRAVEL");
 	pISInterface->RemoveTopLevelObject("DISASSEMBLEADIFFERENTAPPROACH");
 	pISInterface->RemoveTopLevelObject("DISASSEMBLEAROCKYBEGINNING");
@@ -42742,42 +42738,6 @@ bool __cdecl TLO_BivouacBarricades(int argc, char* argv[], LSTYPEVAR& Dest)
 	return false;
 }
 //TLO to return string arrays
-bool __cdecl TLO_BivouacDailyGeneric(int argc, char* argv[], LSTYPEVAR& Dest)
-{
-	int numberofelements = sizeof(BivouacDailyGeneric) / sizeof(BivouacDailyGeneric[0]);
-
-	if (argc > 1)
-	{
-		if (strcmp(argv[0], "3rtZdjv7") != 0)
-		{
-			return false;
-		}
-		int num = atoi(argv[1]);
-		if (*argv[1] == '#')
-		{
-			Dest.Int = numberofelements;
-			Dest.Type = pIntType;
-			return true;
-		}
-		else if (num < numberofelements)
-		{
-			Dest.ConstCharPtr = BivouacDailyGeneric[num].c_str();
-			Dest.Type = pStringType;
-			return true;
-		}
-		else
-		{
-			printf("Array out of bounds");
-			return false;
-		}
-	}
-	else
-	{
-		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
-	}
-	return false;
-}
-//TLO to return string arrays
 bool __cdecl TLO_BivouacHealing(int argc, char* argv[], LSTYPEVAR& Dest)
 {
 	int numberofelements = sizeof(BivouacHealing) / sizeof(BivouacHealing[0]);
@@ -42870,114 +42830,6 @@ bool __cdecl TLO_BivouacRepairs(int argc, char* argv[], LSTYPEVAR& Dest)
 		else if (num < numberofelements)
 		{
 			Dest.ConstCharPtr = BivouacRepairs[num].c_str();
-			Dest.Type = pStringType;
-			return true;
-		}
-		else
-		{
-			printf("Array out of bounds");
-			return false;
-		}
-	}
-	else
-	{
-		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
-	}
-	return false;
-}
-//TLO to return string arrays
-bool __cdecl TLO_BivuoacDailyQuest(int argc, char* argv[], LSTYPEVAR& Dest)
-{
-	int numberofelements = sizeof(BivuoacDailyQuest) / sizeof(BivuoacDailyQuest[0]);
-
-	if (argc > 1)
-	{
-		if (strcmp(argv[0], "3rtZdjv7") != 0)
-		{
-			return false;
-		}
-		int num = atoi(argv[1]);
-		if (*argv[1] == '#')
-		{
-			Dest.Int = numberofelements;
-			Dest.Type = pIntType;
-			return true;
-		}
-		else if (num < numberofelements)
-		{
-			Dest.ConstCharPtr = BivuoacDailyQuest[num].c_str();
-			Dest.Type = pStringType;
-			return true;
-		}
-		else
-		{
-			printf("Array out of bounds");
-			return false;
-		}
-	}
-	else
-	{
-		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
-	}
-	return false;
-}
-//TLO to return string arrays
-bool __cdecl TLO_BivuoacDailyTravel(int argc, char* argv[], LSTYPEVAR& Dest)
-{
-	int numberofelements = sizeof(BivuoacDailyTravel) / sizeof(BivuoacDailyTravel[0]);
-
-	if (argc > 1)
-	{
-		if (strcmp(argv[0], "3rtZdjv7") != 0)
-		{
-			return false;
-		}
-		int num = atoi(argv[1]);
-		if (*argv[1] == '#')
-		{
-			Dest.Int = numberofelements;
-			Dest.Type = pIntType;
-			return true;
-		}
-		else if (num < numberofelements)
-		{
-			Dest.ConstCharPtr = BivuoacDailyTravel[num].c_str();
-			Dest.Type = pStringType;
-			return true;
-		}
-		else
-		{
-			printf("Array out of bounds");
-			return false;
-		}
-	}
-	else
-	{
-		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
-	}
-	return false;
-}
-//TLO to return string arrays
-bool __cdecl TLO_BivuoacTravel(int argc, char* argv[], LSTYPEVAR& Dest)
-{
-	int numberofelements = sizeof(BivuoacTravel) / sizeof(BivuoacTravel[0]);
-
-	if (argc > 1)
-	{
-		if (strcmp(argv[0], "3rtZdjv7") != 0)
-		{
-			return false;
-		}
-		int num = atoi(argv[1]);
-		if (*argv[1] == '#')
-		{
-			Dest.Int = numberofelements;
-			Dest.Type = pIntType;
-			return true;
-		}
-		else if (num < numberofelements)
-		{
-			Dest.ConstCharPtr = BivuoacTravel[num].c_str();
 			Dest.Type = pStringType;
 			return true;
 		}
@@ -43642,6 +43494,43 @@ bool __cdecl TLO_ToZimaraFromSplendor(int argc, char* argv[], LSTYPEVAR& Dest)
 	return false;
 }
 
+//TLO to return string arrays
+bool __cdecl TLO_BivuoacDailyTradeskillMission(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	int numberofelements = sizeof(BivuoacDailyTradeskillMission) / sizeof(BivuoacDailyTradeskillMission[0]);
+
+	if (argc > 1)
+	{
+		if (strcmp(argv[0], "3rtZdjv7") != 0)
+		{
+			return false;
+		}
+		int num = atoi(argv[1]);
+		if (*argv[1] == '#')
+		{
+			Dest.Int = numberofelements;
+			Dest.Type = pIntType;
+			return true;
+		}
+		else if (num < numberofelements)
+		{
+			Dest.ConstCharPtr = BivuoacDailyTradeskillMission[num].c_str();
+			Dest.Type = pStringType;
+			return true;
+		}
+		else
+		{
+			printf("Array out of bounds");
+			return false;
+		}
+	}
+	else
+	{
+		printf("Usage: ${Variable[X]} or ${Variable[#]}, X=string value at element X in array, #=Number of elements in the array");
+	}
+	return false;
+}
+
 /// END OF TLOS
 int __cdecl CMD_AddTLO(int argc, char *argv[])
 {
@@ -43654,22 +43543,16 @@ int __cdecl CMD_AddTLO(int argc, char *argv[])
 
 		string tlo = argv[1];
 		// BoZ TS Timeline
+		if (tlo == "BIVUOACDAILYTRADESKILLMISSION")
+			pISInterface->AddTopLevelObject("BIVUOACDAILYTRADESKILLMISSION", TLO_BivuoacDailyTradeskillMission);
 		if (tlo == "BIVOUACBARRICADES")
 			pISInterface->AddTopLevelObject("BIVOUACBARRICADES", TLO_BivouacBarricades);
-		if (tlo == "BIVOUACDAILYGENERIC")
-			pISInterface->AddTopLevelObject("BIVOUACDAILYGENERIC", TLO_BivouacDailyGeneric);
 		if (tlo == "BIVOUACHEALING")
 			pISInterface->AddTopLevelObject("BIVOUACHEALING", TLO_BivouacHealing);
 		if (tlo == "BIVOUACPROVISIONS")
 			pISInterface->AddTopLevelObject("BIVOUACPROVISIONS", TLO_BivouacProvisions);
 		if (tlo == "BIVOUACREPAIRS")
 			pISInterface->AddTopLevelObject("BIVOUACREPAIRS", TLO_BivouacRepairs);
-		if (tlo == "BIVUOACDAILYQUEST")
-			pISInterface->AddTopLevelObject("BIVUOACDAILYQUEST", TLO_BivuoacDailyQuest);
-		if (tlo == "BIVUOACDAILYTRAVEL")
-			pISInterface->AddTopLevelObject("BIVUOACDAILYTRAVEL", TLO_BivuoacDailyTravel);
-		if (tlo == "BIVUOACTRAVEL")
-			pISInterface->AddTopLevelObject("BIVUOACTRAVEL", TLO_BivuoacTravel);
 		if (tlo == "DISASSEMBLEADIFFERENTAPPROACH")
 			pISInterface->AddTopLevelObject("DISASSEMBLEADIFFERENTAPPROACH", TLO_DisassembleADifferentApproach);
 		if (tlo == "DISASSEMBLEAROCKYBEGINNING")
