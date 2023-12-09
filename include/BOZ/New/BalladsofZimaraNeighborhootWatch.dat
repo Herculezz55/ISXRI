@@ -240,3 +240,6 @@ Path -PL 18 -CPSP
 Custom
 HailActor "Coarsequill" 2 1
 -343.03 117.94 602.52
+Custom
+HailActor "Coarsequill" 5 1
+-340.66 116.24 602.69

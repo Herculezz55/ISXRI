@@ -5,12 +5,11 @@ HailActorGetQuest -Actor "Miranna Ameema"
 Custom
 FlyUp 5
 -320.98 184.49 638.83
--357.05 191.61 616.87 59.52 -12.66 0.00
--477.85 220.37 539.02 48.94 -6.24 0.00
--552.43 231.19 474.04 48.94 -6.24 0.00
--646.87 244.88 391.75 48.94 -6.24 0.00
--746.30 261.67 277.39 33.74 -0.18 -0.00
--763.21 272.14 187.54 2.41 -0.00 -0.00
+-357.05 191.61 616.87
+-477.85 220.37 539.02
+-646.87 244.88 391.75
+-746.30 261.67 277.39
+-763.21 272.14 187.54
 Custom
 FlyDown
 -757.67 185.80 163.47
@@ -52,7 +51,7 @@ HailActor "Vofres" 4 1
 -824.32 174.89 186.32
 -798.22 174.54 190.27
 Custom
-ZoneDoor zone_portal_to_aerie_dungeons "Splendor Sky Aerie: Vale Invasion [Solo]"
+ZoneDoor zone_portal_to_dun_hooluk_invasion_03 "Splendor Sky Aerie: Vale Invasion [Solo]"
 -798.22 174.54 190.27
 Custom
 Instance
