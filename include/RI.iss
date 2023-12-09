@@ -11842,7 +11842,7 @@ objectdef RIMUIObject
 				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Hide if You Can"]
 				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Tricking the Eyes"]
 				UIElement[QuestsListBox@RI]:AddItem["Disassemble: A Different Approach"]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac Daily Quest",0,FF00b33c]
+				UIElement[QuestsListBox@RI]:AddItem["Bivuoac Daily Tradeskill Mission",0,FF00b33c]
 				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Barricades"]
 				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Healing"]
 				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Provisions"]
