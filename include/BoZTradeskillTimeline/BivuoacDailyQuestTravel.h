@@ -1,4 +1,4 @@
-string BivuoacDailyQuestTravel[] = {"Bivuoac Daily Quest Travel", 
+string BivuoacDailyQuestTravel[] = {"Bivuoac Daily Tradeskill Mission", 
 "Custom", 
 "CheckAndSet -NotInZone \"Guild Hall\" 7", 
 "0 0 0", 

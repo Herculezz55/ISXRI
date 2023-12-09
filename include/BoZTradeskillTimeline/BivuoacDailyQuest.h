@@ -1,4 +1,4 @@
-string BivuoacDailyQuest[] = {"Bivuoac Daily Quest", 
+string BivuoacDailyQuest[] = {"Bivuoac Daily Tradeskill Mission", 
 "Custom", 
 "HailActor \"Burnish\" 2", 
 "711.79 -43.80 -472.62", 
