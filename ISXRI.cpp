@@ -12,7 +12,7 @@
 
 // need to delete old file before trying to rename.
 #define EXTENSION_VERSION "6.81 12-9-23"
-double EXTVER = 6.80;
+double EXTVER = 6.81;
 #include "ISXRI.h"
 
 
