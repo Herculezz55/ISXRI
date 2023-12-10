@@ -113,6 +113,6 @@ string BivuoacDailyTradeskillMission[] = {"Bivuoac Daily Tradeskill Mission",
 "Quest \"BivouacRepairs\" 0 1", 
 "716.24 -43.70 -471.57", 
 "Custom", 
-"TimeStampEcho \"Bivuoac Daily Tradeskill Mission\"", 
+"TimeStampEcho \"Ending Bivuoac Daily Tradeskill Mission\"", 
 "716.24 -43.70 -471.57", 
 };

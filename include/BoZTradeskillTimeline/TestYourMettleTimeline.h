@@ -60,6 +60,6 @@ string TestYourMettleTimeline[] = {"Test Your Mettle Timeline",
 "Quest \"DisassembleADifferentApproach\"", 
 "0 0 0", 
 "Custom", 
-"Quest \"BivuoacDailyTradeskillMission\"", 
+"Quest \"BivuoacDailyTradeskillMission\" 0 1", 
 "0 0 0", 
 };
