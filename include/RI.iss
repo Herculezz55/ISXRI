@@ -6225,7 +6225,7 @@
 
 ;WIP
 
-;		Added sending mercs like pets (uses same setting)
+;		Added sending mercs like pets (uses same setting)  
 
 variable(global) float RI_Var_Float_Version=6.83
 
