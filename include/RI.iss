@@ -6188,6 +6188,7 @@
 ;			Disassemble: Hide if You Can
 ;			Disassemble: Tricking the Eyes
 ;			Disassemble: A Different Approach
+;			Bivouac Daily Tradeskill Mission
 ;			Bivouac: Repairs
 ;			Bivouac: Provisions
 ;			Bivouac: Healing
@@ -6227,7 +6228,7 @@
 
 ;		Added sending mercs like pets (uses same setting)  
 
-variable(global) float RI_Var_Float_Version=6.83
+variable(global) float RI_Var_Float_Version=6.84
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
