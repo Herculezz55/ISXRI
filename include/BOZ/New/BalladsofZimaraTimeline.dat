@@ -36,9 +36,9 @@ Quest "RootsinCorruption"
 Custom
 Quest "GoodforFirewood"
 0 0 0
-Custom
-Quest "BalladsofZimaraRiddlestoneRemediationServices"
-0 0 0
+; Custom
+; Quest "BalladsofZimaraRiddlestoneRemediationServices"
+; 0 0 0
 Custom
 Quest "BalladsofZimaraFacingtheHeat"
 0 0 0
@@ -58,16 +58,13 @@ Custom
 Quest "BalladsofZimaraRazelandRousingDitty"
 0 0 0
 Custom
-Quest "BalladsofZimaraSongoftheMaedjinn"
-0 0 0
-Custom
 Quest "StickySweetVengeance"
 0 0 0
 Custom
 Quest "DestructionofAmassedWeapons"
 0 0 0
 Custom
-Quest "ZakirRishRemoval"
+Quest "BalladsofZimaraSongoftheMaedjinn"
 0 0 0
 Custom
 Quest "BalladsofZimaraLunaticsLament"

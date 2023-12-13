@@ -19,7 +19,7 @@ HailActorGetQuest -Actor "Miranna Ameema"
 -736.10 142.50 20.50
 -677.47 141.90 -18.79
 Custom
-ClickActor "Fly from Isles of Wisdom" 5
+ClickActor "Fly from Isles of Wisdom"
 Custom
 TravelMap "Strungstone Peaks"
 -677.47 141.90 -18.79
@@ -27,7 +27,6 @@ TravelMap "Strungstone Peaks"
 159.77 362.23 675.11
 109.34 376.16 689.42
 106.63 377.93 667.41
-; TODO Get Item Inscription Name
 Custom
 ClickActor "cairn inscription" 5
 106.63 377.93 667.41
@@ -44,7 +43,7 @@ ClickActor "cairn inscription" 5
 161.61 361.59 674.02
 210.23 378.33 654.02
 Custom
-ClickActor "Fly from Strungstone Peaks" 5
+ClickActor "Fly from Strungstone Peaks"
 Custom
 TravelMap "Isles of Wisdom"
 213.27 378.94 653.07
@@ -84,7 +83,7 @@ Path -PL 5 -L -QA "-A|miniature sword|-T|QSC:10/10|-E|H"
 -683.02 142.87 -12.44
 -676.89 141.86 -20.85
 Custom
-ClickActor "Fly from Isles of Wisdom" 5
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Custom
 TravelMap "Zenith Helionae"
@@ -108,13 +107,13 @@ Path -PL 13 -L -R -QA "-A|a Yazdani|-T|QSC:8/8|-E|K" -CT "QSC: I have obtained a
 193.19 145.65 -112.20
 310.37 166.96 -56.58
 Custom
-ClickActor "Fly from Zenith Helionae" 5
+ClickActor "Fly from Zenith Helionae"
 313.10 167.48 -53.67
 Custom
 TravelMap "Isles of Wisdom"
 313.10 167.48 -53.67
 Custom
-ClickActor "Fly from Isles of Wisdom" 5
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Custom
 TravelMap "Strungstone Peaks"
@@ -132,7 +131,7 @@ HailActor "Sirran the Lunatic" 7 1
 161.61 361.59 674.02
 210.23 378.33 654.02
 Custom
-ClickActor "Fly from Strungstone Peaks" 5
+ClickActor "Fly from Strungstone Peaks"
 213.27 378.94 653.07
 Wait
 1
@@ -141,7 +140,7 @@ Custom
 TravelMap "Isles of Wisdom"
 213.27 378.94 653.07
 Custom
-ClickActor "Fly from Isles of Wisdom" 5
+ClickActor "Fly from Isles of Wisdom"
 -683.05 143.07 -12.26
 Wait
 1
@@ -181,7 +180,7 @@ Path -PL 25 -L -QA "-A|Zakir Rish Chest|-T|QSC:I found an ornate silver|-E|H" -C
 -711.14 147.17 -387.56
 -708.96 145.31 -360.20
 Custom
-ClickActor "Fly from Auric Palisades" 5
+ClickActor "Fly from Auric Palisades"
 -708.96 145.31 -360.20
 Custom
 TravelMap "Isles of Wisdom"
@@ -238,7 +237,7 @@ CraftIt "Candied Fairy-Leaf Cake" 4
 -704.51 144.19 7.89
 -679.02 141.87 -19.40
 Custom
-ClickActor "Fly from Isles of Wisdom" 5
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Custom
 TravelMap "Strungstone Peaks"

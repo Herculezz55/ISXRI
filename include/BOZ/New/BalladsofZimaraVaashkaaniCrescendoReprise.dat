@@ -10,7 +10,7 @@ HailActorGetQuest -Actor "Miranna Ameema"
 -736.10 142.50 20.50
 -677.47 141.90 -18.79
 Custom
-ClickAllActors "Fly from Isles of Wisdom"
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Custom
 TravelMap "Auric Palisades"
@@ -25,13 +25,12 @@ TravelMap "Auric Palisades"
 -587.22 172.69 -583.63
 -495.96 162.78 -605.31
 Custom
-ZoneDoor zone_portal_to_vaashkaani "Vaashkaani: Alcazar Crescendo [Solo]"
+ZoneDoor zone_portal_to_dun_djinn_palace "Vaashkaani: Alcazar Crescendo [Solo]"
 288.76 164.76 -126.28
 -76.77 3.63 -0.36
 Custom
 Instance
 0 0 0
-; clear the zone
 Custom
 ZoneDoor Exit
 368.11 20.85 -336.29

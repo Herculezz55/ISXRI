@@ -1,4 +1,16 @@
-Ballads of Zimara:  Song of the Maedjinn
+Ballads of Zimara: Song of the Maedjinn
+Custom
+CheckPreReqs -Completed "Sticky Sweet Vengeance"
+0 0 0
+Custom
+CheckPreReqs -Completed "Destruction of Amassed Weapons"
+0 0 0
+Custom
+CheckPreReqs -Completed "Zakir Rish Removal"
+0 0 0
+Custom
+Path
+-882.61 188.65 333.59
 Custom
 HailActorGetQuest -Actor "Ruhk"
 -911.86 189.59 330.13
@@ -10,38 +22,69 @@ HailActorGetQuest -Actor "Ruhk"
 Custom
 HailActor "Priest Kafri" 3 1
 -826.09 191.48 221.11
--823.76 191.39 221.15
+-814.43 190.97 232.11
 -812.75 189.87 237.97
 Custom
-Path -PL 14 -L -QA "-A|a skylight spren|-T|QSC:6/6|-E|K" -QA "-A|marjoram|-T|QSC:10/10|-E|H"
--810.95 189.29 255.39
--864.68 187.44 319.48
--889.05 187.99 323.59
--916.11 186.26 296.10
--938.90 192.36 304.39
--897.39 165.96 214.09
--895.21 165.34 212.78
--839.99 165.63 277.94
--867.82 199.03 386.24
--857.02 188.58 333.72
--812.99 189.29 253.23
--840.41 189.19 217.63
--796.86 190.12 228.66
--789.32 163.83 341.32
--775.49 191.77 223.76
+Path -PL 42 -L -DFPWD -QA "-A|a skylight spren|-T|QSC:spren|-E|K" -QA "-A|marjoram|-T|QSC:marjoram|-E|H" -CT "QSC:I obtained the flickering flames"
+-856.27 200.91 322.00
+-843.76 207.40 350.24
+-846.52 206.75 368.84
+-860.93 215.03 376.91
+-876.34 218.52 372.55
+-898.15 217.67 361.03
+-923.81 216.60 343.16
+-937.51 215.89 328.04
+-957.64 214.65 297.90
+-956.82 213.82 275.72
+-946.35 213.18 260.41
+-930.55 212.31 240.39
+-915.70 211.21 212.16
+-899.93 199.76 161.81
+-883.59 186.75 118.25
+-866.45 174.87 79.25
+-887.93 175.06 42.83
+-889.71 165.70 11.65
+-878.26 165.06 -20.69
+-838.82 174.79 -37.14
+-824.49 168.85 -11.76
+-801.32 164.37 1.76
+-760.64 157.49 4.86
+-709.20 159.54 -11.43
+-685.05 152.66 18.01
+-676.02 157.78 43.03
+-659.29 159.37 82.91
+-610.20 164.34 140.18
+-582.96 166.28 183.75
+-569.99 167.87 225.19
+-555.42 168.81 245.68
+-533.28 169.75 258.07
+-503.17 170.97 272.48
+-476.59 172.27 280.35
+-505.73 173.47 295.21
+-544.57 174.98 308.93
+-586.59 180.92 311.98
+-651.99 183.32 308.77
+-708.13 185.38 310.92
+-751.14 204.46 313.09
+-795.19 206.08 315.31
+-833.24 207.52 322.46
+-857.58 208.46 329.93
 Custom
 Path
 -809.16 189.29 257.06
--818.39 191.41 229.43
+Custom
+FlyDown 2
+-815.87 191.56 231.77
 -826.09 191.48 221.11
 Custom
 HailActor "Priest Kafri" 11 1
 -826.09 191.48 221.11
--813.04 190.51 232.59
--821.21 189.39 271.91
--858.51 187.42 321.77
--893.00 187.79 328.94
--910.19 189.66 330.14
+-814.43 190.97 232.11
+-815.87 215.56 231.77
+-807.61 215.73 242.49
+-853.95 215.16 299.64
+-896.43 215.32 321.95
+-896.46 187.83 321.91
 Custom
 HailActor "Miranna Ameema" 6 1
 -826.09 191.48 221.11
@@ -55,38 +98,38 @@ HailActor "Miranna Ameema" 6 1
 -736.10 142.50 20.50
 -677.47 141.90 -18.79
 Custom
-ClickAllActors "Fly from Isles of Wisdom"
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Custom
 TravelMap "Zenith Helionae"
 -677.47 141.90 -18.79
 310.37 166.96 -56.58
 Custom
-Path -PL 13 -L -R -QA "-A|a winged viper|-T|QSC:8/8|-E|K"
-310.37 166.96 -56.58
-193.19 145.65 -112.20
-180.73 145.78 -145.31
-180.23 152.15 -206.09
-139.46 152.25 -237.02
-82.03 144.55 -244.22
-12.76 138.31 -203.64
--84.45 138.11 -154.40
-27.83 140.69 -83.48
-20.76 151.33 -3.76
--40.22 155.52 39.84
-20.05 141.64 -74.33
-153.94 139.27 -70.38
-193.19 145.65 -112.20
-310.37 166.96 -56.58
+Path -PL 13 -L -R -QA "-A|a winged vipers|-T|QSC:winged viper|-E|K"
+310.37 190.96 -56.58
+193.19 190.65 -112.20
+180.73 190.78 -145.31
+180.23 190.15 -206.09
+139.46 190.25 -237.02
+82.03 190.55 -244.22
+12.76 190.31 -203.64
+-84.45 190.11 -154.40
+27.83 190.69 -83.48
+20.76 190.33 -3.76
+-40.22 190.52 39.84
+20.05 190.64 -74.33
+153.94 190.27 -70.38
+193.19 190.65 -112.20
+310.37 190.96 -56.58
 Custom
-ClickActor cloud
+ClickActor "Fly from Zenith Helionae"
 313.10 167.48 -53.67
 Custom
 TravelMap "Columnar Highgarden"
 313.10 167.48 -53.67
 615.73 207.12 -499.79
 Custom
-Path -PL 13 -L -R -QA "-A|a columnar crawler|-T|QSC:10/10|-E|K"
+Path -PL 13 -L -R -QA "-A|a columnar crawler|-T|QSC:columnar crawlers|-E|K"
 620.72 206.01 -516.03
 621.86 206.56 -600.64
 613.36 200.55 -657.52
@@ -97,7 +140,7 @@ Path -PL 13 -L -R -QA "-A|a columnar crawler|-T|QSC:10/10|-E|K"
 668.10 206.50 -467.29
 617.96 206.50 -505.01
 Custom
-ClickActor cloud
+ClickActor "Fly from Columnar Highgarden"
 617.96 206.50 -505.01
 Custom
 TravelMap "Zenith Helionae"
@@ -131,7 +174,7 @@ HailActor "Miranna Ameema" 2 1
 -736.10 142.50 20.50
 -677.47 141.90 -18.79
 Custom
-ClickAllActors "Fly from Isles of Wisdom"
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Custom
 TravelMap "Auric Palisades"
@@ -188,9 +231,6 @@ Custom
 HailActor "Miranna Ameema" 3 1
 -911.86 189.59 330.13
 -859.29 189.67 367.79
-; complete Quest "Sticky Sweet Vengeance"
-; complete Quest "Destruction of Amassed Weapons"
-; complete Quest "Zakir Rish Removal"
 -859.29 189.67 367.79
 Custom
 HailActor "Miranna Ameema" 8 1
@@ -201,40 +241,38 @@ HailActor "Miranna Ameema" 8 1
 -736.10 142.50 20.50
 -677.47 141.90 -18.79
 Custom
-ClickAllActors "Fly from Isles of Wisdom"
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Custom
 TravelMap "Zenith Helionae"
 -677.47 141.90 -18.79
 310.37 166.96 -56.58
-; Hunt (8) Arcaneframe Razorfangs for Arcana Spirit Jewels [Zenith Helionae]
 Custom
-Path -PL 13 -L -R -QA "-A|razorfang|-T|QSC:8/8|-E|K"
-310.37 166.96 -56.58
-193.19 145.65 -112.20
-180.73 145.78 -145.31
-180.23 152.15 -206.09
-139.46 152.25 -237.02
-82.03 144.55 -244.22
-12.76 138.31 -203.64
--84.45 138.11 -154.40
-27.83 140.69 -83.48
-20.76 151.33 -3.76
--40.22 155.52 39.84
-20.05 141.64 -74.33
-153.94 139.27 -70.38
-193.19 145.65 -112.20
-310.37 166.96 -56.58
+Path -PL 13 -L -R -QA "-A|razorfang|-T|QSC:razorfang-E|K"
+310.37 190.96 -56.58
+193.19 190.65 -112.20
+180.73 190.78 -145.31
+180.23 190.15 -206.09
+139.46 190.25 -237.02
+82.03 190.55 -244.22
+12.76 190.31 -203.64
+-84.45 190.11 -154.40
+27.83 190.69 -83.48
+20.76 190.33 -3.76
+-40.22 190.52 39.84
+20.05 190.64 -74.33
+153.94 190.27 -70.38
+193.19 190.65 -112.20
+310.37 190.96 -56.58
 Custom
-ClickActor cloud
+ClickActor "Fly from Zenith Helionae"
 313.10 167.48 -53.67
 Custom
 TravelMap "Columnar Highgarden"
 313.10 167.48 -53.67
 615.73 207.12 -499.79
-; Hunt (10) Arcaneframe Hammerhooves and Daggerclaws for arcana flesh plates [Columnar Highgarden]
 Custom
-Path -PL 13 -L -R -QA "-A|arcaneframe hammerhoove|-T|QSC:10/10|-E|K" -QA "-A|arcaneframe daggerclaw|-T|QSC:10/10|-E|K"
+Path -PL 13 -L -R -QA "-A|arcaneframe hammerhoove|-T|QSC:hammerhoove|-E|K" -QA "-A|arcaneframe daggerclaw|-T|QSC:daggerclaw|-E|K" -CT "QSC: I have completed"
 620.72 206.01 -516.03
 621.86 206.56 -600.64
 613.36 200.55 -657.52
@@ -245,14 +283,13 @@ Path -PL 13 -L -R -QA "-A|arcaneframe hammerhoove|-T|QSC:10/10|-E|K" -QA "-A|arc
 668.10 206.50 -467.29
 617.96 206.50 -505.01
 Custom
-ClickActor cloud
+ClickActor "Fly from Columnar Highgarden"
 617.96 206.50 -505.01
 Custom
 TravelMap "Claved Fates Isles"
 617.96 206.50 -505.01
-; Gather (4) Life-Sparked Clay [Claved Fate Islets - pick up after killing golems]
 Custom
-Path -PL 30 -L -R -QA "-A|harrying|-T|QSC:4/4|-E|K" -QA "-A|a construct|-T|QSC:4/4|-E|K" -QA "-A|life-sparked clay|-T|QSC:4/4|-E|H"
+Path -PL 30 -L -R -QA "-A|harrying|-T|QSC:harrying|-E|K" -QA "-A|a construct|-T|QSC:construct|-E|K" -QA "-A|life-sparked clay|-T|QSC:clay|-E|H" -CT "QSC: I have completed"
 805.70 185.82 304.21
 756.73 185.34 318.66
 708.36 190.50 371.21
@@ -287,7 +324,7 @@ Path -PL 30 -L -R -QA "-A|harrying|-T|QSC:4/4|-E|K" -QA "-A|a construct|-T|QSC:4
 821.19 185.01 298.49
 849.43 182.19 302.90
 Custom
-ClickActor cloud
+ClickActor "Fly from Claved Fates Isles"
 849.43 182.19 302.90
 Custom
 TravelMap "Isles of Wisdom"

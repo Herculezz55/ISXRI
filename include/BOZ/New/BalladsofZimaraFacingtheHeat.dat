@@ -65,18 +65,15 @@ HailActor "Miranna Ameema"
 -762.24 68.55 331.52
 -749.58 64.98 375.13
 -743.40 62.89 404.77
-;  TODO kill a bunch of things 
 -527 81 692
 -767 61 539
 -777 85 611
 Custom
 ClickActor crystal
 -793.09 84.70 622.25
-; TODO  kill last boss
 Custom
 HailActor "Miranna Ameema"
 -1083.33 181.71 753.22
-; Zones you into Zimara Breadth
 Custom
 WaitForZoning
 0 0 0

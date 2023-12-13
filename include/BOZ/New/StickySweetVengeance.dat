@@ -10,7 +10,7 @@ HailActorGetQuest -Actor "Hooatio"
 -736.10 142.50 20.50
 -677.47 141.90 -18.79
 Custom
-ClickActor "Fly from Isles of Wisdom" 5
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Custom
 TravelMap "Strungstone Peaks"
@@ -18,9 +18,21 @@ TravelMap "Strungstone Peaks"
 211.35 378.72 651.50
 165.10 362.47 672.15
 113.96 374.23 692.06
+Custom
+ClickActor "Bixie Honey Pot"
 107.64 377.93 666.14
 Custom
-Path -PL 23 -L -R -QA "-A|bixie honey pot|-T|QSC:4/4|-E|H" -QA "-A|vanquisher|-T|QSC:6/6|-E|K"
+ClickActor "Bixie Honey Pot"
+107.64 377.93 666.14
+Custom
+ClickActor "Bixie Honey Pot"
+107.64 377.93 666.14
+Custom
+ClickActor "Bixie Honey Pot"
+107.64 377.93 666.14
+Custom
+Path -PL 14 -L -R -QA "-A|bixie honey pot|-T|QSC:bixie honey pots|-E|H" -QA "-A|vanquishers|-T|QSC:Hunt arcaneform vanquisher|-E|K" -CT "QSC: I gathered the bixie"
+107.45 377.93 666.23
 125.65 376.97 674.10
 114.11 373.30 702.84
 88.83 383.33 726.67
@@ -49,7 +61,7 @@ Path -CPSP
 192.46 373.66 660.23
 213.18 378.95 652.73
 Custom
-ClickActor cloud
+ClickActor "Fly from Strungstone Peaks"
 213.18 378.95 652.73
 Custom
 TravelMap "Isles of Wisdom"

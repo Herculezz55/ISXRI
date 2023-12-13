@@ -13,7 +13,7 @@ TravelMap "Zenith Helionae"
 290.53 163.20 -90.15
 288.68 164.28 -120.23
 Custom
-ZoneDoor zone_portal_to_strungstone_dungeons "Zimara Breadth: Strungstone Ascent [Solo]"
+ZoneDoor zone_portal_to_dun_zimara_breadth_02 "Zimara Breadth: Strungstone Ascent [Solo]"
 288.76, 164.76, -126.28
 Custom
 Instance
@@ -38,7 +38,6 @@ Path -PL 13 -L -R -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T
 697.64 179.31 290.25
 776.34 189.47 418.40
 692.58 264.37 543.09
-; run all the way - kill two names
 Custom
 ClickActor traverse
 351.02 401.46 596.43
@@ -51,9 +50,6 @@ Path -PL 13 -L -R -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T
 -42.26 387.75 724.23
 -28.75 386.89 694.10
 -172.03 406.72 827.40
-; Kill Crisj'Jen the Bold 
-; Kill Fuejenyrus 
-; end zone
 287.95 164.09-118.62
 Custom
 FlyUp 5
