@@ -1,26 +1,4 @@
-Ballads of Zimara: Ascending Collection
-Custom
-HailActorGetQuest -Actor "Sirran the Lunatic"
-106.63 377.93 667.41
-152.81 361.42 669.82
-210.95 378.52 653.36
-Custom
-ClickActor "Fly from Strungstone Peaks"
-212.64 378.85 652.89
-Custom
-TravelMap "Zenith Helionae"
-212.64 378.85 652.89
-290.53 163.20 -90.15
-288.68 164.28 -120.23
-Custom
-ZoneDoor zone_portal_to_dun_zimara_breadth_02 "Zimara Breadth: Strungstone Ascent [Solo]"
-288.17 164.41 -122.91
-Custom
-WaitForZoning
-0 0 0
 554.50 219.89 -818.77
-Custom
-Path -PL 5 -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
 597.14 210.02 -783.54
 618.04 201.65 -766.28
 616.63 197.28 -735.61
@@ -31,8 +9,6 @@ Custom
 HailActor "Rubblethrong" 
 625.98 206.78 -573.72
 636.63 205.98 -521.01
-Custom
-Path -PL 5 -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
 653.76 207.49 -471.33
 690.26 208.18 -439.40
 754.66 232.92 -450.56
@@ -43,17 +19,13 @@ Custom
 ClickActor telelport crystal
 649.65 207.46 -462.76
 714.31 176.57 273.68
-Custom
-Path -PL 3 -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
 737.02 184.31 314.91
 747.53 186.53 348.26
 780.39 188.26 348.46
 Custom
-HailActor "Bolagehera" 
+ClickActor "Bolagehera" 
 790.50 189.05 386.00
 790.63 188.77 414.18
-Custom
-Path -PL 10 -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
 793.13 188.91 416.17
 812.43 189.04 426.87
 791.54 189.01 340.35
@@ -74,8 +46,6 @@ Custom
 HailActor "Barlanka" 
 528.28 283.90 553.17
 555.85 275.10 573.90
-Custom
-Path -PL 10 -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
 543.17 275.20 602.56
 509.40 281.13 660.10
 532.92 277.50 620.83
@@ -94,11 +64,9 @@ Path -PL 10 -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:1
 409.69 384.76 579.94
 343.71 402.33 597.42
 Custom
-ClickActor telelport crystal
+ClickActor telelport cyrstal
 343.71 402.33 597.42
 217.16 379.54 651.98
-Custom
-Path -PL 6 -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
 162.79 361.98 670.28
 162.35 361.69 699.08
 123.61 369.03 696.24
@@ -110,8 +78,6 @@ Custom
 HailActor "Crisj'Jen the Bold" 
 94.13 382.59 717.34
 56.99 397.51 733.71
-Custom
-Path -PL 10 -QA "-A|odd stone|-T|QSC:12/12|-E|H" -QA "-A|keepsake globe|-T|QSC:12/12|-E|H"
 39.32 400.98 738.67
 15.74 402.28 738.02
 -2.75 399.69 736.93
@@ -129,23 +95,4 @@ Custom
 HailActor "Fuejenyrus" 
 -222.28 431.60 895.05
 -236.63 433.01 876.62
-ZoneDoor Exit
 -244.37 432.11 893.33
-Custom
-WaitForZoning
-0 0 0
-279.61 161.58 -90.26
-309.35 167.15 -53.82
-Custom
-ClickActor "Fly from Zenith Helionae"
-313.10 167.48 -53.67
-Custom
-TravelMap "Strungstone Peaks"
-313.10 167.48 -53.67
-208.11 377.84 655.18
-166.12 362.97 670.29
-113.02 374.09 694.14
-111.85 378.00 668.63
-Custom
-HailActor "Sirran the Lunatic" 
-106.63 377.93 667.41

@@ -36,9 +36,9 @@ Quest "RootsinCorruption"
 Custom
 Quest "GoodforFirewood"
 0 0 0
-; Custom
-; Quest "BalladsofZimaraRiddlestoneRemediationServices"
-; 0 0 0
+Custom
+Quest "BalladsofZimaraRiddlestoneRemediationServices"
+0 0 0
 Custom
 Quest "BalladsofZimaraFacingtheHeat"
 0 0 0
@@ -76,7 +76,7 @@ Custom
 Quest "BalladsofZimaraVaashkaaniCrescendo"
 0 0 0
 Custom
-Quest "BalladsofZimaraVeshkaaniCrescendo (Reprise)"
+Quest "BalladsofZimaraVaashkaaniCrescendoReprise"
 0 0 0
 Custom
 Quest "BalladsofZimaraFractalChorusFinale"

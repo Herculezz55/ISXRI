@@ -5,17 +5,17 @@ HailActorGetQuest -Actor "Sirran the Lunatic"
 152.81 361.42 669.82
 210.95 378.52 653.36
 Custom
-ClickActor cloud
+ClickActor "Fly from Strungstone Peaks"
 212.64 378.85 652.89
 Custom
 TravelMap "Isles of Wisdom"
 212.64 378.85 652.89
 Custom
-ClickActor cloud
--683.05 143.07 -12.26
+ClickActor "Fly from Isles of Wisdom"
+-676.67 141.86 -20.35
 Custom
 TravelMap "Auric Palisades"
--683.05 143.07 -12.26
+-676.67 141.86 -20.35
 -709.47 145.39 -366.67
 -711.15 145.96 -392.13
 -663.46 130.08 -422.26
@@ -30,7 +30,10 @@ ZoneDoor zone_portal_to_dun_djinn_palace "Vaashkaani: Argent Sanctuary [Solo]"
 288.76 164.76 -126.28
 -76.77 3.63 -0.36
 Custom
-Instance
+WaitForZoning
+0 0 0
+Custom
+MessageBox "Complete Zone and stand at exit door and hit resume"
 0 0 0
 Custom
 ZoneDoor Exit
@@ -41,35 +44,38 @@ ZoneDoor zone_portal_to_dun_djinn_palace "Vaashkaani: Golden Rule [Solo]"
 288.76 164.76 -126.28
 -76.77 3.63 -0.36
 Custom
-Instance
+WaitForZoning
+0 0 0
+Custom
+MessageBox "Complete Zone and stand at exit door and hit resume"
 0 0 0
 Custom
 ZoneDoor Exit
 592.22 71.11 -53.65
--494.90 162.83 -609.40
--524.44 165.19 -599.33
--583.29 171.85 -578.92
--642.50 181.40 -563.63
--673.97 171.99 -538.49
--665.58 149.28 -495.04
--633.82 126.00 -448.67
--669.25 130.18 -419.77
--712.85 146.28 -391.83
+-494.90 192.83 -609.40
+-524.44 192.19 -599.33
+-583.29 192.85 -578.92
+-642.50 192.40 -563.63
+-673.97 192.99 -538.49
+-665.58 192.28 -495.04
+-633.82 192.00 -448.67
+-669.25 192.18 -419.77
+-712.85 192.28 -391.83
 -709.35 145.34 -360.30
 Custom
-ClickActor cloud
+ClickActor "Fly from Auric Palisades"
 -709.56 145.35 -360.27
 Custom
 TravelMap "Isles of Wisdom"
 -709.56 145.35 -360.27
 -703.18 144.16 13.35
--777.85 141.99 27.76
--828.73 142.75 28.51
--863.48 152.99 86.34
--873.69 160.46 141.49
--896.92 166.64 218.46
--914.27 186.77 295.49
--903.18 188.02 326.03
+-777.85 189.99 27.76
+-828.73 189.75 28.51
+-863.48 189.99 86.34
+-873.69 189.46 141.49
+-896.92 189.64 218.46
+-914.27 189.77 295.49
+-903.18 189.02 326.03
 -911.86 189.59 330.13
 Custom
 HailActor "Miranna Ameema" 7 1

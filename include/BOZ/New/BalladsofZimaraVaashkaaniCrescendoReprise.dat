@@ -29,7 +29,10 @@ ZoneDoor zone_portal_to_dun_djinn_palace "Vaashkaani: Alcazar Crescendo [Solo]"
 288.76 164.76 -126.28
 -76.77 3.63 -0.36
 Custom
-Instance
+WaitForZoning
+0 0 0
+Custom
+MessageBox "Complete Zone and stand at exit door and hit resume"
 0 0 0
 Custom
 ZoneDoor Exit
@@ -45,7 +48,7 @@ ZoneDoor Exit
 -712.85 146.28 -391.83
 -709.35 145.34 -360.30
 Custom
-ClickActor cloud
+ClickActor "Fly from Auric Palisades"
 -709.56 145.35 -360.27
 Custom
 TravelMap "Isles of Wisdom"

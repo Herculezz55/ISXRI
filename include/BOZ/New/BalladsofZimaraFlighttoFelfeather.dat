@@ -51,7 +51,7 @@ HailActor "Ryarme" 3 1
 331.73 251.84 731.70
 345.61 252.83 732.94
 Custom
-ClickActor "Fly to felfeather Isle" 5
+ClickActor "Fly to Felfeather Isle"
 345.61 252.83 732.94
 Custom
 TravelMap "Felfeather Isle"
@@ -75,9 +75,9 @@ Path
 1069.37 179.50 756.18
 Custom
 HailActor "Crestcry" 12 1 
-1069.37 179.50 756.18
+1066.29 179.85 753.73
 Wait
-20
+5
 Custom
 HailActor "Crestcry" 12 1 
-1069.37 179.50 756.18
+1066.29 179.85 753.73
