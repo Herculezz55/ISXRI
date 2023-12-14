@@ -68,6 +68,9 @@ Path -PL 28 -L -QA "-A|metallic shard|-T|QSC:7/7|-E|K" -QA "-A|carniverous corps
 Custom
 PauseCombatBot 1
 920.13 44.06 218.63
+Custom
+MessageBox "Pause combat here so you do not kill Sqokri. Press Resume when ready."
+920.13 44.06 218.63
 934 32 226
 Custom
 Target "Sqokri"

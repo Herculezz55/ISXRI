@@ -1,5 +1,14 @@
 Ballads of Zimara: Riddlestone Remediation Services
 Custom
+CheckAndSet -Completed "Ballads of Zimara: Riddlestone Remediation Services" 300
+0 0 0
+Custom
+MakeActiveQuest "Ballads of Zimara: Riddlestone Remediation Services"
+0 0 0
+Custom
+CheckAndSet -ActiveQuest "Ballads of Zimara: Riddlestone Remediation Services" 34
+0 0 0
+Custom
 HailActorGetQuest -Actor "Crestcry"
 1069.37 179.50 756.18
 1065.63 177.40 745.38
@@ -15,10 +24,10 @@ FastTravel "The Barren Sky"
 1068.30 176.93 721.19
 Custom
 ClickActor zone_to_norrath TRUE FALSE 50
--589.04 -46.54 -401.60
+1068.30 176.93 721.190
 Custom
 TravelMap "Splendor Sky Aerie"
-0 0 0
+1068.30 176.93 721.19
 Custom
 WaitForZoning
 0 0 0
