@@ -6188,13 +6188,14 @@
 ;			Disassemble: Hide if You Can
 ;			Disassemble: Tricking the Eyes
 ;			Disassemble: A Different Approach
+;			Bivouac Daily Tradeskill Mission
 ;			Bivouac: Repairs
 ;			Bivouac: Provisions
 ;			Bivouac: Healing
 ;			Bivouac: Barricades
 ; 
 
-;ISXRI - v6.77 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
+;ISXRI - v6.83 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
 
 
 ;RunQuest - Runs a quest with RQ\n\nArgument 1: For Who\nArgument 2: Quest Name]
@@ -6225,9 +6226,9 @@
 
 ;WIP
 
-;		Added sending mercs like pets (uses same setting)
+;		Added sending mercs like pets (uses same setting)  
 
-variable(global) float RI_Var_Float_Version=6.81
+variable(global) float RI_Var_Float_Version=6.84
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
