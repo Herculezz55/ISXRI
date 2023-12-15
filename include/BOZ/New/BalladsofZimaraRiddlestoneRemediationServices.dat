@@ -1,33 +1,36 @@
 Ballads of Zimara: Riddlestone Remediation Services
 Custom
-CheckAndSet -Completed "Ballads of Zimara: Riddlestone Remediation Services" 300
+CheckAndSet -Completed "Ballads of Zimara: Riddlestone Remediation Services" 291
 0 0 0
 Custom
 MakeActiveQuest "Ballads of Zimara: Riddlestone Remediation Services"
 0 0 0
 Custom
-CheckAndSet -ActiveQuest "Ballads of Zimara: Riddlestone Remediation Services" 34
+CheckAndSet -ActiveQuest "Ballads of Zimara: Riddlestone Remediation Services" 22
 0 0 0
+1068.03 179.45 754.65
 Custom
-HailActorGetQuest -Actor "Crestcry"
-1069.37 179.50 756.18
+HailActorGetQuest -Actor "Crestcry" 5 1
+1068.03 179.45 754.65
 1065.63 177.40 745.38
-1064.62 176.64 725.26
-1071.06 176.96 713.83
+1067.05 176.88 725.85
+1072.52 177.00 710.32
 Custom
 HailActor "Oolchimedes" 11 1
-1071.06 176.96 713.83
+1072.52 177.00 710.32
 1068.96 177.20 720.42
 1068.30 176.93 721.19
-Custom
-FastTravel "The Barren Sky"
 1068.30 176.93 721.19
+Custom
+FastTravel "The Barren Sky" 
+0 0 0
+-580.14 -49.25 -409.88
 Custom
 ClickActor zone_to_norrath TRUE FALSE 50
-1068.30 176.93 721.190
+-589.04 -46.54 -401.60
 Custom
 TravelMap "Splendor Sky Aerie"
-1068.30 176.93 721.19
+0 0 0
 Custom
 WaitForZoning
 0 0 0
@@ -92,7 +95,7 @@ HailActor "Miranna Ameema" 5 1
 951.06 164.86 756.11
 929.35 161.86 760.16
 Custom
-ClickActor "Fly to Hooluk Village"
+ClickActor "Fly to Sanctuary"
 929.35 161.86 760.16
 Custom
 TravelMap "Sanctuary"
@@ -116,7 +119,7 @@ Custom
 PauseCombatBot 1
 -24.76 256.71 4.42
 Custom
-Path -PL 59 -L -QA "-MTD|19|-A|a Felfeather Shield|-T|QSC:7/7|-E|UseItem-Potion of Vigorous Unmaking" -CT "QSC: I destroyed the"
+Path -PL 59 -L -QA "-MTD|19|-A|a Felfeather Shield|-T|QSC:7/7|-E|UseItem-Potion of Vigorous Unmaking" -CT "QSC: I destroyed the unstable"
 -24.76 256.71 4.42
 -33.98 253.51 28.12
 -30.10 254.56 51.03
@@ -229,10 +232,10 @@ HailActor "Miranna Ameema" 5 1
 -343.74 195.66 1100.17
 -302.74 192.20 1105.56
 Custom
-ClickActor "Fly to Preening Island" 
+ClickActor "Fly to Sanctuary" 
 -302.74 192.20 1105.56
 Custom
-TravelMap "Preening Island"
+TravelMap "Sanctuary"
 -302.74 192.20 1105.56
 Wait
 20
