@@ -109,7 +109,7 @@ ExamineItem "Jabber's Note" 1
 -565.08 117.71 189.41
 -565.17 99.43 189.38
 Custom
-HailActor -Actor "Jabber Longwind"
+HailActor "Jabber Longwind" 6 1
 -566.74 93.45 236.40
 -563.03 99.34 184.26
 -563.03 178.64 184.26
