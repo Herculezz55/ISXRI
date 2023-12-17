@@ -1,9 +1,12 @@
 Roots in Corruption
+Custom
+HailActor Crestcry 15 1
+1068.03 179.45 754.65
 1068.79 176.49 728.97
-1071.86 176.96 715.18
+1072.52 177.00 710.32
 Custom
 HailActorGetQuest -Actor "Oolchimedes"
-1072.78 176.96 714.08
+1072.52 177.00 710.32
 1070.61 176.96 719.05
 975.61 225 699.05
 880.61 225 619.05
@@ -43,7 +46,7 @@ Path -PL 13 -L -QA "-A|healthy auduborian bark|-T|QSC:Gather healthy auduborian 
 1044.91 190.34 734.34
 1044.81 172.80 734.32
 1067.58 176.93 720.93
-1072.12 176.99 711.54
+1072.52 177.00 710.32
 Custom
 HailActor "Oolchimedes" 9 1 
 1072.12 176.99 711.54

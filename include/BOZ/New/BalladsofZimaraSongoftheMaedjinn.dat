@@ -87,6 +87,12 @@ HailActor "Priest Kafri" 11 1
 Custom
 HailActor "Miranna Ameema" 6 1
 -911.86 189.59 330.13
+Custom
+CheckQuestStep "Miranna Ameema turned out to be" 96
+-911.86 189.59 330.13
+Custom
+MessageBox "Check to see conversation with Miranna is updated"
+-911.86 189.59 330.13
 -904.34 188.18 326.66
 -912.42 186.75 304.56
 -895.87 166.22 216.97
@@ -131,7 +137,7 @@ Path -PL 13 -L -R -QA "-QD|200|-A|a winged viper|-T|QSC:Hunt winged vipers for r
 615.92 267.40 -444.60
 644.48 265.37 -506.11
 Custom
-Path -PL 8 -L -R -QA "-QD|200|-A|a columnar crawler|-T|QSC:Hunt columnar crawlers|-E|K" -CT "QSC:I have the rotten"
+Path -PL 7 -L -R -QA "-QD|200|-A|a columnar crawler|-T|QSC:Hunt columnar crawlers|-E|K" -CT "QSC:I have the rotten"
 620.72 265.01 -516.03
 621.86 265.56 -600.64
 613.36 265.55 -657.52
@@ -141,27 +147,30 @@ Path -PL 8 -L -R -QA "-QD|200|-A|a columnar crawler|-T|QSC:Hunt columnar crawler
 767.73 265.63 -792.21
 668.10 265.50 -467.29
 617.96 226.50 -505.01
-Custom
-ClickActor "Fly from Columnar Highgarden"
-617.96 206.50 -505.01
-Custom
-TravelMap "Zenith Helionae"
-617.96 206.50 -505.01
-Custom
-ClickActor "Fly from Zenith Helionae"
-313.10 167.48 -53.67
-Custom
-TravelMap "Isles of Wisdom"
-313.10 167.48 -53.67
--682.39 142.57 -13.65
--714.41 144.05 13.87
--777.85 141.99 27.76
--828.73 142.75 28.51
--863.48 152.99 86.34
--873.69 160.46 141.49
--896.92 166.64 218.46
--914.27 186.77 295.49
--903.18 188.02 326.03
+647.07 254.28 -452.86
+588.48 254.28 -427.45
+501.23 254.28 -392.11
+419.71 254.28 -359.10
+344.14 254.28 -328.49
+260.62 254.28 -294.67
+189.72 254.28 -265.95
+108.25 262.82 -232.96
+15.08 262.82 -195.23
+-76.09 262.82 -158.30
+-158.06 270.49 -128.36
+-237.08 270.28 -99.34
+-301.47 268.84 -75.48
+-382.67 266.99 -42.21
+-457.83 265.28 -10.95
+-527.63 263.65 22.54
+-600.20 262.03 47.39
+-666.15 260.17 103.42
+-736.49 257.99 179.66
+-800.63 254.78 249.25
+-864.32 227.82 322.25
+-892.08 194.40 326.37
+-900.73 187.92 326.84
+-909.29 189.51 329.34
 -911.86 189.59 330.13
 Custom
 HailActor "Miranna Ameema" 2 1
@@ -258,7 +267,7 @@ TravelMap "Columnar Highgarden"
 313.10 167.48 -53.67
 615.73 207.12 -499.79
 Custom
-Path -PL 49 -L -R -QA "-QD|200|-A|an arcaneframe hammerhoove|-T|QSC:Hunt arcaneframe hammerhooves|-E|K" -QA "-QD|200|-A|an arcaneframe daggerclaws|-T|QSC:Hunt arcaneframe hammerhooves and daggerclaws|-E|K" -QA "-QD|200|-A|an arcaneframe razorfangs|-T|QSC:Hunt arcaneframe razorfangs|-E|K" -CT "QSC: I have completed"
+Path -PL 49 -L -R -QA "-QD|200|-A|an arcaneframe hammerhoof|-T|QSC:Hunt arcaneframe hammerhooves|-E|K" -QA "-QD|200|-A|an arcaneframe daggerclaw|-T|QSC:Hunt arcaneframe hammerhooves and daggerclaws|-E|K" -QA "-QD|200|-A|an arcaneframe razorfangs|-T|QSC:Hunt arcaneframe razorfangs|-E|K" -CT "QSC: I have completed"
 623.26 236.61 -507.20
 633.77 237.62 -506.81
 653.64 240.42 -485.65
@@ -310,7 +319,7 @@ Path -PL 49 -L -R -QA "-QD|200|-A|an arcaneframe hammerhoove|-T|QSC:Hunt arcanef
 618.14 219.61 -513.94
 618.14 206.12 -513.94
 Custom
-Path -PL 10 -CPSP
+Path -PL 8 -CPSP
 616.09 248.95 -503.88
 616.84 260.68 -470.82
 623.13 260.67 -360.86
@@ -323,7 +332,7 @@ Path -PL 10 -CPSP
 740.02 196.16 191.29
 751.13 194.16 253.49
 Custom
-Path -PL 30 -L -R -DFPWD -QA "-QD|200|-A|a harrying|-T|QSC:Obtain life-sparked clay|-E|K" -QA "-QD|200|-A|a construct|-T|QSC:Obtain life-sparked clay|-E|K" -QA "-QD|200|-A|Life-sparked clay|-T|QSC:Obtain life-sparked clay|-E|H" -CT "QSC:I found the life-sparked clay"
+Path -PL 29 -L -R -DFPWD -QA "-QD|200|-A|a harrying|-T|QSC:Obtain life-sparked clay|-E|K" -QA "-QD|200|-A|a construct|-T|QSC:Obtain life-sparked clay|-E|K" -QA "-QD|200|-A|Life-sparked clay|-T|QSC:Obtain life-sparked clay|-E|H" -CT "QSC:I found the life-sparked clay"
 805.70 185.82 304.21
 756.73 185.34 318.66
 708.36 190.50 371.21

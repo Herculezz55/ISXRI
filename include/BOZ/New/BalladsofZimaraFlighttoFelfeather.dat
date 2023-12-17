@@ -2,9 +2,6 @@ Ballads of Zimara: Flight to Felfeather
 Custom
 CheckPreReqs -Completed "A Real Whose Hoos"
 0 0 0
-Custom
-FastTravel "Splendor Sky Aerie"
-0 0 0
 -332.52 119.12 627.12
 Custom
 HailActorGetQuest -Actor "Miranna Ameema"
@@ -72,12 +69,13 @@ Custom
 Path 
 1028.57 173.76 793.29
 1042.89 174.06 764.90
-1069.37 179.50 756.18
+1066.37 179.50 756.18
+1068.03 179.45 754.65
 Custom
 HailActor "Crestcry" 12 1 
-1066.29 179.85 753.73
+1068.03 179.45 754.65
 Wait
 5
 Custom
 HailActor "Crestcry" 12 1 
-1066.29 179.85 753.73
+1068.03 179.45 754.65

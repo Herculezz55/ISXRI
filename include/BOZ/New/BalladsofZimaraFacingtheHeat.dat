@@ -40,8 +40,6 @@ Target "a Hoot Totem" 0 14
 Custom
 UseItem "Potion of Vigorous Unmaking"
 -855.35 174.51 210.72
-Wait
-20
 -855.35 174.51 210.72
 Custom
 PauseCombatBot 0
@@ -124,8 +122,14 @@ DontMoveBehind
 Custom
 HailActor "Miranna Ameema" 1 1 1 1 1 1 1 1 2
 -1081.85 181.72 753.6
+Custom
+HailActor "Miranna Ameema" 2 1
+-1081.85 181.72 753.6
 -702.33 229.78 -753.93
 -688.83 229.28 -754.24
+Custom
+Wait
+20
 Custom
 HailActor "Miranna Ameema" 3 1
 -688.83 229.28 -754.24

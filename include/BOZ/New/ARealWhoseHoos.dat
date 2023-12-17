@@ -24,7 +24,7 @@ HailActorGetQuest -Actor "Viamme"
 -604.71 191.34 -43.81
 -563.44 205.50 -36.83
 Custom
-ClickActor "Vines"
+ClickActor "vine to ridge above 02"
 -563.44 205.50 -36.83
 -485.75 238.94 -77.39
 -463.39 238.33 -75.15
@@ -32,7 +32,16 @@ Custom
 ClickActor "a sickly giant owl"
 -463.39 238.33 -75.15
 Custom
-ClickActor "Owl Pellet"
+ClickActor Owl Pellet
+-463.39 238.33 -75.15
+Custom
+Wait
+5
+Custom
+CheckQuestStep "Examine owl pellet" 46
+-463.39 238.33 -75.15
+Custom
+MessageBox "Examine the Owl Pellet"
 -463.39 238.33 -75.15
 -475.10 238.65 -78.71
 Custom
@@ -40,7 +49,7 @@ HailActor "Hihne" 3 1
 -475.10 238.65 -78.71
 -492.76 238.82 -76.03 98.09 0.00 0.00
 Custom
-ClickActor "Vines"
+ClickActor "vine from ridge above to ground 02"
 -502.42 239.90 -72.72
 -569.17 203.61 -34.07
 -648.65 166.83 -2.47
@@ -86,7 +95,7 @@ Path
 -604.71 191.34 -43.81
 -563.44 205.50 -36.83
 Custom
-ClickActor "Vines"
+ClickActor "vine to ridge above 02"
 -563.44 205.50 -36.83
 -485.75 238.94 -77.39
 -463.39 238.33 -75.15
@@ -94,7 +103,7 @@ Custom
 ApplyVerb "a sickly giant owl" "Apply Chelation Potion"
 -462.36 238.36 -75.82
 Custom
-ClickActor "Vines"
+ClickActor "vine from ridge above to ground 02"
 -505.50 241.42 -71.78
 -569.17 203.61 -34.07
 -648.65 166.83 -2.47
