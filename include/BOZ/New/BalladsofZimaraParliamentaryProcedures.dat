@@ -49,7 +49,7 @@ Custom
 ClickActor "qst_widget_hooluk_parliament_chamber_door"
 314.49 305.08 999.54
 Custom
-CheckQuestStep "Ballads of Zimara: Parliamentary Procedures" "Enter" 86
+CheckQuestStep "Enter" 86
 314.49 305.08 999.54
 Custom
 Path
@@ -96,7 +96,7 @@ Custom
 HailActor "Kindellan the Elder" 15 1
 -838.28 71.13 544.52
 Custom
-CheckQuestStep "Ballads of Zimara: Parliamentary Procedures" "I should return to Miranna" 106
+CheckQuestStep "Elder Kindellan, and the other" 106
 -838.28 71.13 544.52
 Custom
 HailActor "Kindellan the Elder" 15 1

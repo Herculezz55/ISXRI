@@ -3,10 +3,10 @@ Custom
 CheckQuest -Active "Ballads of Zimara: Neighborhoot Watch" 11
 -343.03 117.94 602.5
 Custom
-CheckQuestStep "Ballads of Zimara: Neighborhoot Watch" "Coarsequill revealed" 150
+CheckQuestStep "Coarsequill revealed" 150
 -343.03 117.94 602.5
 Custom
-CheckQuestStep "Ballads of Zimara: Neighborhoot Watch" "I provided" 115
+CheckQuestStep "I provided" 115
 -343.03 117.94 602.5
 Custom
 HailActorGetQuest -Actor "Coarsequill"

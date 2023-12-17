@@ -1,5 +1,11 @@
 Ballads of Zimara: Razeland Rousing Ditty
 Custom
+MakeActiveQuest "Ballads of Zimara: Razeland Rousing Ditty"
+0 0 0
+Custom
+CheckQuestStep "While" 119
+0 0 0
+Custom
 HailActorGetQuest -Actor "Ruhk"
 -911.86 189.59 330.13
 -864.33 188.99 330.86
@@ -87,7 +93,7 @@ Wait
 -118.70 134.48 -159.69
 -23.12 142.89 -106.30
 Custom
-MessageBox "Complete zone and go over to Miranna Ammema in zone before exiting"
+MessageBox "Complete zone and go over to Miranna Ammema inside zone. Press Resume"
 4.26 146.08 -57.81
 4.26 146.08 -57.81
 -16.79 155.93 -3.42
@@ -116,11 +122,12 @@ Path
 -736.10 142.50 20.50
 -677.47 141.90 -18.79
 Custom
-ClickActor "Fly from Isles of Wisdom" 5
+ClickActor "Fly from Isles of Wisdom"
 -677.47 141.90 -18.79
 Custom
 TravelMap "Auric Palisades"
 -677.47 141.90 -18.79
+-687.43 150.42 -377.62
 Custom
 Path -PL 17 -L -QA "-A|a maedjinn|-T|QSC:It appears the maedjinn|-E|UseItem-Aviak Flageolet"
 -687.43 150.42 -377.62
