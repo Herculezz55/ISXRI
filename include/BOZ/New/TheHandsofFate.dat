@@ -77,7 +77,7 @@ Path -PL 15 -CPSP
 -296.43 203.03 -536.89
 -372.09 187.76 -576.41
 Custom
-MessageBox "Click 6 Jann Wish Gems by imbedding Metallic Crystalline"
+MessageBox "Click 6 Jann Wish Gems by embedding Metallic Crystalline"
 -372.09 187.76 -576.41
 Custom
 Path -PL 32 -L -R -DFPWD -QA "-A|Jann Wish Gem|-QD|10|-MTD|3|-T|QSC:Gather metallic crystalline|-E|H" -CT "QSC:Gather metallic crystalline"

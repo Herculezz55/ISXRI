@@ -3,10 +3,10 @@ Custom
 MakeActiveQuest "Ballads of Zimara: Hard Act to Follow"
 0 0 0
 Custom
-CheckQuestStep "Find a way to offer hope to the people of Isles of Wisdom" 73
+CheckQuestStep "I gave the bags" 73
 0 0 0
 Custom
-CheckQuestStep "According to the book I was able to collect" 98
+CheckQuestStep "According to the book" 174
 0 0 0
 Custom
 HailActorGetQuest -Actor "Miranna Ameema"

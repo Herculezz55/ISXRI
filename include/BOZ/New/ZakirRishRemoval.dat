@@ -67,7 +67,7 @@ ClickActor "Zakir Rish Weapons"
 -711.14 147.17 -387.56
 -708.96 145.43 -358.56
 Custom
-Path -PL 22 -L -QA "-A|a maedjinn|-T|QSC:maedjinn|-E|K" -QA "-A|Zakir Rish Weapons|-T|QSC:Zakir|-E|UseItem-brittle arcanum concoction" -QA "-A|Zakir Rish Weapons|-T|QSC:Zakir|-E|H" -CT "QSC:I sabotaged"
+Path -PL 22 -L -QA "-A|a maedjinn|-T|QSC:maedjinn|-E|K" -QA "-A|a maedjinn occupier|-T|QSC:maedjinn occupier|-E|K" -QA "-A|Zakir Rish Weapons|-T|QSC:Zakir|-E|UseItem-brittle arcanum concoction" -QA "-A|Zakir Rish Weapons|-T|QSC:Zakir|-E|H" -CT "QSC:I sabotaged"
 -687.43 150.42 -377.62
 -656.86 132.26 -397.03
 -654.29 132.58 -392.86

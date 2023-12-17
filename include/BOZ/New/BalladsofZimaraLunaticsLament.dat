@@ -68,14 +68,14 @@ BuyFromVendor "Rannaakh" "Bird Whistle" 1
 -838.66 188.75 338.08
 Custom
 MessageBox "Make sure you have obtained the Bird Whistle from Rannaakh"
--855.28 187.12 323.39
+-838.66 188.75 338.08
 -894.86 187.82 320.58
 -913.80 184.15 277.48
 -896.85 165.03 207.51
 -865.46 153.00 84.56
 -826.87 142.88 21.77
 Custom
-Path -PL 5 -L -QA "-A|miniature sword|-T|QSC:Obtain miniature swords (10/10)|-E|H"
+Path -PL 5 -L -QA "-A|miniature sword|-T|QSC:miniature swords|-E|H"
 -879.41 144.07 2.68
 -855.59 142.73 2.08
 -801.81 144.23 1.01
@@ -230,9 +230,27 @@ MessageBox "Make sure you bought the Candied Fairy-Leaf Cake recipe"
 Custom
 ScribeBook "Candied Fairy-Leaf Cake"
 -841.49 188.87 337.56
+Custom
+MessageBox "Make sure you scribed the Candied Fairy-Leaf Cake recipe"
+-841.49 188.87 337.56
 -856.80 188.73 336.12
 -831.70 187.83 300.64
 -754.70 164.19 308.16
+Custom
+Path -PL 10 -DFPWD -QA "-A|Fairy-Leaf|-QD|10|-MTD|3|-E|H"
+-516.13 146.55 263.87
+-566.86 139.77 279.67
+-647.59 143.19 295.76
+-755.04 163.95 312.33
+-825.45 165.51 292.91
+-880.02 164.97 233.22
+-909.51 177.50 251.34
+-911.55 187.64 296.44
+-874.93 188.53 328.88
+-844.59 185.98 310.73
+-808.73 189.29 256.06
+-791.19 189.86 224.90
+-764.75 191.67 225.23
 Custom
 MessageBox "Go Harvest 16 Fairy-Leaf from around Isles of Wisdom and press Resume."
 -754.70 164.19 308.16
