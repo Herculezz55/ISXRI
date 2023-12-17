@@ -73,7 +73,7 @@ MessageBox "Pause combat here so you do not kill Sqokri. Press Resume when ready
 920.13 44.06 218.63
 934 32 226
 Custom
-Target "Sqokri"
+Target "Sqokri" 0 14
 934 32 226
 Custom
 UseItem "Blinding Conviction Gem"
