@@ -41,12 +41,63 @@ ZoneDoor "Aether Wroughtlands" 1 FALSE 20 True
 -711.87 229.62 -751.98
 885.23 -45.55 -322.18
 Custom
-CheckCompletedQuest "Aether Wroughtlands: Experiment BU-T13-R's Harmonic Controller" 51
+Path -PL 10 -CPSP
+882.82 69.79 -322.87
+837.00 83.47 -332.39
+691.51 85.17 -360.76
+573.38 86.54 -383.79
+469.79 87.75 -403.99
+364.12 88.98 -421.82
+261.96 90.16 -437.09
+163.22 91.30 -451.85
+55.58 92.53 -457.98
+-71.73 93.99 -461.24
+-168.44 95.70 -510.23
+-208.44 95.70 -510.23
+Custom
+CheckCompletedQuest "Aether Wroughtlands: Experiment BU-T13-R's Harmonic Controller" 100
 0 0 0
 Custom
 SetActiveQuest "Aether Wroughtlands: Experiment BU-T13-R's Harmonic Controller"
 0 0 0
 Custom
-TimeStampEcho "SetActiveQuest ether Wroughtlands Experiment BU-T13-R's Harmonic Controller"
+TimeStampEcho "SetActiveQuest Aether Wroughtlands Experiment BU-T13-R's Harmonic Controller"
 0 0 0
-
+Custom
+Path -PL 19 -DFPWD -QA "-QD|200|-A|a firespine gnawer|-T|QSC:gnawer|-E|K" -CT "QSC: I have completed"
+-108.88 73.11 -381.34
+-201.97 89.72 -319.22
+-201.97 37.40 -319.22
+-195.92 17.54 -287.79
+-195.46 -5.06 -249.59
+-221.44 -13.40 -275.94
+-236.41 -3.94 -300.28
+-262.01 -8.32 -341.93
+-275.23 -12.00 -380.30
+-247.28 50.53 -379.37
+-176.69 30.93 -373.93
+-108.63 16.58 -385.83
+-47.05 7.61 -396.34
+18.23 3.13 -377.06
+39.65 4.40 -369.00
+95.91 7.61 -373.20
+41.12 10.74 -368.30
+-19.46 11.96 -370.20
+-67.86 11.58 -357.58
+-112.93 11.20 -335.77
+-117.46 9.73 -334.03
+Custom
+CheckCompletedQuest "Aether Wroughtlands: Experiment BU-T13-R's Harmonic Controller" 100
+0 0 0
+Custom
+SetActiveQuest "Aether Wroughtlands: Experiment BU-T13-R's Harmonic Controller"
+0 0 0
+Custom
+TimeStampEcho "SetActiveQuest Aether Wroughtlands: Experiment BU-T13-R's Harmonic Controller"
+0 0 0
+Custom
+CheckAndSet -ActiveQuest "Aether Wroughtlands: Experiment BU-T13-R's Harmonic Controller" 62
+0 0 0
+Custom
+TimeStampEcho "Aether Wroughtlands: Experiment BU-T13-R's Harmonic Controller Completed"
+0 0 0

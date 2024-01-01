@@ -1,4 +1,4 @@
-Zimara Breadth: Tef-Feather
+Zimara Breadth: Nab-Feather
 Custom
 CheckAndSet -InZone "Zimara Breadth" 33
 0 0 0
@@ -55,49 +55,43 @@ Path -PL 19 -CPSP
 307.53 210.86 -80.05
 310.27 200.25 -77.74
 Custom
-CheckCompletedQuest "Zimara Breadth: Tef-Feather" 100
+CheckCompletedQuest "Zimara Breadth: Nab-Feather" 94
 0 0 0
 Custom
-SetActiveQuest "Zimara Breadth: Tef-Feather"
+SetActiveQuest "Zimara Breadth: Nab-Feather"
 0 0 0
 Custom
-TimeStampEcho "SetActiveQuest Zimara Breadth Tef-Feather"
-0 0 0
-310.37 166.96 -56.58
-310.37 301.96 -56.58
-321.52 301.07 -575.26
-Custom
-Path -PL 17 -QA "-QD|200|-A|an endless sufferer|-T|QSC:aviak|-E|K" -QA "-QD|200|-A|an agonizing|-T|QSC:aviak|-E|K" -CT "QSC: I have completed"
-279.39 309.85 -600.03
-228.07 302.00 -614.69
-196.38 295.35 -645.52
-187.22 290.72 -675.24
-188.77 284.84 -715.20
-205.45 279.46 -766.90
-238.92 278.14 -778.45
-273.97 281.12 -751.90
-276.75 285.04 -727.24
-278.26 283.79 -692.02
-275.07 282.41 -653.29
-258.87 281.65 -634.25
-278.04 308.34 -617.16
-282.65 310.31 -664.95
-287.94 301.06 -714.51
-274.31 310.52 -742.83
-249.98 325.13 -745.62
-224.75 314.57 -720.43
-Custom
-CheckCompletedQuest "Zimara Breadth: Tef-Feather" 100
+TimeStampEcho "SetActiveQuest Zimara Breadth Nab-Feather"
 0 0 0
 Custom
-SetActiveQuest "Zimara Breadth: Tef-Feather"
+Path -PL 13 -QA "-QD|200|-A|an arcaneframe daggerclaw|-T|QSC:daggerclaw|-E|K" -CT "QSC: I have completed"
+310.37 190.96 -56.58
+193.19 190.65 -112.20
+180.73 190.78 -145.31
+180.23 190.15 -206.09
+139.46 190.25 -237.02
+82.03 190.55 -244.22
+12.76 190.31 -203.64
+-84.45 190.11 -154.40
+27.83 190.69 -83.48
+20.76 190.33 -3.76
+-40.22 190.52 39.84
+20.05 190.64 -74.33
+153.94 190.27 -70.38
+193.19 190.65 -112.20
+25.26 179.34 -46.57
+Custom
+CheckCompletedQuest "Zimara Breadth: Nab-Feather" 94
 0 0 0
 Custom
-TimeStampEcho "SetActiveQuest Zimara Breadth: Tef-Feather"
+SetActiveQuest "Zimara Breadth: Nab-Feather"
 0 0 0
 Custom
-CheckAndSet -ActiveQuest "Zimara Breadth: Tef-Feather" 68
+TimeStampEcho "SetActiveQuest Zimara Breadth: Nab-Feather"
 0 0 0
 Custom
-TimeStampEcho "Zimara Breadth: Tef-Feather Completed"
+CheckAndSet -ActiveQuest "Zimara Breadth: Nab-Feather" 62
+0 0 0
+Custom
+TimeStampEcho "Zimara Breadth: Nab-Feather Completed"
 0 0 0

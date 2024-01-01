@@ -32,32 +32,66 @@ ZoneDoor "Zone to Zimara Breadth"
 -1096.01 181.82 740.86
 -701.27 250.17 -755.11
 Custom
-Path -PL 20 -CPSP
--701.27 250.17 -755.11
--701.27 284.37 -755.11
--676.36 280.95 -738.22
--644.42 274.55 -714.88
--616.95 268.86 -692.99
--586.20 262.50 -668.49
--561.81 257.87 -653.63
--538.03 253.53 -641.23
--489.56 244.69 -615.97
--489.56 195.48 -615.97
--486.83 204.43 -549.61
--409.70 198.46 -510.58
--321.89 191.49 -460.99
--257.39 194.54 -422.22
--196.29 200.28 -384.78
--130.57 206.45 -344.51
--84.57 222.08 -318.32
--57.91 251.89 -305.19
-30.69 261.21 -249.37
+Path -PL 19 -CPSP
+-702.34 229.78 -753.91
+-702.34 293.33 -753.91
+-653.72 284.75 -690.22
+-602.61 267.08 -624.62
+-560.60 252.56 -570.70
+-514.96 242.68 -513.86
+-457.69 231.85 -443.06
+-403.36 221.57 -375.89
+-346.64 219.70 -312.71
+-283.15 227.77 -249.27
+-231.01 234.61 -205.73
+-169.38 242.70 -154.25
+-102.74 251.44 -98.59
+-23.80 248.70 -60.51
+72.10 250.34 -29.99
+146.52 258.16 -6.37
+242.37 268.28 24.05
+290.91 279.37 -65.44
+300.19 281.65 -86.28
+307.53 210.86 -80.05
+310.27 200.25 -77.74
 Custom
-CheckCompletedQuest "Zimara Breadth: Dol-Feather" 51
+CheckCompletedQuest "Zimara Breadth: Dol-Feather" 94
 0 0 0
 Custom
 SetActiveQuest "Zimara Breadth: Dol-Feather"
 0 0 0
 Custom
 TimeStampEcho "SetActiveQuest Zimara Breadth Dol-Feather"
+0 0 0
+Custom
+Path -PL 13 -QA "-QD|200|-A|a winged viper|-T|QSC:winged viper|-E|K" -CT "QSC:I have the rotten"
+310.37 190.96 -56.58
+193.19 190.65 -112.20
+180.73 190.78 -145.31
+180.23 190.15 -206.09
+139.46 190.25 -237.02
+82.03 190.55 -244.22
+12.76 190.31 -203.64
+-84.45 190.11 -154.40
+27.83 190.69 -83.48
+20.76 190.33 -3.76
+-40.22 190.52 39.84
+20.05 190.64 -74.33
+153.94 190.27 -70.38
+193.19 190.65 -112.20
+25.26 179.34 -46.57
+Custom
+CheckCompletedQuest "Zimara Breadth: Dol-Feather" 94
+0 0 0
+Custom
+SetActiveQuest "Zimara Breadth: Dol-Feather"
+0 0 0
+Custom
+TimeStampEcho "SetActiveQuest Zimara Breadth: Dol-Feather"
+0 0 0
+Custom
+CheckAndSet -ActiveQuest "Zimara Breadth: Dol-Feather" 65
+0 0 0
+Custom
+TimeStampEcho "Zimara Breadth: Dol-Feather Completed"
 0 0 0
