@@ -1,5 +1,0 @@
-string ThenewTravelsofYunZiTimeline[] = {"The new \"Travels\" of Yun Zi Timeline", 
-"Custom", 
-"Quest \"The new \"Travels\" of Yun Zi - Antonica or Bust\"", 
-"0 0 0", 
-};

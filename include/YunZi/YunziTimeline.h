@@ -1,5 +1,0 @@
-string YunziTimeline[] = {"Yunzi Timeline", 
-"Custom", 
-"YunziTimeline", 
-"0 0 0", 
-};

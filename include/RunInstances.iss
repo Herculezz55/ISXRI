@@ -1,4 +1,4 @@
-;RunInstances Script by Herculezz
+ ;RunInstances Script by Herculezz
 
 variable(global) string help=Written by Herculezz, Join Discord: https://discord.gg/FT4VxMe, or visit www.isxri.com
 variable(global) string about=Written by Herculezz, Join Discord: https://discord.gg/FT4VxMe, or visit www.isxri.com
@@ -17,6 +17,7 @@ variable(global) bool RI_Var_Bool_PathDebug=FALSE
 variable(global) bool RI_Var_Bool_RemoveAfterTrigger=FALSE
 variable(global) bool RI_Var_Bool_AcceptRewards=TRUE
 variable(global) bool RI_Var_Bool_IgnoreNamedForShiny=FALSE
+variable(global) string RI_Var_String_QuestDir=""
 variable int Distance=2
 variable int MDistance=4
 variable string CurrentLootWindowID=0
@@ -426,6 +427,7 @@ function main(string FunctionToRun=NONE)
 		if ${FunctionToRun.Find[QUEST-](exists)}
 		{
 			;wait until we start
+			;echo ${FunctionToRun}
 			RI_Var_Bool_QuestMode:Set[TRUE]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			relay "other ${RI_Var_String_RelayGroup}" -noredirect RI_RunInstances Q-RI_Var_Bool_GlobalOthers
@@ -2123,13 +2125,13 @@ atom LoadZone(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace
 	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
 	if ${FP.FileExists[${ZoneFileName}.dat]}
 	{
-		if ${Debug}
+		if ${RI_Var_Bool_Debug}
 			ISXRI: File ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat found Importing
 		ImportZoneFile ${ZoneFileName}
 	}
 	else
 	{
-		if ${Debug}
+		if ${RI_Var_Bool_Debug}
 			ISXRI: File ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat not found Importing from Extension
 		echo ISXRI: ${Time} Importing ZoneFile from Extension
 		RI_CMD_Hidden_AddTLO ${ZoneFileName}
@@ -2147,58 +2149,13 @@ atom(global) IZF(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Repl
 }
 atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}", bool _Verbose=TRUE)
 {
-	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
-	;check if ZineFileName exists, if not end
-	if !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[Solo](exists)} && ${FP.FileExists[${ZoneFileName.Left[-4]}.dat]}
+	;check for ${_QuestName} as Key for RI_CollectionIndexString_RQQuests
+	if !${RI_CollectionIndexString_RQQuests.SelectKey["${_QuestName}"](exists)}
 	{
-		ZoneFileName:Set[${ZoneFileName.Left[-4]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
+		echo ISXRI: Quest: ${_QuestName} does not exist, Please ensure the .DAT file is in RI/Quests/SomeFolder/@@@@.Dat and re run RQ to rescan
+		return
 	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[Heroic](exists)} && ${FP.FileExists[${ZoneFileName.Left[-6]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-6]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[HeroicI](exists)} && ${FP.FileExists[${ZoneFileName.Left[-7]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-7]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[HeroicII](exists)} && ${FP.FileExists[${ZoneFileName.Left[-8]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-8]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[Duo](exists)} && ${FP.FileExists[${ZoneFileName.Left[-3]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-3]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[EventHeroic](exists)} && ${FP.FileExists[${ZoneFileName.Left[-11]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-11]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]}
-	{
-		echo ISXRI: ${Time} Missing ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-		if ${RI_Var_Bool_QuestMode}
-			Script:End
-		else
-			return
-	}
-	else
-	{
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	
+
 	variable file Filename
 	variable int Count
 	
@@ -2206,7 +2163,7 @@ atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName]
 	istrMain:Clear
 	Count:Set[1]
 	;set file to read in to Filename variable
-	Filename:SetFilename["${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"]
+	Filename:SetFilename["${RI_CollectionIndexString_RQQuests.CurrentValue}"]
 
 	;open the file
 	Filename:Open
@@ -2460,7 +2417,7 @@ atom(global) ____displayindex_213412jk123ui123km()
 function CustomFunction(string arg1="", string arg2="", string arg3="", string arg4="", string arg5="")
 {
 	if ${RI_Var_Bool_Debug}
-		echo ${Time}: Calling custom function ${CustomFunction}
+		echo ${Time}: Calling custom function ${CustomFunction} : ${arg1} ${arg2} ${arg3} ${arg4} ${arg5}
 	;move to custom location
 	if !${CustomLoc.Find["0 0 0"]} && !${CustomFunction.Find[WaitForZoning](exists)}
 	{
@@ -2639,6 +2596,72 @@ function SetIgnoreShinyY(int _OnOff)
 ;object RunInstancesObject
 objectdef RunInstancesObject
 {
+	member:bool ImportQuestFile(string QuestName)
+	{
+		variable bool found=FALSE
+		if (${RI_CollectionIndexString_RQQuests.FirstKey(exists)})
+		{
+			do
+			{
+				;echo "|${RI_CollectionIndexString_RQQuests.CurrentKey}|" .Equals[ "|${QuestName}|" ]
+				if ${RI_CollectionIndexString_RQQuests.CurrentKey.Equals["${QuestName}"]}
+				{
+					found:Set[TRUE]
+					break
+				}
+			}
+			while (${RI_CollectionIndexString_RQQuests.NextKey(exists)})
+		}
+		if !${found}
+		{
+			echo ISXRI: Quest: ${QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
+			return FALSE
+		}
+		;else
+		;{
+		;	echo ISXRI: Found ${RI_CollectionIndexString_RQQuests.CurrentKey} Loading into istrMain from Filename: ${RI_CollectionIndexString_RQQuests.CurrentValue}
+		;}
+		
+		if !${RI_Var_Bool_GlobalOthers}
+			relay "all other" RIObj:mImportQuestFile["${QuestName}"]
+		variable file Filename
+		variable int Count
+		
+		variable string TempString
+		istrMain:Clear
+		Count:Set[1]
+		;set file to read in to Filename variable
+		Filename:SetFilename["${RI_CollectionIndexString_RQQuests.CurrentValue}"]
+
+		;open the file
+		Filename:Open
+		
+		;seek to the beginning of file
+		Filename:Seek[0]
+		
+		;while we are not at the end of file
+		while !${Filename.EOF}
+		{
+			;store each line of the file in var
+			TempString:Set[${Filename.Read}]
+			if ${TempString.Equal[NULL]}
+				continue
+			istrMain:Insert[${TempString.Left[-1]}]
+			;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length}
+			Count:Inc
+			;waitframe
+		}
+		
+		;close file
+		Filename:Close
+
+		return TRUE
+	}
+	method mImportQuestFile(string QuestName)
+	{
+		if !${RIObj.ImportQuestFile["${QuestName}"]}
+			return 
+	}
 	member:bool PathTrigger(bool _CheckItemQty, string _ItemName, string _ItemQty, bool _QuestStepExists, bool _QuestExists, bool _QuestDNE, bool _QuestStepChecked, string _tempName, weakref _QuestStep, weakref _Quest, string CommonTrigger)
 	{
 		variable int _countor=0
@@ -4533,7 +4556,7 @@ function FastTravel(string _ZoneName, int _RelayToGroup=1, string _DoorOption=0)
 			relay ${RI_Var_String_RelayGroup} RIMUIObj:FastTravel[ALL,"${_ZoneName}","${_DoorOption}"]
 		else
 			RIMUIObj:FastTravel[${Me.Name},"${_ZoneName}","${_DoorOption}"]
-		wait 50 ${EQ2.Zoning}==1
+		wait 50 ${EQ2.Zoning}==1-
 		if ${EQ2.Zoning}==0
 		{
 			if ${EQ2UIPage[popup,ZoneTeleporter].IsVisible}
@@ -18404,6 +18427,7 @@ function Zann()
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 function QuestY(string _QN)
 {
 	if ${QuestJournalWindow.CompletedQuest[${_QN}](exists)}
@@ -18509,12 +18533,12 @@ function ResetZone(string _ZoneName)
 function QuestM(string QuestOrTimeLineName=~NONE~)
 {
 	MainQuestName:Clear
-	variable bool _Skip100NotChecked=FALSE
-	if !${UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI].Checked}
-	{
-		_Skip100NotChecked:Set[TRUE]
-		UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI]:SetChecked
-	}
+	; variable bool _Skip100NotChecked=FALSE
+	; if !${UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI].Checked}
+	; {
+	; 	_Skip100NotChecked:Set[TRUE]
+	; 	UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI]:SetChecked
+	; }
 	
 	if ${QuestOrTimeLineName.Equal[~NONE~]}
 	{
@@ -18532,11 +18556,11 @@ function QuestM(string QuestOrTimeLineName=~NONE~)
 	}
 	else
 	{
-		if ${QuestOrTimeLineName.Replace[" ",""].Find[SokokarTimelineCrafting]} || ${QuestOrTimeLineName.Replace[" ",""].Find[SokokarCraftingTimeline]}
-			call SokokarTimelineCrafting
+		;if ${QuestOrTimeLineName.Replace[" ",""].Find[SokokarTimelineCrafting]} || ${QuestOrTimeLineName.Replace[" ",""].Find[SokokarCraftingTimeline]}
+		;	call SokokarTimelineCrafting
 		;if ${QuestOrTimeLineName.Replace["'",""].Replace[" ",""].Find[BathezidsWatchFactionCrafting]}
 			;call BathezidsWatchFactionCrafting
-		else
+		;else
 			call QuestDefault "${QuestOrTimeLineName}"
 		; switch "${QuestOrTimeLineName}"
 		; {
@@ -18577,8 +18601,8 @@ function QuestM(string QuestOrTimeLineName=~NONE~)
 			; }
 		; }
 	}
-	if ${UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI].Checked} && !${_Skip100NotChecked}
-		UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI]:SetChecked
+	;if ${UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI].Checked} && !${_Skip100NotChecked}
+	;	UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI]:SetChecked
 	Script:End
 }
 function ExecuteCommand(string CommandName)
@@ -20024,48 +20048,19 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 {
 	;echo Start of Quest: MainQuestName Size: ${MainQuestName.Used}
 	press -release ${RI_Var_String_ForwardKey}
-	variable string _ConvertedQuestName
 
-	if ${_QuestName.Find["\""](exists)}
-		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
-	;echo ${_QuestName} // ${_ElementToJumpTo}
 	if ${_ElementToJumpTo}==0
 		variable int _OriginalMAC=${MainArrayCounter}
-	if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
-		_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
-	else
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
-	;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-	;wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	
-	;if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	;	relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0 1
-	;else
-	;	relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
-
-	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
-	if ${FP.FileExists[${_QuestName}.dat]}
-	{
-		if ${Debug}
-			ISXRI: File ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat found Importing
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile ${_QuestName} 0
-	}
-	else
-	{
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-		wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0 1
-	}
+	if !${RIObj.ImportQuestFile["${_QuestName}"]}
+		return 
 
 	wait 5
 	wait 50 ${istrMain.Used}>0
 	_QuestName:Set[${istrMain.Get[1]}]
 	MainQuestName:Insert["${_QuestName}"]
 	variable int _GiveUpCNT=0
+
 	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} ) && ${_GiveUpCNT:Inc}<=10
 	{
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
@@ -20074,7 +20069,7 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
+	;_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
 	variable bool _Repeatable
 	if ${istrMain.Get[2].Equal[Repeatable]}
@@ -20096,16 +20091,10 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 			QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 			wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-		
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-		
-		wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		
-		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-		else
-			relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+
+		if !${RIObj.ImportQuestFile["${_QuestName}"]}
+			return 
+
 		wait 5
 		wait 50 ${istrMain.Used}>0
 		if ${_ElementToJumpTo}==0
@@ -20127,7 +20116,7 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 		
 		echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
 		
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
+		;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	}
 
 	if ${_CheckQuestCompleted} && !${_QuestName.Find["Access to Tower of the Four Winds"](exists)} && !${_QuestName.Find["Yun Zi"](exists)} && !${_QuestName.Find[Timeline](exists)} && !${_QuestName.Find["Losers Weepers"](exists)} && !${_QuestName.Find["New Lands New Profits"](exists)}
@@ -20156,16 +20145,10 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-	wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	
-	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+	if !${RIObj.ImportQuestFile["${_QuestName}"]}
+		return
+		
 	wait 5	
 	wait 50 ${istrMain.Used}>0
 	;if ${_ElementToJumpTo}==0
@@ -20473,46 +20456,14 @@ function SetActiveQuest(string _QuestName)
 function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestCompleted=TRUE)
 {
 	;echo QuestDefault(string _QuestName=${_QuestName}, int _ElementToJumpTo=0=${_ElementToJumpTo}, bool _CheckQuestCompleted=TRUE=${_CheckQuestCompleted})
-	;echo ${_QuestName.Token[1,|]}
-	;echo "${_QuestName.Token[2,|]}" ${_QuestName.Token[2,|].Find[Repeatable]}
-	if ${_QuestName.Find["\""](exists)}
-		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
-	if ${_QuestName.Find[|](exists)}
-	{
-		if ${_QuestName.Token[2,|].Find[Repeatable]}
-		{
-			InputBox -skin eq2 "How many times would you like to run the Repeatable quest: ${_QuestName.Token[1,|]}?"
-			while ${UserInput.Equal[""]} 
-			{
-				MessageBox -skin eq2 "You must enter a number of times (1 is ok)"
-				InputBox -skin eq2 "How many times would you like to run the Repeatable quest: ${_QuestName.Token[1,|]}?"
-				wait 1
-			}
-			if ${String[${UserInput}].Equal[NULL]} || ${String[${UserInput}].Equal[0]}
-				return
-			else
-				call QuestRepeat "${_QuestName.Token[1,|]}" ${UserInput}
-			return
-		}
-		_QuestName:Set["${_QuestName.Token[1,|]}"]
-	}
-	variable string _ConvertedQuestName
-	
-	if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
-		_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
-	else
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-	;open dat or var and do all of it
-	;echo ${_QuestName}  //  ${_QuestName.Replace[" ",""].Replace["?",""]}
-	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-	wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	
-	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}"
-	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}"
+	;echo ${_QuestName.Count[/]}
+	;echo ${_QuestName.Token[${Math.Calc[${_QuestName.Count[/]}+1]},/]}
+	;echo ${_QuestName.Left[${Math.Calc[-1*${_QuestName.Token[${Math.Calc[${_QuestName.Count[/]}+1]},/].Length}]}]}
+	;RI_Var_String_QuestDir:Set["${_QuestName.Left[${Math.Calc[-1*${_QuestName.Token[${Math.Calc[${_QuestName.Count[/]}+1]},/].Length}]}]}"]
+
+	if !${RIObj.ImportQuestFile["${_QuestName}"]}
+		return 
+
 	wait 5
 	wait 50 ${istrMain.Used}>0
 
@@ -20551,7 +20502,7 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 	
 	echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
 	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
+	;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	
 	MainQuestName:Clear	
 	if ${Me.IsMoving}
@@ -30173,6 +30124,16 @@ function LockAndWait(... args)
 function SkipLoot(int _On=0)
 {
 	relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[${_On}]
+}
+
+function DeleteQuest(string _QuestName)
+{
+	variable int cnt = 0
+	while ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${cnt:Inc} < 5000
+	{
+		QuestJournalWindow.ActiveQuest["${_QuestName}"]:Delete
+		wait 1
+	}
 }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

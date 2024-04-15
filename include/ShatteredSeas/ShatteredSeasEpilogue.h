@@ -1,8 +1,0 @@
-string ShatteredSeasEpilogue[] = {"Shattered Seas: Epilogue", 
-"Custom", 
-"HailActor \"Captain Greymast\" 6", 
-"-158.962296 6.956739 -911.364868", 
-"Custom", 
-"MessageBox \"Go speak to the Queen or The Overlord\"", 
-"-158.962296 6.956739 -911.364868", 
-};

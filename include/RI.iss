@@ -6228,7 +6228,7 @@
 
 ;		Added sending mercs like pets (uses same setting)  
 
-variable(global) float RI_Var_Float_Version=6.84
+variable(global) float RI_Var_Float_Version=6.85
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
@@ -7569,6 +7569,9 @@ variable index:string GroupNames
 variable(global) bool RI_Var_Bool_CheckLoot=FALSE
 variable filepath FP
 variable bool GrabingShinys=FALSE
+variable filepath ScanDirectory=""
+variable(global) collection:string RI_CollectionIndexString_RQQuests
+
 function main()
 {
 	;disable RI_Var_Bool_Debugging
@@ -11252,7 +11255,7 @@ objectdef RIMUIObject
 	}
 	method RQEngage(string _Item)
 	{
-		;echo RQEngage(string _Item="${_Item}")
+		echo RQEngage(string _Item="${_Item}")
 		if ${_Item.Find[|Repeatable](exists)}
 			This:RQ["${_Item}"]
 		else
@@ -11264,590 +11267,38 @@ objectdef RIMUIObject
 			return
 		else
 		{
-			if ${_CatName.Equal[Sokokar Crafting]}
+			UIElement[QuestsListBox@RI]:ClearItems
+			;echo ${_CatName}
+			declare _cnt int 0
+   			declare _FileList filelist
+			declare _TempString string
+    		ScanDirectory:Set["${LavishScript.HomeDirectory}//Scripts//RI//Quest//${_CatName}//"]
+    		_FileList:GetFiles[${ScanDirectory}\\*]
+			;echo ${_FileList.Files}
+			variable file Filename
+			while (${_cnt:Inc}<=${_FileList.Files})
 			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Sokokar Crafting Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Sokokar Crafting Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Fangs Away!]
-				UIElement[QuestsListBox@RI]:AddItem[An Eye in the Sky]
-				UIElement[QuestsListBox@RI]:AddItem[Sticking My Ore In]
-				UIElement[QuestsListBox@RI]:AddItem[Preparations for the Rescue]
-				UIElement[QuestsListBox@RI]:AddItem[Is It Good News?]
-			}
-			if ${_CatName.Equal[Greenmist Heritage]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Greenmist Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Greenmist Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[The Name of Fear]
-				UIElement[QuestsListBox@RI]:AddItem[The Word of Fear]
-				UIElement[QuestsListBox@RI]:AddItem[The Call of Fear]
-				UIElement[QuestsListBox@RI]:AddItem[The Path of Fear]
-				UIElement[QuestsListBox@RI]:AddItem[The Triumph of Fear]
-			}
-			if ${_CatName.Equal[Artisan Epic]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Artisan Epic Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Artisan Epic Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[New Lands New Profits]
-				UIElement[QuestsListBox@RI]:AddItem[Bathzid Watch Faction Crafting]
-				UIElement[QuestsListBox@RI]:AddItem[Sarnak Supply Stocking]
-				UIElement[QuestsListBox@RI]:AddItem[Bixie Distraction]
-				UIElement[QuestsListBox@RI]:AddItem[Anything For Jumjum]
-				UIElement[QuestsListBox@RI]:AddItem[${Me.TSClass.Left[1].Upper}${Me.TSClass.Right[-1]} Errands]
-			}
-			elseif ${_CatName.Equal[Terrors of Thalumbra Crafting]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[The Captain's Lament]
-				UIElement[QuestsListBox@RI]:AddItem[Terrors of Thalumbra Crafting Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Terrors of Thalumbra Crafting Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[What Lies Beneath]
-				UIElement[QuestsListBox@RI]:AddItem[Assay of Origin]
-				UIElement[QuestsListBox@RI]:AddItem[Ore of Yore]
-				UIElement[QuestsListBox@RI]:AddItem[More Ore of Yore]
-				UIElement[QuestsListBox@RI]:AddItem[Underfoot Defender]
-				UIElement[QuestsListBox@RI]:AddItem[Subtunarian Subterfuge]
-				UIElement[QuestsListBox@RI]:AddItem[Into the Unknown]
-				UIElement[QuestsListBox@RI]:AddItem[Stanger in Distress]
-				UIElement[QuestsListBox@RI]:AddItem[Menace in the Mine]
-				UIElement[QuestsListBox@RI]:AddItem[Scanning the Seals]
-				UIElement[QuestsListBox@RI]:AddItem[Monitoring the Situation]
-				UIElement[QuestsListBox@RI]:AddItem[Attuning the Portal]
-				UIElement[QuestsListBox@RI]:AddItem[Monitor Malfunction]
-				UIElement[QuestsListBox@RI]:AddItem[Researching a Solution]
-				UIElement[QuestsListBox@RI]:AddItem[Containing the Stone]
-			}
-			elseif ${_CatName.Equal[Kunark Ascending Crafting]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending Crafting Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Kunark Ascending Crafting Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[An Urgent Call]
-				UIElement[QuestsListBox@RI]:AddItem[Forging Onwards]
-				UIElement[QuestsListBox@RI]:AddItem[Into The Spire]
-				UIElement[QuestsListBox@RI]:AddItem[Not Dead Yet]
-				UIElement[QuestsListBox@RI]:AddItem[Getting Hooked]
-				UIElement[QuestsListBox@RI]:AddItem[Feeling Crabby]
-				UIElement[QuestsListBox@RI]:AddItem[Hung Out to Dry]
-				UIElement[QuestsListBox@RI]:AddItem[Live Bait]
-				UIElement[QuestsListBox@RI]:AddItem[Gathering Shinies]
-				UIElement[QuestsListBox@RI]:AddItem[Losers, Weepers]
-				UIElement[QuestsListBox@RI]:AddItem[Requesting Blessing]
-				UIElement[QuestsListBox@RI]:AddItem[A Finding Charm]
-				UIElement[QuestsListBox@RI]:AddItem[A Mission of Mercy]
-				UIElement[QuestsListBox@RI]:AddItem[Bone Collecting]
-				UIElement[QuestsListBox@RI]:AddItem[Scrying Eyes]
-				UIElement[QuestsListBox@RI]:AddItem[Deeper Disguise]
-				UIElement[QuestsListBox@RI]:AddItem[Gone Astray]
-				UIElement[QuestsListBox@RI]:AddItem[Figurine Profits]
-				UIElement[QuestsListBox@RI]:AddItem[Search and Rescue]
-				UIElement[QuestsListBox@RI]:AddItem[Borrowing From The Dead]
-				UIElement[QuestsListBox@RI]:AddItem[Drop Your Weapon]
-				UIElement[QuestsListBox@RI]:AddItem[Smoothy-Stones for Stabby-Sticks]
-				UIElement[QuestsListBox@RI]:AddItem[Googlow Juice]
-				UIElement[QuestsListBox@RI]:AddItem[Keep the Home Fires Burning]
-				UIElement[QuestsListBox@RI]:AddItem[Squirmy-Wormies for Grumbly-Bellies]
-				UIElement[QuestsListBox@RI]:AddItem[Stacky-Racks for Stabby-Sticks]
-				UIElement[QuestsListBox@RI]:AddItem[If The Bones Fit]
-				UIElement[QuestsListBox@RI]:AddItem[Sickly-Brews for Stabby Sticks]
-				UIElement[QuestsListBox@RI]:AddItem[Temple Visitor]
-				UIElement[QuestsListBox@RI]:AddItem[Guardian of Growf]
-				UIElement[QuestsListBox@RI]:AddItem[Blessing of Growf]
-				UIElement[QuestsListBox@RI]:AddItem[Protector of Growf]
-				UIElement[QuestsListBox@RI]:AddItem[Seeds of Growf]
-				UIElement[QuestsListBox@RI]:AddItem[The Gardens Are In Bloom]
-				UIElement[QuestsListBox@RI]:AddItem[Stranger Friends]
-				UIElement[QuestsListBox@RI]:AddItem[Dying of Bore-dom]
-				UIElement[QuestsListBox@RI]:AddItem[Soil and Trouble]
-				UIElement[QuestsListBox@RI]:AddItem[Process of Elimination]
-				UIElement[QuestsListBox@RI]:AddItem[Choose the Slug Life]
-			}
-			elseif ${_CatName.Equal[Sokokar Crafting]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Sokokar Crafting Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Sokokar Crafting Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Fangs Away!]
-				UIElement[QuestsListBox@RI]:AddItem[An Eye in the Sky]
-				UIElement[QuestsListBox@RI]:AddItem[Sticking My Ore In]
-				UIElement[QuestsListBox@RI]:AddItem[Preperations for the Rescue]
-				UIElement[QuestsListBox@RI]:AddItem[Is It Good News?]
-			}
-			elseif ${_CatName.Equal[Kunark Ascending Adventure]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending Adventure Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Kunark Ascending Adventure Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: Beyond the Veil]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: Opportunity 'Noks]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: Ghost Whisperer]
-				UIElement[QuestsListBox@RI]:AddItem[Drake Disposal Duty]
-				UIElement[QuestsListBox@RI]:AddItem[Idol Destruction]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: Forgotten Lands]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: History in Stone]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: A Chosen Weapon]
-				UIElement[QuestsListBox@RI]:AddItem[Giant Impressment Effort]
-				UIElement[QuestsListBox@RI]:AddItem[Giant Spiritual Awakening]
-				UIElement[QuestsListBox@RI]:AddItem[Suit Up]
-				UIElement[QuestsListBox@RI]:AddItem[Flame Licked]
-				UIElement[QuestsListBox@RI]:AddItem[Littered Along the Pass]
-				UIElement[QuestsListBox@RI]:AddItem[Trader Amongst Us]
-				UIElement[QuestsListBox@RI]:AddItem[Remains to be Seen]
-				UIElement[QuestsListBox@RI]:AddItem[Wings in Danger]
-				UIElement[QuestsListBox@RI]:AddItem[Artifacts of Life]
-				UIElement[QuestsListBox@RI]:AddItem[Feast for a Gift]
-				UIElement[QuestsListBox@RI]:AddItem[Delivered from Madness]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Lives]
-				UIElement[QuestsListBox@RI]:AddItem[A Vicious Tongue]
-				UIElement[QuestsListBox@RI]:AddItem[Bridge To Success]
-				UIElement[QuestsListBox@RI]:AddItem[Get A 'Shroom]
-				UIElement[QuestsListBox@RI]:AddItem[Sluggin' It Out]
-				UIElement[QuestsListBox@RI]:AddItem[Hide and Wreek]
-				UIElement[QuestsListBox@RI]:AddItem[Dying to Have You]
-				UIElement[QuestsListBox@RI]:AddItem[Ghosts and Gooblins]
-				UIElement[QuestsListBox@RI]:AddItem[Growth in an Arid Land]
-				UIElement[QuestsListBox@RI]:AddItem[Lightning Bug Hunt]
-				UIElement[QuestsListBox@RI]:AddItem[Parchment Preservation]
-				UIElement[QuestsListBox@RI]:AddItem[Case of the Missing Headpiece]
-				UIElement[QuestsListBox@RI]:AddItem[Damage the Trust]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: Seeking Reassurance]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: Reading Assignment]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: Resurrection Machination]
-				UIElement[QuestsListBox@RI]:AddItem[Kunark Ascending: A Nightmare Realized]
-			}
-			; elseif ${_CatName.Equal[Shattered Seas]}
-			; {
-				; UIElement[QuestsListBox@RI]:ClearItems
-				; UIElement[QuestsListBox@RI]:AddItem[Shattered Seas Timeline]
-				; UIElement[QuestsListBox@RI].ItemByText[Shattered Seas Timeline]:SetTextColor[FFE8E200]
-				; UIElement[QuestsListBox@RI]:AddItem[]
-		
-			; }
-			elseif ${_CatName.Equal[Epic 2.0 Pre Reqs]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
+				;set file to read in to Filename variable
+				Filename:SetFilename["${LavishScript.HomeDirectory}//Scripts//RI//Quest//${_CatName}//${_FileList.File[${_cnt}].Filename}"]
+
+				;open the file
+				Filename:Open
 				
-				UIElement[QuestsListBox@RI]:AddItem[Jarsath Wastes Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Jarsath Wastes Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Koada'dal Magi's Craft]
-				UIElement[QuestsListBox@RI]:AddItem[Kurns Tower Access Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Kurns Tower Access Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Ning Yun Retreat Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Ning Yun Retreat Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Defending Ning Yun Retreat,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Order of Rime Faction Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Order of Rime Faction Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Othmir Cobalt Scar Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Othmir Cobalt Scar Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Othmir Great Divide Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Othmir Great Divide Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Othmir EW Faction Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Othmir EW Faction Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Precariously Placed Package,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Ry'Gorr Keep Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Ry'Gorr Keep Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Shades of Drinal Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Shades of Drinal Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Seas Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Shattered Seas Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Tears of Veeshan Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Tears of Veeshan Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[The Circle of the Unseen Hand Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[The Circle of the Unseen Hand Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[The City of Qeynos Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[The City of Qeynos Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[The Mysteries of TikTok]
-				UIElement[QuestsListBox@RI]:AddItem[The Never Ending Mending of a Broken Land,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Tower of the Four Winds Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Tower of the Four Winds Timeline]:SetTextColor[FFE8E200]
-			
-			}
-			elseif ${_CatName.Equal[Heritage Quests]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["A Source of Malediction"]
-				UIElement[QuestsListBox@RI]:AddItem[The White Dragonscale Cloak]
-				UIElement[QuestsListBox@RI]:AddItem[Dark Mail Guantlets HQ Timeline]
-				UIElement[QuestsListBox@RI].ItemByText[Dark Mail Guantlets HQ Timeline]:SetTextColor[FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Taking a little trip...,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[An Eye for Power]
-				UIElement[QuestsListBox@RI]:AddItem[A Strange Black Rock]
-				UIElement[QuestsListBox@RI]:AddItem[Gogas Afadin]
-				UIElement[QuestsListBox@RI]:AddItem[The Bone Bladed Claymore]
-				UIElement[QuestsListBox@RI]:AddItem[The Symbol in the Flesh]
-			}
-			elseif ${_CatName.Equal[Planes of Prophecy]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Against the Elements for Qeynos]
-				UIElement[QuestsListBox@RI]:AddItem[Against the Elements for Freeport]
-				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part I: Security Measures"]
-				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part II: Lightning Strikes"]
-				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part III: From Birth to Tombs"]
-				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part IV: A Favor of Love"]
-				UIElement[QuestsListBox@RI]:AddItem["A Stitch in Time, Part V: Sealed with Hate"]
-				UIElement[QuestsListBox@RI]:AddItem[Planes of Prophecy Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Secrets in an Arcane Land]
-				UIElement[QuestsListBox@RI]:AddItem[House Yrzu Faction Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Lighter Studies,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Vetted Rocks,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[The Majestrix's Trust]
-				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Hero's Devotion]
-				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: An Innovative Approach]
-				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Realm of the Plaguebringer]
-				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Through Storms and Mists]
-				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Glimpse of the Hereother]
-				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Drawn to the Fire]
-				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Deep Trouble]
-				UIElement[QuestsListBox@RI]:AddItem[Legacy of Power: Tyrant's Throne]
-				UIElement[QuestsListBox@RI]:AddItem[Pride Pakiat Faction Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[The Missing Heart Leaves Another Hole,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Green Fruit For Rut Part Deux,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Consoling the Souls: A Contemplation,Repeatable,FF00b33c]	
-				UIElement[QuestsListBox@RI]:AddItem[The Mootuingo Job,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[The River Job,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[The Starfire Collection,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Reflection of Recollection]
-				UIElement[QuestsListBox@RI]:AddItem[House Vahla Faction Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Steal It All Back,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Removing Some Competition,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Fawning Over Flora,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Dedication Rewarded]
+				;seek to the beginning of file
+				Filename:Seek[0]
 				
-			}
-			elseif ${_CatName.Equal[Yun Zi]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems				
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2023 Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Antonican Flora"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Commonlands Plants"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Darlight Diversity"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Greater Faydark"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Frostfang Flora"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Timorous Deep"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Thundering Steppes"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Nektulos Forest"]
-				UIElement[QuestsListBox@RI]:AddItem["Beginner Botany: Butcherblock Mountains"]
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2017 Timeline",0,FFE8E200]
-				;UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Oasis For Your Thoughts"]
-				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - In a Kingdom Far Away"]
-				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - Echoes of the Past"]
-				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - Kunark or Bust"]
-				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - I Need to See Moors Places"]
-				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - Ice to See Velious"]
-				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Eternity Without You"]
-				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - Tears for Fears"]
-				UIElement[QuestsListBox@RI]:AddItem["The \"Travels\" of Yun Zi - An Altar-Nate Malice"]
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2018 Timeline",0,FFE8E200]
-				;UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Antonica or Bust"]
-				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Commonlands, Uncommon Heart"]
-				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Run Nektulos Forest Run"]
-				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Thundering Steppes By Steppes"]
-				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Disenchanting the Enchanted"]
-				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - To Zek With It"]
-				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Feerrott Not, I Shall Find You"]
-				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Defrosting Everfrost"]
-				UIElement[QuestsListBox@RI]:AddItem["The new \"Travels\" of Yun Zi - Having Fun Storming Lavastorm"]
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2019 Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Once Again in the Desert"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Skies the Limit"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - ECHO ECHo ECho Echo echo"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Rising to the Occasion"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - More Moors"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Destined for Destiny"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Eternally Eternity"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Returning to Tears"]
-				UIElement[QuestsListBox@RI]:AddItem["Yet more \"Travels\" of Yun Zi - Altering the Altar"]
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2020 Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Coldwind Clam Chowder"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Darklight Beetle Omelets"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Rivervale Ratatouille"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Butcherblock Pumpkin Bread"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Dervish Squash Curry"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Sky Cake"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Mara Mandaikon Kakiage"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Kylong Bean Casserole"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Feast - Othmir Pepper Pasta"]
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2021 Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Getting a Feel For Frostfell"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Evoking Love"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - More than Beer?"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - The Meaning of Mischief"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Oceans for the Oceanless"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Under a Burning Sky"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Gears and Gadgets"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - Deadly Nights"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Holidays - We Need a Hero!"]
-				UIElement[QuestsListBox@RI]:AddItem["Yunzi 2022 Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Around the Landing"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Central Kylong"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Deeper into Kylong"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Focusing on Fens"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Not the Panda!"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Still not a Panda!"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Killers in Kunzar"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Scouting Skyfire"]
-				UIElement[QuestsListBox@RI]:AddItem["Traveler's Kunark Catalog: Angry, Angry, Angry"]
-			}
-			elseif ${_CatName.Equal[Chaos Descending]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["Chaos Descending Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Pursuit of Justice"]
-				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Visitation Day"]
-				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Starpyre's Flames"]
-				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Pure Adventure"]
-				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Planes of Disorder"]
-				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Shadow Casting in the Dark"]
-				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Flames of Order"]
-				UIElement[QuestsListBox@RI]:AddItem["Elements of Destruction: Gusts of Order"]
-				UIElement[QuestsListBox@RI]:AddItem["Chaos Descending Tradeskill Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["The Scrivener's Tale: Animating the Inanimate"]
-				UIElement[QuestsListBox@RI]:AddItem["The Scrivener's Tale: Crafting at a Snail's Pace"]
-				UIElement[QuestsListBox@RI]:AddItem["The Scrivener's Tale: Escargot Overclocking"]
-			}
-			elseif ${_CatName.Equal[Blood of Luclin]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: The Vault of Omens"]
-				UIElement[QuestsListBox@RI]:AddItem["Light Amongst Shadows: Spires of Mythic Passage"]
-				UIElement[QuestsListBox@RI]:AddItem[Blood of Luclin Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Mythic Passage Arranged]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Querent of Ruin]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Behind the Walls of Seru]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Execution of Order]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Extinguish the Corrupted Light]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Cast a Long Shadow]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Burn the Midnight Oil]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Battle of the Nexus]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Midst Souls in the Manor]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Going to Wrack and Ruins]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Moments in the Sun]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Puzzling Power in Ssraeshza]
-				UIElement[QuestsListBox@RI]:AddItem[Shattered Dawn: Vault in the Wound]
-				UIElement[QuestsListBox@RI]:AddItem[Blood of Luclin Tradeskill Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Carving a Legacy]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Monuments of Mythic Passage]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Chasing Moonbeams]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part I]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part II]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: The Sad Tale of Benosch Ironsprocket Part III]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: A Very Fortunate Turn of Events Part I]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: A Very Fortunate Turn of Events Part II]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: A Very Fortunate Turn of Events Part III]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Gifts from the Great Beyond Part I]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Gifts from the Great Beyond Part II]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Gifts from the Great Beyond Part III]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Marketplace of Horrors Part I]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Marketplace of Horrors Part II]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Marketplace of Horrors Part III]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Three Little Tegi Part I]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Three Little Tegi Part II]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Three Little Tegi Part III]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Message in a Shadowed Bottle Part I]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Message in a Shadowed Bottle Part II]
-				UIElement[QuestsListBox@RI]:AddItem[Piercing the Darkness: Message in a Shadowed Bottle Part III]
-			}
-			elseif ${_CatName.Equal[Reign of Shadows]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Grown Up Solution]
-				UIElement[QuestsListBox@RI]:AddItem[Never Let You Echo]
-				UIElement[QuestsListBox@RI]:AddItem[Save the Last Blast For Me]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Whispers of the Gods]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Echoes In the Deep]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Mapping the Dark]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Echo the Distance]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Facing the Savage Beast]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Spirited Attacks]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Shadow on the Vahl]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Whispered Blessings]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Vexing Challenge]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows: Against Thal Odds]
-				UIElement[QuestsListBox@RI]:AddItem[Reign of Shadows Tradeskill Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[The Delineation of Method]
-				UIElement[QuestsListBox@RI]:AddItem[Through the Belly of the Beast]
-				UIElement[QuestsListBox@RI]:AddItem[Paying the Piper]
-				UIElement[QuestsListBox@RI]:AddItem[The Grumbling]
-				UIElement[QuestsListBox@RI]:AddItem[Tiptoe Through the Shadows]
-				UIElement[QuestsListBox@RI]:AddItem[The Grandiose Wordsmith Pursuance]
-				UIElement[QuestsListBox@RI]:AddItem[Ennoblement of Penitence]
-				UIElement[QuestsListBox@RI]:AddItem[Dark Side of the Dark Side]
-				UIElement[QuestsListBox@RI]:AddItem[City of Fordel Midst Side Quest Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Paludal Disposal]
-				UIElement[QuestsListBox@RI]:AddItem[Trouble in Haven]
-				UIElement[QuestsListBox@RI]:AddItem[Pryce On Their Heads]
-				UIElement[QuestsListBox@RI]:AddItem[Help for Hildreth]
-				UIElement[QuestsListBox@RI]:AddItem[Grains of Truth]
-				UIElement[QuestsListBox@RI]:AddItem[Echo Caverns Side Quest Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[A Miner Threat]
-				UIElement[QuestsListBox@RI]:AddItem[Lichen that Venom]
-				UIElement[QuestsListBox@RI]:AddItem[Lives in the Balanzite]
-				UIElement[QuestsListBox@RI]:AddItem[Her Celial Theories]
-				UIElement[QuestsListBox@RI]:AddItem[Fungus Groove]
-				UIElement[QuestsListBox@RI]:AddItem[Savage Weald Side Quest Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Every Rosg Has Its Thorn]
-				UIElement[QuestsListBox@RI]:AddItem[Savage Camo]
-				UIElement[QuestsListBox@RI]:AddItem[Shadeweaver's Thicket Side Quest Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Fleshless Tongue Untied]
-				UIElement[QuestsListBox@RI]:AddItem[Fortune Fails the Bold]
-			}
-			elseif ${_CatName.Equal[Visions of Vetrovia]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["Familiars Wild"]
-				UIElement[QuestsListBox@RI]:AddItem[Storage Wars]
-				UIElement[QuestsListBox@RI]:AddItem[Competitive Market Strategies]
-				UIElement[QuestsListBox@RI]:AddItem[Contract Termination]
-				UIElement[QuestsListBox@RI]:AddItem[Cut-throat Competition,Repeatable,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem[Guide Quest: Guide's Guide to Visions of Vetrovia]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Flotsam For the Boatswain]
-				UIElement[QuestsListBox@RI]:AddItem[How Broken Shore Bay Got Its Name]
-				UIElement[QuestsListBox@RI]:AddItem[Savage Defense Force]
-				UIElement[QuestsListBox@RI]:AddItem[Small Plunder]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Time in Kamapor]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Keeping Secrets]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Into the Keep]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Welcome to the Jungle]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Pygmy Problems Aplenty]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Evil Dedraka]
-				UIElement[QuestsListBox@RI]:AddItem["Visions of Vetrovia: Wastes Not, Want Not"]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Handle with Scare]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Forlorn That Way]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: A Smashing Success]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Vacrul Intentions]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: Eyes on Vacrul Throne]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia: News Far and Wide]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia Weekly Tradeskill Mission]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia Daily Tradeskill Mission]
-				UIElement[QuestsListBox@RI]:AddItem[Visions of Vetrovia Tradeskill Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Local Living]
-				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Different Tastes]
-				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Find the Father]
-				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Simple Gifts]
-				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Covers and Crunchies]
-				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Say Cheese]
-				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Wild Ride]
-				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Mad Machinations]
-				UIElement[QuestsListBox@RI]:AddItem["Were is the Messenger: 'Ware the Were"]
-				UIElement[QuestsListBox@RI]:AddItem[Were is the Messenger: Where the Weres Are]
-				;UIElement[QuestsListBox@RI]:AddItem[Svarni Expanse Side Quest Timeline,0,FFE8E200]
-				;UIElement[QuestsListBox@RI]:AddItem[Nadavir's Golden Eggs]
-				;UIElement[QuestsListBox@RI]:AddItem[For Your Dyes Only]
-				;UIElement[QuestsListBox@RI]:AddItem[Live and Let Dye,Repeatable,FF00b33c]
-				;UIElement[QuestsListBox@RI]:AddItem[Savage Path to Follow]
-				;UIElement[QuestsListBox@RI]:AddItem[Trouble for Camp Naradasa]
-				;UIElement[QuestsListBox@RI]:AddItem[Undead Reckoning,Repeatable,FF00b33c]
-				;UIElement[QuestsListBox@RI]:AddItem[Grumblugtin's Last Hope]
-			}
-			elseif ${_CatName.Equal[A Gathering Obsession Timeline]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession"]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part II"]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part III"]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part IV"]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part V"]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part VI"]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part VII"]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Part VIII"]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession, Final Errand"]
-				UIElement[QuestsListBox@RI]:AddItem["The Return Of A Gathering Obsession"]
-				UIElement[QuestsListBox@RI]:AddItem["The Captain's Lament"]
-				UIElement[QuestsListBox@RI]:AddItem["Fond Memories"]
-				UIElement[QuestsListBox@RI]:AddItem["A Gathering Obsession Beyond The Grave"]
-			}
-			elseif ${_CatName.Equal[The Gardening Goblin Timeline]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[The Gardening Goblin Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Guardian of Growf"]
-				UIElement[QuestsListBox@RI]:AddItem["Blessing of Growf"]
-				UIElement[QuestsListBox@RI]:AddItem["Protector of Growf"]
-				UIElement[QuestsListBox@RI]:AddItem["Seeds of Growf"]
-				UIElement[QuestsListBox@RI]:AddItem["The Plan of Growf"]
-				UIElement[QuestsListBox@RI]:AddItem["Tree of Growf"]
-				UIElement[QuestsListBox@RI]:AddItem["Budding Progress"]
-				UIElement[QuestsListBox@RI]:AddItem["Home Sickness"]
-				UIElement[QuestsListBox@RI]:AddItem["The Gardening Goblin"]
-			}
-			elseif ${_CatName.Equal[Renewal of Ro]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem[Renewal of Ro Adventure Timeline,0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: All's Well in Hopewell"]
-				;UIElement[QuestsListBox@RI]:AddItem["Seeking Mystic Solutions"]
-				;UIElement[QuestsListBox@RI]:AddItem["Fight or Fright"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Raj'Durabad Bound"]
-				;UIElement[QuestsListBox@RI]:AddItem["Desert Products"]
-				;UIElement[QuestsListBox@RI]:AddItem["Crystals and Coconuts"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: In for a Raj'Durabad Time"]
-				;UIElement[QuestsListBox@RI]:AddItem["A History of Sultans"]
-				;UIElement[QuestsListBox@RI]:AddItem["Curse and Tell"]
-				;UIElement[QuestsListBox@RI]:AddItem["The Threatening Truth"]
-				;UIElement[QuestsListBox@RI]:AddItem["Raj'Durabad Feeling About This"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Desperately Seeking Sigils"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Chosen Follower"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Buried Truths"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Rebirth"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Badlands Transformed"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Tailing Dragons"]
-				;UIElement[QuestsListBox@RI]:AddItem["Flustered By Flora"]
-				;UIElement[QuestsListBox@RI]:AddItem["Culling Seedlings"]
-				;UIElement[QuestsListBox@RI]:AddItem["Garden Spikes for Takish Growth"]
-				;UIElement[QuestsListBox@RI]:AddItem["Market Opportunities"]
-				;UIElement[QuestsListBox@RI]:AddItem["Component Parts"]
-				;UIElement[QuestsListBox@RI]:AddItem["Sea of Opportunity"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Determined Through the Delta"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Illusion From the Disillusioned"]
-				;UIElement[QuestsListBox@RI]:AddItem["One-Eyes of War"]
-				;UIElement[QuestsListBox@RI]:AddItem["Swordfury Rising"]
-				;UIElement[QuestsListBox@RI]:AddItem["Blind with Stormfury"]
-				;UIElement[QuestsListBox@RI]:AddItem["One-Eyes on the Prize"]
-				;UIElement[QuestsListBox@RI]:AddItem["In the Names of War"]
-				;UIElement[QuestsListBox@RI]:AddItem["Take to the Skies"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Mission Most Heated"]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro: Sultan's Shattered Designs"]
-				UIElement[QuestsListBox@RI]:AddItem["Research Requisition Tradeskill Missions",0,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem["Renewal of Ro Tradeskill Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Responsibility for Raj'Dur"]
-				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Curing the Curse"]
-				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Renewal"]
-				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Takish Time"]
-				UIElement[QuestsListBox@RI]:AddItem["Researchers of Ro Sandstone Setup"]
-				UIElement[QuestsListBox@RI]:AddItem["Secrets of the Sands"]
-			}
-			elseif ${_CatName.Equal[Ballads of Zimara]}
-			{
-				UIElement[QuestsListBox@RI]:ClearItems
-				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle Timeline",0,FFE8E200]
-				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Sky is the Limit"]
-				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Time to Preen"]
-				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: WHOO"]
-				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Where"]
-				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Breadth of the Matter"]
-				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: The Width of the Breadth"]
-				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Bivouac Building"]
-				UIElement[QuestsListBox@RI]:AddItem["Test Your Mettle: Aetheric Safety"]
-				UIElement[QuestsListBox@RI]:AddItem["Disassemble: No"]
-				UIElement[QuestsListBox@RI]:AddItem["Disassemble: A Rocky Beginning"]
-				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Hide if You Can"]
-				UIElement[QuestsListBox@RI]:AddItem["Disassemble: Tricking the Eyes"]
-				UIElement[QuestsListBox@RI]:AddItem["Disassemble: A Different Approach"]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac Daily Tradeskill Mission",0,FF00b33c]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Barricades"]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Healing"]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Provisions"]
-				UIElement[QuestsListBox@RI]:AddItem["Bivuoac: Repairs"]
+				_TempString:Set["${Filename.Read.Left[-1]}"]
+
+				;Set our entry in our Collection Add if necessary
+				RI_CollectionIndexString_RQQuests:Set["${_TempString}","${LavishScript.HomeDirectory}//Scripts//RI//Quest//${_CatName}//${_FileList.File[${_cnt}].Filename}"]
+
+				if ${_TempString.Find["Timeline"]}
+					UIElement[QuestsListBox@RI]:AddItem["${_TempString}","${LavishScript.HomeDirectory}//Scripts//RI//Quest//${_CatName}//${_FileList.File[${_cnt}].Filename}",FFE8E200]
+				elseif ${_TempString.Find["Mission"]}
+					UIElement[QuestsListBox@RI]:AddItem["${_TempString}","${LavishScript.HomeDirectory}//Scripts//RI//Quest//${_CatName}//${_FileList.File[${_cnt}].Filename}",FF00b33c]
+				else
+					UIElement[QuestsListBox@RI]:AddItem["${_TempString}","${LavishScript.HomeDirectory}//Scripts//RI//Quest//${_CatName}//${_FileList.File[${_cnt}].Filename}"]
+				Filename:Close
 			}
 		}
 	}
@@ -11857,6 +11308,7 @@ objectdef RIMUIObject
 			return
 		if ${_QuestName.Equal[!NONE!]}
 		{
+			RI_CollectionIndexString_RQQuests:Clear
 			;load RI ui and change 
 			ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
 			ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
@@ -11869,28 +11321,21 @@ objectdef RIMUIObject
 			UIElement[RunButton@RI]:Show
 			UIElement[CategoryText@RI]:Show
 			UIElement[CategoryComboBox@RI]:Show
-			
-			UIElement[CategoryComboBox@RI]:AddItem[A Gathering Obsession Timeline]
-			UIElement[CategoryComboBox@RI]:AddItem[Artisan Epic]
-			UIElement[CategoryComboBox@RI]:AddItem[Ballads of Zimara]
-			UIElement[CategoryComboBox@RI]:AddItem[Blood of Luclin]
-			UIElement[CategoryComboBox@RI]:AddItem[Chaos Descending]
-			UIElement[CategoryComboBox@RI]:AddItem[Epic 2.0 Pre Reqs]
-			UIElement[CategoryComboBox@RI]:AddItem[Greenmist Heritage]
-			UIElement[CategoryComboBox@RI]:AddItem[Heritage Quests]
-			UIElement[CategoryComboBox@RI]:AddItem[Kunark Ascending Crafting]
-			UIElement[CategoryComboBox@RI]:AddItem[Kunark Ascending Adventure]
-			UIElement[CategoryComboBox@RI]:AddItem[Planes of Prophecy]
-			UIElement[CategoryComboBox@RI]:AddItem[Reign of Shadows]
-			UIElement[CategoryComboBox@RI]:AddItem[Renewal of Ro]
-			UIElement[CategoryComboBox@RI]:AddItem[Sokokar Crafting]
-			UIElement[CategoryComboBox@RI]:AddItem[Terrors of Thalumbra Crafting]
-			UIElement[CategoryComboBox@RI]:AddItem[The Gardening Goblin Timeline]
-			UIElement[CategoryComboBox@RI]:AddItem[Visions of Vetrovia]
-			UIElement[CategoryComboBox@RI]:AddItem[Yun Zi]
-			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[Ballads of Zimara].ID}]
+
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
-			
+
+			declare _cnt int 0
+   			declare _DirList filelist
+    		ScanDirectory:Set["${LavishScript.HomeDirectory}//Scripts//RI//Quest//"]
+    		_DirList:GetDirectories[${ScanDirectory}\\*]
+
+			while (${_cnt:Inc}<=${_DirList.Files})
+			{
+				UIElement[CategoryComboBox@RI]:AddItem[${_DirList.File[${_cnt}].Filename}]
+				UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[${_DirList.File[${_cnt}].Filename}].ID}]
+				This:RQCat["${_DirList.File[${_cnt}].Filename}"]
+			}
+			UIElement[CategoryComboBox@RI]:SelectItem[${UIElement[CategoryComboBox@RI].ItemByText[${_DirList.File[1].Filename}].ID}]
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FF5DA5CF]
 			;UIElement[QuestsListBox@RI].OrderedItem[]:SetTextColor[FFE8E200]
 		}
@@ -11910,6 +11355,7 @@ objectdef RIMUIObject
 		}
 		else
 		{
+			echo ISXRI: Starting quest ${_QuestName} with RI
 			RI_RunInstances "QUEST-${_QuestName}"
 			;change ui back to standard UI
 			UIElement[Start@RI]:Show
