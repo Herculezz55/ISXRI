@@ -31,8 +31,8 @@ function main()
 		wait 50
 	}
 	
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIMobHud.xml"
+	ui -reload "${RI_Var_String_SkinFileName}"
+	ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIMobHud.xml"
 	
 	;main loop
 	while 1

@@ -87,8 +87,8 @@ function main(... args)
 		wait 50
 	}
 	;load ui
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIGroupLogin.xml"
+	ui -reload "${RI_Var_String_SkinFileName}"
+	ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIGroupLogin.xml"
 	
 	;RIGroupLoginObj:LoadSaves
 	;call LoadToonList

@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.85 12-12-23"
-double EXTVER = 6.85;
+#define EXTENSION_VERSION "6.86 7-10-24"
+double EXTVER = 6.86;
 #include "ISXRI.h"
 
 //
@@ -215,10 +215,13 @@ void newupdatefunction(vector<string> ftd)
 	string ISXRIPath = InnerspacePath;
 	string Dirs = InnerspaceScriptsPath;
 	string QuestDir = InnerspaceScriptsPath;
+	string InstanceDir = InnerspaceScriptsPath;
 	Dirs += "\\RI";
 	CreateDirectory(Dirs.c_str(), 0);
 	QuestDir += "\\RI\\Quest";
 	CreateDirectory(QuestDir.c_str(), 0);
+	InstanceDir += "\\RI\\Instance";
+	CreateDirectory(InstanceDir.c_str(), 0);
 	ISXRIPath += "\\x64\\Extensions\\ISXDK35\\ISXRI.dll";
 	
 	HRESULT hRez;

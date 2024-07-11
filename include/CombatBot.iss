@@ -5835,9 +5835,9 @@ function main()
 		FP:MakeSubdirectory[AbilityCheck]	
 	}
 	
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/CombatBotMiniUI.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/CombatBotUI.xml"
+	ui -reload "${RI_Var_String_SkinFileName}"
+	ui -reload -skin eq2-green "${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/CombatBotMiniUI.xml"
+	ui -reload -skin eq2-green "${LavishScript.HomeDirectory}/Scripts/RI/CombatBot/CombatBotUI.xml"
 	UIElement[RIMovement]:Hide
 	UIElement[CombatBotUI]:Hide
 	

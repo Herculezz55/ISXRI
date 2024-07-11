@@ -526,9 +526,9 @@ function main()
 		http -file "${LavishScript.HomeDirectory}/Scripts/RI/RIOg.xml" http://www.isxri.com/RIOg.xml
 		wait 50
 	}
-    ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIO.xml"
-    ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIOg.xml"
+    ui -reload "${RI_Var_String_SkinFileName}"
+	ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIO.xml"
+    ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIOg.xml"
 
     UIElement[RIOverseer]:Hide
     UIElement[RIOverseerGQ]:Hide

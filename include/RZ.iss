@@ -2719,9 +2719,9 @@ function main(... args)
 		endscript ${RI_Var_String_RunInstancesScriptName}
 	
 	;load ui
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml"
+	ui -reload ${RI_Var_String_SkinFileName}
+	ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RZ.xml"
+	ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RZm.xml"
 	RZObj:Maximize
 	RZObj:LoadSave
 	UIElement[ExpacComboBox@RZ]:AddItem["Renewal of Ro"]

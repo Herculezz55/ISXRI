@@ -104,8 +104,8 @@ function main()
 		wait 50
 	}
 		
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIMovement.xml"
+	ui -reload "${RI_Var_String_SkinFileName}"
+	ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIMovement.xml"
 	if ${Script[Buffer:CombatBot](exists)}
 		UIElement[RIMovement]:Hide
 	;if our main script is not running echo and end

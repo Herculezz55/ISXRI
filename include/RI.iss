@@ -6195,7 +6195,7 @@
 ;			Bivouac: Barricades
 ; 
 
-;ISXRI - v6.83 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
+;ISXRI - v6.86 Released - Full ChangeLog -> http://goo.gl/Vg5PxL
 
 
 ;RunQuest - Runs a quest with RQ\n\nArgument 1: For Who\nArgument 2: Quest Name]
@@ -6228,11 +6228,13 @@
 
 ;		Added sending mercs like pets (uses same setting)  
 
-variable(global) float RI_Var_Float_Version=6.85
+variable(global) float RI_Var_Float_Version=6.86
 
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 ;10-15-15
 
+variable(global) string RI_Var_String_SkinFileName="${LavishScript.HomeDirectory}/Interface/skins/eq2-green/eq2-green.xml"
+variable(global) string RI_Var_String_SkinName="eq2-green"
 variable(global) RIMUIObject RIMUIObj
 variable(global) RIConsoleObject RIConsole
 variable(global) RIMovementObject RIMObj
@@ -8044,8 +8046,7 @@ function main()
 	RI_Overseer
 
 	;load ui
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RILoot.xml"
+	ui -reload "${RI_Var_String_SkinFileName}"
 	
 	RILootObj:LoadRILootOn
 	RILootObj:LoadItems
@@ -10226,8 +10227,8 @@ objectdef RIConsoleObject
 	}
 	method LoadUI()
 	{
-		ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIConsole.xml"
+		ui -reload "${RI_Var_String_SkinFileName}"
+		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIConsole.xml"
 	}
 	method Hide()
 	{
@@ -11310,8 +11311,8 @@ objectdef RIMUIObject
 		{
 			RI_CollectionIndexString_RQQuests:Clear
 			;load RI ui and change 
-			ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-			ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
+			ui -reload "${RI_Var_String_SkinFileName}"
+			ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
 		
 			UIElement[Start@RI]:Hide
 			UIElement[AutoLoot@RI]:Hide
@@ -11342,8 +11343,8 @@ objectdef RIMUIObject
 		elseif ${_QuestName.Equal[QUIT]}
 		{
 			;changeui back to standard ri then close it
-			;ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-			;ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
+			;ui -reload "${RI_Var_String_SkinFileName}"
+			;ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
 			UIElement[Start@RI]:Show
 			UIElement[Start@RI]:SetText[Start]
 			UIElement[AutoLoot@RI]:Show
@@ -11417,11 +11418,24 @@ objectdef RIMUIObject
 	method FastTravel(string ForWho=ALL, string ZoneName=~NONE~, string _DoorOption=0)
 	{
 		;echo FastTravel(string ForWho=${ForWho}, string ZoneName=${ZoneName}, string _DoorOption=${_DoorOption})
-		if !${EQ2UIPage[Popup,TravelMap].IsVisible}
+		EQ2:OpenFastTravelWindow
+		TimedCommand 10 TravelMapWindow.Buttons.Child[${ZoneName}]:LeftClick
+		TimedCommand 20 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[1]:LeftClick
+		if ${Int[${_DoorOption}]}>0 || ${_DoorOption.NotEqual[0]}
 		{
-			eq2ex /smp pon pon_teleport
-			TimedCommand 5 RIMUIObj:FastTravel[${Me.Name},${ZoneName},${_DoorOption}]
-		 	return
+			TimedCommand 30 RIMUIObj:Door[ALL,${_DoorOption}]
+		}
+		TimedCommand 40 ChoiceWindow:DoChoice1
+	}
+	;OLD Method
+	;method FastTravel(string ForWho=ALL, string ZoneName=~NONE~, string _DoorOption=0)
+	;{
+	;	;echo FastTravel(string ForWho=${ForWho}, string ZoneName=${ZoneName}, string _DoorOption=${_DoorOption})
+	;	if !${EQ2UIPage[Popup,TravelMap].IsVisible}
+	;	{
+	;		eq2ex /smp pon pon_teleport
+	;		TimedCommand 5 RIMUIObj:FastTravel[${Me.Name},${ZoneName},${_DoorOption}]
+	;	 	return
 			; Actor[mariners_bell]:DoubleClick
 			; Actor[mariner_bell_city_travel_qeynos]:DoubleClick
 			; Actor[zone_to_guildhall_tier3]:DoubleClick
@@ -11433,31 +11447,31 @@ objectdef RIMUIObject
 			; Actor["Pirate Captain's Helmsman"]:DoubleClick
 			; TimedCommand 10 RIMUIObj:TravelMap[${ForWho},${ZoneName},${ZoneOption}]
 			; return
-		}
-		else
-		{
-			variable int TMCount
-			for(TMCount:Set[1];${TMCount}<=${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].NumChildren};TMCount:Inc)
-			{
+	;	}
+	;	else
+	;	{
+	;		variable int TMCount
+	;		for(TMCount:Set[1];${TMCount}<=${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].NumChildren};TMCount:Inc)
+	;		{
 				;echo Checking #${TMCount} <= ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].NumChildren} ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name]} against ${ZoneName} // ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name].Find[${ZoneName}](exists)}
-				if ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name].Find[${ZoneName}](exists)}
-				{
-					EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}]:LeftClick
-					TimedCommand 5 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[1]:LeftClick
-					if ${Int[${_DoorOption}]}>0 || ${_DoorOption.NotEqual[0]}
-					{
-						TimedCommand 10 RIMUIObj:Door[ALL,${_DoorOption}]
-					}
-					TimedCommand 20 ChoiceWindow:DoChoice1
+	;			if ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name].Find[${ZoneName}](exists)}
+	;			{
+	;				EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}]:LeftClick
+	;				TimedCommand 5 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[1]:LeftClick
+	;				if ${Int[${_DoorOption}]}>0 || ${_DoorOption.NotEqual[0]}
+	;				{
+	;					TimedCommand 10 RIMUIObj:Door[ALL,${_DoorOption}]
+	;				}
+	;				TimedCommand 20 ChoiceWindow:DoChoice1
 					;click zone option if it exists
 					;if ${ZoneOption}>-1
 					;	TimedCommand 30 RIMUIObj:Door[${Me.Name},${ZoneOption}]
-					return
-				}
-			}
-		}
-		TimedCommand 10 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[2]:LeftClick
-	}
+	;				return
+	;			}
+	;		}
+	;	}
+	;	TimedCommand 10 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[2]:LeftClick
+	;}
 	method TravelMap(string ForWho=ALL, string ZoneName=~NONE~, int ZoneOption=-1, int _BellWizardDruid=0)
 	{
 		;echo TravelMap(string ForWho=${ForWho}=ALL, string ZoneName=${ZoneName}=~NONE~, int ZoneOption=${ZoneOption}=-1, int _BellWizardDruid=${_BellWizardDruid}=0)
@@ -12873,7 +12887,7 @@ objectdef RIMUIObject
 	}
 	method UIMedium(int _Save=1)
 	{
-		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml"
+		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml"
 		if ${RelayGroupChecked}	
 			UIElement[RelayGroup@Titlebar@RIMovementUI]:SetChecked
 		else
@@ -12961,7 +12975,7 @@ objectdef RIMUIObject
 	{
 		UIElement[RIMovementUI]:SetHeight[225]
 		UIElement[RIMovementUI]:SetWidth[465]
-		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml"
+		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml"
 		if ${RelayGroupChecked}	
 			UIElement[RelayGroup@Titlebar@RIMovementUI]:SetChecked
 		else
@@ -12999,7 +13013,7 @@ objectdef RIMUIObject
 	{
 		;echo ${BTNName.Upper}
 		RI_Var_String_ButtonToChange:Set[${BTNName.Upper}]
-		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml"
+		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml"
 		UIElement[RIMUIEdit]:SetTitle[RIMUI Edit Button: ${BTNName.Upper}]
 		UIElement[RIMUIEdit]:SetWidth[495]
 		UIElement[RIMUIEdit]:SetHeight[275]
@@ -13077,7 +13091,7 @@ objectdef RIMUIObject
 	{
 		;echo ${BTNName.Upper}
 		RI_Var_String_ButtonToChange:Set[${BTNName.Upper}]
-		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml"
+		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIMUIEdit.xml"
 		
 		;;;;;disable all but save/cancel and the button name field
 		
@@ -15168,8 +15182,8 @@ objectdef CountSetsObject
 }
 atom LoadUI()
 {
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml"
+	ui -reload "${RI_Var_String_SkinFileName}"
+	ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIMUI.xml"
 	
 	if ${Size.Equal[Small]}
 	{

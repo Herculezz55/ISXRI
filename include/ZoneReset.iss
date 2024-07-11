@@ -29,8 +29,8 @@ function main()
 	wait 2
 	
 	;loadui
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/ZoneReset.xml"
+	ui -reload "${RI_Var_String_SkinFileName}"
+	ui -reload -skin eq2-green "${LavishScript.HomeDirectory}/Scripts/RI/ZoneReset.xml"
 	
 	;get ZoneList into ZoneList index
 	EQ2:GetPersisentZones[ZoneList]
