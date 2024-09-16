@@ -575,7 +575,7 @@ void updatefunction()
 	ISXRIPath += "\\x64\\Extensions\\ISXDK35\\ISXRI.dll";
 	Sleep(1000);
 	//download
-	HRESULT hRez = URLDownloadToFile(NULL, "http://www.isxri.com/ISXRI.dll", ISX_Orig_Path.c_str(), 0, NULL);
+	HRESULT hRez = URLDownloadToFile(NULL, "https://isxri.s3.us-west-2.amazonaws.com/ISXRI.dll", ISX_Orig_Path.c_str(), 0, NULL);
 
 	if (hRez != 0){
 		// download failed
@@ -753,7 +753,7 @@ void checkverfunction()
 		printf("ISXRI: Version check failed, Please try again later");
 		ExitThread(0);
 	}
-	hFile = InternetOpenUrl(hOpen, "http://www.isxri.com/Version.php", NULL, 0, INTERNET_FLAG_RELOAD, 0);
+	hFile = InternetOpenUrl(hOpen, "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/V", NULL, 0, INTERNET_FLAG_RELOAD, 0);
 
 	if (hFile)
 	{
@@ -1144,8 +1144,8 @@ void authfunction(){
 
 	hOpen = InternetOpen("UN/1.0", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
 
-	char a[] = "http://www.isxri.com/auth/login.php?l=";
-	char b[] = "&p=";
+	char a[] = "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/L/";
+	char b[] = "/";
 	char URL[100] = "";
 	strcat_s(URL, a);
 	strcat_s(URL, Login);
