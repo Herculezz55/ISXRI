@@ -31,8 +31,8 @@ function main(string _Group=~NONE~)
 		wait 50
 	}
 	;load ui
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RICharListUI.xml"
+	ui -reload "${RI_Var_String_SkinFileName}"
+	ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RICharListUI.xml"
 
 	RICharListObj:LoadAccountList
 	UIElement[AccountsListbox@RICharList]:SelectItem[1]

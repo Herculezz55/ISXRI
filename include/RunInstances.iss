@@ -1,4 +1,4 @@
-;RunInstances Script by Herculezz
+ ;RunInstances Script by Herculezz
 
 variable(global) string help=Written by Herculezz, Join Discord: https://discord.gg/FT4VxMe, or visit www.isxri.com
 variable(global) string about=Written by Herculezz, Join Discord: https://discord.gg/FT4VxMe, or visit www.isxri.com
@@ -17,6 +17,7 @@ variable(global) bool RI_Var_Bool_PathDebug=FALSE
 variable(global) bool RI_Var_Bool_RemoveAfterTrigger=FALSE
 variable(global) bool RI_Var_Bool_AcceptRewards=TRUE
 variable(global) bool RI_Var_Bool_IgnoreNamedForShiny=FALSE
+variable(global) string RI_Var_String_QuestDir=""
 variable int Distance=2
 variable int MDistance=4
 variable string CurrentLootWindowID=0
@@ -264,8 +265,8 @@ function main(string FunctionToRun=NONE)
 	if ( ${FunctionToRun.Equal[Q-RI_Var_Bool_GlobalOthers]} || ${FunctionToRun.Equal[DEV-RI_Var_Bool_GlobalOthers]} || ${FunctionToRun.Equal[RI_Var_Bool_GlobalOthers]} || !${Solo} || ${FunctionToRun.Find[MAIN]} || ${FunctionToRun.Find[DEVM]} || ${FunctionToRun.Find[DEVO]} ) && ( ( ${FunctionToRun.Equal[Q-RI_Var_Bool_GlobalOthers]} || ${FunctionToRun.Equal[RI_Var_Bool_GlobalOthers]} || ${FunctionToRun.Equal[DEV-RI_Var_Bool_GlobalOthers]} || ${FunctionToRun.Find[DEV]} || ${FunctionToRun.Find[MAIN]} || ${FunctionToRun.NotEqual[NONE]} ) && ${FunctionToRun.NotEqual[NONE]} && ${FunctionToRun.NotEqual[DEVN]} ) && !${FunctionToRun.Find[QUEST-](exists)}
 	{
 		RI_Var_IndexString_MainToon:Clear
-		ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
+		ui -reload "${RI_Var_String_SkinFileName}"
+		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
 		UIElement[Start@RI]:SetText[Pause]
 		UIElement[AutoLoot@RI]:Hide
 		UIElement[RI]:SetHeight[40]
@@ -344,7 +345,7 @@ function main(string FunctionToRun=NONE)
 		{
 			_PreGo_
 			if ${NoFile}
-				ImportZoneFile
+				LoadZone
 		}
 		if ${RI_Var_Bool_BackOffMerc}
 		{
@@ -385,8 +386,8 @@ function main(string FunctionToRun=NONE)
 	else
 	{	
 		;echo main
-		ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
+		ui -reload "${RI_Var_String_SkinFileName}"
+		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
 		UIElement[AutoLoot@RI]:SetChecked
 		UIElement[RI]:SetHeight[60]
 		UIElement[RI]:SetWidth[102]
@@ -426,6 +427,7 @@ function main(string FunctionToRun=NONE)
 		if ${FunctionToRun.Find[QUEST-](exists)}
 		{
 			;wait until we start
+			;echo ${FunctionToRun}
 			RI_Var_Bool_QuestMode:Set[TRUE]
 			UIElement[RI]:SetTitle[RQv${RI_Var_Float_Version.Precision[2]}]
 			relay "other ${RI_Var_String_RelayGroup}" -noredirect RI_RunInstances Q-RI_Var_Bool_GlobalOthers
@@ -465,7 +467,7 @@ function main(string FunctionToRun=NONE)
 		;get the zoneset
 		_PreGo_
 		if ${NoFile}
-			ImportZoneFile
+			LoadZone
 			
 		eq2ex /merc backoff
 		wait 5
@@ -655,1550 +657,95 @@ function ReadBook(string _BookName, bool _ClickLastPage=FALSE, bool _CloseBook=F
 atom(global) _PreGo_(string _EXTVar=~NONE~, bool _Verbose=TRUE, bool _Quest=FALSE)
 {
     ;echo PreGo(string _EXTVar=~NONE~=${_EXTVar}, bool _Verbose=TRUE=${_Verbose})
+	istrMain:Clear
 	if ${_EXTVar.NotEqual[~NONE~]}
 	{
 		if ${_Quest}
-		{
-			istrMain:Clear
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${${_EXTVar}[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${${_EXTVar}[3rtZdjv7,${MainArrayCounter}]}]
-		}
+			ImportQuestFile "${_EXTVar}"
 		else
-			LoadZone ${_EXTVar}
+			LoadZone "${_EXTVar}"
 		return
 	}
-	;if ${_Verbose}
-	;	echo ISXRI: ${Time} Importing ZoneFile from Extension
+	else
+		LoadZone
+}
+
+atom(global) LoadZone(string ZoneFileName="${Zone.Name.ReplaceSubstring["[Solo]"," "].ReplaceSubstring["[Heroic I]"," "].ReplaceSubstring["[Heroic II]"," "].Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}")
+{
 	istrMain:Clear
-	switch ${Me.GetGameData[Self.ZoneName].Label}
+	declare _cnt int 0
+	declare _cnt2 int 0
+	declare _DirList filelist
+	declare _FileList2 filelist
+	declare ScanDirectory filepath ""
+	declare _TempString string
+	declare ScanDirectory2 filepath ""
+	ScanDirectory:Set["${LavishScript.HomeDirectory}//Scripts//RI//Instance//"]
+	_DirList:GetDirectories[${ScanDirectory}\\*]
+	;echo ${_DirList.Files}
+	while (${_cnt:Inc}<=${_DirList.Files})
 	{
-		case Brokenskull Bay: Bilgewater Falls [Solo]
-		case Brokenskull Bay: Bilgewater Falls [Advanced Solo]
-		case Brokenskull Bay: Bilgewater Falls [Heroic]
+		ScanDirectory2:Set["${ScanDirectory}${_DirList.File[${_cnt}].Filename}"]
+		;echo ${ScanDirectory2}
+		_FileList2:Reset
+		_FileList2:GetFiles[${ScanDirectory2}\\*]
+		;echo ${_FileList2.Files}
+		_cnt2:Set[0]
+		while (${_cnt2:Inc}<=${_FileList2.Files})
 		{
-			RI_CMD_Hidden_AddTLO Bilgewater
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Bilgewater]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Bilgewater[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Bilgewater[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Fabled Acadechism [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Acadechism
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Acadechism]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Acadechism[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Acadechism[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Brokenskull Bay: Hoist the Yellow Jack [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Hoist
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Hoist]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Hoist[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Hoist[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Brokenskull Bay: Bosun's Private Stock [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Bosun
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Bosun]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Bosun[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Bosun[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Zavith'loa: The Lost Caverns [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Caverns
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Caverns]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Caverns[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Caverns[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Zavith'loa: The Hidden Caldera [Heroic]
-		case Zavith'loa: The Hidden Caldera [Solo]
-		case Zavith'loa: The Hidden Caldera [Advanced Solo]
-		{
-			RI_CMD_Hidden_AddTLO Caldera
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Caldera]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Caldera[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Caldera[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Zavith'loa: The Hunt [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Hunt
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Hunt]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Hunt[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Hunt[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Castle Highhold [Solo]
-		case Castle Highhold [Advanced Solo]
-		case Castle Highhold [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Highhold
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Highhold]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Highhold[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Highhold[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Castle Highhold: Thresinet's Den [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Thresinets
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Thresinets]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Thresinets[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Thresinets[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Castle Highhold: Insider Treachery [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Treachery
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Treachery]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Treachery[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Treachery[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Ossuary: Resonance of Malice [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Resonance
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Resonance]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Resonance[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Resonance[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Ossuary: Sanguine Fountains [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Sanguine
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Sanguine]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Sanguine[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Sanguine[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Ssraeshza Temple [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Temple
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Temple]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Temple[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Temple[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Ssraeshza Temple: Inner Sanctum [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO InnerSanctum
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[InnerSanctum]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${InnerSanctum[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${InnerSanctum[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Ssraeshza Temple: Taskmaster's ;echo [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Taskmaster
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Taskmaster]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Taskmaster[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Taskmaster[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Ossuary of Malevolence [Contested]
-		{
-			RI_CMD_Hidden_AddTLO OssCon
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[OssCon]
-			if ${Developer}
+			;echo ${_FileList2.File[${_cnt2}].Filename}
+			if ${_FileList2.File[${_cnt2}].Filename.Find["${ZoneFileName}"]}
 			{
-				for(MainArrayCounter:Set[0];${MainArrayCounter}<${OssCon[3rtZdjv7,#]};MainArrayCounter:Inc)
-					istrMain:Insert[${OssCon[3rtZdjv7,${MainArrayCounter}]}]
+				;if ${RI_Var_Bool_Debug}
+					echo ISXRI: File ${_FileList2.File[${_cnt2}].Filename} found Importing
+
+				variable file Filename
+				variable int Count
+				
+				variable string TempString
+				istrMain:Clear
+				Count:Set[1]
+				;set file to read in to Filename variable
+				Filename:SetFilename["${_FileList2.File[${_cnt2}].FullPath}"]
+
+				;open the file
+				Filename:Open
+				
+				;seek to the beginning of file
+				Filename:Seek[0]
+				
+				;while we are not at the end of file
+				while !${Filename.EOF}
+				{
+					;store each line of the file in var
+					TempString:Set[${Filename.Read}]
+					if ${TempString.Equal[NULL]}
+						continue
+					istrMain:Insert[${TempString.Left[-1]}]
+					;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length}
+					Count:Inc
+					;waitframe
+				}
+				
+				;close file
+				Filename:Close
+				return
 			}
-			else
-			{
-				MessageBox "This is not a supported zone, please contact Herculezz on Either forums or IRC and let him know the zone name: ${Me.GetGameData[Self.ZoneName].Label} to be added, Best to get and post a screenshot of this."
-				Script:End
-			}
-			break
-		}
-		case F.S. Distillery: Stowaways [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Stowaways
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Stowaways]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Stowaways[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Stowaways[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case F.S. Distillery: Stowaways [Challenge]
-		{
-			RI_CMD_Hidden_AddTLO StowawaysHM
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[StowawaysHM]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${StowawaysHM[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${StowawaysHM[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case F.S. Distillery: Distill or Be Killed [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Distill
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Distill]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Distill[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Distill[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Fabled Crypt of Valdoon [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Valdoon
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Valdoon]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Valdoon[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Valdoon[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Fabled Court of Innovation [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Court
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Court]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Court[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Court[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Stygian Threshold [Heroic] 
-		case Stygian Threshold [Agnostic]
-		{
-			RI_CMD_Hidden_AddTLO Stygian
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Stygian]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Stygian[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Stygian[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Maldura: Bar Brawl [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO BarBrawl
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[BarBrawl]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${BarBrawl[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${BarBrawl[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Maldura: District of Ash [Heroic]
-		case Maldura: District of Ash [Agnostic]
-		{
-			RI_CMD_Hidden_AddTLO Ash
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Ash]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Ash[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Ash[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Maldura: Palace Foray [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Foray
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Foray]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Foray[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Foray[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Stygian Threshold: The Howling Gateway [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO Howling
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Howling]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Howling[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Howling[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Kralet Penumbra: Rise to Power [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO RiseToPower
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[RiseToPower]
-			ShinyScanDistance:Set[10]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${RiseToPower[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Revealed[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Kralet Penumbra: Temple of the Ill-Seen [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO IllSeen
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[IllSeen]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${IllSeen[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${IllSeen[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Kaesora: Xalgozian Stronghold [Expert]
-		case Kaesora: Xalgozian Stronghold [Heroic]
-		case Kaesora: Xalgozian Stronghold [Solo]
-		{
-			RI_CMD_Hidden_AddTLO Xalgozian
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Xalgozian]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Xalgozian[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Xalgozian[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Arcanna'se Spire: Forgotten Sanctum [Solo]
-		case Arcanna'se Spire: Forgotten Sanctum [Heroic]
-		case Arcanna'se Spire: Forgotten Sanctum [Expert]
-		{
-			RI_CMD_Hidden_AddTLO Sanctum
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Sanctum]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Sanctum[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Sanctum[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Arcanna'se Spire: Revealed
-		{
-			RI_CMD_Hidden_AddTLO Revealed
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Revealed]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Revealed[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Revealed[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Arcanna'se Spire: Repository of Secrets [Solo]
-		case Arcanna'se Spire: Repository of Secrets [Heroic]
-		case Arcanna'se Spire: Repository of Secrets [Expert]
-		{
-			RI_CMD_Hidden_AddTLO Repository
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Repository]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Repository[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Repository[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Arcanna'se Spire: Vessel of the Sorceress [Advanced Solo]
-		case Arcanna'se Spire: Vessel of the Sorceress [Event Heroic]
-		case Arcanna'se Spire: Vessel of the Sorceress [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO Vessel
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[Vessel]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${Vessel[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${Vessel[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Crypt of Dalnir: Baron's Workshop [Expert]
-		case Crypt of Dalnir: Baron's Workshop [Heroic]
-		case Crypt of Dalnir: Baron's Workshop [Solo]
-		{
-			RI_CMD_Hidden_AddTLO CryptofDalnirBaronsWorkshop
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[CryptofDalnirBaronsWorkshop]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CryptofDalnirBaronsWorkshop[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${CryptofDalnirBaronsWorkshop[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Crypt of Dalnir: Ritual Chamber [Expert]
-		case Crypt of Dalnir: Ritual Chamber [Heroic]
-		case Crypt of Dalnir: Ritual Chamber [Solo]
-		{
-			RI_CMD_Hidden_AddTLO CryptofDalnirRitualChamber
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[CryptofDalnirRitualChamber]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CryptofDalnirRitualChamber[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${CryptofDalnirRitualChamber[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Crypt of Dalnir: Wizard's Den [Advanced Solo]
-		case Crypt of Dalnir: Wizard's Den [Event Heroic]
-		case Crypt of Dalnir: Wizard's Den [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO WizardsDen
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[WizardsDen]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${WizardsDen[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${WizardsDen[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Ruins of Cabilis [Expert]
-		case The Ruins of Cabilis [Heroic]
-		case The Ruins of Cabilis [Solo]
-		{
-			RI_CMD_Hidden_AddTLO TheRuinsofCabilis
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TheRuinsofCabilis]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheRuinsofCabilis[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TheRuinsofCabilis[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Kaesora: Tomb of the Venerated [Expert Event]
-		case Kaesora: Tomb of the Venerated [Event Heroic]
-		case Kaesora: Tomb of the Venerated [Advanced Solo]
-		{
-			RI_CMD_Hidden_AddTLO KaesoraTomboftheVenerated
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[KaesoraTomboftheVenerated]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${KaesoraTomboftheVenerated[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${KaesoraTomboftheVenerated[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Lost City of Torsis: The Spectral Market [Expert]
-		case Lost City of Torsis: The Spectral Market [Heroic]
-		case Lost City of Torsis: The Spectral Market [Solo]
-		{
-			RI_CMD_Hidden_AddTLO LostCityofTorsisTheSpectralMarket
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[LostCityofTorsisTheSpectralMarket]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${LostCityofTorsisTheSpectralMarket[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${LostCityofTorsisTheSpectralMarket[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Lost City of Torsis: Reaver's Remnants [Expert Challenge]
-		case Lost City of Torsis: Reaver's Remnants [Expert]
-		case Lost City of Torsis: Reaver's Remnants [Challenge Heroic]
-		case Lost City of Torsis: Reaver's Remnants [Heroic]
-		case Lost City of Torsis: Reaver's Remnants [Solo]
-		{
-			RI_CMD_Hidden_AddTLO LostCityofTorsisReaversRemnants
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[LostCityofTorsisReaversRemnants]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${LostCityofTorsisReaversRemnants[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${LostCityofTorsisReaversRemnants[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Lost City of Torsis: The Shrouded Temple [Advanced Solo]
-		case Lost City of Torsis: The Shrouded Temple [Expert Event]
-		case Lost City of Torsis: The Shrouded Temple [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO ShroudedTemple
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[ShroudedTemple]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ShroudedTemple[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${ShroudedTemple[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Befallen: Cavern of the Afflicted [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case Charasis: Maiden's Chamber [Agnostic]
-		{
-			RI_CMD_Hidden_AddTLO CharasisMaidensChamberAgnostic
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[CharasisMaidensChamberAgnostic]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CharasisMaidensChamberAgnostic[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${CharasisMaidensChamberAgnostic[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Crypt of Valdoon [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case Iceshard Keep [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case Kralet Penumbra: Tepid Depths [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case Kralet Penumbra: The Master's Chosen [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case Library of Erudin [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case Maldura: Algorithm For Destruction [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case Temple of the Faceless [Agnostic]
-		{ 
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case The Crypt of Agony [Agnostic]
-		{
-			RI_CMD_Hidden_AddTLO CoA
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[CoA]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CoA[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${CoA[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Deep Forge [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case The Ruins of Guk: Halls of the Fallen [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case Vasty Deep: The Conservatory [Agnostic]
-		{
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
-		}
-		case Vaedenmoor, Realm of Despair
-		{
-			RI_CMD_Hidden_AddTLO VaedenmoorRealmofDespair
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[VaedenmoorRealmofDespair]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${VaedenmoorRealmofDespair[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${VaedenmoorRealmofDespair[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Frillik Tide
-		{
-			RI_CMD_Hidden_AddTLO TheFrillikTide
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TheFrillikTide]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheFrillikTide[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TheFrillikTide[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Underdepths [Proving Ground]
-		{
-			RI_CMD_Hidden_AddTLO TheUnderdepthsProvingGround
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TheUnderdepthsProvingGround]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheUnderdepthsProvingGround[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TheUnderdepthsProvingGround[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Mistmyr Manor
-		{
-			RI_CMD_Hidden_AddTLO MistmyrManor
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[MistmyrManor]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${MistmyrManor[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${MistmyrManor[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Ravenscale Repository
-		{
-			RI_CMD_Hidden_AddTLO RavenscaleRepository
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[RavenscaleRepository]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${RavenscaleRepository[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${RavenscaleRepository[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Plane of Innovation: Masks of the Marvelous [Solo]
-		case Plane of Innovation: Masks of the Marvelous [Heroic]
-		case Plane of Innovation: Masks of the Marvelous [Expert]
-		{
-			RI_CMD_Hidden_AddTLO PlaneofInnovationMasksoftheMarvelous
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[PlaneofInnovationMasksoftheMarvelous]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofInnovationMasksoftheMarvelous[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${PlaneofInnovationMasksoftheMarvelous[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Plane of Innovation: Gears in the Machine [Solo]
-		case Plane of Innovation: Gears in the Machine [Heroic]
-		case Plane of Innovation: Gears in the Machine [Expert]
-		{
-			RI_CMD_Hidden_AddTLO PlaneofInnovationGearsintheMachine
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[PlaneofInnovationGearsintheMachine]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofInnovationGearsintheMachine[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${PlaneofInnovationGearsintheMachine[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Plane of Innovation: Parts Not Included [Duo]
-		case Plane of Innovation: Parts Not Included [Event Heroic]
-		case Plane of Innovation: Parts Not Included [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO PlaneofInnovationPartsNotIncluded
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[PlaneofInnovationPartsNotIncluded]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofInnovationPartsNotIncluded[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${PlaneofInnovationPartsNotIncluded[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Plane of Disease: Outbreak [Solo]
-		case Plane of Disease: Outbreak [Heroic]
-		case Plane of Disease: Outbreak [Expert]
-		{
-			RI_CMD_Hidden_AddTLO PlaneofDiseaseOutbreak
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[PlaneofDiseaseOutbreak]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofDiseaseOutbreak[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${PlaneofDiseaseOutbreak[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Plane of Disease: The Source [Solo]
-		case Plane of Disease: The Source [Heroic]
-		case Plane of Disease: The Source [Expert]
-		{
-			RI_CMD_Hidden_AddTLO PlaneofDiseaseTheSource 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[PlaneofDiseaseTheSource]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofDiseaseTheSource[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${PlaneofDiseaseTheSource[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Plane of Disease: Infested Mesa [Duo]
-		case Plane of Disease: Infested Mesa [Event Heroic]
-		case Plane of Disease: Infested Mesa [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO PlaneofDiseaseInfestedMesa 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[PlaneofDiseaseInfestedMesa]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofDiseaseInfestedMesa[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${PlaneofDiseaseInfestedMesa[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Torden, Bastion of Thunder: Tower Breach [Solo]
-		case Torden, Bastion of Thunder: Tower Breach [Heroic]
-		case Torden, Bastion of Thunder: Tower Breach [Expert]
-		{
-			RI_CMD_Hidden_AddTLO TordenBastionofThunderTowerBreach 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TordenBastionofThunderTowerBreach]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TordenBastionofThunderTowerBreach[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TordenBastionofThunderTowerBreach[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Torden, Bastion of Thunder: Winds of Change [Solo]
-		case Torden, Bastion of Thunder: Winds of Change [Heroic]
-		case Torden, Bastion of Thunder: Winds of Change [Expert]
-		{
-			RI_CMD_Hidden_AddTLO TordenBastionofThunderWindsofChange 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TordenBastionofThunderWindsofChange]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TordenBastionofThunderWindsofChange[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TordenBastionofThunderWindsofChange[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Solusek Ro's Tower: The Obsidian Core [Solo]
-		case Solusek Ro's Tower: The Obsidian Core [Heroic]
-		case Solusek Ro's Tower: The Obsidian Core [Expert]
-		{
-			RI_CMD_Hidden_AddTLO SolusekRosTowerTheObsidianCore 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SolusekRosTowerTheObsidianCore]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SolusekRosTowerTheObsidianCore[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SolusekRosTowerTheObsidianCore[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Solusek Ro's Tower: Monolith of Fire [Solo]
-		case Solusek Ro's Tower: Monolith of Fire [Heroic]
-		case Solusek Ro's Tower: Monolith of Fire [Expert]
-		{
-			RI_CMD_Hidden_AddTLO SolusekRosTowerMonolithofFire 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SolusekRosTowerMonolithofFire]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SolusekRosTowerMonolithofFire[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SolusekRosTowerMonolithofFire[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Shard of Hate: Utter Contempt [Solo]
-		case Shard of Hate: Utter Contempt [Heroic]
-		case Shard of Hate: Udder Contempt [Herd Mode]
-		{
-			RI_CMD_Hidden_AddTLO ShardofHateUtterContempt
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[ShardofHateUtterContempt]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ShardofHateUtterContempt[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${ShardofHateUtterContempt[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case "Brackish Vaults [Solo]"
-		case "Brackish Vaults [Duo]"
-		{
-			RI_CMD_Hidden_AddTLO BrackishVaults 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[BrackishVaults]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${BrackishVaults[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${BrackishVaults[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Plane of Innovation: Security Measures [Tradeskill]
-		{
-			RI_CMD_Hidden_AddTLO PlaneofInnovationSecurityMeasuresTradeskill 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[PlaneofInnovationSecurityMeasuresTradeskill]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofInnovationSecurityMeasuresTradeskill[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${PlaneofInnovationSecurityMeasuresTradeskill[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Torden, Bastion of Thunder: Lightning Strikes [Tradeskill]
-		{
-			RI_CMD_Hidden_AddTLO TordenBastionofThunderLightningStrikesTradeskill 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TordenBastionofThunderLightningStrikesTradeskill]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TordenBastionofThunderLightningStrikesTradeskill[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TordenBastionofThunderLightningStrikesTradeskill[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Plane of Disease: Crypt of Decay [Tradeskill]
-		{
-			RI_CMD_Hidden_AddTLO PlaneofDiseaseCryptofDecayTradeskill
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[PlaneofDiseaseCryptofDecayTradeskill]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${PlaneofDiseaseCryptofDecayTradeskill[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${PlaneofDiseaseCryptofDecayTradeskill[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Solusek Ro's Tower: From the Ashes [Tradeskill]
-		{
-			RI_CMD_Hidden_AddTLO SolusekRosTowerFromtheAshesTradeskill
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SolusekRosTowerFromtheAshesTradeskill]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SolusekRosTowerFromtheAshesTradeskill[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SolusekRosTowerFromtheAshesTradeskill[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Shard of Hate: Eye Spy [Tradeskill]
-		{
-			RI_CMD_Hidden_AddTLO ShardofHateEyeSpyTradeskill
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[ShardofHateEyeSpyTradeskill]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ShardofHateEyeSpyTradeskill[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${ShardofHateEyeSpyTradeskill[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Molten Throne: Hate's Essences [Tradeskill]
-		{
-			RI_CMD_Hidden_AddTLO TheMoltenThroneHatesEssencesTradeskill
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TheMoltenThroneHatesEssencesTradeskill]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheMoltenThroneHatesEssencesTradeskill[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TheMoltenThroneHatesEssencesTradeskill[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Doomfire: The Enkindled Towers [Solo]
-		case Doomfire: The Enkindled Towers [Heroic]
-		case Doomfire: The Enkindled Towers [Expert]
-		{
-			RI_CMD_Hidden_AddTLO DoomfireTheEnkindledTowers 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[DoomfireTheEnkindledTowers]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${DoomfireTheEnkindledTowers[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${DoomfireTheEnkindledTowers[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Eryslai: The Bixel Hive [Solo]
-		case Eryslai: The Bixel Hive [Heroic]
-		case Eryslai: The Bixel Hive [Expert]
-		{
-			RI_CMD_Hidden_AddTLO EryslaiTheBixelHive
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[EryslaiTheBixelHive]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${EryslaiTheBixelHive[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${EryslaiTheBixelHive[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Awuidor: The Nebulous Deep [Solo]
-		case Awuidor: The Nebulous Deep [Heroic]
-		case Awuidor: The Nebulous Deep [Expert]
-		{
-			RI_CMD_Hidden_AddTLO AwuidorTheNebulousDeep
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[AwuidorTheNebulousDeep]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorTheNebulousDeep[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${AwuidorTheNebulousDeep[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Doomfire: Elements of Rage [Solo]
-		case Doomfire: Elements of Rage [Heroic]
-		case Doomfire: Elements of Rage [Expert]
-		{
-			RI_CMD_Hidden_AddTLO DoomfireElementsofRage
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[DoomfireElementsofRage]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${DoomfireElementsofRage[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${DoomfireElementsofRage[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Vegarlson: Ruins of Rathe [Solo]
-		case Vegarlson: Ruins of Rathe [Heroic]
-		case Vegarlson: Ruins of Rathe [Expert]
-		{
-			RI_CMD_Hidden_AddTLO VegarlsonRuinsofRathe
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[VegarlsonRuinsofRathe]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${VegarlsonRuinsofRathe[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${VegarlsonRuinsofRathe[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Eryslai: The Midnight Aerie [Solo]
-		case Eryslai: The Midnight Aerie [Heroic]
-		case Eryslai: The Midnight Aerie [Expert]
-		{
-			RI_CMD_Hidden_AddTLO EryslaiTheMidnightAerie
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[EryslaiTheMidnightAerie]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${EryslaiTheMidnightAerie[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${EryslaiTheMidnightAerie[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Awuidor: Marr's Ascent [Solo]
-		case Awuidor: Marr's Ascent [Heroic]
-		case Awuidor: Marr's Ascent [Expert]
-		{
-			RI_CMD_Hidden_AddTLO AwuidorMarrsAscent
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[AwuidorMarrsAscent]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorMarrsAscent[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${AwuidorMarrsAscent[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Doomfire: Vengeance of Ro [Solo]
-		case Doomfire: Vengeance of Ro [Event Heroic]
-		case Doomfire: Vengeance of Ro [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO DoomfireVengeanceofRo
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[DoomfireVengeanceofRo]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${DoomfireVengeanceofRo[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${DoomfireVengeanceofRo[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Eryslai: Trials of Air [Solo]
-		case Eryslai: Trials of Air [Event Heroic]
-		case Eryslai: Trials of Air [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO EryslaiTrialsofAir
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[EryslaiTrialsofAir]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${EryslaiTrialsofAir[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${EryslaiTrialsofAir[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Awuidor: The Veiled Precipice [Solo]
-		case Awuidor: The Veiled Precipice [Event Heroic]
-		case Awuidor: The Veiled Precipice [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO AwuidorTheVeiledPrecipice
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[AwuidorTheVeiledPrecipice]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AwuidorTheVeiledPrecipice[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${AwuidorTheVeiledPrecipice[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Vegarlson: The Terrene Rift [Solo]
-		case Vegarlson: The Terrene Rift [Event Heroic]
-		case Vegarlson: The Terrene Rift [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO VegarlsonTheTerreneRift
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[VegarlsonTheTerreneRift]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${VegarlsonTheTerreneRift[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${VegarlsonTheTerreneRift[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Deep Chelsith: Vault of Omens [Solo]
-		case Deep Chelsith: Vault of Omens [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO DeepChelsithVaultofOmens
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[DeepChelsithVaultofOmens]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${DeepChelsithVaultofOmens[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${DeepChelsithVaultofOmens[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Aurelian Coast: Sambata Village [Solo]
-		case Aurelian Coast: Sambata Village [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO AurelianCoastSambataVillage
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[AurelianCoastSambataVillage]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AurelianCoastSambataVillage[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${AurelianCoastSambataVillage[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Aurelian Coast: Reishi Rumble [Solo]
-		case Aurelian Coast: Reishi Rumble [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO AurelianCoastReishiRumble
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[AurelianCoastReishiRumble]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AurelianCoastReishiRumble[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${AurelianCoastReishiRumble[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Aurelian Coast: Maiden's Eye [Solo]
-		case Aurelian Coast: Maiden's Eye [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO AurelianCoastMaidensEye
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[AurelianCoastMaidensEye]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${AurelianCoastMaidensEye[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${AurelianCoastMaidensEye[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Sanctus Seru: Echelon of Order [Solo]
-		case Sanctus Seru: Echelon of Order [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO SanctusSeruEchelonofOrder
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SanctusSeruEchelonofOrder]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SanctusSeruEchelonofOrder[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SanctusSeruEchelonofOrder[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Sanctus Seru: Echelon of Divinity [Solo]
-		case Sanctus Seru: Echelon of Divinity [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO SanctusSeruEchelonofDivinity
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SanctusSeruEchelonofDivinity]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SanctusSeruEchelonofDivinity[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SanctusSeruEchelonofDivinity[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Sanctus Seru: Arx Aeturnus [Solo]
-		case Sanctus Seru: Arx Aeturnus [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO SanctusSeruArxAeturnus 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SanctusSeruArxAeturnus]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SanctusSeruArxAeturnus[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SanctusSeruArxAeturnus[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Fordel Midst: The Listless Spires [Solo]
-		case Fordel Midst: The Listless Spires [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO FordelMidstTheListlessSpires 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[FordelMidstTheListlessSpires]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${FordelMidstTheListlessSpires[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${FordelMidstTheListlessSpires[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Fordel Midst: Wayward Manor [Solo]
-		case Fordel Midst: Wayward Manor [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO FordelMidstWaywardManor 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[FordelMidstWaywardManor]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${FordelMidstWaywardManor[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${FordelMidstWaywardManor[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Ruins of Ssraeshza [Solo]
-		case The Ruins of Ssraeshza [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO TheRuinsofSsraeshza 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TheRuinsofSsraeshza]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheRuinsofSsraeshza[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TheRuinsofSsraeshza[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Venom of Ssraeshza [Solo]
-		case The Venom of Ssraeshza [Event Heroic]
-		{
-			RI_CMD_Hidden_AddTLO TheVenomofSsraeshza 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TheVenomofSsraeshza]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheVenomofSsraeshza[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TheVenomofSsraeshza[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Vault of Ssraeshza [Solo]
-		case The Vault of Ssraeshza [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO TheVaultofSsraeshza 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TheVaultofSsraeshza]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheVaultofSsraeshza[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TheVaultofSsraeshza[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Fordel Midst: Bizarre Bazaar [Solo]
-		case Fordel Midst: Bizarre Bazaar [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO FordelMidstBizarreBazaar 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[FordelMidstBizarreBazaar]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${FordelMidstBizarreBazaar[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${FordelMidstBizarreBazaar[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Solusek's Eye: The Calling [Heroic]
-		{
-			RI_CMD_Hidden_AddTLO SoluseksEyeTheCallingHeroic 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SoluseksEyeTheCallingHeroic]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SoluseksEyeTheCallingHeroic[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SoluseksEyeTheCallingHeroic[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case The Icy Keep (Hard)
-		{
-			RI_CMD_Hidden_AddTLO TheIcyKeepHard
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TheIcyKeepHard]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheIcyKeepHard[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TheIcyKeepHard[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Echo Caverns: Quarry Quandary [Solo]
-		case Echo Caverns: Quarry Quandary [Heroic]
-		case Echo Caverns: Quarry Quandary [Expert]
-		{
-			RI_CMD_Hidden_AddTLO EchoCavernsQuarryQuandary
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[EchoCavernsQuarryQuandary]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${EchoCavernsQuarryQuandary[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${EchoCavernsQuarryQuandary[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Echo Caverns: Fungal Foray [Solo]
-		case Echo Caverns: Fungal Foray [Heroic]
-		case Echo Caverns: Fungal Foray [Expert]
-		{
-			RI_CMD_Hidden_AddTLO EchoCavernsFungalForay
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[EchoCavernsFungalForay]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${EchoCavernsFungalForay[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${EchoCavernsFungalForay[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Savage Weald: Fort Grim [Solo]
-		case Savage Weald: Fort Grim [Event Heroic]
-		case Savage Weald: Fort Grim [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO SavageWealdFortGrim
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SavageWealdFortGrim]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SavageWealdFortGrim[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SavageWealdFortGrim[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Savage Weald: Chaotic Caverns [Solo]
-		case Savage Weald: Chaotic Caverns [Heroic]
-		case Savage Weald: Chaotic Caverns [Expert]
-		{
-			RI_CMD_Hidden_AddTLO SavageWealdChaoticCaverns
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SavageWealdChaoticCaverns]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SavageWealdChaoticCaverns[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SavageWealdChaoticCaverns[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Shadeweaver's Thicket: Feral Reserve [Solo]
-		case Shadeweaver's Thicket: Feral Reserve [Heroic]
-		case Shadeweaver's Thicket: Feral Reserve [Expert]
-		{
-			RI_CMD_Hidden_AddTLO ShadeweaversThicketFeralReserve
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[ShadeweaversThicketFeralReserve]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ShadeweaversThicketFeralReserve[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${ShadeweaversThicketFeralReserve[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Shadeweaver's Thicket: Untamed Lands [Solo]
-		case Shadeweaver's Thicket: Untamed Lands [Heroic]
-		case Shadeweaver's Thicket: Untamed Lands [Expert]
-		{
-			RI_CMD_Hidden_AddTLO ShadeweaversThicketUntamedLands
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[ShadeweaversThicketUntamedLands]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ShadeweaversThicketUntamedLands[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${ShadeweaversThicketUntamedLands[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Shadeweaver's Thicket: Loda Kai Isle [Solo]
-		case Shadeweaver's Thicket: Loda Kai Isle [Event Heroic]
-		case Shadeweaver's Thicket: Loda Kai Isle [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO ShadeweaversThicketLodaKaiIsle
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[ShadeweaversThicketLodaKaiIsle]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ShadeweaversThicketLodaKaiIsle[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${ShadeweaversThicketLodaKaiIsle[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Echo Caverns: Zelmie Sortie [Solo]
-		case Echo Caverns: Zelmie Sortie [Event Heroic]
-		case Echo Caverns: Zelmie Sortie [Expert Event]
-		{
-			RI_CMD_Hidden_AddTLO EchoCavernsZelmieSortie
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[EchoCavernsZelmieSortie]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${EchoCavernsZelmieSortie[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${EchoCavernsZelmieSortie[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Shar Vahl: Siege Break [Solo]
-		case Shar Vahl: Siege Break [Heroic]
-		case Shar Vahl: Siege Break [Expert]
-		{
-			RI_CMD_Hidden_AddTLO SharVahlSiegeBreak
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SharVahlSiegeBreak]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SharVahlSiegeBreak[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SharVahlSiegeBreak[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Vex Thal: Shadow Citadel
-		{
-			RI_CMD_Hidden_AddTLO VexThalShadowCitadel
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[VexThalShadowCitadel]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${VexThalShadowCitadel[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${VexThalShadowCitadel[3rtZdjv7,${MainArrayCounter}]}]
-			break
-		}
-		case Vasty Deep: Toil and Trouble [Solo]
-		case Vasty Deep: Toil and Trouble [Heroic I]
-		case Vasty Deep: Toil and Trouble [Heroic II]
-		{
-			RI_CMD_Hidden_AddTLO VastyDeepToilandTrouble
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[VastyDeepToilandTrouble]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${VastyDeepToilandTrouble[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${VastyDeepToilandTrouble[3rtZdjv7,${MainArrayCounter}]}]
-
-			;Weekly
-			call AddShinyActor "WEEKLY ARTIFACT"
-			call AddShinyActor "WEEKLY LOCATION"
-
-			;Dailies
-			call AddShinyActor "a bewitched weapon"
-			call AddShinyActor "a bewtiched weapon"
-			call AddShinyActor "an Akashic spell scroll"
-			call AddShinyActor "unusual lab equipment"
-			call AddShinyActor "an arcane book"
-			call AddShinyActor "a mysterious otherworldly map"
-			break
-		}
-		case Forlorn Gist: Nightmares of Old [Solo]
-		case Forlorn Gist: Nightmares of Old [Heroic I]
-		{
-			RI_CMD_Hidden_AddTLO ForlornGistNightmaresofOld
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[ForlornGistNightmaresofOld]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${ForlornGistNightmaresofOld[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${ForlornGistNightmaresofOld[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Svarni Expanse: Carrion Crag [Solo]
-		case Svarni Expanse: Carrion Crag [Heroic I]
-		case Svarni Expanse: Carrion Crag [Heroic II]
-		{
-			LoadZone SvarniExpanseCarrionCrag
-			;LoadedTLO:Set[TRUE]
-			;LoadedTLOName:Set[SvarniExpanseCarrionCrag]
-			;for(MainArrayCounter:Set[0];${MainArrayCounter}<${SvarniExpanseCarrionCrag[3rtZdjv7,#]};MainArrayCounter:Inc)
-		;		istrMain:Insert[${SvarniExpanseCarrionCrag[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Karuupa Jungle: Heart of Conflict [Solo]
-		case Karuupa Jungle: Heart of Conflict [Heroic I]
-		case Karuupa Jungle: Heart of Conflict [Heroic II]
-		{
-			RI_CMD_Hidden_AddTLO KaruupaJungleHeartofConflict
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[KaruupaJungleHeartofConflict]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${KaruupaJungleHeartofConflict[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${KaruupaJungleHeartofConflict[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Karuupa Jungle: Dedraka's Descent [Solo]
-		case Karuupa Jungle: Dedraka's Descent [Heroic I]
-		{
-			RI_CMD_Hidden_AddTLO KaruupaJungleDedrakasDescent
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[KaruupaJungleDedrakasDescent]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${KaruupaJungleDedrakasDescent[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${KaruupaJungleDedrakasDescent[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Karuupa Jungle: Predator's Perch [Solo]
-		{
-			RI_CMD_Hidden_AddTLO KaruupaJunglePredatorsPerch
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[KaruupaJunglePredatorsPerch]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${KaruupaJunglePredatorsPerch[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${KaruupaJunglePredatorsPerch[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Mahngavi Wastes: Phantasmal Shades [Solo]
-		case Mahngavi Wastes: Phantasmal Shades [Heroic I]
-		{
-			RI_CMD_Hidden_AddTLO MahngaviWastesPhantasmalShades
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[MahngaviWastesPhantasmalShades]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${MahngaviWastesPhantasmalShades[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${MahngaviWastesPhantasmalShades[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Mahngavi Wastes: Warpwood Cairn [Solo]
-		case Mahngavi Wastes: Warpwood Cairn [Heroic I]
-		{
-			RI_CMD_Hidden_AddTLO MahngaviWastesWarpwoodCairn
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[MahngaviWastesWarpwoodCairn]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${MahngaviWastesWarpwoodCairn[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${MahngaviWastesWarpwoodCairn[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Castle Vacrul: Rosy Reverie [Solo]
-		case Castle Vacrul: Rosy Reverie [Heroic I]
-		{
-			RI_CMD_Hidden_AddTLO CastleVacrulRosyReverie
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[CastleVacrulRosyReverie]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CastleVacrulRosyReverie[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${CastleVacrulRosyReverie[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Castle Vacrul: Caverns of the Forsaken [Solo]
-		case Castle Vacrul: Caverns of the Forsaken [Heroic I]
-		{
-			RI_CMD_Hidden_AddTLO CastleVacrulCavernsoftheForsaken
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[CastleVacrulCavernsoftheForsaken]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CastleVacrulCavernsoftheForsaken[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${CastleVacrulCavernsoftheForsaken[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Castle Vacrul: Suite of Screams [Solo]
-		{
-			RI_CMD_Hidden_AddTLO CastleVacrulSuiteofScreams
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[CastleVacrulSuiteofScreams]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CastleVacrulSuiteofScreams[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${CastleVacrulSuiteofScreams[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Castle Vacrul: Throne of the Ydal
-		{
-			RI_CMD_Hidden_AddTLO CastleVacrulThroneoftheYdal
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[CastleVacrulThroneoftheYdal]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${CastleVacrulThroneoftheYdal[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${CastleVacrulThroneoftheYdal[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case The Merchant's Den [Solo]
-		;case The Merchant's Den [Heroic I]
-		;case The Merchant's Den [Heroic II]
-		{
-			RI_CMD_Hidden_AddTLO TheMerchantsDen
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TheMerchantsDen]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TheMerchantsDen[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TheMerchantsDen[3rtZdjv7,${MainArrayCounter}]}]
-
-			call SetShinyIgnoreNamed 1
-			RI_Var_Bool_IgnoreShinyY:Set[1]
-			call AddShinyActor "!"
-
-			;Storage Wars
-			if ${QuestJournalWindow.ActiveQuest["Storage Wars"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "a captive Vikana associate"
-			}
-
-			;Competitive Market Strategies
-			if ${QuestJournalWindow.ActiveQuest["Competitive Market Strategies"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "a captive Vikana associate"
-				call AddShinyActor "Kelethin Crate"
-				call AddShinyActor "Erudin Rugs"
-				call AddShinyActor "Maj'Dul Pottery"
-			}
-			;Contract Termination
-			if ${QuestJournalWindow.ActiveQuest["Contract Termination"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "Glintswift Gang Promissory Notes"
-				call AddShinyActor "Furdock & Friends Merchant Contracts"
-			}
-			;Cut-throat Competition
-			if ${QuestJournalWindow.ActiveQuest["Cut-throat Competition"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "Glintswift Gang Promissory Notes"
-				call AddShinyActor "Furdock & Friends Merchant Contracts"
-				call AddShinyActor "Kelethin Crate"
-				call AddShinyActor "Erudin Rugs"
-				call AddShinyActor "Maj'Dul Pottery"
-			}
-			break
-		}
-		case Raj'Dur Plateaus: Blood and Sand [Signature]
-		;case Raj'Dur Plateaus: Blood and Sand
-		{
-			LoadZone RajDurPlateausBloodandSand
-			;LoadedTLO:Set[TRUE]
-			;LoadedTLOName:Set[RajDurPlateausBloodandSand]
-			;for(MainArrayCounter:Set[0];${MainArrayCounter}<${RajDurPlateausBloodandSand[3rtZdjv7,#]};MainArrayCounter:Inc)
-			;	istrMain:Insert[${RajDurPlateausBloodandSand[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Raj'Dur Plateaus: The Sultan's Dagger [Signature]
-		;case Raj'Dur Plateaus: The Sultan's Dagger
-		{
-			RI_CMD_Hidden_AddTLO RajDurPlateausTheSultansDagger
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[RajDurPlateausTheSultansDagger]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${RajDurPlateausTheSultansDagger[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${RajDurPlateausTheSultansDagger[3rtZdjv7,${MainArrayCounter}]}]
-			
-			;Taskish Tablets for the Taking
-            if ${QuestJournalWindow.ActiveQuest["Taskish Tablets for the Taking"](exists)}
-            {
-                RI_Var_Bool_GrabShinys:Set[1]
-                call AddShinyActor "Stolen Ancient Tablet"
-            }
-
-			break
-		}
-		case Buried Takish'Hiz: Terrene Threshold [Signature]
-		;case Buried Takish'Hiz: Terrene Threshold
-		{
-			RI_CMD_Hidden_AddTLO BuriedTakishHizTerreneThreshold
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[BuriedTakishHizTerreneThreshold]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${BuriedTakishHizTerreneThreshold[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${BuriedTakishHizTerreneThreshold[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Buried Takish'Hiz: The Sacred Gift [Signature]
-		;case Buried Takish'Hiz: The Sacred Gift
-		{
-			RI_CMD_Hidden_AddTLO BuriedTakishHizTheSacredGift
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[BuriedTakishHizTheSacredGift]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${BuriedTakishHizTheSacredGift[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${BuriedTakishHizTheSacredGift[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Takish Badlands: Overgrowth [Solo]
-		;case Takish Badlands: Overgrowth
-		{
-			
-			RI_CMD_Hidden_AddTLO TakishBadlandsOvergrowth
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TakishBadlandsOvergrowth]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TakishBadlandsOvergrowth[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TakishBadlandsOvergrowth[3rtZdjv7,${MainArrayCounter}]}]
-
-			;Renewal of Ro: Tailing Dragons
-			if ${QuestJournalWindow.ActiveQuest["Renewal of Ro: Tailing Dragons"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "Spell-shaped Stone"
-			}
-			;Overgrowth Seed Stealers
-            if ${QuestJournalWindow.ActiveQuest["Overgrowth Seed Stealers"](exists)}
-            {
-                RI_Var_Bool_GrabShinys:Set[1]
-                call AddShinyActor "Jar of Seeds"
-            }
-			break
-		}
-		case Takish Badlands: Kigathor's Glade [Solo]
-		;case Takish Badlands: Kigathor's Glade
-		{
-			RI_CMD_Hidden_AddTLO TakishBadlandsKigathorsGlade
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[TakishBadlandsKigathorsGlade]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${TakishBadlandsKigathorsGlade[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${TakishBadlandsKigathorsGlade[3rtZdjv7,${MainArrayCounter}]}]
-
-			break
-		}
-		case Sandstone Delta: Eye of the Storm [Solo]
-		;case Sandstone Delta: Eye of the Storm
-		{
-			RI_CMD_Hidden_AddTLO SandstoneDeltaEyeoftheStorm
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SandstoneDeltaEyeoftheStorm]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SandstoneDeltaEyeoftheStorm[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SandstoneDeltaEyeoftheStorm[3rtZdjv7,${MainArrayCounter}]}]
-
-			;Sans Manifested Sands /SandstoneDeltaEyeoftheStorm
-            if ${QuestJournalWindow.ActiveQuest["Sans Manifested Sands"](exists)}
-            {
-                RI_Var_Bool_GrabShinys:Set[1]
-                call AddShinyActor "Sands of Clarity"
-                call AddShinyActor "Sands of Supremacy"
-            }
-
-			break
-		}
-		case Sandstone Delta: Eye of Night [Solo]
-		;case Sandstone Delta: Eye of Night
-		{
-			RI_CMD_Hidden_AddTLO SandstoneDeltaEyeofNight 
-			LoadedTLO:Set[TRUE]
-			LoadedTLOName:Set[SandstoneDeltaEyeofNight]
-			for(MainArrayCounter:Set[0];${MainArrayCounter}<${SandstoneDeltaEyeofNight[3rtZdjv7,#]};MainArrayCounter:Inc)
-				istrMain:Insert[${SandstoneDeltaEyeofNight[3rtZdjv7,${MainArrayCounter}]}]
-
-			;Renewal of Ro: Illusion From the Disillusioned
-			if ${QuestJournalWindow.ActiveQuest["Renewal of Ro: Illusion From the Disillusioned"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "Eye of Night Ward"
-				call AddShinyActor "Night Metal"
-			}
-			;Sand By Me
-            if ${QuestJournalWindow.ActiveQuest["Sand By Me"](exists)}
-            {
-                RI_Var_Bool_GrabShinys:Set[1]
-                call AddShinyActor "Sands of Zealotry"
-                call AddShinyActor "Sands of Blessing"
-                call AddShinyActor "Sands of Secrets"
-            }
-			break
-		}
-		default
-		{
-			if ${Zone.Name.Equal["Brackish Vaults [Solo]"]} || ${Zone.Name.Equal["Brackish Vaults [Duo]"]}
-			{
-				RI_CMD_Hidden_AddTLO BrackishVaults 
-				LoadedTLO:Set[TRUE]
-				LoadedTLOName:Set[BrackishVaults]
-				for(MainArrayCounter:Set[0];${MainArrayCounter}<${BrackishVaults[3rtZdjv7,#]};MainArrayCounter:Inc)
-					istrMain:Insert[${BrackishVaults[3rtZdjv7,${MainArrayCounter}]}]
-				break
-			}
-			;need to put in here for default loading of zones with names stripping [Heroic] [Event Heroic] [Solo] [Advanced Solo] [Agnostic] [Expert] etc
-			;MessageBox "This is not a supported zone, please contact Herculezz on Either forums or IRC and let him know the zone name: ${Me.GetGameData[Self.ZoneName].Label} to be added, Best to get and post a screenshot of this."
-			;Script:End
-			echo ISXRI: ${Time} There is no ZoneFile in the Extension for ${Me.GetGameData[Self.ZoneName].Label}, Attempting to import default ZoneFile, or you can type ImportZoneFile filename to import a file (omitting filename, will attempt to load WriteLocs default file for the zone)
-			NoFile:Set[TRUE]
-			break
 		}
 	}
-}
-atom LoadZone(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}")
-{
-	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
-	if ${FP.FileExists[${ZoneFileName}.dat]}
-	{
-		if ${Debug}
-			ISXRI: File ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat found Importing
-		ImportZoneFile ${ZoneFileName}
-	}
-	else
-	{
-		if ${Debug}
-			ISXRI: File ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat not found Importing from Extension
-		echo ISXRI: ${Time} Importing ZoneFile from Extension
-		RI_CMD_Hidden_AddTLO ${ZoneFileName}
-		LoadedTLO:Set[TRUE]
-		LoadedTLOName:Set[${ZoneFileName}]
-		for(MainArrayCounter:Set[0];${MainArrayCounter}<${${ZoneFileName}[3rtZdjv7,#]};MainArrayCounter:Inc)
-			istrMain:Insert[${${ZoneFileName}[3rtZdjv7,${MainArrayCounter}]}]
-		echo ISXRI: ${Time} Done Importing ZoneFile from Extension, to Load from File type ImportZoneFile filename (omitting filename, will attempt to load WriteLocs default file for the zone)
-	}
+
+	echo ISXRI: Instance: ${Zone.Name} does not exist, Please ensure ${ZoneFileName}.dat is in RI/Instance/ExpansionFolder/ and re run RI to rescan
 }
 
-atom(global) IZF(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}", bool _Verbose=TRUE)
+atom(global) ImportQuestFile(string _QuestName, bool _Verbose=TRUE)
 {
-	ImportZoneFile "${ZoneFileName}" ${_Verbose}
-}
-atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}", bool _Verbose=TRUE)
-{
-	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
-	;check if ZineFileName exists, if not end
-	if !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[Solo](exists)} && ${FP.FileExists[${ZoneFileName.Left[-4]}.dat]}
+	;check for ${_QuestName} as Key for RI_CollectionIndexString_RQQuests
+	if !${RI_CollectionIndexString_RQQuests.SelectKey["${_QuestName}"](exists)}
 	{
-		ZoneFileName:Set[${ZoneFileName.Left[-4]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
+		echo ISXRI: Quest: ${_QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
+		return
 	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[Heroic](exists)} && ${FP.FileExists[${ZoneFileName.Left[-6]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-6]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[HeroicI](exists)} && ${FP.FileExists[${ZoneFileName.Left[-7]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-7]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[HeroicII](exists)} && ${FP.FileExists[${ZoneFileName.Left[-8]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-8]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[Duo](exists)} && ${FP.FileExists[${ZoneFileName.Left[-3]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-3]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]} && ${ZoneFileName.Find[EventHeroic](exists)} && ${FP.FileExists[${ZoneFileName.Left[-11]}.dat]}
-	{
-		ZoneFileName:Set[${ZoneFileName.Left[-11]}]
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	elseif !${FP.FileExists[${ZoneFileName}.dat]}
-	{
-		echo ISXRI: ${Time} Missing ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-		if ${RI_Var_Bool_QuestMode}
-			Script:End
-		else
-			return
-	}
-	else
-	{
-		if ${_Verbose}
-			echo ISXRI: ${Time} Loading ZoneFile: "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"
-	}
-	
+
 	variable file Filename
 	variable int Count
 	
@@ -2206,7 +753,7 @@ atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName]
 	istrMain:Clear
 	Count:Set[1]
 	;set file to read in to Filename variable
-	Filename:SetFilename["${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat"]
+	Filename:SetFilename["${RI_CollectionIndexString_RQQuests.CurrentValue}"]
 
 	;open the file
 	Filename:Open
@@ -2230,7 +777,7 @@ atom(global) ImportZoneFile(string ZoneFileName="${Me.GetGameData[Self.ZoneName]
 	;close file
 	Filename:Close
 	if ${_Verbose}
-		echo ISXRI: ${Time} Done Loading ZoneFile
+		echo ISXRI: ${Time} Done Loading QuestFile
 }
 function CheckImReady()
 {
@@ -2297,6 +844,8 @@ function CheckImReady()
 }
 function Go(bool _Quest=FALSE)
 {
+	if ${RI_Var_Bool_Debug}
+		echo ISXRI: Starting: ${istrMain.Get[1]}
 	;make sure we are not dead or zoning or in the incorrect zone
 	call CheckImReady
 
@@ -2339,6 +888,7 @@ function Go(bool _Quest=FALSE)
 	}
 	for(;${MainArrayCounter}<=${istrMain.Used};MainArrayCounter:Inc)
 	{
+		 
 		;make sure we are not dead or zoning or in the incorrect zone or low health if solo
 		call CheckImReady
 		call ShinyCollection
@@ -2350,7 +900,8 @@ function Go(bool _Quest=FALSE)
 		}
 		;read a line from Array
 		LineRead:Set[${istrMain.Get[${MainArrayCounter}]}]
-				
+		if ${RI_Var_Bool_Debug}
+			echo ISXRI: ${LineRead}
 		if ${RI_Var_Bool_Debug}
 		{
 			echo ${Time}: Inside ArrayRead For Loop
@@ -2460,7 +1011,7 @@ atom(global) ____displayindex_213412jk123ui123km()
 function CustomFunction(string arg1="", string arg2="", string arg3="", string arg4="", string arg5="")
 {
 	if ${RI_Var_Bool_Debug}
-		echo ${Time}: Calling custom function ${CustomFunction}
+		echo ${Time}: Calling custom function ${CustomFunction} : ${arg1} ${arg2} ${arg3} ${arg4} ${arg5}
 	;move to custom location
 	if !${CustomLoc.Find["0 0 0"]} && !${CustomFunction.Find[WaitForZoning](exists)}
 	{
@@ -2639,6 +1190,72 @@ function SetIgnoreShinyY(int _OnOff)
 ;object RunInstancesObject
 objectdef RunInstancesObject
 {
+	member:bool ImportQuestFile(string QuestName)
+	{
+		variable bool found=FALSE
+		if (${RI_CollectionIndexString_RQQuests.FirstKey(exists)})
+		{
+			do
+			{
+				;echo "|${RI_CollectionIndexString_RQQuests.CurrentKey}|" .Equals[ "|${QuestName}|" ]
+				if ${RI_CollectionIndexString_RQQuests.CurrentKey.Equals["${QuestName}"]}
+				{
+					found:Set[TRUE]
+					break
+				}
+			}
+			while (${RI_CollectionIndexString_RQQuests.NextKey(exists)})
+		}
+		if !${found}
+		{
+			echo ISXRI: Quest: ${QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
+			return FALSE
+		}
+		;else
+		;{
+		;	echo ISXRI: Found ${RI_CollectionIndexString_RQQuests.CurrentKey} Loading into istrMain from Filename: ${RI_CollectionIndexString_RQQuests.CurrentValue}
+		;}
+		
+		if !${RI_Var_Bool_GlobalOthers}
+			relay "all other" RIObj:mImportQuestFile["${QuestName}"]
+		variable file Filename
+		variable int Count
+		
+		variable string TempString
+		istrMain:Clear
+		Count:Set[1]
+		;set file to read in to Filename variable
+		Filename:SetFilename["${RI_CollectionIndexString_RQQuests.CurrentValue}"]
+
+		;open the file
+		Filename:Open
+		
+		;seek to the beginning of file
+		Filename:Seek[0]
+		
+		;while we are not at the end of file
+		while !${Filename.EOF}
+		{
+			;store each line of the file in var
+			TempString:Set[${Filename.Read}]
+			if ${TempString.Equal[NULL]}
+				continue
+			istrMain:Insert[${TempString.Left[-1]}]
+			;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length}
+			Count:Inc
+			;waitframe
+		}
+		
+		;close file
+		Filename:Close
+
+		return TRUE
+	}
+	method mImportQuestFile(string QuestName)
+	{
+		if !${RIObj.ImportQuestFile["${QuestName}"]}
+			return 
+	}
 	member:bool PathTrigger(bool _CheckItemQty, string _ItemName, string _ItemQty, bool _QuestStepExists, bool _QuestExists, bool _QuestDNE, bool _QuestStepChecked, string _tempName, weakref _QuestStep, weakref _Quest, string CommonTrigger)
 	{
 		variable int _countor=0
@@ -4533,7 +3150,7 @@ function FastTravel(string _ZoneName, int _RelayToGroup=1, string _DoorOption=0)
 			relay ${RI_Var_String_RelayGroup} RIMUIObj:FastTravel[ALL,"${_ZoneName}","${_DoorOption}"]
 		else
 			RIMUIObj:FastTravel[${Me.Name},"${_ZoneName}","${_DoorOption}"]
-		wait 50 ${EQ2.Zoning}==1
+		wait 50 ${EQ2.Zoning}==1-
 		if ${EQ2.Zoning}==0
 		{
 			if ${EQ2UIPage[popup,ZoneTeleporter].IsVisible}
@@ -18404,6 +17021,7 @@ function Zann()
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 function QuestY(string _QN)
 {
 	if ${QuestJournalWindow.CompletedQuest[${_QN}](exists)}
@@ -18509,12 +17127,12 @@ function ResetZone(string _ZoneName)
 function QuestM(string QuestOrTimeLineName=~NONE~)
 {
 	MainQuestName:Clear
-	variable bool _Skip100NotChecked=FALSE
-	if !${UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI].Checked}
-	{
-		_Skip100NotChecked:Set[TRUE]
-		UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI]:SetChecked
-	}
+	; variable bool _Skip100NotChecked=FALSE
+	; if !${UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI].Checked}
+	; {
+	; 	_Skip100NotChecked:Set[TRUE]
+	; 	UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI]:SetChecked
+	; }
 	
 	if ${QuestOrTimeLineName.Equal[~NONE~]}
 	{
@@ -18532,11 +17150,11 @@ function QuestM(string QuestOrTimeLineName=~NONE~)
 	}
 	else
 	{
-		if ${QuestOrTimeLineName.Replace[" ",""].Find[SokokarTimelineCrafting]} || ${QuestOrTimeLineName.Replace[" ",""].Find[SokokarCraftingTimeline]}
-			call SokokarTimelineCrafting
+		;if ${QuestOrTimeLineName.Replace[" ",""].Find[SokokarTimelineCrafting]} || ${QuestOrTimeLineName.Replace[" ",""].Find[SokokarCraftingTimeline]}
+		;	call SokokarTimelineCrafting
 		;if ${QuestOrTimeLineName.Replace["'",""].Replace[" ",""].Find[BathezidsWatchFactionCrafting]}
 			;call BathezidsWatchFactionCrafting
-		else
+		;else
 			call QuestDefault "${QuestOrTimeLineName}"
 		; switch "${QuestOrTimeLineName}"
 		; {
@@ -18577,8 +17195,8 @@ function QuestM(string QuestOrTimeLineName=~NONE~)
 			; }
 		; }
 	}
-	if ${UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI].Checked} && !${_Skip100NotChecked}
-		UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI]:SetChecked
+	;if ${UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI].Checked} && !${_Skip100NotChecked}
+	;	UIElement[SettingsSkipMobAttackHealthCheckBox@SettingsFrame@CombatBotUI]:SetChecked
 	Script:End
 }
 function ExecuteCommand(string CommandName)
@@ -20024,48 +18642,19 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 {
 	;echo Start of Quest: MainQuestName Size: ${MainQuestName.Used}
 	press -release ${RI_Var_String_ForwardKey}
-	variable string _ConvertedQuestName
 
-	if ${_QuestName.Find["\""](exists)}
-		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
-	;echo ${_QuestName} // ${_ElementToJumpTo}
 	if ${_ElementToJumpTo}==0
 		variable int _OriginalMAC=${MainArrayCounter}
-	if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
-		_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
-	else
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
-	;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-	;wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	
-	;if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	;	relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0 1
-	;else
-	;	relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
-
-	declare FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
-	if ${FP.FileExists[${_QuestName}.dat]}
-	{
-		if ${Debug}
-			ISXRI: File ${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/${ZoneFileName}.dat found Importing
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile ${_QuestName} 0
-	}
-	else
-	{
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-		wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0 1
-	}
+	if !${RIObj.ImportQuestFile["${_QuestName}"]}
+		return 
 
 	wait 5
 	wait 50 ${istrMain.Used}>0
 	_QuestName:Set[${istrMain.Get[1]}]
 	MainQuestName:Insert["${_QuestName}"]
 	variable int _GiveUpCNT=0
+
 	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} ) && ${_GiveUpCNT:Inc}<=10
 	{
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
@@ -20074,7 +18663,7 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
+	;_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
 	variable bool _Repeatable
 	if ${istrMain.Get[2].Equal[Repeatable]}
@@ -20096,16 +18685,10 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 			QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 			wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 		}
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-		
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-		
-		wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		
-		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-		else
-			relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+
+		if !${RIObj.ImportQuestFile["${_QuestName}"]}
+			return 
+
 		wait 5
 		wait 50 ${istrMain.Used}>0
 		if ${_ElementToJumpTo}==0
@@ -20127,7 +18710,7 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 		
 		echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
 		
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
+		;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	}
 
 	if ${_CheckQuestCompleted} && !${_QuestName.Find["Access to Tower of the Four Winds"](exists)} && !${_QuestName.Find["Yun Zi"](exists)} && !${_QuestName.Find[Timeline](exists)} && !${_QuestName.Find["Losers Weepers"](exists)} && !${_QuestName.Find["New Lands New Profits"](exists)}
@@ -20156,16 +18739,10 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-	wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	
-	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+	if !${RIObj.ImportQuestFile["${_QuestName}"]}
+		return
+		
 	wait 5	
 	wait 50 ${istrMain.Used}>0
 	;if ${_ElementToJumpTo}==0
@@ -20222,7 +18799,7 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
 			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
 		else
-			relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+			relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
 		wait 5
 		wait 50 ${istrMain.Used}>0
 		if ${_ElementToJumpTo}==0
@@ -20277,7 +18854,7 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
 			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
 		else
-			relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+			relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
 		wait 5
 		wait 50 ${istrMain.Used}>0
 		_QuestName:Set[${istrMain.Get[1]}]
@@ -20331,7 +18908,7 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
 		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
 	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+		relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
 	wait 5
 	wait 50 ${istrMain.Used}>0	
 	;if ${_ElementToJumpTo}==0
@@ -20385,7 +18962,7 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
 			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
 		else
-			relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+			relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
 		wait 5
 		wait 50 ${istrMain.Used}>0
 		_QuestName:Set[${istrMain.Get[1]}]
@@ -20438,7 +19015,7 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
 		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
 	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+		relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
 	wait 5
 	wait 50 ${istrMain.Used}>0
 	;if ${_ElementToJumpTo}==0
@@ -20473,46 +19050,14 @@ function SetActiveQuest(string _QuestName)
 function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestCompleted=TRUE)
 {
 	;echo QuestDefault(string _QuestName=${_QuestName}, int _ElementToJumpTo=0=${_ElementToJumpTo}, bool _CheckQuestCompleted=TRUE=${_CheckQuestCompleted})
-	;echo ${_QuestName.Token[1,|]}
-	;echo "${_QuestName.Token[2,|]}" ${_QuestName.Token[2,|].Find[Repeatable]}
-	if ${_QuestName.Find["\""](exists)}
-		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
-	if ${_QuestName.Find[|](exists)}
-	{
-		if ${_QuestName.Token[2,|].Find[Repeatable]}
-		{
-			InputBox -skin eq2 "How many times would you like to run the Repeatable quest: ${_QuestName.Token[1,|]}?"
-			while ${UserInput.Equal[""]} 
-			{
-				MessageBox -skin eq2 "You must enter a number of times (1 is ok)"
-				InputBox -skin eq2 "How many times would you like to run the Repeatable quest: ${_QuestName.Token[1,|]}?"
-				wait 1
-			}
-			if ${String[${UserInput}].Equal[NULL]} || ${String[${UserInput}].Equal[0]}
-				return
-			else
-				call QuestRepeat "${_QuestName.Token[1,|]}" ${UserInput}
-			return
-		}
-		_QuestName:Set["${_QuestName.Token[1,|]}"]
-	}
-	variable string _ConvertedQuestName
-	
-	if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
-		_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
-	else
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-	;open dat or var and do all of it
-	;echo ${_QuestName}  //  ${_QuestName.Replace[" ",""].Replace["?",""]}
-	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-	wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	
-	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}"
-	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}"
+	;echo ${_QuestName.Count[/]}
+	;echo ${_QuestName.Token[${Math.Calc[${_QuestName.Count[/]}+1]},/]}
+	;echo ${_QuestName.Left[${Math.Calc[-1*${_QuestName.Token[${Math.Calc[${_QuestName.Count[/]}+1]},/].Length}]}]}
+	;RI_Var_String_QuestDir:Set["${_QuestName.Left[${Math.Calc[-1*${_QuestName.Token[${Math.Calc[${_QuestName.Count[/]}+1]},/].Length}]}]}"]
+
+	if !${RIObj.ImportQuestFile["${_QuestName}"]}
+		return 
+
 	wait 5
 	wait 50 ${istrMain.Used}>0
 
@@ -20551,7 +19096,7 @@ function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQues
 	
 	echo ISXRI: ${Time} Ending ${_QuestName.Replace["\"",""]}
 	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
+	;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	
 	MainQuestName:Clear	
 	if ${Me.IsMoving}
@@ -29148,7 +27693,7 @@ function TargetUntilQuestStepExists(string _TargetName, int _Distance, string _Q
 	}
 }
 
-function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Replace[" ",""].Replace["'",""].Replace[":",""].Replace["[",,""].Replace["]",""].Replace["\,",""]}")
+function Instance()
 {
 	variable string _ConvertedQuestName
 	variable string _QuestName
@@ -29160,156 +27705,33 @@ function Instance(string _InstanceName="${Me.GetGameData[Self.ZoneName].Label.Re
 	_OriginalMAC:Set[${MainArrayCounter}]
 	RI_Var_Bool_QuestMode:Set[FALSE]
 	press -release ${RI_Var_String_ForwardKey}
-	declare _FP filepath "${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"
-
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_InstanceName}
 	
-	wait 50 ${${_InstanceName}[3rtZdjv7,1](exists)}
+	LoadZone
+	wait 5
+	wait 50 ${istrMain.Used}>0
 	
-	if !${${_InstanceName}[3rtZdjv7,1](exists)}
-	{
-		;echo dne
-		;echo ${_InstanceName}
-		;echo _InstanceName:Set["${RIObj.ConvertedZoneName["${_InstanceName}"]}"]
-		_InstanceName:Set["${RIObj.ConvertedZoneName["${_InstanceName}"]}"]
-		;echo ${_InstanceName}
-		;echo relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_InstanceName}
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_InstanceName}
-	
-		wait 50 ${${_InstanceName}[3rtZdjv7,1](exists)}
-		
-	}
-	;echo ${_InstanceName}
-	
-	if ${${_InstanceName}[3rtZdjv7,1](exists)}
-	{
-		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_InstanceName}" 0
-		wait 5
-		wait 50 ${istrMain.Used}>0
-		if ${RI_Var_Bool_GlobalOthers}
-			return
-		if ${_InstanceName.Find["SandstoneDeltaEyeoftheStorm"]}
-		{
-			;Sans Manifested Sands
-            if ${QuestJournalWindow.ActiveQuest["Sans Manifested Sands"](exists)}
-            {
-                RI_Var_Bool_GrabShinys:Set[1]
-                call AddShinyActor "Sands of Clarity"
-                call AddShinyActor "Sands of Supremacy"
-            }
-		}
-		if ${_InstanceName.Find["SandstoneDeltaEyeofNight"]}
-		{
-			;Sand By Me
-            if ${QuestJournalWindow.ActiveQuest["Sand By Me"](exists)}
-            {
-                RI_Var_Bool_GrabShinys:Set[1]
-                call AddShinyActor "Sands of Zealotry"
-                call AddShinyActor "Sands of Blessing"
-                call AddShinyActor "Sands of Secrets"
-            }
-		}
-		if ${_InstanceName.Find["TakishBadlandsOvergrowth"]}
-		{
-			;Renewal of Ro: Tailing Dragons
-			if ${QuestJournalWindow.ActiveQuest["Renewal of Ro: Tailing Dragons"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "Spell-shaped Stone"
-			}
-			;Overgrowth Seed Stealers
-            if ${QuestJournalWindow.ActiveQuest["Overgrowth Seed Stealers"](exists)}
-            {
-                RI_Var_Bool_GrabShinys:Set[1]
-                call AddShinyActor "Jar of Seeds"
-            }
-		}
-		if ${_InstanceName.Find["SandstoneDeltaEyeofNight"]}
-		{
-			;Renewal of Ro: Illusion From the Disillusioned // Sandstone Delta: Eye of Night
-			if ${QuestJournalWindow.ActiveQuest["Renewal of Ro: Illusion From the Disillusioned"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "Eye of Night Ward"
-				call AddShinyActor "Night Metal"
-			}
-		}
-		if ${_InstanceName.Find["RajDurPlateausTheSultansDagger"]}
-		{
-			;Taskish Tablets for the Taking
-            if ${QuestJournalWindow.ActiveQuest["Taskish Tablets for the Taking"](exists)}
-            {
-                RI_Var_Bool_GrabShinys:Set[1]
-                call AddShinyActor "Stolen Ancient Tablet"
-            }
-		}
-		call LootOptions RoundRobin
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Assist 1 ${Me.Name}
-		MainArrayCounter:Set[0]
-		echo ISXRI: Starting ${Me.GetGameData[Self.ZoneName].Label}
-			
-		call Go TRUE
-		
-		echo ISXRI: Ending ${Me.GetGameData[Self.ZoneName].Label}
-
-		RI_CMD_Hidden_RemoveTLO ${_InstanceName}
-	}
-	elseif ${_FP.FileExists[${_InstanceName}.dat]}
-	{
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_InstanceName}" 0
-		wait 5
-		wait 50 ${istrMain.Used}>0
-		if ${RI_Var_Bool_GlobalOthers}
-			return
-
-		if ${_InstanceName.Find["TakishBadlandsOvergrowth"]}
-		{
-			;Renewal of Ro: Tailing Dragons
-			if ${QuestJournalWindow.ActiveQuest["Renewal of Ro: Tailing Dragons"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "Spell-shaped Stone"
-			}
-		}
-		if ${_InstanceName.Find["SandstoneDeltaEyeofNight"]}
-		{
-			;Renewal of Ro: Illusion From the Disillusioned // Sandstone Delta: Eye of Night
-			if ${QuestJournalWindow.ActiveQuest["Renewal of Ro: Illusion From the Disillusioned"](exists)}
-			{
-				RI_Var_Bool_GrabShinys:Set[1]
-				call AddShinyActor "Eye of Night Ward"
-				call AddShinyActor "Night Metal"
-			}
-		}
-		call LootOptions RoundRobin
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Assist 1 ${Me.Name}
-		MainArrayCounter:Set[0]
-		echo ISXRI: Starting ${Me.GetGameData[Self.ZoneName].Label}
-			
-		call Go TRUE
-		
-		echo ISXRI: Ending ${Me.GetGameData[Self.ZoneName].Label}
-
-		RI_CMD_Hidden_RemoveTLO ${_InstanceName}
-	}
-	else
+	if ${istrMain.Used}<1
 		call MessageBox "${Me.GetGameData[Self.ZoneName].Label} is not coded, run manually and resume at exit door" 1
-	
+	else
+	{
+		call LootOptions RoundRobin
+		relay ${RI_Var_String_RelayGroup} RI_CMD_Assist 1 ${Me.Name}
+		MainArrayCounter:Set[0]
+		echo ISXRI: Starting ${Me.GetGameData[Self.ZoneName].Label}
+			
+		call Go TRUE
+		
+		echo ISXRI: Ending ${Me.GetGameData[Self.ZoneName].Label}
+	}
+
 	;echo _QuestName:Set["${MainQuestName.Get[${MainQuestName.Used}]}"]
 	_QuestName:Set["${MainQuestName.Get[${MainQuestName.Used}]}"]
 
 	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-	wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	
 	istrMain:Clear
-	
-	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportZoneFile "${_ConvertedQuestName}" 0
+
+	relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
 	wait 5
 	wait 50 ${istrMain.Used}>0
 	
@@ -30173,6 +28595,16 @@ function LockAndWait(... args)
 function SkipLoot(int _On=0)
 {
 	relay ${RI_Var_String_RelayGroup} RI_Var_Bool_SkipLoot:Set[${_On}]
+}
+
+function DeleteQuest(string _QuestName)
+{
+	variable int cnt = 0
+	while ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${cnt:Inc} < 5000
+	{
+		QuestJournalWindow.ActiveQuest["${_QuestName}"]:Delete
+		wait 1
+	}
 }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

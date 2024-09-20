@@ -1,5 +1,0 @@
-string SarnakSupplyStocking[] = {"Sarnak Supply Stocking", 
-"Custom", 
-"SarnakSupplyStocking", 
-"0 0 0", 
-};

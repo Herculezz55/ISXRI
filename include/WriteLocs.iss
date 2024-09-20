@@ -40,8 +40,8 @@ objectdef RIWObject
 {
 	method RIWCustom()
 	{
-		ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-		ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/RIWCustom.xml"
+		ui -reload "${RI_Var_String_SkinFileName}"
+		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RIWCustom.xml"
 	}
 	method AddCustom()
 	{
@@ -346,8 +346,8 @@ function main(... args)
 		FP:Set["${LavishScript.HomeDirectory}/Scripts/RI/ZoneFiles/"]
 	}
 	
-	ui -reload "${LavishScript.HomeDirectory}/Interface/skins/eq2/eq2.xml"
-	ui -reload -skin eq2 "${LavishScript.HomeDirectory}/Scripts/RI/WriteLocs.xml"
+	ui -reload "${RI_Var_String_SkinFileName}"
+	ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/WriteLocs.xml"
 	
 	; UIElement[WriteLocs].FindChild[WriteLOC]:Hide
 	; UIElement[WriteLocs].FindChild[ClickActor]:Hide

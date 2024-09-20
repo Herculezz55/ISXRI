@@ -1,8 +1,0 @@
-string SavageWealdSideQuestTimeline[] = {"Savage Weald Side Quest Timeline", 
-"Custom", 
-"Quest \"Every Rosg Has Its Thorn\"", 
-"0 0 0", 
-"Custom", 
-"Quest \"Savage Camo\"", 
-"0 0 0", 
-};
