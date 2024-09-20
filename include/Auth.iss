@@ -77,7 +77,4 @@ function main()
 	
 	LavishSettings[ISXRIAuth]:Export["${LavishScript.HomeDirectory}/Extensions/ISXRI.xml"]
 	LavishSettings[ISXRIAuth]:Clear
-	;echo Saved file: "${LavishScript.HomeDirectory}/Extensions/ISXRI.xml"
-	echo ISXRI: Authentication information updated, reload ISXRI on all intended sessions
-	relay all -noredirect execute \${If[\${Extension[ISXRI.dll](exists)},ext -unload ISXRI]}
 }

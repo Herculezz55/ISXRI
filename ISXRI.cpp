@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.87 9-19-24"
-double EXTVER = 6.87;
+#define EXTENSION_VERSION "6.88 9-19-24"
+double EXTVER = 6.88;
 #include "ISXRI.h"
 
 //
@@ -236,14 +236,16 @@ void newupdatefunction(vector<string> ftd)
 		string dirname = localPath.substr(0, lastindex);
 		CreateDirectory(dirname.c_str(), 0);
 		int i = 0;
+		//printf("Updater Url: %s", urlPath.c_str());
+		//printf("Updater Local: %s", localPath.c_str());
 		do
 		{
 			hRez = URLDownloadToFile(NULL, urlPath.c_str(), localPath.c_str(), 0, NULL);
 			Sleep(100);
 		} 
-		while (hRez != 0 && i++ < 5);
+		while (!SUCCEEDED(hRez) && i++ < 25);
 
-		if (hRez != 0) {
+		if (!SUCCEEDED(hRez)) {
 			// download failed
 			string failMessage = "ISXRI: Updater Failed for ";
 			failMessage += localPath.c_str();
@@ -273,7 +275,7 @@ void NewUpd()
 		{
 			return;
 		}
-		char buffer[100];
+		char buffer[500];
 		unsigned long bytesRead;
 		stringstream ss;
 		stream->Read(buffer, 100, &bytesRead);
@@ -345,6 +347,7 @@ void NewUpd()
 	}
 	
 }
+
 DWORD WINAPI NewUpdaterThread(LPVOID lpParameter)
 {
 	NewUpd();
@@ -1002,10 +1005,8 @@ void getlp(bool Failed){
 	ISXRIXMLPath += "\\Extensions\\ISXRI.xml";
 	printf("Folder: %s", InnerspacePath);
 	printf("XML: %s", ISXRIXMLPath);*/
-
 	unsigned int ident = pISInterface->OpenSettings("Extensions/ISXRI.xml");
 	unsigned int ID = pISInterface->FindSet(ident, "Authentication");
-
 	//printf("ident: %s", to_string(ident));
 	//printf("ID: %s", to_string(ID));
 
@@ -1013,65 +1014,73 @@ void getlp(bool Failed){
 	printf(Login);
 	printf("Password:");
 	printf(Password);*/
+	
 	if ((pISInterface->GetSetting(ID, "Login", Login, sizeof(Login))) && (pISInterface->GetSetting(ID, "Password", Password, sizeof(Password))))
 	{
-		if (Failed)
+		try
 		{
-			bool ForeOrIS1 = false;
-			char charBuffer[512];
-			pISInterface->DataParse("${Display.Window.IsForeground}", charBuffer, sizeof(charBuffer));
-			//printf("Foreground: %s", charBuffer);
-			string strForeground = charBuffer;
-			if (strForeground == "TRUE")
+			if (Failed)
 			{
-				//printf("Iamnotfore");
-				ForeOrIS1 = true;
-			}
-			pISInterface->DataParse("${Session}", charBuffer, sizeof(charBuffer));
-			//printf("Result: %s", charBuffer);
-			string strSessionName = charBuffer;
-			if (strSessionName == "is1")
-			{
-				//printf("Iamnotis1");
-				ForeOrIS1 = true;
-			}
-			if (ForeOrIS1)
-			{
-				
-				printf("ISXRI: Re-enter authentication information");
-				char *k[] = { "3rtZdjv7" };
-				const unsigned char * p = Auth;
-				const char * c = (const char *)p;
+				bool ForeOrIS1 = false;
+				char charBuffer[512];
+				pISInterface->DataParse("${Display.Window.IsForeground}", charBuffer, sizeof(charBuffer));
+				//printf("Foreground: %s", charBuffer);
+				string strForeground = charBuffer;
+				if (strForeground == "TRUE")
+				{
+					//printf("Iamnotfore");
+					ForeOrIS1 = true;
+				}
+				pISInterface->DataParse("${Session}", charBuffer, sizeof(charBuffer));
+				//printf("Result: %s", charBuffer);
+				string strSessionName = charBuffer;
+				if (strSessionName == "is1")
+				{
+					//printf("Iamnotis1");
+					ForeOrIS1 = true;
+				}
+				if (ForeOrIS1)
+				{
 
-				pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, k);
-				pISInterface->ClearSet(ident);
-				pISInterface->UnloadSet(ident);
-				Sleep(5);
-				pISInterface->ExecuteCommand("relay \"all other local\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},ext -unload ISXRI]}");
-				gettinglp = false;
-				//unload ri on all
-				//${If[${Extension[ISXRI.dll](exists)},ext -unload ISXRI,echo ISXRI: Extension not running on this session]}
-				//pISInterface->Relay("ALL", "relay all -noredirect ${If[${Extension[ISXRI.dll](exists)},ext -unload ISXRI,echo ISXRI: Extension not running on this session]}");
-				return;
+					printf("ISXRI: Re-enter authentication information");
+					char* k[] = { "3rtZdjv7" };
+					const unsigned char* p = Auth;
+					const char* c = (const char*)p;
+
+					pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, k);
+					pISInterface->ClearSet(ident);
+					pISInterface->UnloadSet(ident);
+					Sleep(5);
+					pISInterface->ExecuteCommand("relay \"all other local\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},ext -unload ISXRI]}");
+					gettinglp = false;
+					//unload ri on all
+					//${If[${Extension[ISXRI.dll](exists)},ext -unload ISXRI,echo ISXRI: Extension not running on this session]}
+					//pISInterface->Relay("ALL", "relay all -noredirect ${If[${Extension[ISXRI.dll](exists)},ext -unload ISXRI,echo ISXRI: Extension not running on this session]}");
+					return;
+				}
+				else
+				{
+					pISInterface->ClearSet(ident);
+					pISInterface->UnloadSet(ident);
+					//bool boolDen = false;
+					//pISInterface->UnloadExtension("ISXRI", boolDen);  <--- crashing clients
+					// pISInterface->ExecuteCommand("ext -unload ISXRI");
+				}
 			}
-			else
-			{
-				pISInterface->ClearSet(ident);
-				pISInterface->UnloadSet(ident);
-				//bool boolDen = false;
-				//pISInterface->UnloadExtension("ISXRI", boolDen);  <--- crashing clients
-				// pISInterface->ExecuteCommand("ext -unload ISXRI");
-			}
+			//printf("Either we got both Settings or We did not fail");
+			/*printf("Login:");
+			printf(Login);
+			printf("Password:");
+			printf(Password);*/
+
+			pISInterface->ClearSet(ident);
+			pISInterface->UnloadSet(ident);
+			gotlp = true;
 		}
-		//printf("Either we got both Settings or We did not fail");
-		/*printf("Login:");
-		printf(Login);
-		printf("Password:");
-		printf(Password);*/
-
-		pISInterface->ClearSet(ident);
-		pISInterface->UnloadSet(ident);
-		gotlp = true;
+		catch (const std::exception&)
+		{
+			return;
+		}
 	}
 	else
 	{
@@ -1135,22 +1144,21 @@ int failure = 0;
 void authfunction(){
 	authenticating = true;
 	LastAuthTime = TimeSince();
-
+	
 	HINTERNET hOpen, hFile;
 	string data2;
 
 	hOpen = InternetOpen("UN/1.0", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
-
+	
 	char a[] = "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/L/";
 	char b[] = "/";
-	char URL[100] = "";
+	char URL[500] = "";
 	strcat_s(URL, a);
 	strcat_s(URL, Login);
 	strcat_s(URL, b);
 	strcat_s(URL, Password);
-
-	hFile = InternetOpenUrl(hOpen, URL, NULL, 0, INTERNET_FLAG_RELOAD, 0);
 	
+	hFile = InternetOpenUrl(hOpen, URL, NULL, 0, INTERNET_FLAG_RELOAD, 0);
 	if (hFile)
 	{
 		CHAR data[20];
@@ -1161,7 +1169,6 @@ void authfunction(){
 		InternetCloseHandle(hOpen);
 		printf("ISXRI: Connecting to primary authentication server");
 	}
-
 	//format all our strings and get code and date and format date with words.
 	string firstone = data2;
 	string secondone;
@@ -1282,9 +1289,9 @@ void authfunction(){
 			ExitThread(0);
 		}
 
-		char a2[] = "http://isxri.theavatarseq2.com/auth/login.php?l=";
-		char b2[] = "&p=";
-		char URL2[100] = "";
+		char a2[] = "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/L/";
+		char b2[] = "/";
+		char URL2[500] = "";
 		strcat_s(URL2, a2);
 		strcat_s(URL2, Login);
 		strcat_s(URL2, b2);
@@ -1453,9 +1460,11 @@ DWORD WINAPI AuthThread(LPVOID lpParameter)
 void auth()
 {
 	DWORD AuthThreadID;
+	
 	HANDLE threadHandle = CreateThread(0, 0, AuthThread, 0, 0, &AuthThreadID);
-
+	
 	CloseHandle(threadHandle);
+	return;
 }
 
 
@@ -1468,9 +1477,9 @@ void LoggedInfunction(){
 
 	hOpen = InternetOpen("UN/1.0", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
 
-	char a[] = "http://www.isxri.com/auth/login.php?l=";
-	char b[] = "&p=";
-	char URL[100] = "";
+	char a[] = "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/L/";
+	char b[] = "/";
+	char URL[500] = "";
 	strcat_s(URL, a);
 	strcat_s(URL, Login);
 	strcat_s(URL, b);
@@ -1583,9 +1592,9 @@ void LoggedInfunction(){
 			ExitThread(0);
 		}
 
-		char a2[] = "http://isxri.theavatarseq2.com/auth/login.php?l=";
-		char b2[] = "&p=";
-		char URL2[100] = "";
+		char a2[] = "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/L/";
+		char b2[] = "/";
+		char URL2[500] = "";
 		strcat_s(URL2, a2);
 		strcat_s(URL2, Login);
 		strcat_s(URL2, b2);
@@ -1757,6 +1766,7 @@ void LoggedIn()
 
 void LogOutfunction()
 {
+	return;
 	CoInitialize(NULL);
 
 	string sLI;
@@ -4255,116 +4265,129 @@ void ISXRIPulseNoAuth()
 }
 void ISXRIPulseAuth()
 {
-	if (!LoadMessageDisplayed)
+	try
 	{
-		printf("ISXRI: Loading version %s", RI_Version);
-		printf("ISXRI: For support goto http://forums.isxri.com or visit us on IRC @ #isxri");
-		printf("ISXRI: Authenticating ISXRI");
-		LoadMessageDisplayed = true;
-	}
-	if (!gotlp)
-	{
-		//printf("!gotlp if statement");
-		if (!gettinglp && pISInterface->GetScriptRuntime("Buffer:Auth") == 0)
+		if (!LoadMessageDisplayed)
 		{
+			printf("ISXRI: Loading version %s", RI_Version);
+			printf("ISXRI: For support goto http://forums.isxri.com or visit us on IRC @ #isxri");
+			printf("ISXRI: Authenticating ISXRI");
+			LoadMessageDisplayed = true;
+		}
+		if (!gotlp)
+		{
+			//printf("!gotlp if statement");
+			if (!gettinglp && pISInterface->GetScriptRuntime("Buffer:Auth") == 0)
+			{
+				CurrTime = TimeSince();
+				if ((CurrTime - LastGotLPTime) > 1)
+					getlp(false);
+			}
+		}
+	    if (!Authed)
+		{
+			//printf("!Authed if statement");
+			if (!authenticating)
+			{
+				//printf("!authenticating if statement");
+				if (gotlp && pISInterface->GetScriptRuntime("Buffer:Auth") == 0)
+				{
+					//printf("!gotlp");
+
+					//Sleep(500);
+					//authenticate
+					if (!authenticating)
+					{
+						//printf("!authenticating");
+						CurrTime = TimeSince();
+						//string test = to_string(CurrTime);
+						//printf("%s", test);
+						if ((CurrTime - LastAuthTime) > 1)
+						{
+							//printf("auth()");
+							auth();
+						}
+					}
+					//Sleep(500);
+				}
+			}
+		}
+		else
+		{
+			if (!NewUpdaterB)
+			{
+				//printf("checking ver");
+				//Sleep(500);
+				//checkver
+				NewUpdater();
+
+				//mark version checked
+				NewUpdaterB = true;
+				//Sleep(500);
+			}
+			if (!VerChecked)
+			{
+				//printf("checking ver");
+				//Sleep(500);
+				//checkver
+				checkver();
+
+				//mark version checked
+				VerChecked = true;
+				//Sleep(500);
+			}
+			else if (boolNewVersion)
+			{
+				updater();
+				boolNewVersion = false;
+			}
+			else if (!boolUpdated && boolNeedUpdate)
+			{
+				if (!boolAnnouncedUpdate)
+				{
+					printf("ISXRI: Updating ISXRI.dll");
+					pISInterface->ExecuteCommand("relay \"all other local\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},echo ISXRI: Updating ISXRI.dll]}");
+					//pISInterface->ExecuteCommand("relay \"all other\" echo ISXRI: Updating ISXRI.dll");
+					boolAnnouncedUpdate = true;
+				}
+				else if (boolRenameWorked)
+				{
+					if (!boolUpdating)
+					{
+						boolUpdating = true;
+						update();
+					}
+				}
+			}
+			else if (!Loaded)
+			{
+				//Sleep(500);
+				//register TLO's
+				RegisterTopLevelObjectsAfterAuth();
+				//pISInterface->AddTopLevelObject("CoA", TLO_CoA);
+				//register commands
+				RegisterCommandsAfterAuth();
+
+				//set loaded true
+				Loaded = true;
+				//Sleep(500);
+			}
+			// Removed the logincheck every 5 mins, need to decide do i want 1 hour or 1 day and change ips to 2? -- changed back to 5mins and fixed it so it does in seperate thread
+			//and probably make a DotNetAPP to do the checking so it doesnt freeze the clients, same with Auth and updater.  --- Fixed, Used CreateThread
 			CurrTime = TimeSince();
-			if ((CurrTime - LastGotLPTime) > 1)
-				getlp(false);
-		}
-	}
-	else if (!Authed)
-	{
-		//printf("!Authed if statement");
-		if (!authenticating)
-		{
-			//printf("!authenticating if statement");
-			if (gotlp && pISInterface->GetScriptRuntime("Buffer:Auth") == 0)
+			if ((CurrTime - LoggedInTime) > 300)//300 = 5 mins, 240 = 4 mins, 360 = 6 mins, 3600= 1 hour, 900=15mins
 			{
-				//printf("!gotlp");
-
-				//Sleep(500);
-				//authenticate
-				if (!authenticating)
-				{
-					CurrTime = TimeSince();
-					//string test = to_string(CurrTime);
-					//printf("%s", test);
-					if ((CurrTime - LastAuthTime) > 1)
-						auth();
-				}
-				//Sleep(500);
+				//printf("5 mins");
+				LoggedIn();
+				LoggedInTime = TimeSince();
 			}
 		}
 	}
-	else
-	{
-		if (!NewUpdaterB)
-		{
-			//printf("checking ver");
-			//Sleep(500);
-			//checkver
-			NewUpdater();
+	catch (exception e1) {
+		// catch block catches the exception that is thrown from try block
 
-			//mark version checked
-			NewUpdaterB = true;
-			//Sleep(500);
-		}
-		if (!VerChecked)
-		{
-			//printf("checking ver");
-			//Sleep(500);
-			//checkver
-			checkver();
-
-			//mark version checked
-			VerChecked = true;
-			//Sleep(500);
-		}
-		else if (boolNewVersion)
-		{
-			updater();
-			boolNewVersion = false;
-		}
-		else if (!boolUpdated && boolNeedUpdate)
-		{
-			if (!boolAnnouncedUpdate)
-			{
-				printf("ISXRI: Updating ISXRI.dll");
-				pISInterface->ExecuteCommand("relay \"all other local\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},echo ISXRI: Updating ISXRI.dll]}");
-				//pISInterface->ExecuteCommand("relay \"all other\" echo ISXRI: Updating ISXRI.dll");
-				boolAnnouncedUpdate = true;
-			}
-			else if (boolRenameWorked)
-			{
-				if (!boolUpdating)
-				{
-					boolUpdating = true;
-					update();
-				}
-			}
-		}
-		else if (!Loaded)
-		{
-			//Sleep(500);
-			//register TLO's
-			RegisterTopLevelObjectsAfterAuth();
-			//pISInterface->AddTopLevelObject("CoA", TLO_CoA);
-			//register commands
-			RegisterCommandsAfterAuth();
-
-			//set loaded true
-			Loaded = true;
-			//Sleep(500);
-		}
-		// Removed the logincheck every 5 mins, need to decide do i want 1 hour or 1 day and change ips to 2? -- changed back to 5mins and fixed it so it does in seperate thread
-		//and probably make a DotNetAPP to do the checking so it doesnt freeze the clients, same with Auth and updater.  --- Fixed, Used CreateThread
-		CurrTime = TimeSince();
-		if ((CurrTime - LoggedInTime) > 300)//300 = 5 mins, 240 = 4 mins, 360 = 6 mins, 3600= 1 hour, 900=15mins
-		{
-			//printf("5 mins");
-			LoggedIn();
-			LoggedInTime = TimeSince();
-		}
+		string error = e1.what();
+		printf(error.c_str());
 	}
 }
 
