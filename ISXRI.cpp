@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.86 7-10-24"
-double EXTVER = 6.86;
+#define EXTENSION_VERSION "6.87 9-19-24"
+double EXTVER = 6.87;
 #include "ISXRI.h"
 
 //
@@ -268,7 +268,7 @@ void NewUpd()
 		pISInterface->GetScriptsPath(InnerspaceScriptsPath, sizeof(InnerspaceScriptsPath));
 
 		IStream* stream;
-		HRESULT result = URLOpenBlockingStreamA(0, "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/", &stream, 0, 0);
+		HRESULT result = URLOpenBlockingStreamA(0, "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/P/", &stream, 0, 0);
 		if (result != 0)
 		{
 			return;
@@ -559,7 +559,7 @@ void CloseISXRI(){
 
 	//printf("Filename: %s", extunload);
 	//printf("Filename: %s", filename);
-	pISInterface->ExecuteTimedCommand(10,extunload);
+	pISInterface->ExecuteTimedCommand(10, extunload);
 	//pISInterface->ExecuteCommand("execute ${If[${Extension[" + filename + "](exists)},ext -unload ISXRI]}");
 }
 //update function
@@ -980,9 +980,6 @@ void testthread()
 }
 /// END EXAMPLE
 */
-
-
-
 
 char Login[50] = "\0";
 char Password[50] = "\0";
