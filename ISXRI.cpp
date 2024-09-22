@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.88 9-19-24"
-double EXTVER = 6.88;
+#define EXTENSION_VERSION "6.89 9-20-24"
+double EXTVER = 6.89;
 #include "ISXRI.h"
 
 //
@@ -115,7 +115,7 @@ bool boolNewVersion = false;
 
 HANDLE threadHandle;
 
-#include <wincrypt.h>e
+#include <wincrypt.h>
 
 //variables for updater
 string ISX_Orig_Path;
@@ -365,6 +365,66 @@ void NewUpdater()
 {
 	NewUpdaterT();
 }
+#include <iostream>
+#include <filesystem>
+namespace fs = std::filesystem;
+//map<string,string> entries;
+void replaceAll(std::string& str, const std::string& from, const std::string& to) {
+	if (from.empty())
+		return;
+	size_t start_pos = 0;
+	while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+		str.replace(start_pos, from.length(), to);
+		start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+	}
+}
+string GetQuestName(string questFile)
+{
+	std::ifstream file(questFile); // Open the file
+	if (!file.is_open()) {
+		printf("Failed to open the file: %s", questFile);
+		return questFile;
+	}
+
+	std::string firstLine;
+	if (std::getline(file, firstLine)) { // Read the first line
+		//firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\"'), firstLine.end());
+		//firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\\'), firstLine.end());
+		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), ','), firstLine.end());
+		//string comma = ",";
+		//string commaReplace = "%COM%";
+		//replaceAll(firstLine, comma, commaReplace);
+		return firstLine;
+	}
+	else {
+		{
+			pISInterface->Printf("Failed to read the first line.");
+		}
+	}
+
+	file.close(); // Close the file
+	return questFile;
+}
+
+void ScanQuests()
+{
+	pISInterface->Print("ISXRI: Scanning Quest Folder");
+	char InnerspaceScriptsPath[512];
+	string path = pISInterface->GetScriptsPath(InnerspaceScriptsPath, sizeof(InnerspaceScriptsPath));
+	path += "/RI/Quest/";
+	//vector<fs::directory_entry> entries;
+	pISInterface->ExecuteCommand("RI_CollectionString_RQQuests:Clear");
+	for (const auto& entry : fs::recursive_directory_iterator(path)) {
+		if (!entry.is_directory())
+		{
+			//entries.insert(std::make_pair(GetQuestName(entry.path().generic_string()), entry.path().generic_string()));
+			string com = "RI_CollectionString_RQQuests:Set[\"" + GetQuestName(entry.path().generic_string()) + "\",\"" + entry.path().generic_string() + "\"]";
+			//pISInterface->Print(com.c_str());
+			pISInterface->ExecuteCommand(com.c_str());
+		}
+	}
+	pISInterface->Print("ISXRI: Scanning Quest Folder Complete");
+}
 
 void DetermineLowestSessionISXRI()
 {
@@ -549,6 +609,7 @@ void ISXRIUnRegisterCommands()
 	pISInterface->RemoveCommand("RI_CMD_Hidden_AddTLO");
 	pISInterface->RemoveCommand("RI_CMD_Hidden_RemoveTLO");
 	pISInterface->RemoveCommand("RI_CMD_Hidden_RIS");
+	pISInterface->RemoveCommand("RI_CMD_Hidden_ScanQuests");
 
 	// pISInterface->RemoveCommand("CB");
 }
@@ -1043,11 +1104,11 @@ void getlp(bool Failed){
 				{
 
 					printf("ISXRI: Re-enter authentication information");
-					char* k[] = { "3rtZdjv7" };
+					char* k = (char*)"3rtZdjv7";
 					const unsigned char* p = Auth;
 					const char* c = (const char*)p;
 
-					pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, k);
+					pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, &k);
 					pISInterface->ClearSet(ident);
 					pISInterface->UnloadSet(ident);
 					Sleep(5);
@@ -1113,11 +1174,11 @@ void getlp(bool Failed){
 	
 			//printf("ISXRI: Missing authentication information");
 			//pISInterface->RunScript("Auth.iss");
-			char *k[] = { "3rtZdjv7" };
+			char* k = (char*)"3rtZdjv7";
 			const unsigned char * p = Auth;
 			const char * c = (const char *)p;
 
-			pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, k);
+			pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, &k);
 			pISInterface->ClearSet(ident);
 			pISInterface->UnloadSet(ident);
 			Sleep(5);
@@ -2019,6 +2080,11 @@ int __cdecl CMD_AbilityTypeEnableDisable(int argc, char *argv[])
 	return 1;
 }
 
+int __cdecl CMD_ScanQuests(int argc, char* argv[])
+{
+	ScanQuests();
+	return 1;
+}
 
 int __cdecl CMD_Cast(int argc, char *argv[])
 {
@@ -3040,18 +3106,38 @@ int __cdecl CMD_PauseCombatBots(int argc, char *argv[])
 }
 int __cdecl CMD_RQ(int argc, char *argv[])
 {
-	pISInterface->ExecuteTimedCommand(1, "RIMUIObj:RQ");
-		
+	string command;
+	if (argc > 1)
+	{
+		command += "RIMUIObj:RQ[";
+		command += argv[1];
+		for (int i = 2; i < argc - 1; i++)
+		{
+			command += ",";
+			command += argv[i];
+		}
+		if (argc > 2)
+		{
+			command += ",";
+			command += argv[argc - 1];
+		}
+		command += "]";
+	}
+	else
+		command += "RIMUIObj:RQ";
+
+	pISInterface->ExecuteTimedCommand(1, command.c_str());
+
 	return 1;
 }
 
 int __cdecl CMD_Evac(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = Evac;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("Evac", c, sizeof(Evac), 1, k);
+	pISInterface->RunScriptFromBuffer("Evac", c, sizeof(Evac), 1, &k);
 	return 1;
 }
 int __cdecl CMD_Transmute(int argc, char *argv[])
@@ -3063,7 +3149,7 @@ int __cdecl CMD_Transmute(int argc, char *argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3082,7 +3168,7 @@ int __cdecl CMD_Extract(int argc, char *argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3094,11 +3180,11 @@ int __cdecl CMD_Extract(int argc, char *argv[])
 
 int __cdecl CMD_Auth(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char *k = (char*)"3rtZdjv7";
 	const unsigned char * p = Auth;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, k);
+	pISInterface->RunScriptFromBuffer("Auth", c, sizeof(Auth), 1, &k);
 	return 1;
 }
 int __cdecl CMD_Salvage(int argc, char *argv[])
@@ -3110,7 +3196,7 @@ int __cdecl CMD_Salvage(int argc, char *argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3122,21 +3208,21 @@ int __cdecl CMD_Salvage(int argc, char *argv[])
 
 int __cdecl CMD_RIAutoTarget(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = AutoTarget;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RIAutoTarget", c, sizeof(AutoTarget), 1, k);
+	pISInterface->RunScriptFromBuffer("RIAutoTarget", c, sizeof(AutoTarget), 1, &k);
 	pISInterface->ExecuteTimedCommand(1, "UIElement[RIAutoTarget]:Show");
 	return 1;
 }
 int __cdecl CMD_RIMovement(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RIMovement;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RIMovement", c, sizeof(RIMovement), 1, k);
+	pISInterface->RunScriptFromBuffer("RIMovement", c, sizeof(RIMovement), 1, &k);
 	return 1;
 }
 int __cdecl CMD_RICom(int argc, char *argv[])
@@ -3146,7 +3232,7 @@ int __cdecl CMD_RICom(int argc, char *argv[])
 /*int __cdecl CMD_RunInstances(int argc, char *argv[])
 {
 	//printf("Starting RI");
-	char *key[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RunInstances;
 	const char * c = (const char *)p;
 	pISInterface->RunScriptFromBuffer("RunInstances", c, sizeof(RunInstances), argc, key);
@@ -3161,13 +3247,13 @@ int __cdecl CMD_RunInstances(int argc, char *argv[])
 
 	if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RunInstances", c, sizeof(RunInstances), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RunInstances", c, sizeof(RunInstances), argci, argvi);
 	}
@@ -3181,13 +3267,13 @@ int __cdecl CMD_DeleteMissions(int argc, char *argv[])
 
 	if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("DeleteMissions", c, sizeof(DeleteMissions), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("DeleteMissions", c, sizeof(DeleteMissions), argci, argvi);
 	}
@@ -3200,19 +3286,19 @@ int __cdecl CMD_RA(int argc, char *argv[])
 		
 	if (argc == 3)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], argv[2], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], argv[2], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RA", c, sizeof(Agnostics), argci, argvi);
 	}
 	else if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RA", c, sizeof(Agnostics), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RA", c, sizeof(Agnostics), argci, argvi);
 	}
@@ -3225,13 +3311,13 @@ int __cdecl CMD_ShareMissions(int argc, char *argv[])
 
 	if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("ShareMissions", c, sizeof(ShareMissions), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", (char*)NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("ShareMissions", c, sizeof(ShareMissions), argci, argvi);
 	}
@@ -3254,29 +3340,29 @@ int __cdecl CMD_CloseISXRI(int argc, char *argv[])
 }
 int __cdecl CMD_POTR(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = PotionReplenish;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("PotionReplenish", c, sizeof(PotionReplenish), 1, k);
+	pISInterface->RunScriptFromBuffer("PotionReplenish", c, sizeof(PotionReplenish), 1, &k);
 	return 1;
 }
 int __cdecl CMD_PoisonReplenish(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = PoisonReplenish;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("PoisonReplenish", c, sizeof(PoisonReplenish), 1, k);
+	pISInterface->RunScriptFromBuffer("PoisonReplenish", c, sizeof(PoisonReplenish), 1, &k);
 	return 1;
 }
 /*int __cdecl CMD_RZ(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RZ;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RZ", c, sizeof(RZ), 1, k);
+	pISInterface->RunScriptFromBuffer("RZ", c, sizeof(RZ), 1, &k);
 	return 1;
 }*/
 /*int __cdecl CMD_RZ(int argc, char *argv[])
@@ -3285,13 +3371,13 @@ int __cdecl CMD_PoisonReplenish(int argc, char *argv[])
 	const char * c = (const char *)p;
 	if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RZ", c, sizeof(RZ), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RZ", c, sizeof(RZ), argci, argvi);
 	}
@@ -3307,7 +3393,7 @@ int __cdecl CMD_RZo(int argc, char *argv[])
 		return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3325,7 +3411,7 @@ int __cdecl CMD_RZ(int argc, char *argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3343,7 +3429,7 @@ int __cdecl CMD_RIO(int argc, char* argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3361,7 +3447,7 @@ int __cdecl CMD_RIInventory(int argc, char *argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3379,7 +3465,7 @@ int __cdecl CMD_RIInfuse(int argc, char* argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3397,7 +3483,7 @@ int __cdecl CMD_RPG(int argc, char *argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3415,7 +3501,7 @@ int __cdecl CMD_RGL(int argc, char *argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3428,7 +3514,7 @@ int __cdecl CMD_RGL(int argc, char *argv[])
 int __cdecl CMD_Ascension(int argc, char *argv[])
 {
 	char* args[10];
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3439,29 +3525,29 @@ int __cdecl CMD_Ascension(int argc, char *argv[])
 }
 int __cdecl CMD_Harvest(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = Harvest;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RIHarvest", c, sizeof(Harvest), 1, k);
+	pISInterface->RunScriptFromBuffer("RIHarvest", c, sizeof(Harvest), 1, &k);
 	return 1;
 }
 int __cdecl CMD_AntiAFK(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = AntiAFK;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("AntiAFK", c, sizeof(AntiAFK), 1, k);
+	pISInterface->RunScriptFromBuffer("AntiAFK", c, sizeof(AntiAFK), 1, &k);
 	return 1;
 }
 int __cdecl CMD_CombatBot(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = CombatBot;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("CombatBot", c, sizeof(CombatBot), 1, k);
+	pISInterface->RunScriptFromBuffer("CombatBot", c, sizeof(CombatBot), 1, &k);
 	return 1;
 }
 int __cdecl CMD_AbilityCheck(int argc, char* argv[])
@@ -3473,7 +3559,7 @@ int __cdecl CMD_AbilityCheck(int argc, char* argv[])
 	return 0;
 	}*/
 	//printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3485,114 +3571,114 @@ int __cdecl CMD_AbilityCheck(int argc, char* argv[])
 int __cdecl CMD_CloseRI(int argc, char *argv[])
 {
 	printf("ISXRI: Closing RI");
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = CloseRI;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("CloseRI", c, sizeof(CloseRI), 1, k);
+	pISInterface->RunScriptFromBuffer("CloseRI", c, sizeof(CloseRI), 1, &k);
 	return 1;
 }
 /*int __cdecl CMD_RILooter(int argc, char *argv[])
 {
 	printf("ISXRI: Starting RILooter");
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RILooter;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RILooter", c, sizeof(RILooter), 1, k);
+	pISInterface->RunScriptFromBuffer("RILooter", c, sizeof(RILooter), 1, &k);
 	return 1;
 }*/
 void vCMD_RIS()
 {
 	//printf("ISXRI: Starting RI");
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RI;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RI", c, sizeof(RI), 1, k);
+	pISInterface->RunScriptFromBuffer("RI", c, sizeof(RI), 1, &k);
 }
 int __cdecl CMD_RIS(int argc, char *argv[])
 {
 	//printf("ISXRI: Starting RI");
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RI;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RI", c, sizeof(RI), 1, k);
+	pISInterface->RunScriptFromBuffer("RI", c, sizeof(RI), 1, &k);
 
 	return 1;
 }
 int __cdecl CMD_Replenish(int argc, char *argv[])
 {
 	printf("ISXRI: Starting Replenish");
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = Replenish;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("Replenish", c, sizeof(Replenish), 1, k);
+	pISInterface->RunScriptFromBuffer("Replenish", c, sizeof(Replenish), 1, &k);
 
 	return 1;
 }
 int __cdecl CMD_RelayGroup(int argc, char *argv[])
 {
-	char *key[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RelayGroup;
 	const char * c = (const char *)p;
 
 	printf("ISXRI: Starting RelayGroup");
-	pISInterface->RunScriptFromBuffer("RelayGroup", c, sizeof(RelayGroup), 1, key);
+	pISInterface->RunScriptFromBuffer("RelayGroup", c, sizeof(RelayGroup), 1, &k);
 
 	return 1;
 }
 int __cdecl CMD_RaidRelayGroup(int argc, char *argv[])
 {
-	char *key[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RaidRelayGroup;
 	const char * c = (const char *)p;
 
 	printf("ISXRI: Starting RaidRelayGroup");
-	pISInterface->RunScriptFromBuffer("RaidRelayGroup", c, sizeof(RaidRelayGroup), 1, key);
+	pISInterface->RunScriptFromBuffer("RaidRelayGroup", c, sizeof(RaidRelayGroup), 1, &k);
 
 	return 1;
 }
 /*int __cdecl CMD_OgrePlayNice(int argc, char *argv[])
 {
 	printf("ISXRI: Starting OgrePlayNice");
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = OgrePlayNice;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("OgrePlayNice", c, sizeof(OgrePlayNice), 1, k);
+	pISInterface->RunScriptFromBuffer("OgrePlayNice", c, sizeof(OgrePlayNice), 1, &k);
 	return 1;
 }*/
 int __cdecl CMD_Detarget(int argc, char *argv[])
 {
 	printf("ISXRI: Starting Detarget");
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = DeTarget;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("DeTarget", c, sizeof(DeTarget), 1, k);
+	pISInterface->RunScriptFromBuffer("DeTarget", c, sizeof(DeTarget), 1, &k);
 	return 1;
 }
 int __cdecl CMD_Vexven(int argc, char *argv[])
 {
 	printf("ISXRI: Starting Vexven");
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = Vexven;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("Vexven", c, sizeof(Vexven), 1, k);
+	pISInterface->RunScriptFromBuffer("Vexven", c, sizeof(Vexven), 1, &k);
 	return 1;
 }
 
 int __cdecl CMD_RoRDisguiseFlute(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RoRDisguiseFlute;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RoRDisguiseFlute", c, sizeof(RoRDisguiseFlute), 1, k);
+	pISInterface->RunScriptFromBuffer("RoRDisguiseFlute", c, sizeof(RoRDisguiseFlute), 1, &k);
 	return 1;
 }
 int __cdecl CMD_RoRDisguiseFluteEnd(int argc, char* argv[])
@@ -3608,11 +3694,11 @@ int __cdecl CMD_RoRDisguiseFluteEnd(int argc, char* argv[])
 }
 int __cdecl CMD_CoT(int argc, char* argv[])
 {
-	char* k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char* p = CoT;
 	const char* c = (const char*)p;
 
-	pISInterface->RunScriptFromBuffer("CoT", c, sizeof(CoT), 1, k);
+	pISInterface->RunScriptFromBuffer("CoT", c, sizeof(CoT), 1, &k);
 	return 1;
 }
 int __cdecl CMD_AggroControl(int argc, char *argv[])
@@ -3621,13 +3707,13 @@ int __cdecl CMD_AggroControl(int argc, char *argv[])
 	const char * c = (const char *)p;
 	if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("AggroControl", c, sizeof(AggroControl), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("AggroControl", c, sizeof(AggroControl), argci, argvi);
 	}
@@ -3651,11 +3737,11 @@ int __cdecl CMD_Depot(int argc, char *argv[])
 	}
 	
 	
-	/*char *k[] = { "3rtZdjv7" };
+	/*char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = Depot;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("Depot", c, sizeof(Depot), 1, k);*/
+	pISInterface->RunScriptFromBuffer("Depot", c, sizeof(Depot), 1, &k);*/
 	return 1;
 }
 int __cdecl CMD_ExecuteCommand(int argc, char *argv[])
@@ -3696,19 +3782,19 @@ int __cdecl CMD_RILogin(int argc, char *argv[])
 	const char * c = (const char *)p;
 	if (argc == 3)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], argv[2], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], argv[2], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RILogin", c, sizeof(RILogin), argci, argvi);
 	}
 	else if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RILogin", c, sizeof(RILogin), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RILogin", c, sizeof(RILogin), argci, argvi);
 	}
@@ -3724,7 +3810,7 @@ int __cdecl CMD_ArgTest(int argc, char *argv[])
 		return 0;
 	}
 	printf("ISXRI:Argument Count: %d", argc);
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3740,19 +3826,19 @@ int __cdecl CMD_ArgTest(int argc, char *argv[])
 	const char * c = (const char *)p;
 	if (argc == 3)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], argv[2], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], argv[2], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RIAutoDeity", c, sizeof(AutoDeity), argci, argvi);
 	}
 	else if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RIAutoDeity", c, sizeof(AutoDeity), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RIAutoDeity", c, sizeof(AutoDeity), argci, argvi);
 	}
@@ -3764,13 +3850,13 @@ int __cdecl CMD_Flag(int argc, char *argv[])
 	const char * c = (const char *)p;
 	if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("Flag", c, sizeof(Flag), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("Flag", c, sizeof(Flag), argci, argvi);
 	}
@@ -3778,45 +3864,45 @@ int __cdecl CMD_Flag(int argc, char *argv[])
 }
 int __cdecl CMD_ZoneReset(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = ZoneReset;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("ZoneReset", c, sizeof(ZoneReset), 1, k);
+	pISInterface->RunScriptFromBuffer("ZoneReset", c, sizeof(ZoneReset), 1, &k);
 	return 1;
 }
 int __cdecl CMD_RICharList(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RICharList;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RICharList", c, sizeof(RICharList), 1, k);
+	pISInterface->RunScriptFromBuffer("RICharList", c, sizeof(RICharList), 1, &k);
 	return 1;
 }
 int __cdecl CMD_Repair(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = Repair;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("Repair", c, sizeof(Repair), 1, k);
+	pISInterface->RunScriptFromBuffer("Repair", c, sizeof(Repair), 1, &k);
 	return 1;
 }
 int __cdecl CMD_RIMobHud(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = RIMobHud;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RIMobHud", c, sizeof(RIMobHud), 1, k);
+	pISInterface->RunScriptFromBuffer("RIMobHud", c, sizeof(RIMobHud), 1, &k);
 	return 1;
 }
 int __cdecl CMD_RIWriteLocs(int argc, char *argv[])
 {
 	char* args[10];
 
-	args[0] = "3rtZdjv7";
+	args[0] = (char*)"3rtZdjv7";
 	for (int i = 1; i < argc; i++)
 	{
 		args[i] = argv[i];
@@ -3827,47 +3913,47 @@ int __cdecl CMD_RIWriteLocs(int argc, char *argv[])
 }
 /*int __cdecl CMD_RIWriteLocs(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = WriteLocs;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RIWriteLocs", c, sizeof(WriteLocs), 1, k);
+	pISInterface->RunScriptFromBuffer("RIWriteLocs", c, sizeof(WriteLocs), 1, &k);
 	return 1;
 }*/
 int __cdecl CMD_RIBalance(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = Balance;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("RIBalance", c, sizeof(Balance), 1, k);
+	pISInterface->RunScriptFromBuffer("RIBalance", c, sizeof(Balance), 1, &k);
 	return 1;
 }
 int __cdecl CMD_GC(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = GetCharms;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("GetCharms", c, sizeof(GetCharms), 1, k);
+	pISInterface->RunScriptFromBuffer("GetCharms", c, sizeof(GetCharms), 1, &k);
 	return 1;
 }
 int __cdecl CMD_GI(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = GetItems;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("GetItems", c, sizeof(GetItems), 1, k);
+	pISInterface->RunScriptFromBuffer("GetItems", c, sizeof(GetItems), 1, &k);
 	return 1;
 }
 int __cdecl CMD_HideEffects(int argc, char *argv[])
 {
-	char *k[] = { "3rtZdjv7" };
+	char* k = (char*)"3rtZdjv7";
 	const unsigned char * p = HideEffects;
 	const char * c = (const char *)p;
 
-	pISInterface->RunScriptFromBuffer("HideEffects", c, sizeof(HideEffects), 1, k);
+	pISInterface->RunScriptFromBuffer("HideEffects", c, sizeof(HideEffects), 1, &k);
 	return 1;
 }
 int __cdecl CMD_Collection(int argc, char *argv[])
@@ -3876,13 +3962,13 @@ int __cdecl CMD_Collection(int argc, char *argv[])
 	const char * c = (const char *)p;
 	if (argc == 2)
 	{
-		char* argvi[] = { "3rtZdjv7", argv[1], NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", argv[1], NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RICollection", c, sizeof(Collection), argci, argvi);
 	}
 	else
 	{
-		char* argvi[] = { "3rtZdjv7", NULL };
+		char* argvi[] = { (char*)"3rtZdjv7", NULL };
 		int argci = sizeof(argvi) / sizeof(char*) - 1;
 		pISInterface->RunScriptFromBuffer("RICollection", c, sizeof(Collection), argci, argvi);
 	}
@@ -4019,6 +4105,7 @@ void RegisterCommandsAfterAuth()
 {
 	CheckForAndLoadISXEQ2();
 	vCMD_RIS();
+	ScanQuests();
 	pISInterface->AddCommand("CloseRI", CMD_CloseRI, true, false);
 	pISInterface->AddCommand("RIMovement", CMD_RIMovement, true, false);
 	pISInterface->AddCommand("RI_CMD_ExecuteCommand", CMD_ExecuteCommand, true, false);
@@ -4116,6 +4203,7 @@ void RegisterCommandsAfterAuth()
 	pISInterface->AddCommand("RI_CMD_Hidden_AddTLO", CMD_AddTLO, true, true);
 	pISInterface->AddCommand("RI_CMD_Hidden_RemoveTLO", CMD_RemoveTLO, true, true);
 	pISInterface->AddCommand("RI_CMD_Hidden_RIS", CMD_RIS, true, true);
+	pISInterface->AddCommand("RI_CMD_Hidden_ScanQuests", CMD_ScanQuests, true, true);
 	//end hidden commands
 
 	//if (combatbot)
@@ -4147,6 +4235,8 @@ void RegisterTopLevelObjectsAfterAuth()
 {
 	pISInterface->AddTopLevelObject("Devel", TLO_Devel);
 	pISInterface->AddTopLevelObject("PaidMem", TLO_PaidMem);
+	//pISInterface->AddTopLevelObject("QuestDirs", TLO_QuestDirs);
+	
 	/**/
 }
 bool Loaded = false;
@@ -4487,17 +4577,17 @@ bool ISXRI::Initialize(ISInterface *p_ISInterface)
 		RegisterExtension();
 
 		// retrieve basic LavishScript data types for use in ISXRI data types
-		pStringType=pISInterface->FindLSType("string");
-		pIntType=pISInterface->FindLSType("int");
-		pUintType=pISInterface->FindLSType("uint");
-		pBoolType=pISInterface->FindLSType("bool");
-		pFloatType=pISInterface->FindLSType("float");
-		pTimeType=pISInterface->FindLSType("time");
-		pByteType=pISInterface->FindLSType("byte");
-		pIntPtrType=pISInterface->FindLSType("intptr");
-		pBoolPtrType=pISInterface->FindLSType("boolptr");
-		pFloatPtrType=pISInterface->FindLSType("floatptr");
-		pBytePtrType=pISInterface->FindLSType("byteptr");
+		pStringType=pISInterface->FindLSType((char*)"string");
+		pIntType=pISInterface->FindLSType((char*)"int");
+		pUintType=pISInterface->FindLSType((char*)"uint");
+		pBoolType=pISInterface->FindLSType((char*)"bool");
+		pFloatType=pISInterface->FindLSType((char*)"float");
+		pTimeType=pISInterface->FindLSType((char*)"time");
+		pByteType=pISInterface->FindLSType((char*)"byte");
+		pIntPtrType=pISInterface->FindLSType((char*)"intptr");
+		pBoolPtrType=pISInterface->FindLSType((char*)"boolptr");
+		pFloatPtrType=pISInterface->FindLSType((char*)"floatptr");
+		pBytePtrType=pISInterface->FindLSType((char*)"byteptr");
 
 		// Connect to commonly used Inner Space services
 		ConnectServices();
