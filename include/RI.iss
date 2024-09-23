@@ -5052,6 +5052,7 @@ objectdef RIMUIObject
 				{
 					if ${This.RQCategory[${RI_CollectionString_RQQuests.CurrentValue}].Equal[${_CatName}]} && ${RI_CollectionString_RQQuests.CurrentKey.NotEqual[""]}
 					{
+						;echo "${RI_CollectionString_RQQuests.CurrentKey}" // "${RI_CollectionString_RQQuests.CurrentValue}"
 						if ${RI_CollectionString_RQQuests.CurrentKey.Find["Timeline"]}
 							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}",FFE8E200]
 						elseif ${_TempString.Find["Mission"]}

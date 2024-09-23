@@ -739,12 +739,16 @@ atom(global) LoadZone(string ZoneFileName="${Zone.Name.ReplaceSubstring["[Solo]"
 
 atom(global) ImportQuestFile(string _QuestName, bool _Verbose=TRUE)
 {
-	_QuestName:Set[${_QuestName.Replace["\,",""]}]
+	_QuestName:Set[${_QuestName.Replace["\,",""].Trim}]
 	;check for ${_QuestName} as Key for RI_CollectionString_RQQuests
 	if !${RI_CollectionString_RQQuests["${_QuestName}"](exists)}
 	{
-		echo ISXRI: Quest: ${_QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
-		return
+		RI_CMD_Hidden_ScanQuests
+		if !${RI_CollectionString_RQQuests["${_QuestName}"](exists)}
+		{
+			echo ISXRI: Quest: ${_QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
+			return
+		}
 	}
 
 	variable file Filename
@@ -769,7 +773,7 @@ atom(global) ImportQuestFile(string _QuestName, bool _Verbose=TRUE)
 		TempString:Set[${Filename.Read}]
 		if ${TempString.Equal[NULL]}
 			continue
-		istrMain:Insert[${TempString.Left[-1]}]
+		istrMain:Insert[${TempString.Replace["\n",""].Replace["\r",""].Trim}]
 		;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length}
 		Count:Inc
 		;waitframe
@@ -1020,7 +1024,7 @@ function CustomFunction()
 		call RIMObj.Move ${CustomLoc} ${Precision} 0 TRUE ${StopForCombat} TRUE FALSE TRUE
 	}
 	call MakeCurrentActiveQuest
-	execute call ${CustomFunction}
+	execute -reparse call ${CustomFunction~}
 	wait 5
 	if ${StopForCombat}
 		call RIMObj.CheckCombat
@@ -1194,35 +1198,16 @@ objectdef RunInstancesObject
 {
 	member:bool ImportQuestFile(string _QuestName)
 	{
-		_QuestName:Set[${_QuestName.Replace["\,",""]}]
-		;variable bool found=FALSE
-		;if (${RI_CollectionString_RQQuests.FirstKey(exists)})
-		;{
-			;do
-			;{
-				;echo "|${RI_CollectionString_RQQuests.CurrentKey}|" .Equals[ "|${QuestName}|" ]
-				;if ${RI_CollectionString_RQQuests.CurrentKey.Equals["${QuestName}"]}
-				;{
-				;	found:Set[TRUE]
-				;	break
-				;}
-			;}
-			;while (${RI_CollectionString_RQQuests.NextKey(exists)})
-		;}
-		;if !${found}
-		;{
-		;	echo ISXRI: Quest: ${QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
-		;	return FALSE
-		;}
-		;else
-		;{
-		;	echo ISXRI: Found ${RI_CollectionString_RQQuests.CurrentKey} Loading into istrMain from Filename: ${RI_CollectionString_RQQuests.CurrentValue}
-		;}
+		_QuestName:Set[${_QuestName.Replace["\,",""].Trim}]
 		;echo ${RI_CollectionString_RQQuests.Used} \\ ${RI_CollectionString_RQQuests[${_QuestName}]}
 		if !${RI_CollectionString_RQQuests[${_QuestName}](exists)}
 		{
-			echo ISXRI: Quest: ${_QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
-			return FALSE
+			RI_CMD_Hidden_ScanQuests
+			if !${RI_CollectionString_RQQuests["${_QuestName}"](exists)}
+			{
+				echo ISXRI: Quest: ${_QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
+				return
+			}
 		}
 
 		if !${RI_Var_Bool_GlobalOthers}
@@ -1249,7 +1234,7 @@ objectdef RunInstancesObject
 			TempString:Set[${Filename.Read}]
 			if ${TempString.Equal[NULL]}
 				continue
-			istrMain:Insert[${TempString.Left[-1]}]
+			istrMain:Insert[${TempString.Replace["\n",""].Replace["\r",""].Trim}]
 			;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length}
 			Count:Inc
 			;waitframe
@@ -3151,7 +3136,7 @@ function FastTravel(string _ZoneName, int _RelayToGroup=1, string _DoorOption=0)
 	wait 5
 	if ${RIMUIObj.MainIconIDExists[${Me.ID},955,0]}==0
 	{
-		call MessageBox "You must be gold to use the FastTravel feature required for this quest Pausing RQ please resume in ${_ZoneName.Replace["\"",""]} at the location FastTravel would normally take you"
+		call MessageBox "You must be gold to use the FastTravel feature required for this quest Pausing RQ please resume in ${_ZoneName} at the location FastTravel would normally take you"
 	}
 	else
 	{
@@ -3427,9 +3412,9 @@ function HailActorGetQuest(... args)
 			case -Actor
 			{
 				if ${args[${Math.Calc[${_acnt}+1]}].Left[6].Upper.Equal[GUILD-]}
-					_Actor:Set["guild,${args[${Math.Calc[${_acnt}+1]}].Right[-6].Replace["\"",""]}"]
+					_Actor:Set["guild,${args[${Math.Calc[${_acnt}+1]}].Right[-6]}"]
 				else
-					_Actor:Set["${args[${Math.Calc[${_acnt}+1]}].Replace["\"",""]}"]
+					_Actor:Set["${args[${Math.Calc[${_acnt}+1]}]}"]
 				break
 			}
 			case -NumberOfResponses
@@ -3483,7 +3468,7 @@ function HailActorGetQuest(... args)
 	if ${_CheckQuestExists} && ( ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} )
 		return
 	;make sure _Actor exists so we do not go through the motions for nothign
-	echo \${Actor[${_Actor}](exists)}  //  ${Actor[${_Actor}](exists)}
+	;echo \${Actor[${_Actor}](exists)}  //  ${Actor[${_Actor}](exists)}
 	if ${Actor[${_Actor}](exists)}
 	{
 		variable int _ID
@@ -27289,9 +27274,9 @@ function CheckPreReqs(... args)
 		for(_count:Set[1];${_count}<=${_Fails.Used};_count:Inc)
 		{
 			if ${_count}<${_Fails.Used}
-				_FailMessage:Concat[${_Fails.Get[${_count}].Replace["\"",""]}\n]
+				_FailMessage:Concat[${_Fails.Get[${_count}]}\n]
 			else
-				_FailMessage:Concat[${_Fails.Get[${_count}].Replace["\"",""]}]
+				_FailMessage:Concat[${_Fails.Get[${_count}]}]
 		}
 		MessageBox -skin eq2 "${_FailMessage}"
 		if !${RI_Var_Bool_SSSInScript}
@@ -27547,8 +27532,8 @@ function PlaceHouseItem(int _FaceDegree=${Me.Heading})
 }
 function MessageBox(string _Message, bool _Pause=1)
 {
-	RIConsole:Echo["${_Message.Replace["\"",""]}"]
-	MessageBox -skin eq2 "${_Message.Replace["\"",""]}"
+	RIConsole:Echo["${_Message}"]
+	MessageBox -skin eq2 "${_Message}"
 	if ${_Pause}
 	{
 		RI_Var_Bool_Paused:Set[TRUE]

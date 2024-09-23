@@ -269,7 +269,7 @@ void NewUpd()
 		char InnerspaceScriptsPath[512];
 		pISInterface->GetScriptsPath(InnerspaceScriptsPath, sizeof(InnerspaceScriptsPath));
 
-		IStream* stream;
+		/*IStream* stream;
 		HRESULT result = URLOpenBlockingStreamA(0, "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/P/", &stream, 0, 0);
 		if (result != 0)
 		{
@@ -284,8 +284,31 @@ void NewUpd()
 			ss.write(buffer, (long long)bytesRead);
 			stream->Read(buffer, 100, &bytesRead);
 		}
-		stream->Release();
-		string resultString = ss.str();
+		stream->Release();*/
+
+		HINTERNET hInternet = InternetOpen("MyUserAgent", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
+		if (hInternet == NULL) {
+			std::cerr << "InternetOpen failed: " << GetLastError() << std::endl;
+			return;
+		}
+
+		HINTERNET hUrl = InternetOpenUrl(hInternet, "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/P/", NULL, 0, INTERNET_FLAG_RELOAD, 0);
+		if (hUrl == NULL) {
+			std::cerr << "InternetOpenUrl failed: " << GetLastError() << std::endl;
+			InternetCloseHandle(hInternet);
+			return;
+		}
+
+		char buffer[999999];
+		DWORD bytesRead;
+		while (InternetReadFile(hUrl, buffer, sizeof(buffer), &bytesRead) && bytesRead != 0) {
+			//std::cout.write(buffer, bytesRead);
+		}
+
+		InternetCloseHandle(hUrl);
+		InternetCloseHandle(hInternet);
+
+		string resultString = buffer;
 		//printf(resultString.c_str());
 		vector<string> filesToDownload;
 
@@ -408,7 +431,7 @@ string GetQuestName(string questFile)
 
 void ScanQuests()
 {
-	pISInterface->Print("ISXRI: Scanning Quest Folder");
+	//pISInterface->Print("ISXRI: Scanning Quest Folder");
 	char InnerspaceScriptsPath[512];
 	string path = pISInterface->GetScriptsPath(InnerspaceScriptsPath, sizeof(InnerspaceScriptsPath));
 	path += "/RI/Quest/";
@@ -418,12 +441,12 @@ void ScanQuests()
 		if (!entry.is_directory())
 		{
 			//entries.insert(std::make_pair(GetQuestName(entry.path().generic_string()), entry.path().generic_string()));
-			string com = "RI_CollectionString_RQQuests:Set[\"" + GetQuestName(entry.path().generic_string()) + "\",\"" + entry.path().generic_string() + "\"]";
+			string com = "RI_CollectionString_RQQuests:Set[" + GetQuestName(entry.path().generic_string()) + "," + entry.path().generic_string() + "]";
 			//pISInterface->Print(com.c_str());
 			pISInterface->ExecuteCommand(com.c_str());
 		}
 	}
-	pISInterface->Print("ISXRI: Scanning Quest Folder Complete");
+	//pISInterface->Print("ISXRI: Scanning Quest Folder Complete");
 }
 
 void DetermineLowestSessionISXRI()
