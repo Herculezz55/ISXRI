@@ -67,9 +67,11 @@ objectdef RIApi
         return ${negate}
     }
 
-	/* ================================================
+/* 
+ ===============================================================================================
 		Movement
-	*/ ================================================
+ ===============================================================================================
+*/
 
     function MoveTo(string forWho, point3f location, float minDistance = 0)
     {
@@ -177,11 +179,11 @@ function Follow2D(string ActorName,float X, float Y, float Z, float RespectDista
 
 
 
-
-
-	/* ================================================
-		specials
-	*/ ================================================
+/*
+ ===============================================================================================
+		Specials
+ ===============================================================================================
+*/
 
 function ActivateSpecial(string ActorName, float X, float Y, float Z)
 {
@@ -253,10 +255,11 @@ function ClickOn(string ActorName)
 }
 
 
-
-;===================================================================================
-; Descriptions
-
+/*
+;=============================================================================================== 
+Descriptions
+;===============================================================================================
+/*
 
 function DescribeActor(int ActorID)
 {
@@ -409,7 +412,7 @@ function DescribeActor(int ActorID)
 	}
 		}
 ;===================================================================================
-;long Archetype
+; Archetype data & actions
 ;
 
 function get_Archetype(string ToonClass)
@@ -518,6 +521,53 @@ function get_Archetype(string ToonClass)
 		}	
 	}
 }
+
+
+function CureArchetype(string Archetype)
+{
+	;variable int Counter=0
+	variable int i
+	for ( i:Set[0] ; ${i} < ${Me.GroupCount} ; i:Inc )
+	{
+		echo getting Archetype for ${Me.Group[${i}].Class}
+		call get_Archetype "${Me.Group[${i}].Class}"
+		echo it's ${Return}
+		if (${Return.Equal[${Archetype}]})
+			oc !c -CastAbilityOnPlayer Priest Cure ${Me.Group[${i}].Name}
+	}		
+}
+
+
+function Evac()
+{
+	echo debugging Evac I am ${Me.Class}/${Me.Archetype}
+	switch ${Me.Archetype}
+	{
+		case scout
+			echo debug: in scout case
+			Me.Ability["Escape"]:Use
+		break
+		case priest
+			echo debug: in priest case
+			switch ${Me.Class}
+			{
+				case druid
+					echo debug: in druid case
+					Call UseAbility "Verdurous Journey"
+				break
+				default
+					echo debug: in default case
+					Me.Inventory["Totem of Escape"]:Use
+				break
+			}
+		break
+		default
+			echo debug: in default case
+			Me.Inventory["Totem of Escape"]:Use
+		break
+	}
+}
+
 
 ;===================================================================================
 
