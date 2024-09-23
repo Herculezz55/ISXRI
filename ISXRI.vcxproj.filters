@@ -33,6 +33,9 @@
     <Filter Include="Header Files\Services\List">
       <UniqueIdentifier>{0e2e9287-7475-47e3-ba73-ead2846fb832}</UniqueIdentifier>
     </Filter>
+    <Filter Include=".github">
+      <UniqueIdentifier>{895a8ee7-ae11-45b6-91c0-e39ce73f75d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ISXRI.cpp">
