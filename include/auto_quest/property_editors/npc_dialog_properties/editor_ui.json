@@ -1,0 +1,97 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "type": "stackpanel",
+  "name": "RI.quest_writer.npc_dialog_properties",
+  "_dock": "bottom",
+  "borderBrush": {
+    "color": "#f4f3ee"
+  },
+  "borderThickness": [0, 2, 0, 0],
+  "header": "test",
+  "children": [
+    {
+      "type": "panel",
+      "borderBrush": {
+        "color": "#f4f3ee"
+      },
+      "borderThickness": [0, 0, 0, 1],
+      "margin": [0, 0, 0, 15],
+      "children": [
+        {
+          "type": "textblock",
+          "text": "NPC Dialog Properties",
+          "font": {
+            "bold": true,
+            "heightFactor": 1.2
+          },
+          "horizontalAlignment": "center",
+          "widthFactor": 1
+        }
+      ]
+    },
+    {
+      "type": "textblock",
+      "text": "NPC Name:",
+      "widthFactor": 1,
+      "horizontalAlignment": "left",
+      "font": {
+        "heightFactor": 0.9
+      }
+    },
+    {
+      "type": "stackpanel",
+      "orientation": "horizontal",
+      "children": [
+        {
+          "type": "button",
+          "content": "◎",
+          "tooltip": "Set the NPC name to the currently targeted NPC.",
+          "horizontalAlignment": "left",
+          "eventHandlers": {
+            "onRelease": [
+              "method",
+              "RINPCDialogPropertiesController",
+              "OnSetNPCNameButtonClick"
+            ]
+          }
+        },
+        {
+          "type": "textblock",
+          "horizontalAlignment": "left",
+          "widthFactor": 1,
+          "text": "${RINPCDialogPropertiesController.CurrentNPCName}"
+        }
+      ]
+    },
+    {
+      "type": "stackpanel",
+      "orientation": "vertical",
+      "children": [
+        {
+          "type": "textblock",
+          "text": "Dialog Options:",
+          "horizontalAlignment": "left",
+          "widthFactor": 1,
+          "font": {
+            "heightFactor": 0.9
+          }
+        },
+        {
+          "type": "textbox",
+          "name": "RI.quest_writer.npc_dialog_dialog_options",
+          "horizontalAlignment": "left",
+          "widthFactor": 1,
+          "tooltip": "A comma separated list of the number of the dialog option to pick to make the quest dialog appear.\n\ne.g. 1,2,1,1,2",
+          "textBinding": {
+            "pullFormat": "${RINPCDialogPropertiesController.CurrentDialogOptions}",
+            "pullReplaceNull": "",
+            "pushFormat": [
+              "RINPCDialogPropertiesController.CurrentDialogOptions:Set[\"",
+              "\"]"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

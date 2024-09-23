@@ -1,0 +1,276 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "skin": {
+    "name": "RISkin",
+    "brushes": {
+      "window.titleBar.backgroundBrush": {
+        "color": "#211C18"
+      }
+    },
+    "templates": {
+      "window.title": {
+        "verticalAlignment": "center",
+        "margin": [2, 0, 0, 0]
+      },
+      "button": {
+        "jsonTemplate": "default:button",
+        "margin": [2, 2, 2, 2],
+        "color": "#f4f3ee"
+      },
+      "checkbox": {
+        "jsonTemplate": "default:checkbox",
+        "margin": [2, 2, 2, 2]
+      },
+      "window": {
+        "jsonTemplate": "default:window",
+        "backgroundBrush": {
+          "color": "#463f3a"
+        },
+        "color": "#f4f3ee",
+        "font": {
+          "face": "Segoe UI",
+          "height": 16
+        }
+      },
+      "listbox.contentContainer": {
+        "jsonTemplate": "scrollviewer",
+        "type": "scrollviewer",
+        "acceptsMouseFocus": false,
+        "contentContainer": {
+          "type": "border",
+          "horizontalContentAlignment": "stretch",
+          "verticalContentAlignment": "stretch"
+        }
+      },
+      "listbox.contentContainerFitWidth": {
+        "jsonTemplate": "listbox.contentContainer",
+        "horizontalScroll": "fit"
+      },
+      "listbox.content": {
+        "type": "stackpanel",
+        "uniform": true,
+        "backgroundBrush": "listbox.backgroundBrush"
+      },
+      "listbox": {
+        "defaultItemViewTemplate": "listboxitem",
+        "acceptsKeyboardFocus": true,
+        "padding": [ 1, 1, 1, 1 ],
+        "borderThickness": 1,
+        "borderBrush": "listbox.borderBrush",
+        "contentContainer": {
+          "jsonTemplate": "listbox.contentContainer"
+        },
+        "content": {
+          "jsonTemplate": "listbox.content"
+        }
+      },
+      "itemview": {
+        "type": "itemview",
+        "acceptsKeyboardFocus": false,
+        "contentContainer": {
+          "type": "border",
+          "horizontalContentAlignment": "stretch",
+          "verticalContentAlignment": "stretch"
+        },
+        "padding": [ 2, 2, 2, 2 ],
+        "margin": [ 1, 1, 1, 1 ],
+        "backgroundBrush": "itemview.backgroundBrush",
+        "eventHandlers": {
+          "onMouseButtonMove": {
+            "type": "forward",
+            "elementType": "itemlist",
+            "event": "onItemMouseButtonMove"
+          }
+        },
+        "styles": {
+          "onSelected": {
+            "backgroundBrush": "itemview.selectedBackgroundBrush"
+          },
+          "onDeselected": {
+            "backgroundBrush": "itemview.backgroundBrush"
+          }
+        }
+      }
+    }
+  },
+  "elements": [
+    {
+      "type": "window",
+      "skin": "RISkin",
+      "title": "RI Quest Writer",
+      "name": "RI.quest_writer.window",
+      "borderThickness": 2,
+      "hideOnClose": false,
+      "minSize": {
+        "width": 650,
+        "height": 350
+      },
+      "maxSize": {
+        "width": 950,
+        "height": 650
+      },
+
+      "eventHandlers": {
+        "onCloseButtonClick": ["method", "RIQuestWriterController", "OnClose"]
+      },
+      "content": {
+        "type": "stackpanel",
+        "name": "RI.quest_writer.content",
+        "uniform": true,
+        "heightFactor": 1,
+        "orientation": "horizontal",
+        "children": [
+          {
+            "type": "panel",
+            "visibility": "hidden",
+            "name": "RIQuestWriterController.events"
+          },
+          {
+            "type": "dockpanel",
+            "widthFactor": 0.2,
+            "orientation": "vertical",
+            "children": [
+              {
+                "type": "stackpanel",
+                "name": "RI.quest_writer.controls",
+                "margin": [5, 5, 15, 5],
+                "_dock": "top",
+                "children": [
+                  {
+                    "type": "stackpanel",
+                    "widthFactor": 1,
+                    "children": [
+                      {
+                        "type": "textblock",
+                        "text": "Quest Name:",
+                        "horizontalAlignment": "left",
+                        "widthFactor": 1
+                      },
+                      {
+                        "type": "textbox",
+                        "name": "RI.quest_writer.quest_name",
+                        "horizontalAlignment": "left",
+                        "widthFactor": 1
+                      }
+                    ]
+                  },
+                  {
+                    "type": "wrappanel",
+                    "widthFactor": 1,
+                    "orientation": "horizontal",
+                    "childSize": {
+                      "width": 75,
+                      "height": 35
+                    },
+                    "children": [
+                      {
+                        "type": "button",
+                        "name": "RI.quest_writer.npc_dialog",
+                        "content": "NPC Dialog",
+                        "widthFactor": 1,
+                        "_stepType": "npc_dialog",
+                        "eventHandlers": {
+                          "onRelease": [
+                            "method",
+                            "RIQuestWriterController",
+                            "OnConfigureNewStep"
+                          ]
+                        }
+                      },
+                      {
+                        "type": "button",
+                        "name": "RI.quest_writer.run_path",
+                        "content": "Run Path",
+                        "_stepType": "run_path",
+                        "widthFactor": 1,
+                        "eventHandlers": {
+                          "onRelease": [
+                            "method",
+                            "RIQuestWriterController",
+                            "OnConfigureNewStep"
+                          ]
+                        }
+                      },
+                      {
+                        "type": "button",
+                        "name": "RI.quest_writer.kill_mobs",
+                        "content": "Kill Mobs",
+                        "_stepType": "kill_mobs",
+                        "widthFactor": 1,
+                        "eventHandlers": {
+                          "onRelease": [
+                            "method",
+                            "RIQuestWriterController",
+                            "OnConfigureNewStep"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "widthFactor": 1,
+                "_dock": "bottom",
+                "margin": [0, 15, 0, 0],
+                "children": [
+                  {
+                    "type": "button",
+                    "content": "Add Step",
+                    "widthFactor": 1,
+                    "eventHandlers": {
+                      "onRelease": [
+                        "method",
+                        "RIQuestWriterController",
+                        "OnAddStepButtonClick"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "widthFactor": 1,
+                "_dock": "bottom",
+                "name": "RI.quest_writer.properties_panel",
+                "children": []
+              }
+            ]
+          },
+          {
+            "type": "stackpanel",
+            "heightFactor": 1,
+            "widthFactor": 1,
+            "children": [
+              {
+                "type": "textblock",
+                "text": "Quest Steps:",
+                "horizontalAlignment": "left",
+                "widthFactor": 1
+              },
+              {
+                "type": "listbox",
+                "name": "RI.quest_writer.quest_steps",
+                "heightFactor": 1,
+                "widthFactor": 1,
+                "-contentContainer":{
+                  "jsonTemplate":"listbox.contentContainerFitWidth"
+                },
+                "itemsBinding": {
+                  "pullFormat": "${RIQuestWriterController.GetQuestStepsForDisplay}",
+                  "autoPull": false,
+                  "pullHook": {
+                    "elementName": "RIQuestWriterController.events",
+                    "flags": "global",
+                    "event": "onNewStepAdded"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

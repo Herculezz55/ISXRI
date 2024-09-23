@@ -1,0 +1,63 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "type": "stackpanel",
+  "name": "RI.quest_writer.run_path_properties",
+  "_dock": "bottom",
+  "borderBrush": {
+    "color": "#f4f3ee"
+  },
+  "borderThickness": [0, 2, 0, 0],
+  "header": "test",
+  "children": [
+    {
+      "type": "panel",
+      "borderBrush": {
+        "color": "#f4f3ee"
+      },
+      "borderThickness": [0, 0, 0, 1],
+      "margin": [0, 0, 0, 15],
+      "children": [
+        {
+          "type": "textblock",
+          "text": "Run Path Properties",
+          "font": {
+            "bold": true,
+            "heightFactor": 1.2
+          },
+          "horizontalAlignment": "center",
+          "widthFactor": 1
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "RI.quest_writer.run_path_properties.add_point",
+      "content": "Add Point",
+      "tooltip": "Add a point.",
+      "horizontalAlignment": "stretch",
+      "eventHandlers": {
+        "onRelease": [
+          "method",
+          "RIRunPathPropertiesController",
+          "OnAddPointClick"
+        ]
+      }
+    },
+    {
+      "type": "stackpanel",
+      "widthFactor": 1,
+      "children": [
+        {
+          "type": "textblock",
+          "text": "Distance From Last"
+        },
+        {
+          "type": "textblock",
+          "textBinding": {
+            "pullFormat": "${RIRunPathPropertiesController.GetDistanceFromLastPoint}"
+          }
+        }
+      ]
+    }
+  ]
+}
