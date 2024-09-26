@@ -5223,7 +5223,6 @@ objectdef RIMUIObject
 			TimedCommand 1 RIMUIObj:FastTravelTeleportZone[${ZoneName},${MapWindowDescription},${DoorOption}]
 		elseif (${TravelMapWindow.IsVisible} && ${_failCount:Inc} < 50)
 		{
-			;echo ${TravelMapWindow.Buttons.Child[${RIMUIObj.FindFastTravelZoneName[${ZoneName}]}].GetProperty[NormalTextColor].NotEquals[#FFDC5C]}
 			if (${TravelMapWindow.Buttons.Child[${RIMUIObj.FindFastTravelZoneName[${ZoneName}]}].GetProperty[NormalTextColor].NotEquals[#FFDC5C]})
 			{
 				TravelMapWindow.Buttons.Child[${RIMUIObj.FindFastTravelZoneName[${ZoneName}]}]:LeftClick
@@ -5335,6 +5334,8 @@ objectdef RIMUIObject
 			TimedCommand 1 RIMUIObj:FastTravelChoiceWindow
 		elseif (${ChoiceWindow.Choice1.Equal[Travel]})
 		{
+			if ${MapWindow.IsVisible}
+				MapWindow:Close
 			ChoiceWindow:DoChoice1
 			TimedCommand 1 RIMUIObj:FastTravelChoiceWindow
 		}

@@ -3141,9 +3141,9 @@ function FastTravel(string _ZoneName, string MapDescription=~NONE~, int _RelayTo
 	else
 	{
 		if ${_RelayToGroup}>0
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:FastTravel[ALL,${_ZoneName},${MapDescription},${_DoorOption}]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:FastTravel[ALL,"${_ZoneName}","${MapDescription}","${_DoorOption}"]
 		else
-			RIMUIObj:FastTravel[${Me.Name},${_ZoneName},${MapDescription},${_DoorOption}]
+			RIMUIObj:FastTravel[${Me.Name},"${_ZoneName}","${MapDescription}","${_DoorOption}"]
 		wait 600 ${EQ2.Zoning}==1
 		wait 600 ${EQ2.Zoning}==0
 	}
