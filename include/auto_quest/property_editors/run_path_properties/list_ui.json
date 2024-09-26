@@ -1,0 +1,24 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "type": "stackpanel",
+  "orientation": "vertical",
+  "horizontalAlignment": "left",
+  "children": [
+    {
+      "type": "textblock",
+      "horizontalAlignment": "stretch",
+      "font": {
+        "bold": true,
+        "heightFactor": 1.1
+      },
+      "text": "Run Path"
+    },
+    {
+      "type": "listbox",
+      "horizontalAlignment": "stretch",
+      "borderThickness": 0,
+      "padding": [5, 0, 0, 0],
+      "items": []
+    }
+  ]
+}

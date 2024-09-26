@@ -1,0 +1,51 @@
+{
+  "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+  "type": "stackpanel",
+  "orientation": "vertical",
+  "horizontalAlignment": "left",
+  "children": [
+    {
+      "type": "textblock",
+      "horizontalAlignment": "stretch",
+      "font": {
+        "bold": true,
+        "heightFactor": 1.1
+      },
+      "text": "NPC Dialog"
+    },
+    {
+      "type": "stackpanel",
+      "orientation": "horizontal",
+      "horizontalAlignment": "stretch",
+      "padding": [5, 0, 0, 0],
+      "children": [
+        {
+          "type": "textblock",
+          "text": "NPC Name:",
+          "margin": [0, 0, 5, 0]
+        },
+        {
+          "type": "textblock",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "type": "stackpanel",
+      "orientation": "horizontal",
+      "horizontalAlignment": "stretch",
+      "padding": [5, 0, 0, 0],
+      "children": [
+        {
+          "type": "textblock",
+          "text": "Options:",
+          "margin": [0, 0, 5, 0]
+        },
+        {
+          "type": "textblock",
+          "text": ""
+        }
+      ]
+    }
+  ]
+}
