@@ -1,6 +1,6 @@
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 
-variable(global) float RI_Var_Float_Version=6.86
+variable(global) float RI_Var_Float_Version=${ISXRIVersion}
 
 variable(global) string RI_Var_String_SkinFileName="${LavishScript.HomeDirectory}/Interface/skins/eq2-green/eq2-green.xml"
 variable(global) string RI_Var_String_SkinName="eq2-green"
@@ -4055,6 +4055,7 @@ objectdef RIConsoleObject
 }
 objectdef RIMUIObject
 {
+	variable int _failCount = 0
 	method RunQuest(string _ForWho=ALL, string _QuestName)
 	{
 		if ${This.ForWhoCheck[${_ForWho}]}
@@ -5188,63 +5189,166 @@ objectdef RIMUIObject
 				Me.Inventory[Query, Location=="Inventory" && Name=-"${BookName}"]:Scribe
 		}
 	}
-	method FastTravel(string ForWho=ALL, string ZoneName=~NONE~, string _DoorOption=0)
+	member:int FindFastTravelZoneName(string ZoneName)
 	{
-		;echo FastTravel(string ForWho=${ForWho}, string ZoneName=${ZoneName}, string _DoorOption=${_DoorOption})
-		EQ2:OpenFastTravelWindow
-		TimedCommand 10 TravelMapWindow.Buttons.Child[${ZoneName}]:LeftClick
-		TimedCommand 20 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[1]:LeftClick
-		if ${Int[${_DoorOption}]}>0 || ${_DoorOption.NotEqual[0]}
+		variable int i=0
+		i:Set[0]
+		for (i:Set[1];${i}<${TravelMapWindow.Buttons.NumChildren};i:Inc)
 		{
-			TimedCommand 30 RIMUIObj:Door[ALL,${_DoorOption}]
+			if ${TravelMapWindow.Buttons.Child[${i}].Text.Find[${ZoneName}](exists)}
+				return ${i}
 		}
-		TimedCommand 40 ChoiceWindow:DoChoice1
+		return 0
 	}
-	;OLD Method
-	;method FastTravel(string ForWho=ALL, string ZoneName=~NONE~, string _DoorOption=0)
-	;{
-	;	;echo FastTravel(string ForWho=${ForWho}, string ZoneName=${ZoneName}, string _DoorOption=${_DoorOption})
-	;	if !${EQ2UIPage[Popup,TravelMap].IsVisible}
-	;	{
-	;		eq2ex /smp pon pon_teleport
-	;		TimedCommand 5 RIMUIObj:FastTravel[${Me.Name},${ZoneName},${_DoorOption}]
-	;	 	return
-			; Actor[mariners_bell]:DoubleClick
-			; Actor[mariner_bell_city_travel_qeynos]:DoubleClick
-			; Actor[zone_to_guildhall_tier3]:DoubleClick
-			; Actor[Zone to Friend]:DoubleClick
-			; Actor[flight_cloud_large_1_to_medium_1]:DoubleClick
-			; Actor[mariner_bell_city_travel_freeport]:DoubleClick
-			; Actor["Ole Salt's Mariner Bell"]:DoubleClick
-			; Actor["Navigator's Globe of Norrath"]:DoubleClick
-			; Actor["Pirate Captain's Helmsman"]:DoubleClick
-			; TimedCommand 10 RIMUIObj:TravelMap[${ForWho},${ZoneName},${ZoneOption}]
-			; return
-	;	}
-	;	else
-	;	{
-	;		variable int TMCount
-	;		for(TMCount:Set[1];${TMCount}<=${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].NumChildren};TMCount:Inc)
-	;		{
-				;echo Checking #${TMCount} <= ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].NumChildren} ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name]} against ${ZoneName} // ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name].Find[${ZoneName}](exists)}
-	;			if ${EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}].GetProperty[Name].Find[${ZoneName}](exists)}
-	;			{
-	;				EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[3].Child[1].Child[3].Child[${TMCount}]:LeftClick
-	;				TimedCommand 5 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[1]:LeftClick
-	;				if ${Int[${_DoorOption}]}>0 || ${_DoorOption.NotEqual[0]}
-	;				{
-	;					TimedCommand 10 RIMUIObj:Door[ALL,${_DoorOption}]
-	;				}
-	;				TimedCommand 20 ChoiceWindow:DoChoice1
-					;click zone option if it exists
-					;if ${ZoneOption}>-1
-					;	TimedCommand 30 RIMUIObj:Door[${Me.Name},${ZoneOption}]
-	;				return
-	;			}
-	;		}
-	;	}
-	;	TimedCommand 10 EQ2UIPage[Popup,TravelMap].Child[Page,TravelMap].Child[2]:LeftClick
-	;}
+	member:int FindMapWindowTeleportLocation(string Description)
+	{
+		variable int i=0
+		i:Set[0]
+		for (i:Set[1];${i}<${TravelMapWindow.Buttons.NumChildren};i:Inc)
+		{
+			if ${MapWindow.TeleportLocation[${i}].Description.Find[${Description}](exists)}
+				return ${i}
+		}
+		return 0
+	}
+	method FastTravelTeleportZone(string ZoneName=~NONE~, string MapWindowDescription=~NONE~, string DoorOption=0)
+	{
+		;echo FastTravelTeleportZone(string ZoneName=${ZoneName}, string MapWindowDescription=${MapWindowDescription}, string DoorOption=${DoorOption})
+		if (${ZoneName.Equals[~NONE~]} || ${EQ2.Zoning}==1)
+		{
+			_failCount:Set[0]	
+			return
+		}
+		elseif (!${TravelMapWindow.IsVisible} && ${_failCount:Inc} < 50)
+			TimedCommand 1 RIMUIObj:FastTravelTeleportZone[${ZoneName},${MapWindowDescription},${DoorOption}]
+		elseif (${TravelMapWindow.IsVisible} && ${_failCount:Inc} < 50)
+		{
+			;echo ${TravelMapWindow.Buttons.Child[${RIMUIObj.FindFastTravelZoneName[${ZoneName}]}].GetProperty[NormalTextColor].NotEquals[#FFDC5C]}
+			if (${TravelMapWindow.Buttons.Child[${RIMUIObj.FindFastTravelZoneName[${ZoneName}]}].GetProperty[NormalTextColor].NotEquals[#FFDC5C]})
+			{
+				TravelMapWindow.Buttons.Child[${RIMUIObj.FindFastTravelZoneName[${ZoneName}]}]:LeftClick
+				TimedCommand 1 RIMUIObj:FastTravelTeleportZone[${ZoneName},${MapWindowDescription},${DoorOption}]
+			}
+			else
+			{
+				_failCount:Set[0]
+				This:FastTravelClickZone[${MapWindowDescription},${DoorOption}]
+			}
+		}
+		else
+			_failCount:Set[0]
+	}
+	method FastTravelClickZone(string MapWindowDescription=~NONE~, string DoorOption=0)
+	{
+		;echo FastTravelClickZone(string MapWindowDescription=${MapWindowDescription}, string DoorOption=${DoorOption})
+		if (${EQ2.Zoning}==1)
+		{
+			failCount:Set[0]
+			return
+		}
+		elseif (!${TravelMapWindow.Child[button, ZoneButton].IsEnabled} && ${TravelMapWindow.IsVisible} && ${_failCount:Inc} < 50)
+			TimedCommand 1 RIMUIObj:FastTravelClickZone[${MapWindowDescription},${DoorOption}]
+		elseif (${TravelMapWindow.IsVisible} && ${_failCount:Inc} < 50)
+		{
+			TravelMapWindow.Child[button, ZoneButton]:LeftClick
+			TimedCommand 1 RIMUIObj:FastTravelClickZone[${MapWindowDescription},${DoorOption}]
+		}
+		elseif (${ChoiceWindow.Choice1.Equal[Travel]})
+		{
+			_failCount:Set[0]
+			RIMUIObj:FastTravelChoiceWindow
+		}
+		elseif (${EQ2UIPage[popup,ZoneTeleporter].IsVisible})
+		{
+			_failCount:Set[0]
+			RIMUIObj:FastTravelDoorOption[${DoorOption}]
+		}
+		elseif (${MapWindow.IsVisible})
+		{
+			_failCount:Set[0]
+			This:FastTravelMapWindowTeleport[${MapWindowDescription},${DoorOption}]
+		}
+		elseif (${_failCount:Inc} < 10)
+			TimedCommand 1 RIMUIObj:FastTravelClickZone[${MapWindowDescription},${DoorOption}]
+		else
+			_failCount:Set[0]
+	}
+	method FastTravelMapWindowTeleport(string MapWindowDescription=~NONE~, string DoorOption=0)
+	{
+		;echo FastTravelMapWindowTeleport(string MapWindowDescription=${MapWindowDescription}, string DoorOption=${DoorOption})
+		if (${MapWindowDescription.Equals[~NONE~]} || ${ChoiceWindow.Choice1.Equal[Travel]} || ${EQ2.Zoning}==1)
+		{
+			_failCount:Set[0]
+			RIMUIObj:FastTravelDoorOption[${DoorOption}]
+		}
+		elseif (!${MapWindow.IsVisible} && ${_failCount:Inc} < 50)
+			TimedCommand 1 RIMUIObj:FastTravelMapWindowTeleport[${MapWindowDescription},${DoorOption}]
+		elseif (${MapWindow.IsVisible} && ${_failCount:Inc} < 50)
+		{
+			if (${ChoiceWindow.Choice1.Equal[Travel]})
+			{
+				_failCount:Set[0]
+				This:FastTravelChoiceWindow
+			}
+			elseif (${EQ2UIPage[popup,ZoneTeleporter].IsVisible})
+			{
+				_failCount:Set[0]
+				This:FastTravelDoorOption[${DoorOption}]
+			}
+			else
+			{
+				MapWindow:Teleport[${RIMUIObj.FindMapWindowTeleportLocation[${MapWindowDescription}]}]
+				TimedCommand 1 RIMUIObj:FastTravelMapWindowTeleport[${MapWindowDescription},${DoorOption}]
+			}
+		}
+		else
+			_failCount:Set[0]	
+	}
+	method FastTravelDoorOption(string DoorOption=0)
+	{
+		;echo FastTravelDoorOption(string DoorOption=${DoorOption})
+		if (${ChoiceWindow.Choice1.Equal[Travel]} || ${EQ2.Zoning}==1)
+		{
+			_failCount:Set[0]
+			RIMUIObj:FastTravelChoiceWindow
+		}
+		if (!${EQ2UIPage[popup,ZoneTeleporter].IsVisible} && ${_failCount:Inc} < 5)
+			TimedCommand 1 RIMUIObj:FastTravelDoorOption[${DoorOption}]
+		elseif (${EQ2UIPage[popup,ZoneTeleporter].IsVisible})
+		{
+			_failCount:Set[0]
+			This:Door[ALL,${_DoorOption}]
+			TimedCommand 1 RIMUIObj:FastTravelChoiceWindow
+		}
+		else
+			_failCount:Set[0]
+	}
+	method FastTravelChoiceWindow()
+	{
+		;echo FastTravelChoiceWindow
+		if (${EQ2.Zoning}==1)
+		{
+			_failCount:Set[0]
+			return
+		}
+		elseif (!${ChoiceWindow.Choice1.Equal[Travel]} && ${_failCount:Inc} < 10)
+			TimedCommand 1 RIMUIObj:FastTravelChoiceWindow
+		elseif (${ChoiceWindow.Choice1.Equal[Travel]})
+		{
+			ChoiceWindow:DoChoice1
+			TimedCommand 1 RIMUIObj:FastTravelChoiceWindow
+		}
+		else
+			_failCount:Set[0]
+	}
+	
+	method FastTravel(string ForWho=ALL, string ZoneName=~NONE~, string MapWindowDescription=~NONE~, string DoorOption=0)
+	{
+		;echo FastTravel(string ForWho=${ForWho}, string ZoneName=${ZoneName}, string DoorOption=${DoorOption})
+		EQ2:OpenFastTravelWindow
+		TimedCommand 1 RIMUIObj:FastTravelTeleportZone[${ZoneName},${MapWindowDescription},${DoorOption}]
+	}
+	
 	method TravelMap(string ForWho=ALL, string ZoneName=~NONE~, int ZoneOption=-1, int _BellWizardDruid=0)
 	{
 		;echo TravelMap(string ForWho=${ForWho}=ALL, string ZoneName=${ZoneName}=~NONE~, int ZoneOption=${ZoneOption}=-1, int _BellWizardDruid=${_BellWizardDruid}=0)
@@ -6038,7 +6142,7 @@ objectdef RIMUIObject
 	}
 	method AcceptReward(string ForWho)
 	{
-		if ${This.ForWhoCheck[${ForWho}]}
+		if ${This.ForWhoCheck[${ForWho}] && ${RewardWindow(exists)}}
 			RewardWindow:AcceptReward
 	}
 	method AutoRun(string ForWho)
@@ -8923,8 +9027,28 @@ function FastTravelPop()
 		;echo we got null or blank
 		FaTrZN:Set["~NONE~"]
 	}
-	
-	relay all RIMUIObj:FastTravel[${PopForWho},"${FaTrZN}"]
+	InputBox "MapDescription?"
+	variable string FaTrMD=${UserInput}
+	if ${UserInput.NotEqual[NULL]}
+	{
+		if ${UserInput.Equal[""]}
+		{
+			FaTrMD:Set["~NONE~"]
+			;echo Blank
+		}
+		else
+		{
+			FaTrMD:Set[${UserInput}]
+			;echo we got ${TMZN}
+		}
+		
+	}
+	else 
+	{
+		;echo we got null or blank
+		FaTrMD:Set["~NONE~"]
+	}
+	relay all RIMUIObj:FastTravel[${PopForWho},"${FaTrZN}","${FaTrMD}"]
 	CommandQ:Set[FALSE]
 	FaTrP:Set[FALSE]
 	PopForWho:Set[~NONE~]

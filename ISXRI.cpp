@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.90 9-22-24"
-double EXTVER = 6.90;
+#define EXTENSION_VERSION "6.91 9-26-24"
+double EXTVER = 6.91;
 #include "ISXRI.h"
 
 //
@@ -403,9 +403,12 @@ void replaceAll(std::string& str, const std::string& from, const std::string& to
 }
 string GetQuestName(string questFile)
 {
+	string fail = "";
 	std::ifstream file(questFile); // Open the file
 	if (!file.is_open()) {
-		printf("Failed to open the file: %s", questFile);
+		fail += "Failed to open the file: ";
+		fail += questFile;
+		pISInterface->Print(fail.c_str());
 		return questFile;
 	}
 
@@ -414,6 +417,8 @@ string GetQuestName(string questFile)
 		//firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\"'), firstLine.end());
 		//firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\\'), firstLine.end());
 		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), ','), firstLine.end());
+		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '['), firstLine.end());
+		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), ']'), firstLine.end());
 		//string comma = ",";
 		//string commaReplace = "%COM%";
 		//replaceAll(firstLine, comma, commaReplace);
@@ -421,7 +426,10 @@ string GetQuestName(string questFile)
 	}
 	else {
 		{
-			pISInterface->Printf("Failed to read the first line.");
+			fail += "Failed to read the first line of ";
+			fail += questFile;
+			pISInterface->Print(fail.c_str());
+			return questFile;
 		}
 	}
 
@@ -438,7 +446,7 @@ void ScanQuests()
 	//vector<fs::directory_entry> entries;
 	pISInterface->ExecuteCommand("RI_CollectionString_RQQuests:Clear");
 	for (const auto& entry : fs::recursive_directory_iterator(path)) {
-		if (!entry.is_directory())
+		if (!entry.is_directory() && !fs::is_empty(entry.path()))
 		{
 			//entries.insert(std::make_pair(GetQuestName(entry.path().generic_string()), entry.path().generic_string()));
 			string com = "RI_CollectionString_RQQuests:Set[" + GetQuestName(entry.path().generic_string()) + "," + entry.path().generic_string() + "]";
@@ -529,6 +537,7 @@ void ISXRIUnRegisterTLOs()
 {
 	pISInterface->RemoveTopLevelObject("Devel");
 	pISInterface->RemoveTopLevelObject("PaidMem");
+	pISInterface->RemoveTopLevelObject("ISXRIVersion");
 	//pISInterface->RemoveTopLevelObject("Paid");
 }
 
@@ -1943,6 +1952,12 @@ else
 return FALSE;
 }
 */
+bool __cdecl TLO_ISXRIVersion(int argc, char* argv[], LSTYPEVAR& Dest)
+{
+	Dest.Float = EXTVER;
+	Dest.Type = pFloatType;
+	return true;
+}
 
 bool __cdecl TLO_Devel(int argc, char *argv[], LSTYPEVAR &Dest)
 {
@@ -4258,6 +4273,7 @@ void RegisterTopLevelObjectsAfterAuth()
 {
 	pISInterface->AddTopLevelObject("Devel", TLO_Devel);
 	pISInterface->AddTopLevelObject("PaidMem", TLO_PaidMem);
+	pISInterface->AddTopLevelObject("ISXRIVersion", TLO_ISXRIVersion);
 	//pISInterface->AddTopLevelObject("QuestDirs", TLO_QuestDirs);
 	
 	/**/
@@ -4626,7 +4642,7 @@ bool ISXRI::Initialize(ISInterface *p_ISInterface)
 
 		// Register any text triggers built into ISXRI
 		//RegisterTriggers();
-		
+
 		return true;
 	}
 
