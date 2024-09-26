@@ -741,13 +741,19 @@ atom(global) ImportQuestFile(string _QuestName, bool _Verbose=TRUE)
 {
 	_QuestName:Set[${_QuestName.Replace["\,",""].Trim}]
 	;check for ${_QuestName} as Key for RI_CollectionString_RQQuests
-	if !${RI_CollectionString_RQQuests["${_QuestName}"](exists)}
+	if !${RI_CollectionString_RQQuests[${QuestName}](exists)}
 	{
 		RI_CMD_Hidden_ScanQuests
-		if !${RI_CollectionString_RQQuests["${_QuestName}"](exists)}
+		if !${RI_CollectionString_RQQuests["${QuestName}"](exists)}
 		{
-			echo ISXRI: Quest: ${_QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
-			return
+			variable string ConvertedQuestName = ""
+			ConvertedQuestName:Set[${RIObj.AlternativeQuestSearch[${QuestName}]}]
+			if !${RI_CollectionString_RQQuests["${ConvertedQuestName}"](exists)}
+			{
+				echo ISXRI: Quest: ${QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
+				return
+			}
+			QuestName:Set[${ConvertedQuestName}]
 		}
 	}
 
@@ -1196,22 +1202,46 @@ function SetIgnoreShinyY(int _OnOff)
 ;object RunInstancesObject
 objectdef RunInstancesObject
 {
-	member:bool ImportQuestFile(string _QuestName)
+	member:string AlternativeQuestSearch(string QuestName)
 	{
-		_QuestName:Set[${_QuestName.Replace["\,",""].Trim}]
-		;echo ${RI_CollectionString_RQQuests.Used} \\ ${RI_CollectionString_RQQuests[${_QuestName}]}
-		if !${RI_CollectionString_RQQuests[${_QuestName}](exists)}
+		variable string ConvertedQuestName = ""
+		variable string Key = ""
+		if "${RI_CollectionString_RQQuests.FirstValue(exists)}"
+		{
+			do
+			{
+				Key:Set[${RI_CollectionString_RQQuests.CurrentKey}]
+				ConvertedQuestName:Set["${Key.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
+				;echo ${QuestName} // ${ConvertedQuestName} // ${Key} // ${ConvertedQuestName.Find["${QuestName}"](exists)}
+				if (${ConvertedQuestName.Find["${QuestName}"](exists)})
+					return ${Key}
+			}
+			while "${RI_CollectionString_RQQuests.NextKey(exists)}"
+		}
+	}
+	member:bool ImportQuestFile(string QuestName)
+	{
+		
+		QuestName:Set[${QuestName.Replace["\,",""].Trim}]
+		;echo ${RI_CollectionString_RQQuests.Used} \\ ${RI_CollectionString_RQQuests[${QuestName}]}
+		if !${RI_CollectionString_RQQuests[${QuestName}](exists)}
 		{
 			RI_CMD_Hidden_ScanQuests
-			if !${RI_CollectionString_RQQuests["${_QuestName}"](exists)}
+			if !${RI_CollectionString_RQQuests["${QuestName}"](exists)}
 			{
-				echo ISXRI: Quest: ${_QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
-				return
+				variable string ConvertedQuestName = ""
+				ConvertedQuestName:Set[${RIObj.AlternativeQuestSearch[${QuestName}]}]
+				if !${RI_CollectionString_RQQuests["${ConvertedQuestName}"](exists)}
+				{
+					echo ISXRI: Quest: ${QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
+					return
+				}
+				QuestName:Set[${ConvertedQuestName}]
 			}
 		}
 
 		if !${RI_Var_Bool_GlobalOthers}
-			relay "other ${RI_Var_String_RelayGroup}" RIObj:mImportQuestFile["${_QuestName}"]
+			relay "other ${RI_Var_String_RelayGroup}" RIObj:mImportQuestFile["${QuestName}"]
 		variable file Filename
 		variable int Count
 		
@@ -1219,7 +1249,7 @@ objectdef RunInstancesObject
 		istrMain:Clear
 		Count:Set[1]
 		;set file to read in to Filename variable
-		Filename:SetFilename["${RI_CollectionString_RQQuests["${_QuestName}"]}"]
+		Filename:SetFilename["${RI_CollectionString_RQQuests["${QuestName}"]}"]
 
 		;open the file
 		Filename:Open
