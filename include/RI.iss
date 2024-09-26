@@ -5219,11 +5219,10 @@ objectdef RIMUIObject
 			_failCount:Set[0]	
 			return
 		}
-		elseif (!${TravelMapWindow.IsVisible} && ${_failCount:Inc} < 50)
+		elseif ((!${TravelMapWindow.IsVisible} || ${TravelMapWindow.TeleportLocations}==0) && ${_failCount:Inc} < 50)
 			TimedCommand 1 RIMUIObj:FastTravelTeleportZone[${ZoneName},${MapWindowDescription},${DoorOption}]
-		elseif (${TravelMapWindow.IsVisible} && ${_failCount:Inc} < 50)
+		elseif (${TravelMapWindow.IsVisible} && ${TravelMapWindow.TeleportLocations}>0 && ${_failCount:Inc} < 50)
 		{
-			;echo ${TravelMapWindow.Buttons.Child[${RIMUIObj.FindFastTravelZoneName[${ZoneName}]}].GetProperty[NormalTextColor].NotEquals[#FFDC5C]}
 			if (${TravelMapWindow.Buttons.Child[${RIMUIObj.FindFastTravelZoneName[${ZoneName}]}].GetProperty[NormalTextColor].NotEquals[#FFDC5C]})
 			{
 				TravelMapWindow.Buttons.Child[${RIMUIObj.FindFastTravelZoneName[${ZoneName}]}]:LeftClick
@@ -5281,9 +5280,9 @@ objectdef RIMUIObject
 			_failCount:Set[0]
 			RIMUIObj:FastTravelDoorOption[${DoorOption}]
 		}
-		elseif (!${MapWindow.IsVisible} && ${_failCount:Inc} < 50)
+		elseif ((!${MapWindow.IsVisible} || ${MapWindow.TeleportLocations}==0) && ${_failCount:Inc} < 50)
 			TimedCommand 1 RIMUIObj:FastTravelMapWindowTeleport[${MapWindowDescription},${DoorOption}]
-		elseif (${MapWindow.IsVisible} && ${_failCount:Inc} < 50)
+		elseif (${MapWindow.IsVisible} && ${MapWindow.TeleportLocations}>0 && ${_failCount:Inc} < 50)
 		{
 			if (${ChoiceWindow.Choice1.Equal[Travel]})
 			{
@@ -5335,6 +5334,8 @@ objectdef RIMUIObject
 			TimedCommand 1 RIMUIObj:FastTravelChoiceWindow
 		elseif (${ChoiceWindow.Choice1.Equal[Travel]})
 		{
+			if ${MapWindow.IsVisible}
+				MapWindow:Close
 			ChoiceWindow:DoChoice1
 			TimedCommand 1 RIMUIObj:FastTravelChoiceWindow
 		}
