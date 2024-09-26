@@ -3129,9 +3129,9 @@ function ChoiceWindow(int _Choice)
 		relay ${RI_Var_String_RelayGroup} ChoiceWindow:DoChoice${_Choice}
 	wait 5
 }
-function FastTravel(string _ZoneName, int _RelayToGroup=1, string _DoorOption=0)
+function FastTravel(string _ZoneName, string MapDescription=~NONE~, int _RelayToGroup=1, string _DoorOption=0)
 {	
-	;echo FastTravel(string _ZoneName=${_ZoneName}, int _RelayToGroup=${_RelayToGroup}, string _DoorOption=${_DoorOption})
+	;echo FastTravel(string _ZoneName=${_ZoneName}, string MapDescription=~NONE~=${MapDescription}, int _RelayToGroup=${_RelayToGroup}, string _DoorOption=${_DoorOption})
 	eq2execute hidden_effects delete 4221996095
 	wait 5
 	if ${RIMUIObj.MainIconIDExists[${Me.ID},955,0]}==0
@@ -3141,17 +3141,9 @@ function FastTravel(string _ZoneName, int _RelayToGroup=1, string _DoorOption=0)
 	else
 	{
 		if ${_RelayToGroup}>0
-			relay ${RI_Var_String_RelayGroup} RIMUIObj:FastTravel[ALL,"${_ZoneName}","${_DoorOption}"]
+			relay ${RI_Var_String_RelayGroup} RIMUIObj:FastTravel[ALL,${_ZoneName},${MapDescription},${_DoorOption}]
 		else
-			RIMUIObj:FastTravel[${Me.Name},"${_ZoneName}","${_DoorOption}"]
-		wait 50 ${EQ2.Zoning}==1-
-		if ${EQ2.Zoning}==0
-		{
-			if ${EQ2UIPage[popup,ZoneTeleporter].IsVisible}
-				call DoorOption 0;wait 10
-			if ${ChoiceWindow(exists)}
-				ChoiceWindow:DoChoice1
-		}
+			RIMUIObj:FastTravel[${Me.Name},${_ZoneName},${MapDescription},${_DoorOption}]
 		wait 600 ${EQ2.Zoning}==1
 		wait 600 ${EQ2.Zoning}==0
 	}
@@ -19144,7 +19136,7 @@ function GoFreeportQeynos(bool _RelayToGroup=TRUE)
 	wait 50 ${EQ2.Zoning}==1
 	if ${EQ2.Zoning}==0
 	{
-		RIMUIObj:FastTravel[ALL,Qeynos,1]
+		RIMUIObj:FastTravel[ALL,Qeynos]
 		wait 50 ${EQ2.Zoning}==1
 	}
 	wait 6000 ${EQ2.Zoning}==0
@@ -19159,7 +19151,7 @@ function GoQeynosNeriak(bool _RelayToGroup=TRUE)
 	wait 50 ${EQ2.Zoning}==1
 	if ${EQ2.Zoning}==0
 	{
-		RIMUIObj:FastTravel[ALL,Neriak,1]
+		RIMUIObj:FastTravel[ALL,Neriak]
 		wait 50 ${EQ2.Zoning}==1
 	}
 	wait 6000 ${EQ2.Zoning}==0
