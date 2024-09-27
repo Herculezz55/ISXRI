@@ -30,14 +30,16 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Upload to S3
-      uses: ricardoapaes/action-s3-upload@v1.2.2
+    - name: Upload File to S3
+      uses: Herculezz55/s3-zip-upload@v1
       env:
-        AWS_KEY: ${{secrets.AWS_KEY}}
-        AWS_SECRET: ${{secrets.AWS_SECRET}}
-      with:
-        bucket: isxri
-        src: D:\a\ISXRI\ISXRI\x64\Release\ISXRI.dll
-        filename: ISXRI.dll
-        metadata: x-amz-meta-version=${{github.ref_name}}
-        region: us-west-2
+        AWS_SECRET_ID: ${{ secrets.AWS_SECRET }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_KEY }}
+        BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+        AWS_REGION: us-west-2
+        SOURCE_MODE: FILE
+        SOURCE_PATH: D:\a\ISXRI\ISXRI\x64\Release\ISXRI.dll
+        DEST_FILE: ISXRI.dll
+        CONTENT_TYPE: application/x-msdownload
+        METADATA_KEY: x-amz-meta-version
+        METADATA_VALUE: ${{github.ref_name}}
