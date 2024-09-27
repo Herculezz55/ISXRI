@@ -129,7 +129,8 @@ int CalcHash(FILE *f, char *md5sum)
 	unsigned char hsh[16];
 	unsigned long sz;
 	char byt[3];
-	int rc, err, i;
+	int rc, err;
+	unsigned long i;
 	size_t fsz;
 
 	rc = CryptAcquireContext(&hProv, NULL, MS_STRONG_PROV, PROV_RSA_FULL, 0);
@@ -147,14 +148,14 @@ int CalcHash(FILE *f, char *md5sum)
 
 	CryptCreateHash(hProv, CALG_MD5, 0, 0, &hHash);
 	while ((fsz = fread(buf, 1, 1024, f)) != 0) {
-		CryptHashData(hHash, (unsigned char *)buf, fsz, 0);
+		CryptHashData(hHash, (unsigned char *)buf, (DWORD)fsz, 0);
 	}
 	sz = 16;
 	CryptGetHashParam(hHash, HP_HASHVAL, hsh, &sz, 0);
 	md5sum[0] = 0;
 	for (i = 0; i<sz; i++) {
-		sprintf(byt, "%.2X", hsh[i]);
-		strcat(md5sum, byt);
+		sprintf_s(byt, "%.2X", hsh[i]);
+		strcat_s(byt, md5sum);
 	}
 	CryptDestroyHash(hHash);
 	CryptReleaseContext(hProv, 0);
@@ -164,15 +165,15 @@ int CalcHash(FILE *f, char *md5sum)
 
 string MD5(string fp)
 {
-	FILE* f;
+	FILE** f = NULL;
 	char md5sum[33];
 
-	f = fopen(fp.c_str(), "rb");
+	fopen_s(f, fp.c_str(), "rb");
 
 	if (f)
 	{
-		CalcHash(f, md5sum);
-		fclose(f);
+		CalcHash(*f, md5sum);
+		fclose(*f);
 		return md5sum;
 	}
 	else
@@ -1868,7 +1869,7 @@ return FALSE;
 */
 bool __cdecl TLO_ISXRIVersion(int argc, char* argv[], LSTYPEVAR& Dest)
 {
-	Dest.Float = EXTVER;
+	Dest.Float = (float)EXTVER;
 	Dest.Type = pFloatType;
 	return true;
 }
@@ -2378,7 +2379,8 @@ void CAM()
 	for (counter = 1; counter <= intMaintainedBuffer; counter++)
 	{
 		char buffer[10];
-		string b = _itoa(counter, buffer, 10);
+		_itoa_s(counter, buffer, _countof(buffer), 10);
+		string b;
 		b = buffer;
 		string c = "${Me.Ability[${Me.Maintained[" + b + "].Name}](exists)}";
 		//string d = "echo ${Me.Maintained[" + b + "].Name}";
