@@ -41,4 +41,5 @@ jobs:
       uses: usualdesigner/s3-artifact-upload@v1.0.15
       with:
         bucket-name: ${{ secrets.BUCKET_NAME }}
-        file: D:\a\ISXRI\ISXRI\x64\Release\ISXRI.dll
+        file: ISXRI.dll
+        metadata: x-amz-meta-version , ${{ github.ref_name }}
