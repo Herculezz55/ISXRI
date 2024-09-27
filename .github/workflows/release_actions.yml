@@ -33,8 +33,8 @@ jobs:
     - name: Upload to S3
       uses: ricardoapaes/action-s3-upload@v1.2.2
       env:
-        AWS_KEY: ${{ secrets.AWS_KEY }}
-        AWS_SECRET: ${{ secrets.AWS_SECRET }}
+        AWS_KEY: ${{secrets.AWS_KEY}}
+        AWS_SECRET: ${{secrets.AWS_SECRET}}
       with:
         bucket: isxri
         src: D:\a\ISXRI\ISXRI\x64\Release\ISXRI.dll
