@@ -30,13 +30,15 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Upload File to S3
-      uses: NotCoffee418/s3-zip-upload@v1.4
-      env:
-        AWS_SECRET_ID: ${{ secrets.AWS_SECRET }}
-        AWS_SECRET_KEY: ${{ secrets.AWS_KEY }}
-        BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-        AWS_REGION: us-west-2
-        SOURCE_MODE: FILE
-        SOURCE_PATH: D:\a\ISXRI\ISXRI\x64\Release\ISXRI.dll
-        DEST_FILE: ISXRI.dll
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4.0.2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+        aws-region: us-west-2
+        
+    - name: Upload artifacts to AWS S3
+      uses: usualdesigner/s3-artifact-upload@v1.0.15
+      with:
+        bucket-name: ${{ secrets.BUCKET_NAME }}
+        file: D:\a\ISXRI\ISXRI\x64\Release\ISXRI.dll
