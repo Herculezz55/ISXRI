@@ -20,7 +20,7 @@ jobs:
       uses: actions/checkout@latest
 
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@vlatest
+      uses: microsoft/setup-msbuild@latest
 
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
