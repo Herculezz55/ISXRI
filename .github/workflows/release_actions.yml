@@ -42,4 +42,4 @@ jobs:
       with:
         bucket-name: ${{ secrets.BUCKET_NAME }}
         file: ISXRI.dll
-        metadata: x-amz-meta-version , ${{ github.ref_name }}
+        meta-data: x-amz-meta-version , ${{ github.ref_name }}
