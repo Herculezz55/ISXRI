@@ -36,6 +36,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>include\;$(IncludePath)</IncludePath>
     <LibraryPath>lib64\vs16\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
