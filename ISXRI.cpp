@@ -25,6 +25,7 @@ double EXTVER = 6.93;
 //
 
 #include <string>
+#include <utf8string.h>
 #include "RIMovement.h"
 #include "RunInstances.h"
 #include "Auth.h"

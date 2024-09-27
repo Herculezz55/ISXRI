@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -29,9 +25,6 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -39,18 +32,10 @@
   <PropertyGroup>
     <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\..\..\..\..\OneDrive\InnerSpace\Extensions\ISXDK35\</OutDir>
-    <IntDir>Release\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.17134.0\ucrt\x86;C:\OneDrive\ISXDK\35\lib\vs14;$(LibraryPath)</LibraryPath>
-    <IncludePath>D:\GitHub\ISXRI\include\BoZTradeskillTimeline;D:\GitHub\ISXRI\include\TheGardeningGoblinTimeline;D:\GitHub\ISXRI\include\RoRInstances;D:\GitHub\ISXRI\include\RoRTSTimeline;D:\GitHub\ISXRI\include\RoRTimeline;D:\GitHub\ISXRI\include\ChaosDescendingTradeskillTimeline;D:\GitHub\ISXRI\include\AGatheringObsessionTimeline;D:\GitHub\ISXRI\include\VoVInstances;D:\GitHub\ISXRI\include\VoVTimeline;D:\GitHub\ISXRI\include\VoVTradeskillTimeline;D:\GitHub\ISXRI\include\RoSInstances;D:\GitHub\ISXRI\include\RoSTimeline;D:\GitHub\ISXRI\include\RoSTradeskillTimeline;D:\GitHub\ISXRI\include\BoLTradeskillTimeline;D:\GitHub\ISXRI\include\BoLInstances;D:\GitHub\ISXRI\include\BoLTimeline;D:\GitHub\ISXRI\include\CDTimeline;D:\GitHub\ISXRI\include\CDInstances;C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.17134.0\ucrt;C:\Program Files %28x86%29\Windows Kits\8.1\Include\um;C:\Program Files %28x86%29\Windows Kits\8.1\Include\winrt;C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.17134.0\winrt;D:\GitHub\ISXRI\include\Prelude;D:\GitHub\ISXRI\include\OthmirGreatDivideTimeline;C:\OneDrive\ISXDK\35\include;D:\GitHub\ISXRI\include\YunZi;D:\GitHub\ISXRI\include\ToweroftheFourWindsTimeline;D:\GitHub\ISXRI\include\TerrorsofThalumbraCraftingTimeline;D:\GitHub\ISXRI\include\TearsofVeeshanTimeline;D:\GitHub\ISXRI\include\SokokarTimelineCrafting;D:\GitHub\ISXRI\include\Signature;D:\GitHub\ISXRI\include\ShatteredSeas;D:\GitHub\ISXRI\include\ShadesofDrinalTimeline;D:\GitHub\ISXRI\include\SentinelsFate;D:\GitHub\ISXRI\include\RyGorrKeepTimeline;D:\GitHub\ISXRI\include\RaidCoding;D:\GitHub\ISXRI\include\ProvingGrounds;D:\GitHub\ISXRI\include\PoPInstances;D:\GitHub\ISXRI\include\PlanesofProphecyTimeline;D:\GitHub\ISXRI\include\PlanesofProphecyTimeline\PridePakiatFactionTimeline;D:\GitHub\ISXRI\include\PlanesofProphecyTimeline\HouseYrzuFactionTimeline;D:\GitHub\ISXRI\include\PlanesofProphecyTimeline\HouseVahlaFactionTimeline;D:\GitHub\ISXRI\include\PlanesofProphecyCraftingTimeline;D:\GitHub\ISXRI\include\OthmirEWFactionTimeline;D:\GitHub\ISXRI\include\OthmirCobaltScarTimeline;D:\GitHub\ISXRI\include\OrderofRimeFactionTimeline;D:\GitHub\ISXRI\include\NingYunRetreatTimeline;D:\GitHub\ISXRI\include\ISUI;D:\GitHub\ISXRI\include\LavishScript;D:\GitHub\ISXRI\include\Language;D:\GitHub\ISXRI\include\KurnsTowerAccessTimeline;D:\GitHub\ISXRI\include\KunarkAscendingInstances;D:\GitHub\ISXRI\include\KunarkAscendingCraftingTimeline;D:\GitHub\ISXRI\include\KunarkAscendingAdventureTimeline;D:\GitHub\ISXRI\include\JarsathWastesTimeline;D:\GitHub\ISXRI\include\Instances;D:\GitHub\ISXRI\include\HeritageQuests;D:\GitHub\ISXRI\include\Greenmist;D:\GitHub\ISXRI\include\DarkMailGuantletsHQTimeline;D:\GitHub\ISXRI\include\CityofQeynosTimeline;D:\GitHub\ISXRI\include\ArtisanEpicTimeline;D:\GitHub\ISXRI\include;$(IncludePath)</IncludePath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>C:\OneDrive\Projects\VisualStudioProjects\vcpkg\installed\x64-windows\lib;C:\OneDrive\ISXDK\35\lib64\vs14;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\OneDrive\ISXDK\35\bin\ISXRI\include;C:\OneDrive\Projects\VisualStudioProjects\vcpkg\installed\x64-windows\include\*;C:\OneDrive\ISXDK\35\include;$(IncludePath)</IncludePath>
-    <OutDir>..\..\..\..\..\OneDrive\InnerSpace\x64\Extensions\ISXDK35\</OutDir>
+    <IncludePath>include\;$(IncludePath)</IncludePath>
+    <LibraryPath>lib64\vs16\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
