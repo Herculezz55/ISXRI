@@ -40,6 +40,3 @@ jobs:
         SOURCE_MODE: FILE
         SOURCE_PATH: D:\a\ISXRI\ISXRI\x64\Release\ISXRI.dll
         DEST_FILE: ISXRI.dll
-        CONTENT_TYPE: application/x-msdownload
-        METADATA_KEY: x-amz-meta-version
-        METADATA_VALUE: ${{github.ref_name}}
