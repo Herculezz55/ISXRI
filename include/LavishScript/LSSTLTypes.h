@@ -2,7 +2,7 @@
 #include <map>
 #include <set>
 using namespace std;
-
+#include <utf8string.h>
 extern void InvalidatePersistentObject(unsigned int persistentClass, unsigned __int64 persistedValue);
 extern unsigned int RegisterPersistentClass(const char *name);
 

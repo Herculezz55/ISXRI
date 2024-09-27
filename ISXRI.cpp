@@ -88,9 +88,7 @@ double EXTVER = 6.93;
 #include <wininet.h>
 #include <string>
 #include <comdef.h>
-#include <mshtml.h> 
 #include <urlmon.h>
-#import <mshtml.tlb> no_auto_exclude 
 
 #pragma comment(lib, "wininet.lib")
 #pragma comment(lib, "urlmon.lib")
@@ -1854,91 +1852,6 @@ void LoggedIn()
 {
 	DWORD LoggedInThreadID;
 	HANDLE threadHandle = CreateThread(0, 0, LoggedInThread, 0, 0, &LoggedInThreadID);
-
-	CloseHandle(threadHandle);
-}
-
-void LogOutfunction()
-{
-	return;
-	CoInitialize(NULL);
-
-	string sLI;
-	string m_strURL;
-	HINTERNET hOpen, hFile;
-
-	MSHTML::IHTMLDocument2Ptr pDoc;
-	HRESULT hr = CoCreateInstance(CLSID_HTMLDocument, NULL, CLSCTX_INPROC_SERVER, IID_IHTMLDocument2, (void**)&pDoc);
-
-	SAFEARRAY* psa = SafeArrayCreateVector(VT_VARIANT, 0, 1);
-	VARIANT *param;
-
-	hOpen = InternetOpen("UN/1.0", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
-	if (!hOpen)
-		ExitThread(0);
-	//set runtime in ms to a long and convert to a string to appent to the end of the url to get fresh data
-	/*unsigned long runtime;
-	runtime = pISInterface->GetRuntime();
-	string tt = to_string(runtime);*/
-
-	char a[] = "http://www.isxri.com/auth/logout.php?l=";
-	char b[] = "&p=";
-	//char c[] = "&t=";
-	char URL[100] = "";
-	strcat_s(URL, a);
-	strcat_s(URL, Login);
-	strcat_s(URL, b);
-	strcat_s(URL, Password);
-	//strcat_s(URL, c);
-	//strcat_s(URL, tt.c_str()); // concatanate tt to URL after converting to cstr.
-	//printf(URL);
-
-	hFile = InternetOpenUrl(hOpen, URL, NULL, 0, 0, INTERNET_FLAG_RELOAD);
-
-
-	if (hFile){
-		CHAR buffer[10 * 1024];
-		DWORD dwRead;
-
-		while (InternetReadFile(hFile, buffer, 1024, &dwRead)){
-			if (dwRead == 0)
-				break;
-
-			buffer[dwRead] = 0;
-
-			bstr_t bsData = (LPCTSTR)buffer;
-			hr = SafeArrayAccessData(psa, (LPVOID*)&param);
-			param->vt = VT_BSTR;
-			param->bstrVal = (BSTR)bsData;
-			hr = pDoc->write(psa);
-
-		} //end while loop
-
-		hr = pDoc->close();
-		InternetCloseHandle(hFile);
-		SafeArrayDestroy(psa);
-	}
-	else
-	{
-		InternetCloseHandle(hFile);
-		InternetCloseHandle(hOpen);
-		ExitThread(0);
-	}
-	InternetCloseHandle(hOpen);
-
-	CoUninitialize();
-}
-
-DWORD WINAPI LogOutThread(LPVOID lpParameter)
-{
-	LogOutfunction();
-	return 0;
-}
-
-void LogOut()
-{
-	DWORD LogOutThreadID;
-	HANDLE threadHandle = CreateThread(0, 0, LogOutThread, 0, 0, &LogOutThreadID);
 
 	CloseHandle(threadHandle);
 }
