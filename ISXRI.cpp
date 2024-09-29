@@ -121,7 +121,7 @@ string ISX_Orig_Path;
 string ISX_Orig_PathRename;
 char filename[FILENAME_MAX] = "ISXRI.dll";
 
-int CalcHash(FILE *f, char *md5sum)
+int CalcHash(FILE* f, char* md5sum)
 {
 	HCRYPTPROV hProv;
 	HCRYPTHASH hHash;
@@ -129,8 +129,7 @@ int CalcHash(FILE *f, char *md5sum)
 	unsigned char hsh[16];
 	unsigned long sz;
 	char byt[3];
-	int rc, err;
-	unsigned long i;
+	int rc, err, i;
 	size_t fsz;
 
 	rc = CryptAcquireContext(&hProv, NULL, MS_STRONG_PROV, PROV_RSA_FULL, 0);
@@ -148,14 +147,14 @@ int CalcHash(FILE *f, char *md5sum)
 
 	CryptCreateHash(hProv, CALG_MD5, 0, 0, &hHash);
 	while ((fsz = fread(buf, 1, 1024, f)) != 0) {
-		CryptHashData(hHash, (unsigned char *)buf, (DWORD)fsz, 0);
+		CryptHashData(hHash, (unsigned char*)buf, fsz, 0);
 	}
 	sz = 16;
 	CryptGetHashParam(hHash, HP_HASHVAL, hsh, &sz, 0);
 	md5sum[0] = 0;
-	for (i = 0; i<sz; i++) {
-		sprintf_s(byt, "%.2X", hsh[i]);
-		strcat_s(byt, md5sum);
+	for (i = 0; i < sz; i++) {
+		sprintf(byt, "%.2X", hsh[i]);
+		strcat(md5sum, byt);
 	}
 	CryptDestroyHash(hHash);
 	CryptReleaseContext(hProv, 0);
@@ -165,15 +164,15 @@ int CalcHash(FILE *f, char *md5sum)
 
 string MD5(string fp)
 {
-	FILE** f = NULL;
+	FILE* f;
 	char md5sum[33];
 
-	fopen_s(f, fp.c_str(), "rb");
+	f = fopen(fp.c_str(), "rb");
 
 	if (f)
 	{
-		CalcHash(*f, md5sum);
-		fclose(*f);
+		CalcHash(f, md5sum);
+		fclose(f);
 		return md5sum;
 	}
 	else
