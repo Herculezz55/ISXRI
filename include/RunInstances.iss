@@ -18648,7 +18648,7 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 		
 	variable string CleanQuestName = "${_QuestName.Replace["\"",""].Replace[",",""]}";	
 
-	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
+	if (${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} || ${QuestJournalWindow.CompletedQuest[${_QuestName.Replace["\"",""]}](exists)}) && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
 	{
 		;MessageBox -skin eq2 "${_QuestName} is already completed"
 		echo ISXRI: ${_QuestName} already Completed moving on

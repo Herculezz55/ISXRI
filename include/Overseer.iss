@@ -55,7 +55,7 @@ variable string MyName
 
 function main()
 {
-    
+    return
     Script:DisableDebugging
 
     GOQuest:Insert["Eliminate Venekor|Fabled|1"]
