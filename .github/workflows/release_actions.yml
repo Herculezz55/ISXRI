@@ -42,7 +42,7 @@ jobs:
       with:
         bucket-name: ${{ secrets.BUCKET_NAME }}
         file: ISXRI.dll
-        meta-data: "{\"x-amz-meta-version\": \"${{ github.ref_name }}\"}"
+        meta-data: "{\"version\": \"${{ github.ref_name }}\"}"
 
     - name: Github Releases To Discord
       uses: SethCohen/github-releases-to-discord@v1.15.0
