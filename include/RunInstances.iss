@@ -721,7 +721,7 @@ atom(global) LoadZone(string ZoneFileName="${Zone.Name.ReplaceSubstring["[Solo]"
 					TempString:Set[${Filename.Read}]
 					if ${TempString.Equal[NULL]}
 						continue
-					istrMain:Insert[${TempString.Left[-1]}]
+					istrMain:Insert["${TempString.Replace["\n",""].Replace["\r",""].Trim}"]
 					;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length}
 					Count:Inc
 					;waitframe
@@ -739,56 +739,8 @@ atom(global) LoadZone(string ZoneFileName="${Zone.Name.ReplaceSubstring["[Solo]"
 
 atom(global) ImportQuestFile(string _QuestName, bool _Verbose=TRUE)
 {
-	_QuestName:Set[${_QuestName.Replace["\,",""].Trim}]
-	;check for ${_QuestName} as Key for RI_CollectionString_RQQuests
-	if !${RI_CollectionString_RQQuests[${QuestName}](exists)}
-	{
-		RI_CMD_Hidden_ScanQuests
-		if !${RI_CollectionString_RQQuests["${QuestName}"](exists)}
-		{
-			variable string ConvertedQuestName = ""
-			ConvertedQuestName:Set[${RIObj.AlternativeQuestSearch[${QuestName}]}]
-			if !${RI_CollectionString_RQQuests["${ConvertedQuestName}"](exists)}
-			{
-				echo ISXRI: Quest: ${QuestName} does not exist, Please ensure the .DAT file is in RI/Quest/SomeFolder/@@@@.Dat and re run RQ to rescan
-				return
-			}
-			QuestName:Set[${ConvertedQuestName}]
-		}
-	}
-
-	variable file Filename
-	variable int Count
-	
-	variable string TempString
-	istrMain:Clear
-	Count:Set[1]
-	;set file to read in to Filename variable
-	Filename:SetFilename[${RI_CollectionString_RQQuests["${_QuestName}"]}]
-
-	;open the file
-	Filename:Open
-	
-	;seek to the beginning of file
-	Filename:Seek[0]
-	
-	;while we are not at the end of file
-	while !${Filename.EOF}
-	{
-		;store each line of the file in var
-		TempString:Set[${Filename.Read}]
-		if ${TempString.Equal[NULL]}
-			continue
-		istrMain:Insert[${TempString.Replace["\n",""].Replace["\r",""].Trim}]
-		;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length}
-		Count:Inc
-		;waitframe
-	}
-	
-	;close file
-	Filename:Close
-	if ${_Verbose}
-		echo ISXRI: ${Time} Done Loading QuestFile
+	if !${RIObj.ImportQuestFile["${QuestName}"]}
+		return 
 }
 function CheckImReady()
 {
@@ -1011,7 +963,7 @@ function Go(bool _Quest=FALSE)
 	}
 	wait 5
 }
-atom(global) ____displayindex_213412jk123ui123km()
+atom(global) displaypath()
 {
 	variable int counter
 	for(counter:Set[1];${counter}<=${istrMain.Used};counter:Inc)
@@ -1221,10 +1173,11 @@ objectdef RunInstancesObject
 	}
 	member:bool ImportQuestFile(string QuestName)
 	{
-		
-		QuestName:Set[${QuestName.Replace["\,",""].Trim}]
+		;echo member:bool ImportQuestFile(string QuestName = \"${QuestName}\")
+		QuestName:Set["${QuestName.Replace["\,",""].Trim}"]
+		;echo \"${QuestName}\"
 		;echo ${RI_CollectionString_RQQuests.Used} \\ ${RI_CollectionString_RQQuests[${QuestName}]}
-		if !${RI_CollectionString_RQQuests[${QuestName}](exists)}
+		if !${RI_CollectionString_RQQuests["${QuestName}"](exists)}
 		{
 			RI_CMD_Hidden_ScanQuests
 			if !${RI_CollectionString_RQQuests["${QuestName}"](exists)}
@@ -1249,6 +1202,7 @@ objectdef RunInstancesObject
 		istrMain:Clear
 		Count:Set[1]
 		;set file to read in to Filename variable
+		;echo setting file "\${RI_CollectionString_RQQuests["${QuestName}"]}" "${RI_CollectionString_RQQuests["${QuestName}"]}"
 		Filename:SetFilename["${RI_CollectionString_RQQuests["${QuestName}"]}"]
 
 		;open the file
@@ -1261,11 +1215,14 @@ objectdef RunInstancesObject
 		while !${Filename.EOF}
 		{
 			;store each line of the file in var
-			TempString:Set[${Filename.Read}]
+			if ${Count}==1
+				TempString:Set["${Filename.Read}"]	
+			else
+				TempString:Set[${Filename.Read}]
 			if ${TempString.Equal[NULL]}
 				continue
-			istrMain:Insert[${TempString.Replace["\n",""].Replace["\r",""].Trim}]
-			;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length}
+			istrMain:Insert["${TempString.Replace["\n",""].Replace["\r",""].Trim}"]
+			;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length} ${TempString}
 			Count:Inc
 			;waitframe
 		}
@@ -18668,7 +18625,7 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 
 	wait 5
 	wait 50 ${istrMain.Used}>0
-	_QuestName:Set[${istrMain.Get[1]}]
+	_QuestName:Set["${istrMain.Get[1]}"]
 	MainQuestName:Insert["${_QuestName}"]
 	variable int _GiveUpCNT=0
 
@@ -18689,15 +18646,15 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	if ${_QuestName.Find["Brother Pang's Trial"](exists)}
 		_QuestName:Concat[" "]
 		
-	variable string CleanQuestName = ${_QuestName.Replace["\"",""].Replace[",",""]};	
+	variable string CleanQuestName = "${_QuestName.Replace["\"",""].Replace[",",""]}";	
 
 	if ${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
 	{
 		;MessageBox -skin eq2 "${_QuestName} is already completed"
-		echo ISXRI: ${CleanQuestName} already Completed moving on
+		echo ISXRI: ${_QuestName} already Completed moving on
 		;skip here
 		_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
-		
+		CleanQuestName:Set["${_QuestName.Replace["\"",""].Replace[",",""]}"]
 		_GiveUpCNT:Set[0]
 		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
 		{
@@ -18724,11 +18681,9 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	else
 	{
 		echo ISXRI: ${Time} Starting ${CleanQuestName}
-		
 		call Go TRUE
 		
-		echo ISXRI: ${Time} Ending ${CleanQuestName}
-		
+		echo ISXRI: ${Time} Ending ${CleanQuestName}	
 		;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 	}
 
@@ -19378,7 +19333,6 @@ function CheckAndSet(... args)
 		if ${Me.Distance[${_NotNearLocation.Get[${_acnt}].Replace[" ",","]}]}>${_NotNearDistance.Get[${_acnt}]} && ${Int[${_Index.Get[${_acnt}]}]}>${_HighestIndex}
 			_HighestIndex:Set[${Int[${_Index.Get[${_acnt}]}]}]
 	}
-	;echo ${_InZoneName.Used} // ${_InZoneName.Used}
 	for(_acnt:Set[1];${_acnt}<=${_InZoneName.Used};_acnt:Inc)
 	{
 		if ${Me.GetGameData[Self.ZoneName].Label.Find["${_InZoneName.Get[${_acnt}]}"](exists)} && ${Int[${_Index.Get[${_acnt}]}]}>${_HighestIndex}
