@@ -161,7 +161,6 @@ int CalcHash(FILE* f, char* md5sum)
 	return 1;
 }
 
-
 string MD5(string fp)
 {
 	FILE* f;
@@ -413,8 +412,8 @@ string GetQuestName(string questFile)
 
 	std::string firstLine;
 	if (std::getline(file, firstLine)) { // Read the first line
-		//firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\"'), firstLine.end());
-		//firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\\'), firstLine.end());
+		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\"'), firstLine.end());
+		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\\'), firstLine.end());
 		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), ','), firstLine.end());
 		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '['), firstLine.end());
 		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), ']'), firstLine.end());
