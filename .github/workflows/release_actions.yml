@@ -45,17 +45,4 @@ jobs:
         git checkout -b release
         cp D:\a\ISXRI\ISXRI\ISXRI.dll .
         git add ISXRI.dll
-        git commit -m "Add ISXRI.dll from release"
-        git -c http.extraheader="AUTHORIZATION: bearer ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}" push --set-upstream origin release
-
-    - name: Create pull request
-      run: gh pr create -B main -H release --title 'Add ISXRI.dll from release' --body 'Created by GitHub action'
-      env:
-        GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
-
-    - name: Merge pull request
-      run: |
-        PR_NUMBER=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Eq2automation/ISXRI-Data/pulls?head=Eq2automation:release | jq '.[0].number')
-        gh pr merge $PR_NUMBER --merge --delete-branch
-      env:
-        GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
+        
