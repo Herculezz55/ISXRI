@@ -34,7 +34,8 @@ jobs:
       run: |
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
-
+        git config --unset-all http.https://github.com/.extraheader
+        
     - name: Commit ISXRI.dll to release branch
       env:
         GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
