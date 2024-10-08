@@ -45,4 +45,4 @@ jobs:
         git checkout -b release
         cp D:\a\ISXRI\ISXRI\ISXRI.dll .
         git add ISXRI.dll
-        
+        git commit -m "Add ISXRI.dll from release"
