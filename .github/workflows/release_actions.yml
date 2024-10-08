@@ -30,26 +30,15 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Github Releases To Discord
-      uses: SethCohen/github-releases-to-discord@v1.15.0
-      with:
-        webhook_url: ${{ secrets.WEBHOOK_URL }}
-        color: "2105893"
-        username: "Release Changelog"
-        avatar_url: "https://cdn.discordapp.com/avatars/487431320314576937/bd64361e4ba6313d561d54e78c9e7171.png"
-        footer_title: "Changelog"
-        footer_icon_url: "https://cdn.discordapp.com/avatars/487431320314576937/bd64361e4ba6313d561d54e78c9e7171.png"
-        footer_timestamp: true
-
     - name: Commit ISXRI.dll to release branch
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
       run: |
-        gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+        gh auth login --with-token <<< "${{ secrets.ISXRIDATA_GITHUB_TOKEN }}"
         git clone https://github.com/Eq2automation/ISXRI-Data.git
         cd ISXRI-Data
         git checkout -b release
-        cp D:\a\ISXRI\ISXRI\ISXRI.dll .
+        cp ../path/to/ISXRI.dll .
         git add ISXRI.dll
         git commit -m "Add ISXRI.dll from release"
         git push --set-upstream origin release
@@ -57,11 +46,11 @@ jobs:
     - name: Create pull request
       run: gh pr create -B main -H release --title 'Add ISXRI.dll from release' --body 'Created by GitHub action'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
 
     - name: Merge pull request
       run: |
         PR_NUMBER=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Eq2automation/ISXRI-Data/pulls?head=Eq2automation:release | jq '.[0].number')
         gh pr merge $PR_NUMBER --merge --delete-branch
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
