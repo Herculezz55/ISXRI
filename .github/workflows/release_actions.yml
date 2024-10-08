@@ -34,15 +34,16 @@ jobs:
       run: |
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
-        git config --unset-all http.https://github.com/.extraheader
         
     - name: Commit ISXRI.dll to release branch
       env:
         GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
       run: |
+        git config --unset-all http.https://github.com/.extraheader
         git clone https://github.com/Eq2automation/ISXRI-Data.git
         cd ISXRI-Data
         git checkout -b release
         cp D:\a\ISXRI\ISXRI\ISXRI.dll .
         git add ISXRI.dll
         git commit -m "Add ISXRI.dll from release"
+        git push --set-upstream origin release
