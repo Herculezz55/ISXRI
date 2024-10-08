@@ -30,20 +30,6 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4.0.2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
-        aws-region: us-west-2
-        
-    - name: Upload artifacts to AWS S3
-      uses: usualdesigner/s3-artifact-upload@v1.0.15
-      with:
-        bucket-name: ${{ secrets.BUCKET_NAME }}
-        file: ISXRI.dll
-        meta-data: "{\"version\": \"${{ github.ref_name }}\"}"
-
     - name: Github Releases To Discord
       uses: SethCohen/github-releases-to-discord@v1.15.0
       with:
@@ -54,3 +40,28 @@ jobs:
         footer_title: "Changelog"
         footer_icon_url: "https://cdn.discordapp.com/avatars/487431320314576937/bd64361e4ba6313d561d54e78c9e7171.png"
         footer_timestamp: true
+
+    - name: Commit ISXRI.dll to release branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+        git clone https://github.com/Eq2automation/ISXRI-Data.git
+        cd ISXRI-Data
+        git checkout -b release
+        cp D:\a\ISXRI\ISXRI\ISXRI.dll .
+        git add ISXRI.dll
+        git commit -m "Add ISXRI.dll from release"
+        git push --set-upstream origin release
+
+    - name: Create pull request
+      run: gh pr create -B main -H release --title 'Add ISXRI.dll from release' --body 'Created by GitHub action'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Merge pull request
+      run: |
+        PR_NUMBER=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Eq2automation/ISXRI-Data/pulls?head=Eq2automation:release | jq '.[0].number')
+        gh pr merge $PR_NUMBER --merge --delete-branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
