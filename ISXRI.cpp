@@ -10,9 +10,9 @@
 // dictionary), then an update is available.  Equal text means the version is up to date.  After means this 
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
-// need to delete old file before trying to rename.
-#define EXTENSION_VERSION "6.94 9-29-24"
-double EXTVER = 6.94;
+// need to pull this information from Github TAG and Release Date
+#define EXTENSION_VERSION "6.95 10-7-24"
+double EXTVER = 6.95;
 #include "ISXRI.h"
 
 //
