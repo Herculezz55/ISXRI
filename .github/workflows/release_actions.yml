@@ -42,9 +42,7 @@ jobs:
         git config --unset-all http.https://github.com/.extraheader
         git clone https://github.com/Eq2automation/ISXRI-Data.git
         cd ISXRI-Data
-        git remote set-head origin master
-        git checkout -b release
         cp D:\a\ISXRI\ISXRI\ISXRI.dll .
         git add ISXRI.dll
-        git commit -m "Add ISXRI.dll from release"
-        git push https://${{ secrets.ISXRIDATA_GITHUB_TOKEN }}@github.com/Eq2automation/ISXRI-Data.git --set-upstream origin release
+        git commit -m "Add ISXRI.dll"
+        git push https://${{ secrets.ISXRIDATA_GITHUB_TOKEN }}@github.com/Eq2automation/ISXRI-Data.git
