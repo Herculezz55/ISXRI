@@ -44,5 +44,4 @@ jobs:
         git commit -m "Add ISXRI.dll"
         git push https://${{ secrets.ISXRIDATA_GITHUB_TOKEN }}@github.com/Eq2automation/ISXRI-Data.git -u isxridll
         gh pr create -B main -H isxridll --title 'Add ISXRI.dll' --body 'Created by GitHub action'
-        PR_NUMBER=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Eq2automation/ISXRI-Data/pulls?head=Eq2automation:isxridll | jq '.[0].number')
-        gh pr merge $PR_NUMBER --merge --delete-branch
+        gh pr merge --merge --delete-branch
