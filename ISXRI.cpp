@@ -267,30 +267,13 @@ void NewUpd()
 		char InnerspaceScriptsPath[512];
 		pISInterface->GetScriptsPath(InnerspaceScriptsPath, sizeof(InnerspaceScriptsPath));
 
-		/*IStream* stream;
-		HRESULT result = URLOpenBlockingStreamA(0, "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/P/", &stream, 0, 0);
-		if (result != 0)
-		{
-			return;
-		}
-		char buffer[500];
-		unsigned long bytesRead;
-		stringstream ss;
-		stream->Read(buffer, 100, &bytesRead);
-		while (bytesRead > 0U)
-		{
-			ss.write(buffer, (long long)bytesRead);
-			stream->Read(buffer, 100, &bytesRead);
-		}
-		stream->Release();*/
-
 		HINTERNET hInternet = InternetOpen("MyUserAgent", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
 		if (hInternet == NULL) {
 			std::cerr << "InternetOpen failed: " << GetLastError() << std::endl;
 			return;
 		}
 
-		HINTERNET hUrl = InternetOpenUrl(hInternet, "https://tfwapfktlsllzpjvqmnchmxzv40xnmgj.lambda-url.us-west-2.on.aws/P/", NULL, 0, INTERNET_FLAG_RELOAD, 0);
+		HINTERNET hUrl = InternetOpenUrl(hInternet, "https://raw.githubusercontent.com/Eq2automation/ISXRI-Data/refs/heads/main/md5s.json", NULL, 0, INTERNET_FLAG_RELOAD, 0);
 		if (hUrl == NULL) {
 			std::cerr << "InternetOpenUrl failed: " << GetLastError() << std::endl;
 			InternetCloseHandle(hInternet);
@@ -348,13 +331,13 @@ void NewUpd()
 				localFileHash = MD5(fullPath);
 				transform(localFileHash.begin(), localFileHash.end(), localFileHash.begin(), ::tolower);
 				if (localFileHash != webFileHash)
-					filesToDownload.push_back("https://isxri.s3.us-west-2.amazonaws.com/" + webFilePath + "|" + fullPath);
+					filesToDownload.push_back("https://raw.githubusercontent.com/Eq2automation/ISXRI-Data/refs/heads/main/RI/" + webFilePath + "|" + fullPath);
 			}
 			else
 			{
 				//printf("file not exists");
 				//add file to filesToDownload string array
-				filesToDownload.push_back("https://isxri.s3.us-west-2.amazonaws.com/" + webFilePath + "|" + fullPath);
+				filesToDownload.push_back("https://raw.githubusercontent.com/Eq2automation/ISXRI-Data/refs/heads/main/RI/" + webFilePath + "|" + fullPath);
 			}
 		}
 		newupdatefunction(filesToDownload);
@@ -669,7 +652,7 @@ void updatefunction()
 	ISXRIPath += "\\x64\\Extensions\\ISXDK35\\ISXRI.dll";
 	Sleep(1000);
 	//download
-	HRESULT hRez = URLDownloadToFile(NULL, "https://isxri.s3.us-west-2.amazonaws.com/ISXRI.dll", ISX_Orig_Path.c_str(), 0, NULL);
+	HRESULT hRez = URLDownloadToFile(NULL, "https://raw.githubusercontent.com/Eq2automation/ISXRI-Data/refs/heads/main/ISXRI.dll", ISX_Orig_Path.c_str(), 0, NULL);
 
 	if (hRez != 0){
 		// download failed

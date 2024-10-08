@@ -18766,14 +18766,9 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		}
 		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 		
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-		
-		wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		
-		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-		else
-			relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
+		if !${RIObj.ImportQuestFile["${_QuestName}"]}
+		return 
+
 		wait 5
 		wait 50 ${istrMain.Used}>0
 		if ${_ElementToJumpTo}==0
@@ -18821,14 +18816,8 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 		else
 			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 		
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-		
-		wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		
-		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-		else
-			relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
+		if !${RIObj.ImportQuestFile["${_QuestName}"]}
+			return 
 		wait 5
 		wait 50 ${istrMain.Used}>0
 		_QuestName:Set[${istrMain.Get[1]}]
@@ -18875,14 +18864,8 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 	}
 	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-	wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	
-	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
+	if !${RIObj.ImportQuestFile["${_QuestName}"]}
+		return 
 	wait 5
 	wait 50 ${istrMain.Used}>0	
 	;if ${_ElementToJumpTo}==0
@@ -18929,14 +18912,8 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 		else
 			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 		
-		relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-		
-		wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		;echo ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)} // ${${_ConvertedQuestName.Upper}[3rtZdjv7,1]}
-		if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-			relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-		else
-			relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
+		if !${RIObj.ImportQuestFile["${_QuestName}"]}
+			return 
 		wait 5
 		wait 50 ${istrMain.Used}>0
 		_QuestName:Set[${istrMain.Get[1]}]
@@ -18982,14 +18959,8 @@ function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=
 	}
 	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_AddTLO ${_ConvertedQuestName.Upper}
-	
-	wait 50 ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-	
-	if ${${_ConvertedQuestName.Upper}[3rtZdjv7,1](exists)}
-		relay ${RI_Var_String_RelayGroup} -noredirect _PreGo_ "${_ConvertedQuestName.Upper}" 0
-	else
-		relay ${RI_Var_String_RelayGroup} -noredirect ImportQuestFile "${_ConvertedQuestName}" 0
+	if !${RIObj.ImportQuestFile["${_QuestName}"]}
+		return 
 	wait 5
 	wait 50 ${istrMain.Used}>0
 	;if ${_ElementToJumpTo}==0
