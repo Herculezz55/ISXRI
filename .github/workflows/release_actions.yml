@@ -34,7 +34,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
       run: |
-        echo "${{ secrets.ISXRIDATA_GITHUB_TOKEN }}" | gh auth login --with-token
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
         git clone https://github.com/Eq2automation/ISXRI-Data.git
         cd ISXRI-Data
         git checkout -b release
