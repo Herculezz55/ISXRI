@@ -14,7 +14,7 @@
 #define EXTENSION_VERSION "6.95 10-7-24"
 double EXTVER = 6.95;
 #include "ISXRI.h"
-
+//
 //
 //
 //
@@ -263,7 +263,7 @@ void newupdatefunction(vector<string> ftd)
 void NewUpd()
 {
 	try {
-		printf("ISXRI: Checking for Updates");
+		printf("ISXRI: Checking for Data Updates");
 		char InnerspaceScriptsPath[512];
 		pISInterface->GetScriptsPath(InnerspaceScriptsPath, sizeof(InnerspaceScriptsPath));
 
@@ -306,40 +306,52 @@ void NewUpd()
 		{
 			std::cerr << "parse error at byte " << ex.byte << std::endl;
 		}
-
+		
 		for (auto& el : j.items())
 		{
-			string ss = el.value();
+			//printf("%s %s", el.key(), el.value().get_ref<string&>());
+			string webFilePath = el.key();
+			string webFileHash = el.value().get_ref<string&>();
 
-			if (ss.empty())
+			if (webFilePath.empty() || webFileHash.empty())
 				return;
 
-			string webFilePath;
-			string webFileHash;
 			string localFileHash;
-			vector<string> both = split(ss.c_str(),'|');
-			webFilePath = both[0];
-			webFileHash = both[1];
 			string fullPath = InnerspaceScriptsPath;
 			fullPath += "\\";
 			fullPath += webFilePath;
 			replace(fullPath.begin(), fullPath.end(), '/', '\\');
 			if (FileExists(fullPath))
 			{
-				//printf("file exists");
+				
 				//check the hash matches
 				localFileHash = MD5(fullPath);
+				/*string test = "";
+				test += webFilePath;
+				test += " ";
+				test += localFileHash;
+				test += "=";
+				test += webFileHash;*/
+
+				//printf("file exists: %s", test.c_str());
 				transform(localFileHash.begin(), localFileHash.end(), localFileHash.begin(), ::tolower);
 				if (localFileHash != webFileHash)
-					filesToDownload.push_back("https://raw.githubusercontent.com/Eq2automation/ISXRI-Data/refs/heads/main/RI/" + webFilePath + "|" + fullPath);
+				{
+					//printf("file hash doesn't match");
+					filesToDownload.push_back("https://raw.githubusercontent.com/Eq2automation/ISXRI-Data/refs/heads/main/" + webFilePath + "|" + fullPath);
+				}
 			}
 			else
 			{
-				//printf("file not exists");
+				//printf("file not exists: %s", webFilePath.c_str());
 				//add file to filesToDownload string array
-				filesToDownload.push_back("https://raw.githubusercontent.com/Eq2automation/ISXRI-Data/refs/heads/main/RI/" + webFilePath + "|" + fullPath);
+				filesToDownload.push_back("https://raw.githubusercontent.com/Eq2automation/ISXRI-Data/refs/heads/main/" + webFilePath + "|" + fullPath);
 			}
 		}
+		/*for (auto& f : filesToDownload)
+		{
+			printf(f.c_str());
+		}*/
 		newupdatefunction(filesToDownload);
 
 	}
@@ -643,6 +655,7 @@ void CloseISXRI(){
 
 void updatefunction()
 {
+	printf("ISXRI: Updating ISXRI.dll");
 	char InnerspacePath[512];
 	char InnerspaceScriptsPath[512];
 	pISInterface->GetInnerSpacePath(InnerspacePath, sizeof(InnerspacePath));
@@ -820,7 +833,7 @@ void checkverfunction()
 		Sleep(100);
 	}
 
-
+	printf("ISXRI: Checking Version: Current: %s", to_string(EXTVER));
 	HINTERNET hOpen, hFile;
 	string data2;
 
@@ -882,6 +895,10 @@ void checkverfunction()
 			printf("ISXRI: New Version Available");
 			//DetermineLowestSessionISXRI();
 			boolNewVersion = true;
+		}
+		else
+		{
+			printf("ISXRI: Version's Match");
 		}
 		/*else
 		{
