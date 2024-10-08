@@ -34,7 +34,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
       run: |
-        gh auth login --with-token <<< "${{ secrets.ISXRIDATA_GITHUB_TOKEN }}"
+        echo "${{ secrets.ISXRIDATA_GITHUB_TOKEN }}" | gh auth login --with-token
         git clone https://github.com/Eq2automation/ISXRI-Data.git
         cd ISXRI-Data
         git checkout -b release
@@ -54,3 +54,4 @@ jobs:
         gh pr merge $PR_NUMBER --merge --delete-branch
       env:
         GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
+
