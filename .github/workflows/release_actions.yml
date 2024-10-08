@@ -36,6 +36,8 @@ jobs:
         git config --global user.email 'github-actions@github.com'
 
     - name: Commit ISXRI.dll to release branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
       run: |
         echo "${{ secrets.ISXRIDATA_GITHUB_TOKEN }}" | gh auth login --with-token
         git clone https://github.com/Eq2automation/ISXRI-Data.git
