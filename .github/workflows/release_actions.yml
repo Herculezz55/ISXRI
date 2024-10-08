@@ -30,21 +30,18 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Configure Git
-      run: |
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
-        
     - name: Commit ISXRI.dll to release branch
       env:
         GITHUB_TOKEN: ${{ secrets.ISXRIDATA_GITHUB_TOKEN }}
       run: |
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
-        git clone --single-branch --branch main https://github.com/Eq2automation/ISXRI-Data.git
+        git clone https://github.com/Eq2automation/ISXRI-Data.git
         cd ISXRI-Data
+        git checkout -b isxridll
         cp D:\a\ISXRI\ISXRI\ISXRI.dll .
         git add ISXRI.dll
         git commit -m "Add ISXRI.dll"
-        gh pr create -B main --title 'Add ISXRI.dll' --body 'Created by GitHub action'
+        git push --set-upstream origin isxridll
+        gh pr create -B main -H isxridll --title 'Add ISXRI.dll' --body 'Created by GitHub action'
         
