@@ -42,6 +42,6 @@ jobs:
         cp D:\a\ISXRI\ISXRI\ISXRI.dll .
         git add ISXRI.dll
         git commit -m "Add ISXRI.dll"
-        git push --set-upstream origin isxridll
+        git push https://${{ secrets.ISXRIDATA_GITHUB_TOKEN }}@github.com/Eq2automation/ISXRI-Data.git -u origin isxridll
         gh pr create -B main -H isxridll --title 'Add ISXRI.dll' --body 'Created by GitHub action'
         
