@@ -38,7 +38,7 @@ jobs:
         git clone https://github.com/Eq2automation/ISXRI-Data.git
         cd ISXRI-Data
         git checkout -b release
-        cp ../path/to/ISXRI.dll .
+        cp D:\a\ISXRI\ISXRI\ISXRI.dll .
         git add ISXRI.dll
         git commit -m "Add ISXRI.dll from release"
         git push --set-upstream origin release
