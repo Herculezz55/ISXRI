@@ -43,8 +43,8 @@ jobs:
         git config --global user.email 'github-actions@github.com'
         git clone --single-branch --branch main https://github.com/Eq2automation/ISXRI-Data.git
         cd ISXRI-Data
-        git checkout -b release
         cp D:\a\ISXRI\ISXRI\ISXRI.dll .
         git add ISXRI.dll
         git commit -m "Add ISXRI.dll"
-        git push https://${{ secrets.ISXRIDATA_GITHUB_TOKEN }}@github.com/Eq2automation/ISXRI-Data origin release
+        gh pr create -B main --title 'Add ISXRI.dll' --body 'Created by GitHub action'
+        
