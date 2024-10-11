@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to pull this information from Github TAG and Release Date
-#define EXTENSION_VERSION "6.95 10-7-24"
-double EXTVER = 6.95;
+#define EXTENSION_VERSION "6.96 10-10-24"
+double EXTVER = 6.96;
 #include "ISXRI.h"
 //
 //
