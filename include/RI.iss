@@ -4901,11 +4901,11 @@ objectdef RIMUIObject
 					{
 						;echo "${RI_CollectionString_RQQuests.CurrentKey}" // "${RI_CollectionString_RQQuests.CurrentValue}"
 						if ${RI_CollectionString_RQQuests.CurrentKey.Find["Timeline"]}
-							UIElement[QuestsListBox@RI]:AddItem["${RI_Decode["${RI_CollectionString_RQQuests.CurrentKey}"]}","${RI_CollectionString_RQQuests.CurrentValue}",FFE8E200]
+							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}",FFE8E200]
 						elseif ${_TempString.Find["Mission"]}
-							UIElement[QuestsListBox@RI]:AddItem["${RI_Decode["${RI_CollectionString_RQQuests.CurrentKey}"]}","${RI_CollectionString_RQQuests.CurrentValue}",FF00b33c]
+							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}",FF00b33c]
 						else
-							UIElement[QuestsListBox@RI]:AddItem["${RI_Decode["${RI_CollectionString_RQQuests.CurrentKey}"]}","${RI_CollectionString_RQQuests.CurrentValue}"]
+							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}"]
 					}
 				}
 				while "${RI_CollectionString_RQQuests.NextKey(exists)}"
