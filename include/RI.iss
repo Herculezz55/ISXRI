@@ -1811,7 +1811,7 @@ function main()
 												if ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|].Equals["*WAIT*"]}
 												{
 													;sound Alarm and throw a messagebox on ALL Sessions
-													relay ALL MessageBox -skin eq2 "${Me.Name} Found ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} WAITING"
+													relay ALL MessageBox -skin ${RI_Var_String_SkinName} "${Me.Name} Found ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} WAITING"
 													while ${Actor[Exquisite Chest,radius,7](exists)}
 														wait 1
 												}
@@ -3663,7 +3663,7 @@ objectdef RIMovementObject
 			{
 				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13, please move closer and resume RQ"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13, please move closer and resume RQ"
 					RI_Var_Bool_Paused:Set[TRUE]
 					UIElement[Start@RI]:SetText[Resume]
 					while ${RI_Var_Bool_Paused}
@@ -3674,7 +3674,7 @@ objectdef RIMovementObject
 				}
 				else
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13"
 					return
 				}
 			}
@@ -3696,7 +3696,7 @@ objectdef RIMovementObject
 			{
 				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Spire within 13, please move closer and resume RQ"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Spire within 13, please move closer and resume RQ"
 					RI_Var_Bool_Paused:Set[TRUE]
 					UIElement[Start@RI]:SetText[Resume]
 					while ${RI_Var_Bool_Paused}
@@ -3707,7 +3707,7 @@ objectdef RIMovementObject
 				}
 				else
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Spire within 13"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Spire within 13"
 					return
 				}
 			}
@@ -3720,7 +3720,7 @@ objectdef RIMovementObject
 			{
 				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Guild Portal Druid within 13, please move closer and resume RQ"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Guild Portal Druid within 13, please move closer and resume RQ"
 					RI_Var_Bool_Paused:Set[TRUE]
 					UIElement[Start@RI]:SetText[Resume]
 					while ${RI_Var_Bool_Paused}
@@ -3731,7 +3731,7 @@ objectdef RIMovementObject
 				}
 				else
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Guild Portal Druid within 13"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Guild Portal Druid within 13"
 					return
 				}
 			}
