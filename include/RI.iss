@@ -1,7 +1,7 @@
 ;ri Script, Holds, all the things that need to happen all the time, this Starts with ISXRI and ends with it.
 
 variable(global) float RI_Var_Float_Version=${ISXRIVersion}
-
+variable(global) int RI_Var_Int_ScaleFactor=1
 variable(global) string RI_Var_String_SkinFileName="${LavishScript.HomeDirectory}/Interface/skins/eq2-green/eq2-green.xml"
 variable(global) string RI_Var_String_SkinName="eq2-green"
 variable(global) RIMUIObject RIMUIObj
@@ -4901,11 +4901,11 @@ objectdef RIMUIObject
 					{
 						;echo "${RI_CollectionString_RQQuests.CurrentKey}" // "${RI_CollectionString_RQQuests.CurrentValue}"
 						if ${RI_CollectionString_RQQuests.CurrentKey.Find["Timeline"]}
-							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}",FFE8E200]
+							UIElement[QuestsListBox@RI]:AddItem["${RI_Decode["${RI_CollectionString_RQQuests.CurrentKey}"]}","${RI_CollectionString_RQQuests.CurrentValue}",FFE8E200]
 						elseif ${_TempString.Find["Mission"]}
-							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}",FF00b33c]
+							UIElement[QuestsListBox@RI]:AddItem["${RI_Decode["${RI_CollectionString_RQQuests.CurrentKey}"]}","${RI_CollectionString_RQQuests.CurrentValue}",FF00b33c]
 						else
-							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}"]
+							UIElement[QuestsListBox@RI]:AddItem["${RI_Decode["${RI_CollectionString_RQQuests.CurrentKey}"]}","${RI_CollectionString_RQQuests.CurrentValue}"]
 					}
 				}
 				while "${RI_CollectionString_RQQuests.NextKey(exists)}"
@@ -4921,9 +4921,9 @@ objectdef RIMUIObject
 		variable int i=0
 		for(i:Set[1];${i}<=${args.Used};i:Inc)
 		{
-			_QuestName:Concat[${args[${i}]}]
+			_QuestName:Concat["${args[${i}]}"]
 			if ${i}!=${args.Used}
-			_QuestName:Concat[" "];
+				_QuestName:Concat[" "];
 		}
 
 		if ${_QuestName.Equal[""]}
@@ -4936,8 +4936,8 @@ objectdef RIMUIObject
 		
 			UIElement[Start@RI]:Hide
 			UIElement[AutoLoot@RI]:Hide
-			UIElement[RI]:SetHeight[378]
-			UIElement[RI]:SetWidth[302]
+			UIElement[RI]:SetHeight[${Math.Calc[378*${RI_Var_Int_ScaleFactor}]}]
+			UIElement[RI]:SetWidth[${Math.Calc[302*${RI_Var_Int_ScaleFactor}]}]
 			UIElement[QuestsListBox@RI]:Show
 			UIElement[RunButton@RI]:Show
 			UIElement[CategoryText@RI]:Show
@@ -4976,7 +4976,7 @@ objectdef RIMUIObject
 		}
 		else
 		{
-			echo ISXRI: Starting quest ${_QuestName} with RI
+			echo ISXRI: Starting quest "${_QuestName}" with RI
 			RI_RunInstances "QUEST-${_QuestName}"
 			;change ui back to standard UI
 			UIElement[Start@RI]:Show
@@ -9194,13 +9194,21 @@ atom(global) ri(... args)
 		{
 			switch ${args[1]}
 			{
+				case SCALE
+				{
+					RI_Var_Int_ScaleFactor:Set[2]
+					RI_Var_String_SkinFileName:Set["${LavishScript.HomeDirectory}/Interface/skins/eq2-green/eq2-greenx2.xml"]
+					break
+				}
 				case CONSOLE
 				{
 					RIConsole
+					break
 				}
 				case LOOT
 				{
 					RILoot
+					break
 				}
 				case BULWARK
 				{

@@ -269,8 +269,8 @@ function main(string FunctionToRun=NONE)
 		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
 		UIElement[Start@RI]:SetText[Pause]
 		UIElement[AutoLoot@RI]:Hide
-		UIElement[RI]:SetHeight[40]
-		UIElement[RI]:SetWidth[102]
+		UIElement[RI]:SetHeight[${Math.Calc[40*${RI_Var_Int_ScaleFactor}]}]
+		UIElement[RI]:SetWidth[${Math.Calc[102*${RI_Var_Int_ScaleFactor}]}]
 		;;UIElement[RI]:SetWidth[112]
 		;;UIElement[Start@RI]:SetX[26]
 		;one our relaygroup is set, transfer over our relaygroup string and close RelayGroup
@@ -389,8 +389,8 @@ function main(string FunctionToRun=NONE)
 		ui -reload "${RI_Var_String_SkinFileName}"
 		ui -reload -skin ${RI_Var_String_SkinName} "${LavishScript.HomeDirectory}/Scripts/RI/RI.xml"
 		UIElement[AutoLoot@RI]:SetChecked
-		UIElement[RI]:SetHeight[60]
-		UIElement[RI]:SetWidth[102]
+		UIElement[RI]:SetHeight[${Math.Calc[60*${RI_Var_Int_ScaleFactor}]}]
+		UIElement[RI]:SetWidth[${Math.Calc[102*${RI_Var_Int_ScaleFactor}]}]
 		;;UIElement[RI]:SetWidth[112]
 		;;UIElement[AutoLoot@RI]:SetX[20]
 		;;UIElement[Start@RI]:SetX[26]
@@ -975,7 +975,7 @@ function CustomFunction()
 {
 
 	if ${RI_Var_Bool_Debug}
-		echo ${Time}: Calling custom function ${CustomFunction}
+		echo ${Time}: Calling custom function "${CustomFunction}"
 	;move to custom location
 	if !${CustomLoc.Find["0 0 0"]} && !${CustomFunction.Find[WaitForZoning](exists)}
 	{
@@ -1163,7 +1163,7 @@ objectdef RunInstancesObject
 			do
 			{
 				Key:Set[${RI_CollectionString_RQQuests.CurrentKey}]
-				ConvertedQuestName:Set["${Key.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
+				ConvertedQuestName:Set["${Key.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace["\,",""].Replace[":",""]}"]
 				;echo ${QuestName} // ${ConvertedQuestName} // ${Key} // ${ConvertedQuestName.Find["${QuestName}"](exists)}
 				if (${ConvertedQuestName.Find["${QuestName}"](exists)})
 					return ${Key}
@@ -1174,7 +1174,7 @@ objectdef RunInstancesObject
 	member:bool ImportQuestFile(string QuestName)
 	{
 		;echo member:bool ImportQuestFile(string QuestName = \"${QuestName}\")
-		QuestName:Set["${QuestName.Replace["\,",""].Trim}"]
+		;QuestName:Set["${QuestName.Replace["\,",""].Trim}"]
 		;echo \"${QuestName}\"
 		;echo ${RI_CollectionString_RQQuests.Used} \\ ${RI_CollectionString_RQQuests[${QuestName}]}
 		if !${RI_CollectionString_RQQuests["${QuestName}"](exists)}
@@ -1216,12 +1216,12 @@ objectdef RunInstancesObject
 		{
 			;store each line of the file in var
 			if ${Count}==1
-				TempString:Set["${Filename.Read}"]	
+				TempString:Set["${Filename.Read.Replace["\r",""].Replace["\n",""]}"]	
 			else
-				TempString:Set[${Filename.Read}]
+				TempString:Set[${Filename.Read.Replace["\r",""].Replace["\n",""]}]
 			if ${TempString.Equal[NULL]}
 				continue
-			istrMain:Insert["${TempString.Replace["\n",""].Replace["\r",""].Trim}"]
+			istrMain:Insert["${TempString.Escape}"]
 			;echo Adding ${istrMain.Get[${Count}]} to istrMain Variable in Element ${Count} : Length ${istrMain.Get[${Count}].Length} ${TempString}
 			Count:Inc
 			;waitframe
@@ -1375,8 +1375,60 @@ objectdef RunInstancesObject
 	}
 	method Start()
 	{
-		RI_Var_Bool_Start:Set[TRUE]
-		UIElement[Start@RI]:SetText[Pause]
+		if ${RI_Var_Bool_Start}
+		{
+			if ${RI_Var_Bool_Paused}
+			{
+				if ${Debug}
+					echo ${Time}: Resuming
+				if ${Script[Buffer:RunInstances](exists)}
+					Script[Buffer:RunInstances]:Resume
+				if ${Script[Buffer:RIMovement](exists)}
+					Script[Buffer:RIMovement]:Resume
+				if ${Script[Buffer:RILooter](exists)}
+					Script[Buffer:RILooter]:Resume
+				if ${Script[Buffer:CoT](exists)}
+					Script[Buffer:CoT]:Resume
+				if ${Script[Buffer:AggroControl](exists)}
+					Script[Buffer:AggroControl]:Resume
+				RI_Var_Bool_Paused:Set[FALSE]
+				UIElement[Start@RI]:SetText[Pause]
+			}
+			else
+			{
+				if ${Debug}
+					echo ${Time}: Pausing
+				if ${Script[Buffer:RunInstances](exists)}
+					Script[Buffer:RunInstances]:Pause
+				if ${Script[Buffer:RIMovement](exists)}
+					Script[Buffer:RIMovement]:Pause
+				if ${Script[Buffer:RILooter](exists)}
+					Script[Buffer:RILooter]:Pause
+				if ${Script[Buffer:CoT](exists)}
+					Script[Buffer:CoT]:Pause
+				if ${Script[Buffer:AggroControl](exists)}
+					Script[Buffer:AggroControl]:Pause
+				RI_Var_Bool_Paused:Set[TRUE]
+				if ${Me.FlyingUsingMount}
+				{
+					press ${RI_Var_String_BackwardKey}
+					press ${RI_Var_String_BackwardKey}
+					press ${RI_Var_String_BackwardKey}
+				}
+				else
+					press -release ${RI_Var_String_ForwardKey}
+				press -release ${RI_Var_String_StrafeLeftKey}
+				press -release ${RI_Var_String_StrafeRightKey}
+				press -release ${RI_Var_String_FlyUpKey}
+				press -release ${RI_Var_String_FlyDownKey}
+				UIElement[Start@RI]:SetText[Resume]
+			}
+		}
+		else
+		{
+			RI_Var_Bool_Start:Set[TRUE]
+			UIElement[Start@RI]:SetText[Pause]
+		}
 	}
 	member:string ConvertedZoneName(string _ZoneName)
 	{	
@@ -17129,7 +17181,7 @@ function QuestM(string QuestOrTimeLineName=~NONE~)
 		;if ${QuestOrTimeLineName.Replace["'",""].Replace[" ",""].Find[BathezidsWatchFactionCrafting]}
 			;call BathezidsWatchFactionCrafting
 		;else
-			call QuestDefault "${QuestOrTimeLineName}"
+			call Quest "${QuestOrTimeLineName}" 0 TRUE TRUE
 		; switch "${QuestOrTimeLineName}"
 		; {
 			; case Sokokar Timeline Crafting
@@ -18612,98 +18664,70 @@ function Poismtsbutton()
 		call MessageBox "We were unable to determine the button to push. Push the correct button and resume"
 	
 }
-function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestCompleted=TRUE)
-{
-	;echo Start of Quest: MainQuestName Size: ${MainQuestName.Used}
-	press -release ${RI_Var_String_ForwardKey}
 
+function MakeCurrentActiveQuest(string _QuestName=${MainQuestName.Get[${MainQuestName.Used}]})
+{
+	QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+}
+function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=0)
+{
+	MainQuestName:Insert["${_QuestName}"]
+	if ${_QuestName.Find["\""](exists)}
+		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
 	if ${_ElementToJumpTo}==0
 		variable int _OriginalMAC=${MainArrayCounter}
-	
-	if !${RIObj.ImportQuestFile["${_QuestName}"]}
-		return 
-
-	wait 5
-	wait 50 ${istrMain.Used}>0
-	_QuestName:Set["${istrMain.Get[1]}"]
-	MainQuestName:Insert["${_QuestName}"]
-	variable int _GiveUpCNT=0
-
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} ) && ${_GiveUpCNT:Inc}<=10
+	variable int _qcount=1
+	for(_qcount:Set[1];${_qcount}<=${_NumRepeats};_qcount:Inc)
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]}
-	}
-	;_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-	;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
-	variable bool _Repeatable
-	if ${istrMain.Get[2].Equal[Repeatable]}
-		_Repeatable:Set[TRUE]
-	
-	if ${_QuestName.Find["Brother Pang's Trial"](exists)}
-		_QuestName:Concat[" "]
+		;echo Start of Quest: MainQuestName Size: ${MainQuestName.Used}
+		press -release ${RI_Var_String_ForwardKey}
+		variable string _ConvertedQuestName
+		;echo ${_QuestName} // ${_ElementToJumpTo}
 		
-	variable string CleanQuestName = "${_QuestName.Replace["\"",""].Replace[",",""]}";	
-
-	if (${QuestJournalWindow.CompletedQuest["${_QuestName.Replace["\"",""]}"](exists)} || ${QuestJournalWindow.CompletedQuest[${_QuestName.Replace["\"",""]}](exists)}) && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
-	{
-		;MessageBox -skin eq2 "${_QuestName} is already completed"
-		echo ISXRI: ${_QuestName} already Completed moving on
-		;skip here
-		_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
-		CleanQuestName:Set["${_QuestName.Replace["\"",""].Replace[",",""]}"]
-		_GiveUpCNT:Set[0]
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
-		{
-			QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-			wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-		}
-
-		if !${RIObj.ImportQuestFile["${CleanQuestName}"]}
+		if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
+			_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
+		else
+			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
+		
+		if !${RIObj.ImportQuestFile["${_QuestName}"]}
 			return 
-
 		wait 5
 		wait 50 ${istrMain.Used}>0
-		if ${_ElementToJumpTo}==0
-			MainArrayCounter:Set[${_OriginalMAC}]
-		else
-			MainArrayCounter:Set[${_ElementToJumpTo}]
+		_QuestName:Set[${istrMain.Get[1]}]
+		variable int _GiveUpCNT=0
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		{
+			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+			squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
+		}
+		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
+		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
+		variable bool _Repeatable
+		if ${istrMain.Get[2].Equal[Repeatable]}
+			_Repeatable:Set[TRUE]
 		
-		;echo Setting ${_ElementToJumpTo} its now ${MainArrayCounter}
-		MainQuestName:Remove[${MainQuestName.Used}]
-		MainQuestName:Collapse
-		;echo End of Quest: MainQuestName Size: ${MainQuestName.Used}
-		return
-	}
-	else
-	{
-		echo ISXRI: ${Time} Starting ${CleanQuestName}
+		echo ISXRI: ${Time} Starting ${_QuestName} #${_qcount} of ${_NumRepeats}
+		
 		call Go TRUE
 		
-		echo ISXRI: ${Time} Ending ${CleanQuestName}	
-		;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
+		echo ISXRI: ${Time} Ending ${_QuestName}
+		
+		if ${Me.IsMoving}
+		{
+			press -release ${RI_Var_String_ForwardKey}
+		}
 	}
+	
+	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 
-	if ${_CheckQuestCompleted} && !${_QuestName.Find["Access to Tower of the Four Winds"](exists)} && !${_QuestName.Find["Yun Zi"](exists)} && !${_QuestName.Find[Timeline](exists)} && !${_QuestName.Find["Losers Weepers"](exists)} && !${_QuestName.Find["New Lands New Profits"](exists)}
-	{
-		waitframe
-		if ${_QuestName.Find["Visions of Vetrovia: Wastes Not"](exists)}
-		{
-			squelch wait 100 ${QuestJournalWindow.CompletedQuest["Visions of Vetrovia: Wastes Not, Want Not"](exists)}
-			if !${QuestJournalWindow.CompletedQuest["Visions of Vetrovia: Wastes Not, Want Not"](exists)}
-				call MessageBox "Quest: Visions of Vetrovia: Wastes Not, Want Not not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
-		}
-		else
-		{
-			squelch wait 100 ${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}
-			;echo \${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
-			if !${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
-				call MessageBox "Quest: ${_QuestName} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
-		}
-	}
 	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
 	
 	_GiveUpCNT:Set[0]
@@ -18711,13 +18735,15 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	{
 		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
 		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
 		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
 	}
+	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
 	
 	if !${RIObj.ImportQuestFile["${_QuestName}"]}
-		return
-		
-	wait 5	
+		return 
+	wait 5
 	wait 50 ${istrMain.Used}>0
 	;if ${_ElementToJumpTo}==0
 		MainArrayCounter:Set[${_OriginalMAC}]
@@ -18728,12 +18754,142 @@ function Quest(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestComple
 	MainQuestName:Remove[${MainQuestName.Used}]
 	MainQuestName:Collapse
 	;echo End of Quest: MainQuestName Size: ${MainQuestName.Used}
+	
 	if ${Me.IsMoving}
 	{
 		press -release ${RI_Var_String_ForwardKey}
 	}
-	
 }
+function SetActiveQuest(string _QuestName)
+{
+	variable int _GiveUpCNT=0
+	if ${_QuestName.Find["\""](exists)}
+		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	{
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+		wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
+	}
+}
+
+function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted=TRUE, bool MainQuest=FALSE)
+{
+	if ${Me.IsMoving}
+		press -release ${RI_Var_String_ForwardKey}
+
+	if (!${MainQuest} && ${ElementToJumpTo}==0)
+		variable int _OriginalMAC=${MainArrayCounter}
+
+	if !${RIObj.ImportQuestFile["${QuestName}"]}
+		return 
+
+	wait 5
+	wait 50 ${istrMain.Used}>0
+	QuestName:Set["${istrMain.Get[1]}"]
+	MainQuestName:Insert["${QuestName}"]
+	variable int _GiveUpCNT=0
+
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${QuestName}"]} && ( ${QuestJournalWindow.ActiveQuest["${QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${QuestName}](exists)} ) && ${_GiveUpCNT:Inc}<=10
+	{
+		squelch QuestJournalWindow.ActiveQuest["${QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${QuestName}]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest["${QuestName}"]:MakeCurrentActiveQuest
+		squelch QuestJournalWindow.ActiveQuest[${QuestName}]:MakeCurrentActiveQuest
+		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${QuestName}"]}
+	}
+	
+	variable bool _Repeatable
+	if ${istrMain.Get[2].Equal[Repeatable]}
+		_Repeatable:Set[TRUE]
+	
+	if ${QuestName.Find["Brother Pang's Trial"](exists)}
+		QuestName:Concat[" "]
+
+	if (${QuestJournalWindow.CompletedQuest["${QuestName.Replace["\"",""]}"](exists)} || ${QuestJournalWindow.CompletedQuest[${QuestName.Replace["\"",""]}](exists)}) && ( !${_Repeatable} || ${ElementToJumpTo}>0 )
+	{
+		echo ISXRI: "${QuestName}" already Completed moving on
+		if !${MainQuest}
+		{
+			QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
+			_GiveUpCNT:Set[0]
+			while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
+			{
+				QuestJournalWindow.ActiveQuest["${QuestName}"]:MakeCurrentActiveQuest
+				wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${QuestName}]}
+			}
+
+			if !${RIObj.ImportQuestFile["${QuestName}"]}
+				return 
+
+			wait 5
+			wait 50 ${istrMain.Used}>0
+
+			MainQuestName:Remove[${MainQuestName.Used}]
+			MainQuestName:Collapse
+
+			if ${ElementToJumpTo}==0
+				MainArrayCounter:Set[${_OriginalMAC}]
+			else
+				MainArrayCounter:Set[${ElementToJumpTo}]
+		}	
+		elseif ${ElementToJumpTo}>0
+			MainArrayCounter:Set[${ElementToJumpTo}]
+		
+		return
+	}
+	else
+	{
+		echo ISXRI: ${Time} Starting "${QuestName}"
+		call Go TRUE
+		echo ISXRI: ${Time} Ending "${QuestName}"
+	}
+
+	if ${MainQuest}
+		MainQuestName:Clear	
+	if ${Me.IsMoving}
+		press -release ${RI_Var_String_ForwardKey}
+
+	if ${CheckQuestCompleted} && !${_QuestName.Find[Tradeskill Mission](exists)} && !${QuestName.Find["Access to Tower of the Four Winds"](exists)} && !${QuestName.Find["Yun Zi"](exists)} && !${QuestName.Find[Timeline](exists)} && !${QuestName.Find["Losers Weepers"](exists)} && !${QuestName.Find["New Lands New Profits"](exists)}
+	{
+		waitframe
+
+		squelch wait 100 ${QuestJournalWindow.CompletedQuest["${QuestName}"](exists)}
+		if !${QuestJournalWindow.CompletedQuest["${QuestName}"](exists)}
+			call MessageBox "Quest: ${QuestName} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
+	}
+	if !${MainQuest}
+	{
+		QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
+		
+		_GiveUpCNT:Set[0]
+		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
+		{
+			squelch QuestJournalWindow.ActiveQuest["${QuestName}"]:MakeCurrentActiveQuest
+			squelch QuestJournalWindow.ActiveQuest[${QuestName}]:MakeCurrentActiveQuest
+			Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${QuestName}]}
+		}
+		
+		if !${RIObj.ImportQuestFile["${QuestName}"]}
+			return
+			
+		wait 5	
+		wait 50 ${istrMain.Used}>0
+		
+		MainArrayCounter:Set[${_OriginalMAC}]
+		
+		MainQuestName:Remove[${MainQuestName.Used}]
+		MainQuestName:Collapse
+		
+		if ${Me.IsMoving}
+		{
+			press -release ${RI_Var_String_ForwardKey}
+		}
+	}
+}
+
 function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction=0, int _ElementToJumpTo=0)
 {
 	MainQuestName:Insert["${_QuestName}"]
@@ -18881,192 +19037,6 @@ function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction
 	if ${Me.IsMoving}
 	{
 		press -release ${RI_Var_String_ForwardKey}
-	}
-}
-function MakeCurrentActiveQuest(string _QuestName=${MainQuestName.Get[${MainQuestName.Used}]})
-{
-	QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-}
-function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=0)
-{
-	MainQuestName:Insert["${_QuestName}"]
-	if ${_QuestName.Find["\""](exists)}
-		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
-	if ${_ElementToJumpTo}==0
-		variable int _OriginalMAC=${MainArrayCounter}
-	variable int _qcount=1
-	for(_qcount:Set[1];${_qcount}<=${_NumRepeats};_qcount:Inc)
-	{
-		;echo Start of Quest: MainQuestName Size: ${MainQuestName.Used}
-		press -release ${RI_Var_String_ForwardKey}
-		variable string _ConvertedQuestName
-		;echo ${_QuestName} // ${_ElementToJumpTo}
-		
-		if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
-			_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
-		else
-			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-		
-		if !${RIObj.ImportQuestFile["${_QuestName}"]}
-			return 
-		wait 5
-		wait 50 ${istrMain.Used}>0
-		_QuestName:Set[${istrMain.Get[1]}]
-		variable int _GiveUpCNT=0
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
-		{
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-			squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-		}
-		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
-		variable bool _Repeatable
-		if ${istrMain.Get[2].Equal[Repeatable]}
-			_Repeatable:Set[TRUE]
-		
-		echo ISXRI: ${Time} Starting ${_QuestName} #${_qcount} of ${_NumRepeats}
-		
-		call Go TRUE
-		
-		echo ISXRI: ${Time} Ending ${_QuestName}
-		
-		if ${Me.IsMoving}
-		{
-			press -release ${RI_Var_String_ForwardKey}
-		}
-	}
-	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
-
-	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
-	
-	_GiveUpCNT:Set[0]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
-	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-	
-	if !${RIObj.ImportQuestFile["${_QuestName}"]}
-		return 
-	wait 5
-	wait 50 ${istrMain.Used}>0
-	;if ${_ElementToJumpTo}==0
-		MainArrayCounter:Set[${_OriginalMAC}]
-	;else
-	;	MainArrayCounter:Set[${_ElementToJumpTo}]
-	
-	;echo Set MainArrayCounter back to ${MainArrayCounter}
-	MainQuestName:Remove[${MainQuestName.Used}]
-	MainQuestName:Collapse
-	;echo End of Quest: MainQuestName Size: ${MainQuestName.Used}
-	
-	if ${Me.IsMoving}
-	{
-		press -release ${RI_Var_String_ForwardKey}
-	}
-}
-function SetActiveQuest(string _QuestName)
-{
-	variable int _GiveUpCNT=0
-	if ${_QuestName.Find["\""](exists)}
-		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
-	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-	}
-}
-function QuestDefault(string _QuestName, int _ElementToJumpTo=0, bool _CheckQuestCompleted=TRUE)
-{
-	;echo QuestDefault(string _QuestName=${_QuestName}, int _ElementToJumpTo=0=${_ElementToJumpTo}, bool _CheckQuestCompleted=TRUE=${_CheckQuestCompleted})
-	;echo ${_QuestName.Count[/]}
-	;echo ${_QuestName.Token[${Math.Calc[${_QuestName.Count[/]}+1]},/]}
-	;echo ${_QuestName.Left[${Math.Calc[-1*${_QuestName.Token[${Math.Calc[${_QuestName.Count[/]}+1]},/].Length}]}]}
-	;RI_Var_String_QuestDir:Set["${_QuestName.Left[${Math.Calc[-1*${_QuestName.Token[${Math.Calc[${_QuestName.Count[/]}+1]},/].Length}]}]}"]
-
-	if !${RIObj.ImportQuestFile["${_QuestName}"]}
-		return 
-
-	wait 5
-	wait 50 ${istrMain.Used}>0
-
-	;echo ${istrMain.Get[1]} // ${istrMain.Used}
-	_QuestName:Set[${istrMain.Get[1]}]
-	MainQuestName:Insert["${_QuestName}"]
-	variable int _GiveUpCNT=0
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
-	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-	}
-	
-	variable bool _Repeatable
-	if ${istrMain.Get[2].Equal[Repeatable]}
-		_Repeatable:Set[TRUE]
-		
-	if ${_QuestName.Find["Brother Pang's Trial"](exists)}
-		_QuestName:Concat[" "]
-		
-	variable string CleanQuestName=${_QuestName.Replace["\"",""].Replace[",",""]}
-
-	if ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} && ( !${_Repeatable} || ${_ElementToJumpTo}>0 )
-	{
-		;MessageBox -skin eq2 "${_QuestName} is already completed"
-		echo ISXRI: ${_QuestName} already Completed moving on
-		;skip here
-		if ${_ElementToJumpTo}>0
-			MainArrayCounter:Set[${_ElementToJumpTo}]
-		return
-	}
-	echo ISXRI: ${Time} Starting ${CleanQuestName}
-	
-	call Go TRUE
-	
-	echo ISXRI: ${Time} Ending ${CleanQuestName}
-	
-	;relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
-	
-	MainQuestName:Clear	
-	if ${Me.IsMoving}
-	{
-		press -release ${RI_Var_String_ForwardKey}
-	}
-	
-	if ${_CheckQuestCompleted} && !${_QuestName.Find["Yun Zi"](exists)} && !${_QuestName.Find[Timeline](exists)} && !${_QuestName.Find[Tradeskill Mission](exists)} && !${_QuestName.Find["Losers Weepers"](exists)} && !${_QuestName.Find["New Lands New Profits"](exists)}
-	{
-		waitframe
-		if ${_QuestName.Find["Visions of Vetrovia: Wastes Not"](exists)}
-		{
-			squelch wait 100 ${QuestJournalWindow.CompletedQuest["Visions of Vetrovia: Wastes Not, Want Not"](exists)}
-			if !${QuestJournalWindow.CompletedQuest["Visions of Vetrovia: Wastes Not, Want Not"](exists)}
-				call MessageBox "Quest: Visions of Vetrovia: Wastes Not, Want Not not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
-		}
-		else
-		{
-			squelch wait 100 ${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}
-			;echo \${QuestJournalWindow.CompletedQuest[${_QuestName}](exists)}  \\  ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
-			if !${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
-				call MessageBox "Quest: ${CleanQuestName} not showing completed, check steps and finish manually and resume rq at ${Me.Loc}"
-		}
 	}
 }
 function MakeActiveQuest(string _QuestName)

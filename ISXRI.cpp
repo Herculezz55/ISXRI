@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to pull this information from Github TAG and Release Date
-#define EXTENSION_VERSION "6.96 10-10-24"
-double EXTVER = 6.96;
+#define EXTENSION_VERSION "6.97 10-16-24"
+double EXTVER = 6.97;
 #include "ISXRI.h"
 //
 //
@@ -182,7 +182,7 @@ string MD5(string fp)
 
 vector<string> split(const char* str, char c = ' ')
 {
-	std::vector<std::string> result;
+	vector<string> result;
 
 	do
 	{
@@ -191,7 +191,7 @@ vector<string> split(const char* str, char c = ' ')
 		while (*str != c && *str)
 			str++;
 
-		result.push_back(std::string(begin, str));
+		result.push_back(string(begin, str));
 	} while (0 != *str++);
 
 	return result;
@@ -269,13 +269,13 @@ void NewUpd()
 
 		HINTERNET hInternet = InternetOpen("MyUserAgent", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
 		if (hInternet == NULL) {
-			std::cerr << "InternetOpen failed: " << GetLastError() << std::endl;
+			cerr << "InternetOpen failed: " << GetLastError() << endl;
 			return;
 		}
 
 		HINTERNET hUrl = InternetOpenUrl(hInternet, "https://raw.githubusercontent.com/Eq2automation/ISXRI-Data/refs/heads/main/md5s.json", NULL, 0, INTERNET_FLAG_RELOAD, 0);
 		if (hUrl == NULL) {
-			std::cerr << "InternetOpenUrl failed: " << GetLastError() << std::endl;
+			cerr << "InternetOpenUrl failed: " << GetLastError() << endl;
 			InternetCloseHandle(hInternet);
 			return;
 		}
@@ -283,7 +283,7 @@ void NewUpd()
 		char buffer[999999];
 		DWORD bytesRead;
 		while (InternetReadFile(hUrl, buffer, sizeof(buffer), &bytesRead) && bytesRead != 0) {
-			//std::cout.write(buffer, bytesRead);
+			//cout.write(buffer, bytesRead);
 		}
 
 		InternetCloseHandle(hUrl);
@@ -304,7 +304,7 @@ void NewUpd()
 		}
 		catch (json::parse_error& ex)
 		{
-			std::cerr << "parse error at byte " << ex.byte << std::endl;
+			cerr << "parse error at byte " << ex.byte << endl;
 		}
 		
 		for (auto& el : j.items())
@@ -383,21 +383,22 @@ void NewUpdater()
 }
 #include <iostream>
 #include <filesystem>
-namespace fs = std::filesystem;
+namespace fs = filesystem;
 //map<string,string> entries;
-void replaceAll(std::string& str, const std::string& from, const std::string& to) {
+void replaceAll(string& str, const string& from, const string& to) {
 	if (from.empty())
 		return;
 	size_t start_pos = 0;
-	while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+	while ((start_pos = str.find(from, start_pos)) != string::npos) {
 		str.replace(start_pos, from.length(), to);
 		start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
 	}
 }
+
 string GetQuestName(string questFile)
 {
 	string fail = "";
-	std::ifstream file(questFile); // Open the file
+	ifstream file(questFile); // Open the file
 	if (!file.is_open()) {
 		fail += "Failed to open the file: ";
 		fail += questFile;
@@ -405,16 +406,8 @@ string GetQuestName(string questFile)
 		return questFile;
 	}
 
-	std::string firstLine;
-	if (std::getline(file, firstLine)) { // Read the first line
-		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\"'), firstLine.end());
-		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '\\'), firstLine.end());
-		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), ','), firstLine.end());
-		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), '['), firstLine.end());
-		firstLine.erase(std::remove(firstLine.begin(), firstLine.end(), ']'), firstLine.end());
-		//string comma = ",";
-		//string commaReplace = "%COM%";
-		//replaceAll(firstLine, comma, commaReplace);
+	string firstLine;
+	if (getline(file, firstLine)) {
 		return firstLine;
 	}
 	else {
@@ -441,8 +434,8 @@ void ScanQuests()
 	for (const auto& entry : fs::recursive_directory_iterator(path)) {
 		if (!entry.is_directory() && !fs::is_empty(entry.path()))
 		{
-			//entries.insert(std::make_pair(GetQuestName(entry.path().generic_string()), entry.path().generic_string()));
-			string com = "RI_CollectionString_RQQuests:Set[" + GetQuestName(entry.path().generic_string()) + "," + entry.path().generic_string() + "]";
+			//entries.insert(make_pair(GetQuestName(entry.path().generic_string()), entry.path().generic_string()));
+			string com = "RI_CollectionString_RQQuests:Set[\"" + GetQuestName(entry.path().generic_string()) + "\",\"" + entry.path().generic_string() + "\"]";
 			//pISInterface->Print(com.c_str());
 			pISInterface->ExecuteCommand(com.c_str());
 		}
@@ -1168,7 +1161,7 @@ void getlp(bool Failed){
 			pISInterface->UnloadSet(ident);
 			gotlp = true;
 		}
-		catch (const std::exception&)
+		catch (const exception&)
 		{
 			return;
 		}
@@ -1865,6 +1858,7 @@ else
 return FALSE;
 }
 */
+
 bool __cdecl TLO_ISXRIVersion(int argc, char* argv[], LSTYPEVAR& Dest)
 {
 	Dest.Float = (float)EXTVER;
@@ -4188,6 +4182,7 @@ void RegisterTopLevelObjectsAfterAuth()
 	pISInterface->AddTopLevelObject("Devel", TLO_Devel);
 	pISInterface->AddTopLevelObject("PaidMem", TLO_PaidMem);
 	pISInterface->AddTopLevelObject("ISXRIVersion", TLO_ISXRIVersion);
+	
 	//pISInterface->AddTopLevelObject("QuestDirs", TLO_QuestDirs);
 	
 	/**/
