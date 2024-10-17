@@ -39,7 +39,7 @@ jobs:
         git clone https://github.com/Eq2automation/ISXRI-Data.git
         cd ISXRI-Data
         git checkout -b isxridll
-        cp D:\a\ISXRI\ISXRI\ISXRI.dll .
+        cp C:\OneDrive\InnerSpace\x64\Extensions\ISXDK35\ISXRI.dll .
         git add ISXRI.dll
         git commit -m "Add ISXRI.dll"
         git push https://${{ secrets.ISXRIDATA_GITHUB_TOKEN }}@github.com/Eq2automation/ISXRI-Data.git -u isxridll
