@@ -18704,7 +18704,7 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 		variable int _OriginalMAC=${MainArrayCounter}
 
 	variable int curFaction = 0
-
+	variable bool factionsInit = false;
 	if ${FactionName.NotNULLOrEmpty}
 	{
 		if !${RIMUIObj.FactionsInitialized}
@@ -18715,6 +18715,7 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 		}
 		wait 5
 		curFaction:Set[${RIMUIObj.FactionAmount[${FactionName}]}]
+		factionsInit:Set[${RIMUIObj.FactionsInitialized}]
 	}
 	if !${RIObj.ImportQuestFile["${QuestName}"]}
 		return 
@@ -18734,7 +18735,7 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 	if ${QuestName.Find["Brother Pang's Trial"](exists)}
 		QuestName:Concat[" "]
 	
-	if ((${FactionName.NotNULLOrEmpty} && ${curFaction}>=${Faction}) || ${QuestJournalWindow.CompletedQuest["${QuestName.Replace["\"",""]}"](exists)} || ${QuestJournalWindow.CompletedQuest[${QuestName.Replace["\"",""]}](exists)}) && ( !${_Repeatable} || ${ElementToJumpTo}>0 )
+	if ((${FactionName.NotNULLOrEmpty} && ${curFaction}>=${Faction}) || (!${FactionName.NotNULLOrEmpty} && ${QuestJournalWindow.CompletedQuest["${QuestName.Replace["\"",""]}"](exists)}) || (!${FactionName.NotNULLOrEmpty} && ${QuestJournalWindow.CompletedQuest[${QuestName.Replace["\"",""]}](exists)})) && ( !${_Repeatable} || ${ElementToJumpTo}>0 )
 	{
 		if ${FactionName.NotNULLOrEmpty}
 			echo ISXRI: "${QuestName}", Your faction with ${FactionName} is ${curFaction} which is already greater than or equal to ${Faction} moving on
@@ -18773,28 +18774,31 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 	{
 		if (${FactionName.NotNULLOrEmpty} && (${curFaction}==-1 || ${curFaction}==0))
 		{
-			InputBox -skin ${RI_Var_String_SkinName} "We were unable to read the faction amount for ${_FactionName} how many times would you like to run ${_QuestName}?"
+			InputBox -skin ${RI_Var_String_SkinName} "We were unable to read the faction amount for ${FactionName} how many times would you like to run ${QuestName}?"
 			while ${UserInput.Equal[""]} || ${String[${UserInput}].Equal[NULL]} || ${String[${UserInput}].Equal[0]}
 			{
 				MessageBox -skin ${RI_Var_String_SkinName} "You must enter a number of times (1 is ok)"
-				InputBox -skin ${RI_Var_String_SkinName} "How many times would you like to run the Repeatable quest: ${_QuestName}?"
+				InputBox -skin ${RI_Var_String_SkinName} "How many times would you like to run the Repeatable quest: ${QuestName}?"
 				wait 1
 			}
 			NumRepeats:Set[${Int[${UserInput}]}]
 		}
 		variable int _qcount=1
-		while (${FactionName.NotNULLOrEmpty} && (${curFaction}<${_Faction} || !${RIMUIObj.FactionsInitialized}))
+		while (${FactionName.NotNULLOrEmpty} && ${NumRepeats}==1 && (${curFaction}<${Faction} || !${factionsInit}))
 		{
-			if !${RIMUIObj.FactionsInitialized}
+			if !${factionsInit}
 			{
 				echo ISXRI: Initializing Faction Data
 				wait 100 ${RIMUIObj.FactionsInitialized}
 				echo ISXRI: Done Initializing Faction Data
+				curFaction:Set[${RIMUIObj.FactionAmount[${FactionName}]}]
+				factionsInit:Set[${RIMUIObj.FactionsInitialized}]
 				continue
 			}
-			echo ISXRI: ${Time} Starting ${QuestName} FactionAmount: ${curFaction} of ${_Faction}
+			echo ISXRI: ${Time} Starting ${QuestName} FactionAmount: ${curFaction} of ${Faction}
 			call Go TRUE
 			echo ISXRI: ${Time} Ending ${QuestName}
+			factionsInit:Set[FALSE]
 		}
 		for(_qcount:Set[1];${_qcount}<=${NumRepeats};_qcount:Inc)
 		{
@@ -18853,7 +18857,8 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 
 function QuestRepeatFaction(string QuestName, string FactionName, int Faction=0, int ElementToJumpTo=0)
 {
-	call Quest "${QuestName}" ${ElementToJumpTo} TRUE FALSE 1 "${FactionName}" ${FactionAmount}
+
+	call Quest "${QuestName}" ${ElementToJumpTo} TRUE FALSE 1 "${FactionName}" ${Faction}
 }
 
 function GoFreeportQeynos(bool _RelayToGroup=TRUE)
