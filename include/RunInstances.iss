@@ -17751,7 +17751,7 @@ function CraftIt(string _Recipe, int _Amount=1, bool _KeepWindow=FALSE, bool _Ex
     AddTrigger RICraft:Canceled "Item creation cancelled.  However, fuel components were still consumed."
 	; while !${Actor[Query,(Type=="Tradeskill Unit" && Distance<=4) || (Name=-"Dalnir's Forge" && Distance <15)](exists)}
 	; {
-		; MessageBox -skin eq2 "You must be within 4 of a tradeskill device, please move closer and unpause"
+		; MessageBox -skin ${RI_Var_String_SkinName} "You must be within 4 of a tradeskill device, please move closer and unpause"
 		; MainArrayCounter:Set[${Math.Calc[${MainArrayCount}-2]}]
 		; RI_Var_Bool_Paused:Set[TRUE]
 		; UIElement[Start@RI]:SetText[Resume]
@@ -17864,7 +17864,7 @@ function CraftIt(string _Recipe, int _Amount=1, bool _KeepWindow=FALSE, bool _Ex
 				{
 					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
 						eq2ex start_broker
 						wait 10
 					}
@@ -17873,7 +17873,7 @@ function CraftIt(string _Recipe, int _Amount=1, bool _KeepWindow=FALSE, bool _Ex
 				{
 					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
 						eq2ex start_broker
 						wait 10
 					}
@@ -17882,7 +17882,7 @@ function CraftIt(string _Recipe, int _Amount=1, bool _KeepWindow=FALSE, bool _Ex
 				{
 					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
 						eq2ex start_broker
 						wait 10
 					}
@@ -17891,14 +17891,14 @@ function CraftIt(string _Recipe, int _Amount=1, bool _KeepWindow=FALSE, bool _Ex
 				{
 					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
 						eq2ex start_broker
 						wait 10
 					}
 				}
 				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity}
 				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand}"
+					MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand}"
 					eq2ex start_broker
 					wait 10
 				}
@@ -18385,7 +18385,7 @@ function OLDCraftItOLD(string _Recipe, int _Amount=1)
 {
 	; while !${Actor[Query,(Type=="Tradeskill Unit" && Distance<=4) || (Name=-"Dalnir's Forge" && Distance <15)](exists)}
 	; {
-		; MessageBox -skin eq2 "You must be within 4 of a tradeskill device, please move closer and unpause"
+		; MessageBox -skin ${RI_Var_String_SkinName} "You must be within 4 of a tradeskill device, please move closer and unpause"
 		; MainArrayCounter:Set[${Math.Calc[${MainArrayCount}-2]}]
 		; RI_Var_Bool_Paused:Set[TRUE]
 		; UIElement[Start@RI]:SetText[Resume]
@@ -18426,7 +18426,7 @@ function OLDCraftItOLD(string _Recipe, int _Amount=1)
 				{
 					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
 						eq2ex start_broker
 						wait 10
 					}
@@ -18435,7 +18435,7 @@ function OLDCraftItOLD(string _Recipe, int _Amount=1)
 				{
 					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
 						eq2ex start_broker
 						wait 10
 					}
@@ -18444,7 +18444,7 @@ function OLDCraftItOLD(string _Recipe, int _Amount=1)
 				{
 					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
 						eq2ex start_broker
 						wait 10
 					}
@@ -18453,14 +18453,14 @@ function OLDCraftItOLD(string _Recipe, int _Amount=1)
 				{
 					while ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
 						eq2ex start_broker
 						wait 10
 					}
 				}
 				while ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand} < ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity}
 				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand}"
+					MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${_Recipe}].ToRecipeInfo.Fuel.QuantityOnHand}"
 					eq2ex start_broker
 					wait 10
 				}
@@ -18518,33 +18518,33 @@ function SokokarTimelineCrafting()
 	if ${QuestJournalWindow.CompletedQuest["Fangs Away!"](exists)} && ${QuestJournalWindow.CompletedQuest["An Eye in the Sky"](exists)} && ${QuestJournalWindow.CompletedQuest["Sticking My Ore In"](exists)} && ${QuestJournalWindow.CompletedQuest["Preparations for the Rescue"](exists)} && ${QuestJournalWindow.CompletedQuest["Is It Good News?"](exists)}
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "You have already completed the Sokokar Timeline Crafting"
+		MessageBox -skin ${RI_Var_String_SkinName} "You have already completed the Sokokar Timeline Crafting"
 		Script:End
 	}
 	if ${Me.TSLevel}<65
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "You must be Tradeskill Level 65 or higher to start this timeline"
+		MessageBox -skin ${RI_Var_String_SkinName} "You must be Tradeskill Level 65 or higher to start this timeline"
 		Script:End
 	}
 	if ${Me.Inventory[Query,Location=="Inventory" && Name=="ferrite cluster"].Quantity}<38
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "You must have at least 38 ferrite cluster in your inventory"
+		MessageBox -skin ${RI_Var_String_SkinName} "You must have at least 38 ferrite cluster in your inventory"
 		eq2ex start_broker
 		Script:End
 	}
 	if ${Me.Inventory[Query,Location=="Inventory" && Name=-"redwood lumber"].Quantity}<28
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "You must have at least 28 redwood lumber in your inventory"
+		MessageBox -skin ${RI_Var_String_SkinName} "You must have at least 28 redwood lumber in your inventory"
 		eq2ex start_broker
 		Script:End
 	}
 	if ${Me.Inventory[Query,Location=="Inventory" && Name=-"smoldering coal"].Quantity}<28
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "You must have at least 70 Smoldering Coal in your inventory"
+		MessageBox -skin ${RI_Var_String_SkinName} "You must have at least 70 Smoldering Coal in your inventory"
 		eq2ex start_broker
 		Script:End
 	}
@@ -18665,117 +18665,37 @@ function Poismtsbutton()
 	
 }
 
-function MakeCurrentActiveQuest(string _QuestName=${MainQuestName.Get[${MainQuestName.Used}]})
+function SetActiveQuest(string QuestName)
 {
-	QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-	QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
+	call MakeActiveQuest "${QuestName}"
 }
-function QuestRepeat(string _QuestName, int _NumRepeats=1, int _ElementToJumpTo=0)
-{
-	MainQuestName:Insert["${_QuestName}"]
-	if ${_QuestName.Find["\""](exists)}
-		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
-	if ${_ElementToJumpTo}==0
-		variable int _OriginalMAC=${MainArrayCounter}
-	variable int _qcount=1
-	for(_qcount:Set[1];${_qcount}<=${_NumRepeats};_qcount:Inc)
-	{
-		;echo Start of Quest: MainQuestName Size: ${MainQuestName.Used}
-		press -release ${RI_Var_String_ForwardKey}
-		variable string _ConvertedQuestName
-		;echo ${_QuestName} // ${_ElementToJumpTo}
-		
-		if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
-			_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
-		else
-			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-		
-		if !${RIObj.ImportQuestFile["${_QuestName}"]}
-			return 
-		wait 5
-		wait 50 ${istrMain.Used}>0
-		_QuestName:Set[${istrMain.Get[1]}]
-		variable int _GiveUpCNT=0
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
-		{
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-			squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-		}
-		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
-		variable bool _Repeatable
-		if ${istrMain.Get[2].Equal[Repeatable]}
-			_Repeatable:Set[TRUE]
-		
-		echo ISXRI: ${Time} Starting ${_QuestName} #${_qcount} of ${_NumRepeats}
-		
-		call Go TRUE
-		
-		echo ISXRI: ${Time} Ending ${_QuestName}
-		
-		if ${Me.IsMoving}
-		{
-			press -release ${RI_Var_String_ForwardKey}
-		}
-	}
-	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
 
-	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
-	
-	_GiveUpCNT:Set[0]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
-	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-	
-	if !${RIObj.ImportQuestFile["${_QuestName}"]}
-		return 
-	wait 5
-	wait 50 ${istrMain.Used}>0
-	;if ${_ElementToJumpTo}==0
-		MainArrayCounter:Set[${_OriginalMAC}]
-	;else
-	;	MainArrayCounter:Set[${_ElementToJumpTo}]
-	
-	;echo Set MainArrayCounter back to ${MainArrayCounter}
-	MainQuestName:Remove[${MainQuestName.Used}]
-	MainQuestName:Collapse
-	;echo End of Quest: MainQuestName Size: ${MainQuestName.Used}
-	
-	if ${Me.IsMoving}
-	{
-		press -release ${RI_Var_String_ForwardKey}
-	}
-}
-function SetActiveQuest(string _QuestName)
+function MakeActiveQuest(string QuestName)
 {
-	variable int _GiveUpCNT=0
-	if ${_QuestName.Find["\""](exists)}
-		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
+	variable int GiveUpCNT=0
+	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${QuestName}]} && ( ${QuestJournalWindow.ActiveQuest["${QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest[${QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${QuestName}"](exists)} ) && ${GiveUpCNT:Inc}<=10
 	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
+		call MakeCurrentActiveQuest "${QuestName}"
+		squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${QuestName}]}
 	}
 }
 
-function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted=TRUE, bool MainQuest=FALSE)
+function MakeCurrentActiveQuest(string QuestName=${MainQuestName.Get[${MainQuestName.Used}]})
+{
+	QuestJournalWindow.ActiveQuest["${QuestName}"]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest[${QuestName}]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest["${QuestName}"]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest[${QuestName}]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest["${QuestName}"]:MakeCurrentActiveQuest
+	QuestJournalWindow.ActiveQuest[${QuestName}]:MakeCurrentActiveQuest
+}
+
+function QuestRepeat(string QuestName, int NumRepeats=1, int ElementToJumpTo=0)
+{
+	call Quest "${QuestName}" ${ElementToJumpTo} TRUE FALSE ${NumRepeats}
+}
+
+function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted=TRUE, bool MainQuest=FALSE, int NumRepeats=1, string FactionName="", int Faction=0)
 {
 	if ${Me.IsMoving}
 		press -release ${RI_Var_String_ForwardKey}
@@ -18783,6 +18703,20 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 	if (!${MainQuest} && ${ElementToJumpTo}==0)
 		variable int _OriginalMAC=${MainArrayCounter}
 
+	variable int curFaction = 0
+	variable bool factionsInit = false;
+	if ${FactionName.NotNULLOrEmpty}
+	{
+		if !${RIMUIObj.FactionsInitialized}
+		{
+			echo ISXRI: Initializing Faction Data
+			wait 100 ${RIMUIObj.FactionsInitialized}
+			echo ISXRI: Done Initializing Faction Data
+		}
+		wait 5
+		curFaction:Set[${RIMUIObj.FactionAmount[${FactionName}]}]
+		factionsInit:Set[${RIMUIObj.FactionsInitialized}]
+	}
 	if !${RIObj.ImportQuestFile["${QuestName}"]}
 		return 
 
@@ -18792,14 +18726,7 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 	MainQuestName:Insert["${QuestName}"]
 	variable int _GiveUpCNT=0
 
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${QuestName}"]} && ( ${QuestJournalWindow.ActiveQuest["${QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${QuestName}](exists)} ) && ${_GiveUpCNT:Inc}<=10
-	{
-		squelch QuestJournalWindow.ActiveQuest["${QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${QuestName}]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest["${QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${QuestName}"]}
-	}
+	call MakeActiveQuest "${QuestName}"
 	
 	variable bool _Repeatable
 	if ${istrMain.Get[2].Equal[Repeatable]}
@@ -18807,10 +18734,13 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 	
 	if ${QuestName.Find["Brother Pang's Trial"](exists)}
 		QuestName:Concat[" "]
-
-	if (${QuestJournalWindow.CompletedQuest["${QuestName.Replace["\"",""]}"](exists)} || ${QuestJournalWindow.CompletedQuest[${QuestName.Replace["\"",""]}](exists)}) && ( !${_Repeatable} || ${ElementToJumpTo}>0 )
+	
+	if ((${FactionName.NotNULLOrEmpty} && ${curFaction}>=${Faction}) || (!${FactionName.NotNULLOrEmpty} && ${QuestJournalWindow.CompletedQuest["${QuestName.Replace["\"",""]}"](exists)}) || (!${FactionName.NotNULLOrEmpty} && ${QuestJournalWindow.CompletedQuest[${QuestName.Replace["\"",""]}](exists)})) && ( !${_Repeatable} || ${ElementToJumpTo}>0 )
 	{
-		echo ISXRI: "${QuestName}" already Completed moving on
+		if ${FactionName.NotNULLOrEmpty}
+			echo ISXRI: "${QuestName}", Your faction with ${FactionName} is ${curFaction} which is already greater than or equal to ${Faction} moving on
+		else
+			echo ISXRI: "${QuestName}" already Completed moving on
 		if !${MainQuest}
 		{
 			QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
@@ -18842,9 +18772,44 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 	}
 	else
 	{
-		echo ISXRI: ${Time} Starting "${QuestName}"
-		call Go TRUE
-		echo ISXRI: ${Time} Ending "${QuestName}"
+		if (${FactionName.NotNULLOrEmpty} && (${curFaction}==-1 || ${curFaction}==0))
+		{
+			InputBox -skin ${RI_Var_String_SkinName} "We were unable to read the faction amount for ${FactionName} how many times would you like to run ${QuestName}?"
+			while ${UserInput.Equal[""]} || ${String[${UserInput}].Equal[NULL]} || ${String[${UserInput}].Equal[0]}
+			{
+				MessageBox -skin ${RI_Var_String_SkinName} "You must enter a number of times (1 is ok)"
+				InputBox -skin ${RI_Var_String_SkinName} "How many times would you like to run the Repeatable quest: ${QuestName}?"
+				wait 1
+			}
+			NumRepeats:Set[${Int[${UserInput}]}]
+		}
+		variable int _qcount=1
+		while (${FactionName.NotNULLOrEmpty} && ${NumRepeats}==1 && (${curFaction}<${Faction} || !${factionsInit}))
+		{
+			if !${factionsInit}
+			{
+				echo ISXRI: Initializing Faction Data
+				wait 100 ${RIMUIObj.FactionsInitialized}
+				echo ISXRI: Done Initializing Faction Data
+				curFaction:Set[${RIMUIObj.FactionAmount[${FactionName}]}]
+				factionsInit:Set[${RIMUIObj.FactionsInitialized}]
+				continue
+			}
+			echo ISXRI: ${Time} Starting ${QuestName} FactionAmount: ${curFaction} of ${Faction}
+			call Go TRUE
+			echo ISXRI: ${Time} Ending ${QuestName}
+			factionsInit:Set[FALSE]
+		}
+		for(_qcount:Set[1];${_qcount}<=${NumRepeats};_qcount:Inc)
+		{
+			variable string echoString = "ISXRI: ${Time} Starting ${QuestName}"
+			if ${NumRepeats}>1
+				echoString:Concat[" Repeat #${_qcount} of ${NumRepeats}"]
+			echo ${echoString}
+			call Go TRUE
+			echo ISXRI: ${Time} Ending "${QuestName}"
+		}
+		
 	}
 
 	if ${MainQuest}
@@ -18890,168 +18855,12 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 	}
 }
 
-function QuestRepeatFaction(string _QuestName, string _FactionName, int _Faction=0, int _ElementToJumpTo=0)
+function QuestRepeatFaction(string QuestName, string FactionName, int Faction=0, int ElementToJumpTo=0)
 {
-	MainQuestName:Insert["${_QuestName}"]
-	if ${_ElementToJumpTo}==0
-		variable int _OriginalMAC=${MainArrayCounter}
 
-	if ${_QuestName.Find["\""](exists)}
-		_QuestName:Set["${_QuestName.Replace["\"",""]}"]
-		
-	;MainQuestName:Insert["${_QuestName}"]
-	if !${RIMUIObj.FactionsInitialized}
-	{
-		echo ISXRI: Initializing Faction Data
-		wait 100 ${RIMUIObj.FactionsInitialized}
-		echo ISXRI: Done Initializing Faction Data
-	}
-	wait 5
-	if ${RIMUIObj.FactionAmount[${_FactionName}]}>=${_Faction}
-	{
-		;show messagebox 
-		echo ISXRI: ${_QuestName}, Your faction with ${_FactionName} is ${RIMUIObj.FactionAmount[${_FactionName}]} which is already greater than or equal to ${_Faction} moving on
-		;skip here
-		_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
-		
-		_GiveUpCNT:Set[0]
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
-		{
-			QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-			wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-		}
-		_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-		
-		if !${RIObj.ImportQuestFile["${_QuestName}"]}
-		return 
-
-		wait 5
-		wait 50 ${istrMain.Used}>0
-		if ${_ElementToJumpTo}==0
-			MainArrayCounter:Set[${_OriginalMAC}]
-		else
-			MainArrayCounter:Set[${_ElementToJumpTo}]
-		
-		;echo Setting ${_ElementToJumpTo} its now ${MainArrayCounter}
-		MainQuestName:Remove[${MainQuestName.Used}]
-		MainQuestName:Collapse
-		;echo End of Quest: MainQuestName Size: ${MainQuestName.Used}
-		return
-	}
-	elseif ${RIMUIObj.FactionAmount[${_FactionName}]}==-1 || ${RIMUIObj.FactionAmount[${_FactionName}]}==0
-	{
-		InputBox -skin eq2 "We were unable to read the faction amount for ${_FactionName} how many times would you like to run ${_QuestName}?"
-		while ${UserInput.Equal[""]} || ${String[${UserInput}].Equal[NULL]} || ${String[${UserInput}].Equal[0]}
-		{
-			MessageBox -skin eq2 "You must enter a number of times (1 is ok)"
-			InputBox -skin eq2 "How many times would you like to run the Repeatable quest: ${_QuestName}?"
-			wait 1
-		}
-		call QuestRepeat "${_QuestName}" ${UserInput}
-		return
-	}
-	variable int _qcount=0
-	;for(_qcount:Set[1];${_qcount}<=${_NumRepeats};_qcount:Inc)
-	while ${RIMUIObj.FactionAmount[${_FactionName}]}<${_Faction} || !${RIMUIObj.FactionsInitialized}
-	{
-		if !${RIMUIObj.FactionsInitialized}
-		{
-			echo ISXRI: Initializing Faction Data
-			wait 100 ${RIMUIObj.FactionsInitialized}
-			echo ISXRI: Done Initializing Faction Data
-			continue
-		}
-		;echo Start of Quest: MainQuestName Size: ${MainQuestName.Used}
-		press -release ${RI_Var_String_ForwardKey}
-		variable string _ConvertedQuestName
-		;echo ${_QuestName} // ${ElementToJumpTo}
-		;if ${_ElementToJumpTo}==0
-		;	_OriginalMAC:Set[${MainArrayCounter}]
-		if ${_QuestName.Equal[101 Things to Do With a Dead Grindhoof]}
-			_ConvertedQuestName:Set["ThingstoDoWithaDeadGrindhoof"]
-		else
-			_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-		
-		if !${RIObj.ImportQuestFile["${_QuestName}"]}
-			return 
-		wait 5
-		wait 50 ${istrMain.Used}>0
-		_QuestName:Set[${istrMain.Get[1]}]
-		variable int _GiveUpCNT=0
-		while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
-		{
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-			squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-			squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-		}
-		_ConvertedQuestName:Set["${_QuestName.Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-		;echo ${_QuestName} // \${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)} // ${QuestJournalWindow.CompletedQuest["${_QuestName}"](exists)}
-		variable bool _Repeatable
-		if ${istrMain.Get[2].Equal[Repeatable]}
-			_Repeatable:Set[TRUE]
-		
-		echo ISXRI: ${Time} Starting ${_QuestName} #${_qcount:Inc} Faction: ${RIMUIObj.FactionAmount[${_FactionName}]} Needed: ${_Faction}
-;		of ${_NumRepeats}
-		
-		call Go TRUE
-		
-		echo ISXRI: ${Time} Ending ${_QuestName}
-		
-		if ${Me.IsMoving}
-		{
-			press -release ${RI_Var_String_ForwardKey}
-		}
-	}
-	
-	relay ${RI_Var_String_RelayGroup} RI_CMD_Hidden_RemoveTLO ${_ConvertedQuestName.Upper}
-
-	_QuestName:Set["${MainQuestName.Get[${Math.Calc[${MainQuestName.Used}-1]}]}"]
-	
-	_GiveUpCNT:Set[0]
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} && ${_GiveUpCNT:Inc}<=10
-	{
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		squelch QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		Squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-	}
-	_ConvertedQuestName:Set["${_QuestName.Replace[".",""].Replace["(",""].Replace[")",""].Replace["!",""].Replace["'",""].Replace["-",""].Replace[" ",""].Replace["?",""].Replace[",",""].Replace[":",""]}"]
-	
-	if !${RIObj.ImportQuestFile["${_QuestName}"]}
-		return 
-	wait 5
-	wait 50 ${istrMain.Used}>0	
-	;if ${_ElementToJumpTo}==0
-		MainArrayCounter:Set[${_OriginalMAC}]
-	;else
-	;	MainArrayCounter:Set[${_ElementToJumpTo}]
-	
-	;echo Set MainArrayCounter back to ${MainArrayCounter}
-	MainQuestName:Remove[${MainQuestName.Used}]
-	MainQuestName:Collapse
-	;echo End of Quest: MainQuestName Size: ${MainQuestName.Used}
-	
-	if ${Me.IsMoving}
-	{
-		press -release ${RI_Var_String_ForwardKey}
-	}
+	call Quest "${QuestName}" ${ElementToJumpTo} TRUE FALSE 1 "${FactionName}" ${Faction}
 }
-function MakeActiveQuest(string _QuestName)
-{
-	variable int _GiveUpCNT=0
-	;echo ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
-	while ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual["${_QuestName}"]} && ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].NotEqual[${_QuestName}]} && ( ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest[${_QuestName}](exists)} || ${QuestJournalWindow.ActiveQuest["${_QuestName}"](exists)} ) && ${_GiveUpCNT:Inc}<=10
-	{
-		QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		QuestJournalWindow.ActiveQuest["${_QuestName}"]:MakeCurrentActiveQuest
-		QuestJournalWindow.ActiveQuest[${_QuestName}]:MakeCurrentActiveQuest
-		squelch wait 5 ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal["${_QuestName}"]} || ${QuestJournalWindow.CurrentQuest.Name.GetProperty[LocalText].Equal[${_QuestName}]}
-	}
-}
+
 function GoFreeportQeynos(bool _RelayToGroup=TRUE)
 {
 	if ${_RelayToGroup} && !${RI_Var_Bool_GlobalOthers}
@@ -20894,13 +20703,13 @@ function SKTimelineStarter()
 	}
 	else
 	{
-		MessageBox -skin eq2 "We are on neither Dock of Kylong Plains and unable to move to Jones (835, 12, 253), please move to Jones (835, 12, 253) and re run"
+		MessageBox -skin ${RI_Var_String_SkinName} "We are on neither Dock of Kylong Plains and unable to move to Jones (835, 12, 253), please move to Jones (835, 12, 253) and re run"
 		Script:End
 	}
 
 	if ${Math.Distance[${Me.Loc},835,12,253]}>25
 	{
-		MessageBox -skin eq2 "We were unable to move to Jones (835, 12, 253), please move to Jones (835, 12, 253) and re run"
+		MessageBox -skin ${RI_Var_String_SkinName} "We were unable to move to Jones (835, 12, 253), please move to Jones (835, 12, 253) and re run"
 		Script:End
 	}
 }
@@ -20946,7 +20755,7 @@ function NewLandsNewProfitsStarter()
 	}
 	else
 	{
-		MessageBox -skin eq2 "We are on neither Dock of Kylong Plains and unable to move to Taskmaster Greeblentus (2115,520,-912), please move to Taskmaster Greeblentus (2115,520,-912) and re run"
+		MessageBox -skin ${RI_Var_String_SkinName} "We are on neither Dock of Kylong Plains and unable to move to Taskmaster Greeblentus (2115,520,-912), please move to Taskmaster Greeblentus (2115,520,-912) and re run"
 		Script:End
 	}
 	;now move to SokoKar if 
@@ -21038,7 +20847,7 @@ function QuestStarter(float _X, float _Y, float _Z, int _Distance, string _ZoneN
 	if ( ${Math.Distance[${Me.Loc},${_X},${_Y},${_Z}]}>${_Distance} || !${Zone.Name.Find[${_ZoneName}](exists)} ) && !${Me.Ability[id,3266969222].IsReady} && !${Zone.ShortName.Find[guildhall](exists)}
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "We are not within ${_Distance} of ${_X},${_Y},${_Z} in ${_ZoneName}, waiting for Call to Guild Hall to be ready or for us to be in our guild hall"
+		MessageBox -skin ${RI_Var_String_SkinName} "We are not within ${_Distance} of ${_X},${_Y},${_Z} in ${_ZoneName}, waiting for Call to Guild Hall to be ready or for us to be in our guild hall"
 		while !${Me.Ability[id,3266969222].IsReady} && !${Zone.ShortName.Find[guildhall](exists)} 
 			wait 10
 		while ${EQ2.Zoning}!=0 
@@ -21061,13 +20870,13 @@ function QuestStarter(float _X, float _Y, float _Z, int _Distance, string _ZoneN
 			wait 10
 			if !${Zone.ShortName.Find[guildhall](exists)}
 			{
-				MessageBox -skin eq2 "We attempted to Call to Guild Hall but did not end up in the Guild Hall"
+				MessageBox -skin ${RI_Var_String_SkinName} "We attempted to Call to Guild Hall but did not end up in the Guild Hall"
 				Script:End
 			}
 		}
 		if !${Actor[Query, Name=="Ole Salt's Mariner Bell" && Distance<=13](exists)} && !${Actor[Query, Name=="Navigator's Globe of Norrath" && Distance<=13](exists)} && !${Actor[Query, Name=="Pirate Captain's Helmsman" && Distance<=13](exists)} && ${Zone.ShortName.Find[guildhall](exists)}
 		{
-			MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13"
+			MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13"
 			Script:End
 		}
 		;echo call TravelMap "${_ZoneToZoneName}" ${_DoorOption} ${_ZoneToDeviceOption}
@@ -21076,7 +20885,7 @@ function QuestStarter(float _X, float _Y, float _Z, int _Distance, string _ZoneN
 
 		if !${Zone.Name.Find[${_ZoneToZoneName}](exists)} && ${_CheckZone}
 		{
-			MessageBox -skin eq2 "We were unable to succesfully zone to ${_ZoneToZoneName}, please try again or zone there manually"
+			MessageBox -skin ${RI_Var_String_SkinName} "We were unable to succesfully zone to ${_ZoneToZoneName}, please try again or zone there manually"
 			Script:End
 		}
 	}
@@ -21155,7 +20964,7 @@ function FensBellToBathezidsWatchCraft()
 	}
 	else
 	{
-		MessageBox -skin eq2 "We are unable to move to Quest Giver, please move to Quest Giver and re run"
+		MessageBox -skin ${RI_Var_String_SkinName} "We are unable to move to Quest Giver, please move to Quest Giver and re run"
 		Script:End
 	}
 }
@@ -21172,13 +20981,13 @@ function BathezidsWatchFactionCrafting()
 	if ${RIMUIObj.FactionAmount[Bathezid's Watch]}>-20000
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "You have enough faction to start Artisan Epic Timeline"
+		MessageBox -skin ${RI_Var_String_SkinName} "You have enough faction to start Artisan Epic Timeline"
 		Script:End
 	}
 	if ${Me.TSLevel}<70
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "You must be Tradeskill Level 70 or higher to start this timeline"
+		MessageBox -skin ${RI_Var_String_SkinName} "You must be Tradeskill Level 70 or higher to start this timeline"
 		Script:End
 	}
 	;check Fuels and Resource Quantities for each TSClass, Fuel = 810 Resources = 648
@@ -21254,7 +21063,7 @@ function BathezidsWatchFactionCrafting()
 		
 	if ${RIMUIObj.FactionAmount[Bathezid's Watch]}==0 && ${QuestJournalWindow.CompletedQuest["New Lands, New Profits"](exists)}
 	{
-		MessageBox -skin eq2 "You have already completed New Lands, New Profits and your Bathezid's Watch faction is reporting 0, which means we are not reading it, open your faction window and goto each dropdown and scroll all the way down the re run"
+		MessageBox -skin ${RI_Var_String_SkinName} "You have already completed New Lands, New Profits and your Bathezid's Watch faction is reporting 0, which means we are not reading it, open your faction window and goto each dropdown and scroll all the way down the re run"
 		Script:End
 	}
 	
@@ -21312,7 +21121,7 @@ function BathezidsWatchFactionCrafting()
 				{
 					if ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent1.QuantityOnHand} < ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent1.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent1.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent1.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent1.QuantityOnHand}"
 						eq2ex start_broker
 						Script:End
 					}
@@ -21321,7 +21130,7 @@ function BathezidsWatchFactionCrafting()
 				{
 					if ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent2.QuantityOnHand} < ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent2.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent2.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent2.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent2.QuantityOnHand}"
 						eq2ex start_broker
 						Script:End
 					}
@@ -21330,7 +21139,7 @@ function BathezidsWatchFactionCrafting()
 				{
 					if ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent3.QuantityOnHand} < ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent3.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent3.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent3.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent3.QuantityOnHand}"
 						eq2ex start_broker
 						Script:End
 					}
@@ -21339,21 +21148,21 @@ function BathezidsWatchFactionCrafting()
 				{
 					if ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent4.QuantityOnHand} < ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent4.Quantity}
 					{
-						MessageBox -skin eq2 "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
+						MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent4.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent4.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.BuildComponent4.QuantityOnHand}"
 						eq2ex start_broker
 						Script:End
 					}
 				}
 				if ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.Fuel.QuantityOnHand} < ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.Fuel.Quantity}
 				{
-					MessageBox -skin eq2 "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.Fuel.QuantityOnHand}"
+					MessageBox -skin ${RI_Var_String_SkinName} "You need ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.Fuel.Quantity} of ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.Fuel.Name} and only have ${Me.Recipe[${BWFactionRecipeName}].ToRecipeInfo.Fuel.QuantityOnHand}"
 					eq2ex start_broker
 					Script:End
 				}
 			}
 			else
 			{
-				MessageBox -skin eq2 "We were unable to retrieve recipe info"
+				MessageBox -skin ${RI_Var_String_SkinName} "We were unable to retrieve recipe info"
 				Script:End
 			}
 		}
@@ -21368,7 +21177,7 @@ function BathezidsWatchFactionCrafting()
 			}
 			if !${Me.Recipe[${BWFactionRecipeName}](exists)}
 			{
-				MessageBox -skin eq2 "Can not find Recipe: ${BWFactionRecipeName}"
+				MessageBox -skin ${RI_Var_String_SkinName} "Can not find Recipe: ${BWFactionRecipeName}"
 				Script:End
 			}
 		}
@@ -21458,7 +21267,7 @@ function CheckResourceQuantityOnHand(string _ResourceName, int _Quantity)
 	if ${Me.Inventory[Query, Location=="Inventory" && Name=="${_ResourceName}"].Quantity}<${_Quantity}
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "You must have at least ${_Quantity} ${_ResourceName} in your inventory"
+		MessageBox -skin ${RI_Var_String_SkinName} "You must have at least ${_Quantity} ${_ResourceName} in your inventory"
 		eq2ex start_broker
 		Script:End
 	}
@@ -21472,7 +21281,7 @@ function SarnakSupplyStocking()
 	if ${Me.TSLevel}<80
 	{
 		;show messagebox 
-		MessageBox -skin eq2 "You must be Tradeskill Level 80 or higher to start this timeline"
+		MessageBox -skin ${RI_Var_String_SkinName} "You must be Tradeskill Level 80 or higher to start this timeline"
 		Script:End
 	}
 	switch ${Me.TSSubClass}
@@ -21836,13 +21645,13 @@ function ArtisanEpicTimeline()
 		if ${QuestJournalWindow.CompletedQuest["The Proof of the Pudding"](exists)} || ${QuestJournalWindow.ActiveQuest["The Proof of the Pudding"](exists)}
 		{
 			;show messagebox 
-			MessageBox -skin eq2 "You have already completed the Artisan Epic Timeline or are on The Proof of the Pudding"
+			MessageBox -skin ${RI_Var_String_SkinName} "You have already completed the Artisan Epic Timeline or are on The Proof of the Pudding"
 			Script:End
 		}
 		if ${Me.TSLevel}<80
 		{
 			;show messagebox 
-			MessageBox -skin eq2 "You must be Tradeskill Level 80 or higher to start this timeline"
+			MessageBox -skin ${RI_Var_String_SkinName} "You must be Tradeskill Level 80 or higher to start this timeline"
 			Script:End
 		}
 		;if not completed "New Lands, New Profits"
@@ -27195,7 +27004,7 @@ function CheckPreReqs(... args)
 			else
 				_FailMessage:Concat[${_Fails.Get[${_count}]}]
 		}
-		MessageBox -skin eq2 "${_FailMessage}"
+		MessageBox -skin ${RI_Var_String_SkinName} "${_FailMessage}"
 		if !${RI_Var_Bool_SSSInScript}
 			MainArrayCounter:Set[${Math.Calc[${MainArrayCounter}-2]}]
 		RI_Var_Bool_Paused:Set[TRUE]
@@ -27211,11 +27020,11 @@ function CheckPreReqs(... args)
 function TFB(string _What)
 {
 	if ${_What.Upper.Equal[COLLECTION]}
-		MessageBox -skin eq2 "This has not been coded yet, finish the collection, when done unpause RQ and it will resume the quest."
+		MessageBox -skin ${RI_Var_String_SkinName} "This has not been coded yet, finish the collection, when done unpause RQ and it will resume the quest."
 	elseif ${_What.Upper.Equal[CRAFTING]}
-		MessageBox -skin eq2 "You are at the stage where you need other crafters to make you items (or you can buy from broker), do this, and resume RI and it will continue the quest"
+		MessageBox -skin ${RI_Var_String_SkinName} "You are at the stage where you need other crafters to make you items (or you can buy from broker), do this, and resume RI and it will continue the quest"
 	elseif ${_What.Upper.Equal[DALNIR]}
-		MessageBox -skin eq2 "You are at the stage where you need finish Crypt of Dalnir, do this, and resume RI and it will continue the quest"
+		MessageBox -skin ${RI_Var_String_SkinName} "You are at the stage where you need finish Crypt of Dalnir, do this, and resume RI and it will continue the quest"
 	RI_Var_Bool_Paused:Set[TRUE]
 	UIElement[Start@RI]:SetText[Resume]
 	while ${RI_Var_Bool_Paused}
@@ -27262,7 +27071,7 @@ function RemoveFromDepot(string _DepotName,... args)
 	}
 	elseif ${Zone.ShortName.Find[guildhall](exists)}
 	{
-		MessageBox -skin eq2 "You are more than 12 away from the ${_DepotName} depot, please move closer and unpause RQ"
+		MessageBox -skin ${RI_Var_String_SkinName} "You are more than 12 away from the ${_DepotName} depot, please move closer and unpause RQ"
 		RI_Var_Bool_Paused:Set[TRUE]
 		MainArrayCounter:Dec
 		MainArrayCounter:Dec
@@ -27450,7 +27259,7 @@ function PlaceHouseItem(int _FaceDegree=${Me.Heading})
 function MessageBox(string _Message, bool _Pause=1)
 {
 	RIConsole:Echo["${_Message}"]
-	MessageBox -skin eq2 "${_Message}"
+	MessageBox -skin ${RI_Var_String_SkinName} "${_Message}"
 	if ${_Pause}
 	{
 		RI_Var_Bool_Paused:Set[TRUE]

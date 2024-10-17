@@ -1811,7 +1811,7 @@ function main()
 												if ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|].Equals["*WAIT*"]}
 												{
 													;sound Alarm and throw a messagebox on ALL Sessions
-													relay ALL MessageBox -skin eq2 "${Me.Name} Found ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} WAITING"
+													relay ALL MessageBox -skin ${RI_Var_String_SkinName} "${Me.Name} Found ${UIElement[AddedItemsListbox@RILoot].OrderedItem[${AILCounter}].Text.Token[2,|]} WAITING"
 													while ${Actor[Exquisite Chest,radius,7](exists)}
 														wait 1
 												}
@@ -3663,7 +3663,7 @@ objectdef RIMovementObject
 			{
 				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13, please move closer and resume RQ"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13, please move closer and resume RQ"
 					RI_Var_Bool_Paused:Set[TRUE]
 					UIElement[Start@RI]:SetText[Resume]
 					while ${RI_Var_Bool_Paused}
@@ -3674,7 +3674,7 @@ objectdef RIMovementObject
 				}
 				else
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Travel Bell within 13"
 					return
 				}
 			}
@@ -3696,7 +3696,7 @@ objectdef RIMovementObject
 			{
 				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Spire within 13, please move closer and resume RQ"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Spire within 13, please move closer and resume RQ"
 					RI_Var_Bool_Paused:Set[TRUE]
 					UIElement[Start@RI]:SetText[Resume]
 					while ${RI_Var_Bool_Paused}
@@ -3707,7 +3707,7 @@ objectdef RIMovementObject
 				}
 				else
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Spire within 13"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Spire within 13"
 					return
 				}
 			}
@@ -3720,7 +3720,7 @@ objectdef RIMovementObject
 			{
 				if ${Script[${RI_Var_String_RunInstancesScriptName}](exists)}
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Guild Portal Druid within 13, please move closer and resume RQ"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Guild Portal Druid within 13, please move closer and resume RQ"
 					RI_Var_Bool_Paused:Set[TRUE]
 					UIElement[Start@RI]:SetText[Resume]
 					while ${RI_Var_Bool_Paused}
@@ -3731,7 +3731,7 @@ objectdef RIMovementObject
 				}
 				else
 				{
-					MessageBox -skin eq2 "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Guild Portal Druid within 13"
+					MessageBox -skin ${RI_Var_String_SkinName} "We are at the guild hall to attempt to zone to ${_ZoneToZoneName} but can not find a Guild Portal Druid within 13"
 					return
 				}
 			}
@@ -4901,11 +4901,11 @@ objectdef RIMUIObject
 					{
 						;echo "${RI_CollectionString_RQQuests.CurrentKey}" // "${RI_CollectionString_RQQuests.CurrentValue}"
 						if ${RI_CollectionString_RQQuests.CurrentKey.Find["Timeline"]}
-							UIElement[QuestsListBox@RI]:AddItem["${RI_Decode["${RI_CollectionString_RQQuests.CurrentKey}"]}","${RI_CollectionString_RQQuests.CurrentValue}",FFE8E200]
+							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}",FFE8E200]
 						elseif ${_TempString.Find["Mission"]}
-							UIElement[QuestsListBox@RI]:AddItem["${RI_Decode["${RI_CollectionString_RQQuests.CurrentKey}"]}","${RI_CollectionString_RQQuests.CurrentValue}",FF00b33c]
+							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}",FF00b33c]
 						else
-							UIElement[QuestsListBox@RI]:AddItem["${RI_Decode["${RI_CollectionString_RQQuests.CurrentKey}"]}","${RI_CollectionString_RQQuests.CurrentValue}"]
+							UIElement[QuestsListBox@RI]:AddItem["${RI_CollectionString_RQQuests.CurrentKey}","${RI_CollectionString_RQQuests.CurrentValue}"]
 					}
 				}
 				while "${RI_CollectionString_RQQuests.NextKey(exists)}"
@@ -5276,24 +5276,24 @@ objectdef RIMUIObject
 		;this opens every faction dropdown
 		eq2ex TOGGLEPERSONA
 		wait 5
-		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,6]:SetProperty[visible,TRUE]
-		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,2]:SetProperty[visible,FALSE]
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions]:SetProperty[visible,TRUE]
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Inventory]:SetProperty[visible,FALSE]
 		wait 5
 		variable index:collection:string test
-		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,6].Child[Page,2]:GetOptions[test]
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[3]:GetOptions[test]
 		
 		variable int count
 		for(count:Set[0];${count}<${test.Used};count:Inc)
 		{
-			EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,6].Child[Page,2]:Set[${count}]
+			EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[3]:Set[${count}]
 			wait 5
 		}
 		wait 5
-		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,6]:SetProperty[visible,FALSE]
-		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage].Child[Page,2]:SetProperty[visible,TRUE]
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions]:SetProperty[visible,FALSE]
+		EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Inventory]:SetProperty[visible,TRUE]
 		wait 5
 		eq2ex TOGGLEPERSONA
-		NumFactions:Set[${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].NumChildren}]
+		NumFactions:Set[${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].NumChildren}]
 		;if ${Pass.Equal[IF]}
 		;	echo ISXRI: Done Initializing Factions
 		if ${Pass.Equal[DAF]}
@@ -5382,10 +5382,10 @@ objectdef RIMUIObject
 			variable int FactionCount
 			for(FactionCount:Set[1];${FactionCount}<=${NumFactions};FactionCount:Inc)
 			{
-				if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,1].GetProperty[Text].NotEqual[NULL]}
+				if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${FactionCount}].Child[1].GetProperty[Text].NotEqual[NULL]}
 				{
 					TrueFactionCount:Inc
-					echo Faction: ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,1].GetProperty[Text]} Value: ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,2].GetProperty[Text].Replace[",",""]} KOS: ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,3].GetProperty[Text]}
+					echo Faction: ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${FactionCount}].Child[1].GetProperty[Text]} Value: ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${FactionCount}].Child[Text,2].GetProperty[Text].Replace[",",""]} KOS: ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[3].GetProperty[Text]}
 				}
 			}
 			if ${TrueFactionCount} < ${FactionCount} 
@@ -5415,7 +5415,7 @@ objectdef RIMUIObject
 			return -1
 		}
 		
-		return ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${_IndexPosition}].Child[Text,1].GetProperty[Text]}
+		return ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${_IndexPosition}].Child[1].GetProperty[Text]}
 	}
 	member(int) FactionAmount(string _FactionName)
 	{
@@ -5426,10 +5426,10 @@ objectdef RIMUIObject
 		}
 		for(FactionCount:Set[1];${FactionCount}<=${NumFactions};FactionCount:Inc)
 		{
-			if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,1].GetProperty[Text].NotEqual[NULL]}
+			if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${FactionCount}].Child[1].GetProperty[Text].NotEqual[NULL]}
 			{
-				if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,1].GetProperty[Text].Upper.Equal[${_FactionName.Upper}]}
-					return ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,2].GetProperty[Text].Replace[",",""]}
+				if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${FactionCount}].Child[1].GetProperty[Text].Upper.Equal[${_FactionName.Upper}]}
+					return ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${FactionCount}].Child[2].GetProperty[Text].Replace[",",""]}
 			}
 		}
 		return 0
@@ -5443,10 +5443,10 @@ objectdef RIMUIObject
 		}
 		for(FactionCount:Set[1];${FactionCount}<=${NumFactions};FactionCount:Inc)
 		{
-			if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,1].GetProperty[Text].NotEqual[NULL]}
+			if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${FactionCount}].Child[1].GetProperty[Text].NotEqual[NULL]}
 			{
-				if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,1].GetProperty[Text].Upper.Equal[${_FactionName.Upper}]}
-					return ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[Page,3].Child[Composite,1].Child[Page,1].Child[Composite,1].Child[Page,${FactionCount}].Child[Text,3].GetProperty[Text]}
+				if ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${FactionCount}].Child[1].GetProperty[Text].Upper.Equal[${_FactionName.Upper}]}
+					return ${EQ2UIPage[MainHUD,Persona].Child[Page,MainPage.Factions].Child[5].Child[1].Child[1].Child[1].Child[${FactionCount}].Child[3].GetProperty[Text]}
 			}
 		}
 		return 0
