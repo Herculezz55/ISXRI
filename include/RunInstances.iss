@@ -18735,7 +18735,7 @@ function Quest(string QuestName, int ElementToJumpTo=0, bool CheckQuestCompleted
 	if ${QuestName.Find["Brother Pang's Trial"](exists)}
 		QuestName:Concat[" "]
 	
-	if ((${FactionName.NotNULLOrEmpty} && ${curFaction}>=${Faction}) || (!${FactionName.NotNULLOrEmpty} && ${QuestJournalWindow.CompletedQuest["${QuestName.Replace["\"",""]}"](exists)}) || (!${FactionName.NotNULLOrEmpty} && ${QuestJournalWindow.CompletedQuest[${QuestName.Replace["\"",""]}](exists)})) && ( !${_Repeatable} || ${ElementToJumpTo}>0 )
+	if ((${FactionName.NotNULLOrEmpty} && ${curFaction}>=${Faction}) || (!${FactionName.NotNULLOrEmpty} && ${QuestJournalWindow.CompletedQuest["${QuestName.Replace["\"",""]}"](exists)})) && ( !${_Repeatable} || ${ElementToJumpTo}>0 )
 	{
 		if ${FactionName.NotNULLOrEmpty}
 			echo ISXRI: "${QuestName}", Your faction with ${FactionName} is ${curFaction} which is already greater than or equal to ${Faction} moving on
