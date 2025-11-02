@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to pull this information from Github TAG and Release Date
-#define EXTENSION_VERSION "6.99 10-19-24"
-double EXTVER = 6.99;
+#define EXTENSION_VERSION "7.00 11-1-25"
+double EXTVER = 7.00;
 #include "ISXRI.h"
 //
 //
@@ -104,6 +104,7 @@ double EXTVER = 6.99;
 #include <sstream>
 
 using namespace std;
+bool DoAuth = false;
 bool Authed = false;
 bool boolUpdating = false;
 bool boolNeedUpdate = false;
@@ -4182,127 +4183,21 @@ bool VerChecked = false;
 bool NewUpdaterB = false;
 bool LoadMessageDisplayed = false;
 double CurrTime;
-void ISXRIPulseNoAuth()
-{
-	if (!LoadMessageDisplayed)
-	{
-		printf("ISXRI: Loading version %s", RI_Version);
-		printf("ISXRI: For support goto http://forums.isxri.com or visit us on IRC @ #isxri");
-		// printf("ISXRI: Authenticating ISXRI");
-		LoadMessageDisplayed = true;
-	}
-	/*
-	if (!gotlp)
-	{
-		//printf("!gotlp if statement");
-		if (!gettinglp && pISInterface->GetScriptRuntime("Buffer:Auth") == 0)
-		{
-			CurrTime = TimeSince();
-			if ((CurrTime - LastGotLPTime) > 1)
-				getlp(false);
-		}
-	}
-	else if (!Authed)
-	{
-		//printf("!Authed if statement");
-		if (!authenticating)
-		{
-			//printf("!authenticating if statement");
-			if (gotlp && pISInterface->GetScriptRuntime("Buffer:Auth") == 0)
-			{
-				//printf("!gotlp");
 
-				//Sleep(500);
-				//authenticate
-				if (!authenticating)
-				{
-					CurrTime = TimeSince();
-					//string test = to_string(CurrTime);
-					//printf("%s", test);
-					if ((CurrTime - LastAuthTime) > 1)
-						auth();
-				}
-				//Sleep(500);
-			}
-		}
-	}
-	else
-	{
-		/*if (!VerChecked)
-		{
-			//printf("checking ver");
-			//Sleep(500);
-			//checkver
-			checkver();
-
-			//mark version checked
-			VerChecked = true;
-			//Sleep(500);
-		}
-		else if (boolNewVersion)
-		{
-			updater();
-			boolNewVersion = false;
-		}
-		else if (!boolUpdated && boolNeedUpdate)
-		{
-			if (!boolAnnouncedUpdate)
-			{
-				printf("ISXRI: Updating ISXRI.dll");
-				pISInterface->ExecuteCommand("relay \"all other\" -noredirect execute \\${If[\\${Extension[ISXRI.dll](exists)},echo ISXRI: Updating ISXRI.dll]}");
-				//pISInterface->ExecuteCommand("relay \"all other\" echo ISXRI: Updating ISXRI.dll");
-				boolAnnouncedUpdate = true;
-			}
-			else if (boolRenameWorked)
-			{
-				if (!boolUpdating)
-				{
-					boolUpdating = true;
-					update();
-				}
-			}
-		}
-		else if (!Loaded)
-		*/
-		if (!Loaded)
-		{
-			//Sleep(500);
-			//register TLO's
-			RegisterTopLevelObjectsAfterAuth();
-
-
-			//register commands
-			RegisterCommandsAfterAuth();
-
-			//set loaded true
-			Loaded = true;
-			//Sleep(500);
-		}
-		/*
-		// Removed the logincheck every 5 mins, need to decide do i want 1 hour or 1 day and change ips to 2? -- changed back to 5mins and fixed it so it does in seperate thread
-		//and probably make a DotNetAPP to do the checking so it doesnt freeze the clients, same with Auth and updater.  --- Used CreateThread
-		CurrTime = TimeSince();
-		if ((CurrTime - LoggedInTime) > 300)//300 = 5 mins, 240 = 4 mins, 360 = 6 mins, 3600= 1 hour, 900=15mins
-		{
-			//printf("5 mins");
-			LoggedIn();
-			LoggedInTime = TimeSince();
-		}
-
-		}		*/
-}
-void ISXRIPulseAuth()
+static void ISXRIPulse()
 {
 	try
 	{
 		if (!LoadMessageDisplayed)
 		{
 			printf("ISXRI: Loading version %s", RI_Version);
-			printf("ISXRI: For support goto http://forums.isxri.com or visit us on IRC @ #isxri");
-			printf("ISXRI: Authenticating ISXRI");
+			printf("ISXRI: For support goto http://forums.isxri.com or visit us on Discord");
+			printf("ISXRI: To help and support the Development of ISXRI visit http://www.isxri.com");
+			if (DoAuth)
+				printf("ISXRI: Authenticating ISXRI");
 			LoadMessageDisplayed = true;
 		}
-		if (!gotlp)
+		if (!gotlp && DoAuth)
 		{
 			//printf("!gotlp if statement");
 			if (!gettinglp && pISInterface->GetScriptRuntime("Buffer:Auth") == 0)
@@ -4312,7 +4207,7 @@ void ISXRIPulseAuth()
 					getlp(false);
 			}
 		}
-	    if (!Authed)
+	    if (!Authed && DoAuth)
 		{
 			//printf("!Authed if statement");
 			if (!authenticating)
@@ -4402,8 +4297,9 @@ void ISXRIPulseAuth()
 			}
 			// Removed the logincheck every 5 mins, need to decide do i want 1 hour or 1 day and change ips to 2? -- changed back to 5mins and fixed it so it does in seperate thread
 			//and probably make a DotNetAPP to do the checking so it doesnt freeze the clients, same with Auth and updater.  --- Fixed, Used CreateThread
-			CurrTime = TimeSince();
-			if ((CurrTime - LoggedInTime) > 300)//300 = 5 mins, 240 = 4 mins, 360 = 6 mins, 3600= 1 hour, 900=15mins
+			if (DoAuth)
+				CurrTime = TimeSince();
+			if ((CurrTime - LoggedInTime) > 300 && DoAuth)//300 = 5 mins, 240 = 4 mins, 360 = 6 mins, 3600= 1 hour, 900=15mins
 			{
 				//printf("5 mins");
 				LoggedIn();
@@ -4776,8 +4672,7 @@ void __cdecl PulseService(bool Broadcast, unsigned int MSG, void *lpData)
 		 * displayed by the game.  This is the place to put any repeating
 		 * tasks.
 		 */
-		//ISXRIPulseNoAuth();
-		ISXRIPulseAuth();
+		ISXRIPulse();
 	}
 }
 
