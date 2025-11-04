@@ -105,7 +105,7 @@ double EXTVER = 7.00;
 
 using namespace std;
 bool DoAuth = false;
-bool Authed = false;
+bool Authed = true;
 bool boolUpdating = false;
 bool boolNeedUpdate = false;
 bool boolUpdated = false;
@@ -926,7 +926,7 @@ bool combatbot = true;
 //heroic = free
 bool heroic = false;
 //raid = paid
-bool raid = false;
+bool raid = true;
 bool devel = false;
 string fullexpirationdayewithword;
 unsigned long ParentSet;
