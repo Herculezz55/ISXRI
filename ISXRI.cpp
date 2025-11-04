@@ -11,8 +11,8 @@
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
 
 // need to pull this information from Github TAG and Release Date
-#define EXTENSION_VERSION "7.00 11-1-25"
-double EXTVER = 7.00;
+#define EXTENSION_VERSION "7.01 11-3-25"
+double EXTVER = 7.01;
 #include "ISXRI.h"
 //
 //
@@ -105,7 +105,7 @@ double EXTVER = 7.00;
 
 using namespace std;
 bool DoAuth = false;
-bool Authed = false;
+bool Authed = true;
 bool boolUpdating = false;
 bool boolNeedUpdate = false;
 bool boolUpdated = false;
@@ -926,7 +926,7 @@ bool combatbot = true;
 //heroic = free
 bool heroic = false;
 //raid = paid
-bool raid = false;
+bool raid = true;
 bool devel = false;
 string fullexpirationdayewithword;
 unsigned long ParentSet;
