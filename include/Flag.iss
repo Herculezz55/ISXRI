@@ -36,10 +36,10 @@ function main(string Action=TAKE)
 		wait 2
 		eq2ex apply_verb ${StrategistID} hail
 		wait 10
-		if ${Action.Upper.Equal[TAKE]}
-			EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,2]:LeftClick
-		elseif ${Action.Upper.Equal[GET]}
-			EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[button,3]:LeftClick
+		if ${Action.Upper.Equal[TAKE]}			
+			EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[2]:LeftClick
+		elseif ${Action.Upper.Equal[GET]}			
+			EQ2UIPage[ProxyActor,Conversation].Child[composite,replies].Child[3]:LeftClick
 		RI_CMD_PauseCombatBots 0
 	}
 	else
